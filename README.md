@@ -62,5 +62,10 @@ Response:
 
 - FastAPI
 - Hugging Face Transformers
-- Qdrant
 - Python-dotenv
+- Chromadb
+- Langchain
+- Langchain-community
+- Langchain-core
+- Sentence-transformers
+- Numpy
