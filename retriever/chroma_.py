@@ -30,7 +30,7 @@ def rank_by_query_word_presence_regex(sentences, query):
         print(len(query_words.intersection(sentence_words)))
         return len(query_words.intersection(sentence_words))  # Query so‘zlarini hisoblash
     
-    return [sentence for sentence in sorted(sentences, key=count_query_words, reverse=True) if count_query_words(sentence) > 0]
+    # return [sentence for sentence in sorted(sentences, key=count_query_words, reverse=True) if count_query_words(sentence) > 0]
     
     return sorted(sentences, key=count_query_words, reverse=True)
 

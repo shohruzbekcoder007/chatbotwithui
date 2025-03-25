@@ -33,8 +33,8 @@ async def chat(request: ChatRequest):
             # results = collection.query(query_texts=[query], n_results=5)
             relevant_docs = search_documents(request.query, 20)
 
-            if len(relevant_docs) == 0:
-                return {"response": "Ma'lumot bazamdan ushbu savol bo'yicha  ma'lumot topilmadi. Istasangiz o'z bilimlarimdan foydalanib javob beraman"}
+            # if len(relevant_docs) == 0:
+            #     return {"response": "Ma'lumot bazamdan ushbu savol bo'yicha  ma'lumot topilmadi. Istasangiz o'z bilimlarimdan foydalanib javob beraman"}
 
         context = "\n".join(relevant_docs)
 
@@ -42,7 +42,7 @@ async def chat(request: ChatRequest):
         print("javobga savol ->", context)
 
         # Modelga savol yuborish
-        prompt = f"Quyidagi kontekstdan foydalanib savolga javob bering:\n\nKontekst:\n{context}\n\nSavol: {request.query}"
+        prompt = f"Answer the question using the following context:\n\nContext: {context}\n\nQuestion: {request.query}"
         response = await model.chat(prompt)
         
         return {"response": response}
