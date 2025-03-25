@@ -3,7 +3,8 @@ import aiohttp
 class OllamaModel:
     def __init__(self):
         self.base_url = 'http://localhost:11434'
-        self.model = 'gemma2:9b'
+        # self.model = 'gemma2:9b'
+        self.model = 'gemma3:12b'
         # self.model = 'llama3.2:3b'
 
     async def chat(self, prompt: str) -> str:
