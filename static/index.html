@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAT AI Assistant</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <div class="sidebar">
+        <button class="new-chat-btn">
+            <svg stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                <path d="M12 4.5v15m7.5-7.5h-15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Yangi chat
+        </button>
+        <div class="chat-history">
+            <div class="chat-history-item active">
+                <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M20 2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h16z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Statistika bo'yicha savol
+            </div>
+        </div>
+        <div class="bottom-buttons">
+            <button class="upgrade-btn">
+                <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Imkoniyatlarni kengaytirish
+            </button>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="chat-container">
+            <div class="chat">
+                <div class="chat-messages">
+                    <div class="message bot">
+                        <div class="message-container">
+                            <div class="avatar">AI</div>
+                            <div class="message-content">
+                                Men Stat AI Chatbotman. Sizga qanday yordam bera olaman?
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message bot">
+                        <div class="message-container">
+                            <div class="avatar">AI</div>
+                            <div class="message-content">
+                                Menga Statistika sohasida savol berishingiz mumkin.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="conversation">
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <form class="chat-input" onsubmit="onsubmitnew(event)">
+                    <input type="text" placeholder="Xabar yozing...">
+                    <button type="submit">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(90 12 12)"/>
+                        </svg>
+                    </button>
+                </form>
+                <div class="recommended-texts">
+                    <div class="recommended-text" onclick="sendRecommendedText(this)">Statistika nima?</div>
+                    <div class="recommended-text" onclick="sendRecommendedText(this)">Statistik ma'lumotlarni tahlil qilish usullari</div>
+                    <div class="recommended-text" onclick="sendRecommendedText(this)">Regressiya tahlili nima?</div>
+                    <div class="recommended-text" onclick="sendRecommendedText(this)">Salom</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/app.js"></script>
+</body>
+</html>

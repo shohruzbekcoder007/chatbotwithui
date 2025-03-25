@@ -1,0 +1,44 @@
+[
+    {
+        "content":  "Kimlar statistika hisobotini topshiradi?\nfaoliyat yuritayotgan respondentlar (faoliyat ko‘rsatmayotgan va harakatsiz holatga o‘tkazilganlardan tashqari);\nyangi tashkil etilgan respondentlar birinchi marotaba, belgilangan statistika hisobotining navbatdagi davridan boshlab;\nfaoliyati tugatilgan respondentlar faoliyat yuritgan hisobot davri uchun, o‘z faoliyatini tugatish vaqtida.\n"
+    },
+    {
+        "content":  "statistika hisobotini qayta ishlash davri \nqayta ishlash davri — taqdim etilgan statistika hisobotini tahlil qilish va umumlashtirish uchun Statistika agentligi tomonidan belgilangan vaqt oralig‘i. Qayta ishlash davri tegishli yig‘ma statistika ma’lumotlarini O‘zbekiston Respublikasi Vazirlar Mahkamasi tomonidan tasdiqlanadigan bir yillik statistika dasturida belgilangan tarqatish muddatidan oshmasligi kerak.\n\n(1-bandning o‘n birinchi xatboshisi O‘zbekiston Respublikasi Prezidenti huzuridagi Statistika agentligi direktorining 2023-yil 14-apreldagi 30-mb-sonli buyrug‘i (ro‘yxat raqami 3312-3, 26.04.2023-y.) tahririda — Qonunchilik ma’lumotlari milliy bazasi, 26.04.2023-y., 10/23/3312-3/0230-son)"
+    },
+    {
+        "content":  "eStat 4 da  Hisobot holati haqida ma’lumot\nstatistika hisoboti kelib tushganligi haqida xabarnoma (bundan buyon matnda Xabarnoma deb yuritiladi) — statistika hisobotining axborot tizimiga kelib tushgan sanasi va statistika organi tomonidan uni ko‘rib chiqish natijasini respondentga ma’lum qilish muddati to‘g‘risidagi ma’lumotlarni o‘z ichiga olgan, axborot tizimi tomonidan avtomatik tarzda shakllantiriluvchi xabar\n\nstatistika hisoboti qabul qilinganligi haqida ma’lumotnoma (bundan buyon matnda Ma’lumotnoma deb yuritiladi) — statistika organi tomonidan statistika hisobotining qabul qilinganligini tasdiqlovchi, sanasi va qabul qilgan xodimning familiyasi ko‘rsatilgan, uning elektron raqamli imzosi bilan imzolangan va respondentga yuboriladigan elektron xabar"
+    },
+    {
+        "content":  "statistika hisoboti qaysi sohalar bo’yicha topshiriladi?\n\nStatistika hisoboti sohalari:\nFan va ta’lim sohasi\nIjtimoiy va madaniy soha\nSport sohasi\nSog’liqni saqlash sohasi\nTurizm sohasi\nSavdo sohasi\nXizmatlar sohasi\nSanoat (ishlab chiqarish) sohasi\nTransport sohasi\nAloqa sohasi\nKommunal soha\nEnergetika sohasi\nDemografiya sohasi\nMehnat sohasi\nQishloq xo’jaligi sohasi\nEkologiya sohasi\nKichik biznes va tadbirkorlik sohasi\nMoliya sohasi\nInvestitsiya sohasi\nQurilish sohasi\n"
+    },
+    {
+        "content":  "Statistika hisobotini taqdim etuvchilar— rasmiy statistikani tayyorlovchilarga individual va boshqa ma’lumotlarni statistika maqsadlarida taqdim etuvchi jismoniy yoki yuridik shaxs (respondent)"
+    },
+        {
+        "content":  "E-STAT TIZIMNING FUNKSIONAL IMKONIYATLARI\nTizimni yuklab olish va foydalanuvchi kompyuteriga oʻrnatish talab etilmasligi\nRespondentga tegishli barcha ma’lumotlarning tizim ma’lumotlar bazasida saqlanishi\nHisobot shakllarini yuklab olish talab etilmasligi\nTizimdan chiqmasdan bir nechta respondentlar bilan ishlash imkoniyati\nOneID platformasida autorizatsiyadan oʻtgan holda tizimga kirish imkoniyati\nBoshqa tashkilotlar bilan integratsiyani amalga oshirish imkoniyati\n"
+    },
+    {
+        "content":  "hisobot qanday  to'ldiriladi\n\nHisobot shaklini toʻldirish jarayonida maʻlumot kiritilganidan soʻng, ushbu maʻlumotni tasdiqlash satr va ustunlarni ketma-ketik asosida toʻldirish maqsadida foydalanuvchilar uchun qulay va tushunarli boʻlgan “Tab” tugmasini bosish talab etiladi.\nTaqdim etilayotgan ma’lumotlarning toʻgʻri va toʻliqligini ta’minlash maqsadida mantiqiy nazorat talablari oʻrnatilgan.\n"
+    },
+    {
+        "content":  "hisobotimini qabul qilinganini qanday bilsam bo'ladi\nXabarnomalar – statistika tizimi tomonidan respondentga taqdim etilgan hisobotlarning holati yuzasidan yuborilgan xabarlar ro‘yxati. Har bir xabarnoma uning tizimda qayd etilgan sanasi bo‘yicha tartiblanadi. Shuningdek, taqdim etilgan hisobotlar kim tomonidan ko‘rib chiqilayotgani haqida ma’lumotlarni ko‘rish, har bir hisobot turi bo‘yicha statistika xodimi bilan bog‘lanish va taqdim etilgan, rad etilgan va qabul qilingan hisobotlar bo‘yicha tasdiqlangan ma’lumotnomani olish mumkin. \n"
+    },
+    {
+        "content":  "Hisobotni qanday yarataman\nStatistika hisobotlarini taqdim etish uchun foydalanuvchi oynasining chap yon qismida joylashgan iqtisodiy tarmoq turlari bo‘yicha bo‘limlar ro‘yxatidan kerakli bo‘limni tanlash orqali, ushbu bo‘limga aloqador stastika hisobot turlari ro‘yxati sahifasi ochiladi.\nTaqdim etilgan hisobotlar ro‘yxati tartib raqami, hisobot turi, hisobot davri, taqdim etilgan sanasi va hisobot holati bo‘yicha tartiblanadi. Shuningdek, bu sahifada tegishli hisobot turi bo‘yicha uning Excel fayli ko‘rinishida ko‘chirib olish mumkin. Ushbu faylda hisobot shaklining bo‘lim va satrlari ifoda etilgan. \nTaqdim etish mumkin bo‘lgan hisobotlar ro‘yxati tartib raqami, hisobot turi, hisobot davri, hisobot taqdim etish vaqti va joriy holati bo‘yicha tartiblanadi. Ushbu ro‘yxatdan kerakli hisobot turiga tegishli qatordagi jo’natish tugmasiga bosish orqali ochiladi. \n"
+    },
+    {
+        "content":  "Noqatʼiy mantiqiy nazorat talabi – Hisobot shakllarida bo‘limlar, satrlar va ustunlar o‘rtasidagi talab bajarilmagan holatda, uning bajarilmaslik sababi ko‘rsatilishi zarur (foydalanuvchi oynasining pastki chap qismida).\nNoqat’iy mantiqiy nazorat talabi mavjud bo‘lsa, hisobot shaklining yakuniy qismida joylashgan “Izoh” maydoniga har bir noqat’iy mantiqiy nazorat talabi bo‘yicha tegishli ma’lumot kiritilgandan so‘ng, hisobot shaklini jo‘natishdagi cheklov bekor qilinadi.\nQatʼiy mantiqiy nazorat talabi – Hisobot shakllarida bo‘limlar, satrlar va ustunlar o‘rtasida bajarilishi qatʼiy bo‘lgan mantiqiy nazorat turi (foydalanuvchi oynasining pastki o‘ng qismida). Agarda taqdim etilayotgan hisobot shaklida qat’iy nazorat talabi bo‘lsa, hisobot shaklini jo‘natishga cheklov qo‘yiladi.\n\n"
+    },
+    {
+        "content":  "Statistika hisobotlari davriyligi jihatidan quyidagi turlarga boʻlinadi:\nOylik – har oyda topshiriladi\nChoraklik – har chorakda topshiriladi\nYilda 3-marta – yilning turli davrlarida 3-marta taqdim etiladi\nYillik – yilda 1-marta topshiriladi"
+    },
+    {
+        "content":  "Axborot tizimida hisobot uchun izohni qayerga yozaman\nSaxifaning yakuniy qismida tashkilotning ma’lumotlari kiritiladi(tashkilot rahbari: Ism Familya Sharifi, Email, telefon raqami va hokazo). Bu yerda Izoh qoldirish uchun joy bor izoh qoldirasiz undan so’ng jo’natish tugmasi bosiladi\n"
+    },
+    {
+        "content":  "Axborot tizmida qabul qilingan hisobotimni qanday yuklab olaman\nStatistika hisobotlarini taqdim etish uchun foydalanuvchi oynasining chap yon qismida joylashgan iqtisodiy tarmoq turlari bo‘yicha bo‘limlar ro‘yxatidan kerakli bo‘limni tanlash orqali, ushbu bo‘limga aloqador stastika hisobot turlari ro‘yxati sahifasi ochiladi.\nTaqdim etilgan hisobotlar ro‘yxati tartib raqami, hisobot turi, hisobot davri, taqdim etilgan sanasi va hisobot holati bo‘yicha tartiblanadi. Shuningdek, bu sahifada tegishli hisobot turi bo‘yicha uning Excel fayli ko‘rinishida ko‘chirib olish mumkin. Ushbu faylda hisobot shaklining bo‘lim va satrlari ifoda etilgan. \n"
+    },
+    {
+        "content":  "Qaysi statistik hisobotlarni topshirishim kerak?\nKorxona va tashkilotlar taqdim etiladigan hisobotlar ro’yxatini bilish uchun stat.uz saytiga otib Interaktiv xizmatlar bo’limidan Taqdim etiladigan hisobotlar ro’yxati ga otib tashkilot tegishli Stir kiritib rasmdagi kod bilan tasdiqlangan holda amalga oshiriladi\n"
+    }
+]
