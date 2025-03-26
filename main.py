@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from models.ollama import model
 # from models.groq import model_groq
+from models.huggingface import model as model_huggingface
 from retriever.chroma_ import search_documents
 
 # FastAPI ilovasini yaratish
@@ -43,9 +44,14 @@ async def chat(request: ChatRequest):
 
         # Modelga savol yuborish
         prompt = f"Answer the question using the following context:\n\nContext: {context}\n\nQuestion: {request.query}"
-        response = await model.chat(prompt)
+        # response = await model.chat(prompt)
+
+        # Huggingface modelni ishlatish
+        response_huggingface = model_huggingface.generate_text(prompt, context=context)
+        print("response_huggingface ->", response_huggingface)
         
-        return {"response": response}
+        # return {"response": response}
+        return {"response": response_huggingface}
     except Exception as e:
         return {"error": str(e)}
 
