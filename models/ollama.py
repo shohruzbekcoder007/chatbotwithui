@@ -4,8 +4,8 @@ class OllamaModel:
     def __init__(self):
         self.base_url = 'http://localhost:11434'
         # self.model = 'gemma2:9b'
-        self.model = 'gemma3:27b'
-        # self.model = 'llama3.2:3b'
+        # self.model = 'gemma3:27b'
+        self.model = 'llama3.2:3b'
 
     async def chat(self, prompt: str) -> str:
         """
@@ -70,6 +70,26 @@ class OllamaModel:
                         raise Exception(f"Error from Ollama API: {error_text}")
         except Exception as e:
             print("Error in invoke:", str(e))
+            raise e
+
+    async def rewrite_query(self, user_query, chat_history):
+        try:
+            prompt = f"Given the conversation history:\n{chat_history}\n Rewrite the following user query to be fully self-contained and query have be short. Give response in uzbek. Only give a user's ask:\n{user_query}"
+            data = {
+                'model': self.model,
+                'prompt': prompt,
+                'stream': False
+            }
+            async with aiohttp.ClientSession() as session:
+                async with session.post(f"{self.base_url}/api/generate", json=data) as response:
+                    if response.status == 200:
+                        result = await response.json()
+                        return {'content': result['response'].replace("```html", "").replace("```", "")}
+                    else:
+                        error_text = await response.text()
+                        raise Exception(f"Error from Ollama API: {error_text}")
+        except Exception as e:
+            print("Error in rewrite_query:", str(e))
             raise e
 
 # Model obyektini yaratish

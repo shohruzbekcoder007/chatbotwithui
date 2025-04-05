@@ -13,7 +13,6 @@ def rank_by_query_word_presence(sentences, query):
     
     def count_query_words(sentence):
         sentence_words = set(sentence.lower().split())  # Matndagi so‘zlarni ajratish
-        print(len(query_words.intersection(sentence_words)))
         return len(query_words.intersection(sentence_words))  # Query so‘zlarini hisoblash
     
     return sorted(sentences, key=count_query_words, reverse=True)
@@ -27,12 +26,11 @@ def rank_by_query_word_presence_regex(sentences, query):
     
     def count_query_words(sentence):
         sentence_words = set(re.findall(r'\b\w+\b', sentence.lower()))  # Matndagi so‘zlarni ajratish
-        print(len(query_words.intersection(sentence_words)))
         return len(query_words.intersection(sentence_words))  # Query so‘zlarini hisoblash
     
-    # return [sentence for sentence in sorted(sentences, key=count_query_words, reverse=True) if count_query_words(sentence) > 0]
+    return [sentence for sentence in sorted(sentences, key=count_query_words, reverse=True) if count_query_words(sentence) > 0]
     
-    return sorted(sentences, key=count_query_words, reverse=True)
+    # return sorted(sentences, key=count_query_words, reverse=True)
 
 
 # Modelni yuklash

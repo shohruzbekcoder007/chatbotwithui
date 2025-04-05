@@ -9,3 +9,4 @@ langchain-core>=0.1.30
 sentence-transformers==2.6.1
 numpy~=1.26.0
 torch>=2.2.0
+redis==5.0.1
