@@ -6,7 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
-from models.ollama import model
+# from models.ollama import model
+from models.groq import model as model_groq
 from models.user import User
 from retriever.chroma_ import search_documents
 from redis_obj.redis import redis_session
@@ -47,6 +48,7 @@ class ChatRequest(BaseModel):
 
 @app.get("/")
 async def read_root():
+    redis_session.delete_all_sessions()
     return FileResponse('static/index.html')
 
 @app.get("/login")
@@ -73,7 +75,7 @@ async def chat(request: ChatRequest, current_user: User | None = Depends(get_cur
 
         # Avvalgi sessiyalarni qo‘shish
         previous_context = "\n".join(previous_session)
-        context_query = await model.rewrite_query(request.query, previous_context)
+        context_query = await model_groq.rewrite_query(request.query, previous_context)
 
         if request.query.strip() == "":
             prev_relevant_docs = []
@@ -81,7 +83,6 @@ async def chat(request: ChatRequest, current_user: User | None = Depends(get_cur
         else:
             prev_relevant_docs = search_documents(context_query['content'], 20)
         
-        print(prev_relevant_docs, "<-prev_relevant_docs")
 
         context = "\n".join(relevant_docs)
         prev_context = "\n".join(prev_relevant_docs)
@@ -91,10 +92,11 @@ async def chat(request: ChatRequest, current_user: User | None = Depends(get_cur
         Context: {context} {prev_context}
         Question: {request.query}
         Expanded meaning of your question: {context_query['content']}
-
         """
 
-        response = await model.chat(prompt)
+        print("Prompt ->", prompt)
+
+        response = await model_groq.chat(prompt)
 
         # Huggingface modelni ishlatish
         # response_huggingface = model_huggingface.generate_text(prompt, context=context)

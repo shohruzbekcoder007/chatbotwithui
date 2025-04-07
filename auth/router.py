@@ -45,10 +45,18 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     
     return {"access_token": access_token, "token_type": "bearer"}
 
-@router.get("/me", response_model=dict)
-async def read_users_me(current_user: User = Depends(utils.get_current_user)):
+@router.get("/me")
+async def read_users_me(current_user: User | None = Depends(utils.get_current_user)):
+    if not current_user:
+        return {
+            "email": None,
+            "name": None,
+            "created_at": None,
+            "authenticated": False
+        }
     return {
         "email": current_user.email,
         "name": current_user.name,
-        "created_at": current_user.created_at
+        "created_at": current_user.created_at,
+        "authenticated": True
     }
