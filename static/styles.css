@@ -21,6 +21,7 @@ body {
     display: flex;
     flex-direction: column;
     border-right: 1px solid rgba(0,0,0,0.1);
+    z-index: 20;
 }
 
 .new-chat-btn {
@@ -97,6 +98,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    padding-top: 70px;
     /* padding-bottom: 150px; */
 }
 
@@ -315,4 +317,8 @@ body {
     display: inline-block;
     max-width: 80%;
     word-wrap: break-word;
+}
+
+.header-container {
+    padding-left: calc(270px + 12px);
 }

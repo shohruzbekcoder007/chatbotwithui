@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - AI Chat</title>
+    <link href="/static/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a2463 0%, #1e4bd2 100%);
+            background-size: cover;
+            min-height: 100vh;
+        }
+        .register-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .register-button {
+            background: #3182ce;
+            transition: all 0.3s ease;
+        }
+        .register-button:hover {
+            background: #2c5282;
+            transform: translateY(-2px);
+        }
+        .input-field {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="register-container rounded-lg p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-white mb-2">JOIN US!</h1>
+                <p class="text-blue-200">Create your AI Chat account</p>
+            </div>
+
+            <form id="registerForm" class="space-y-6">
+                <div class="space-y-4">
+                    <input type="text" id="name" required 
+                           placeholder="Name"
+                           class="input-field w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+                    <input type="email" id="email" required 
+                           placeholder="Email"
+                           class="input-field w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+                    <input type="password" id="password" required 
+                           placeholder="Password"
+                           class="input-field w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
+                </div>
+                
+                <button type="submit" 
+                        class="register-button w-full text-white rounded-lg py-3 px-4 font-semibold
+                               shadow-lg">
+                    Create Account
+                </button>
+            </form>
+            
+            <div class="mt-6 flex justify-between items-center text-sm">
+                <a href="/static/login.html" class="text-blue-200 hover:text-white transition-colors">Back to Login</a>
+                <a href="/" class="text-blue-200 hover:text-white transition-colors">Continue as guest</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const userData = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                name: document.getElementById('name').value
+            };
+            
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                if (response.ok) {
+                    alert('Registration successful! Please login.');
+                    window.location.href = '/static/login.html';
+                } else {
+                    const error = await response.json();
+                    alert(error.detail || 'Registration failed');
+                }
+            } catch (error) {
+                alert('An error occurred');
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>

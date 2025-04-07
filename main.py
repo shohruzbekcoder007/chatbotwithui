@@ -1,19 +1,44 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+from beanie import init_beanie
+from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 from models.ollama import model
-# from models.groq import model_groq
-# from models.huggingface import model as model_huggingface
+from models.user import User
 from retriever.chroma_ import search_documents
 from redis_obj.redis import redis_session
+from auth.router import router as auth_router
+from auth.utils import get_current_user
 
 # FastAPI ilovasini yaratish
 app = FastAPI()
 
+# CORS sozlamalari
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# MongoDB va Beanie ni ishga tushirish
+@app.on_event("startup")
+async def startup_event():
+    client = AsyncIOMotorClient(os.getenv("DATABASE_URL", "mongodb://localhost:27017"))
+    await init_beanie(
+        database=client.get_default_database(),
+        document_models=[User]
+    )
+
 # Static fayllarni ulash
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Auth routerini qo'shish
+app.include_router(auth_router)
 
 # Request modelini yaratish
 class ChatRequest(BaseModel):
@@ -22,14 +47,17 @@ class ChatRequest(BaseModel):
 
 @app.get("/")
 async def read_root():
-    # redis_session.delete_all_sessions()
     return FileResponse('static/index.html')
+
+@app.get("/login")
+async def login_page():
+    return FileResponse('static/login.html')
+
 @app.post("/chat")
-async def chat(request: ChatRequest):
+async def chat(request: ChatRequest, current_user: User | None = Depends(get_current_user)):
     try:
-        
-        # user_id = request.user_id.strip()
-        user_id = "user123"
+        # Get user_id from authenticated user or use anonymous
+        user_id = current_user.email if current_user else "anonymous"
         # Oldingi sessiyalarni olish
         previous_session = redis_session.get_user_session(user_id) or []
 
