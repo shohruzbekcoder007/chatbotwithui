@@ -11,7 +11,8 @@ class GroqModel:
         if not self.api_key:
             raise ValueError("GROQ_API_KEY not found in environment variables")
         self.base_url = "https://api.groq.com/openai/v1/chat/completions"
-        self.model = "gemma2-9b-it"  # Groq taqdim etgan model
+        # self.model = "gemma2-9b-it"  # Groq taqdim etgan model
+        self.model = "qwen-2.5-32b"  # Groq taqdim etgan model
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
@@ -33,7 +34,7 @@ class GroqModel:
             {"role": "system", "content": "You must respond only in Uzbek. Ensure there are no spelling mistakes."},
             {"role": "system", "content": "You should generate responses strictly based on the given prompt information without creating new content on your own."},
             {"role": "system", "content": "You are only allowed to answer questions related to the National Statistics Committee. "},
-            {"role": "system", "content": "If there is no relevant information in the context, politely try to answer based on your knowledge. If you cannot find an answer, respond with: '<p>Kechirasiz, ushbu savol bo'yicha aniq ma'lumot topa olmadim. Iltimos, boshqa savol berishingiz mumkin.</p>'."},
+            # {"role": "system", "content": "If there is no relevant information in the context, politely try to answer based on your knowledge. If you cannot find an answer, respond with: '<p>Kechirasiz, ushbu savol bo'yicha aniq ma'lumot topa olmadim. Iltimos, boshqa savol berishingiz mumkin.</p>'."},
             {"role": "user", "content": prompt}
         ]
 
