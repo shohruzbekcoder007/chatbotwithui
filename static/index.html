@@ -188,6 +188,22 @@
             </div>
         </div>
     </div>
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-lg font-medium">Fikr bildirish</h3>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="feedbackComment" class="w-full p-2 border rounded" rows="4" placeholder="Izoh yozing..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeModal()">Bekor qilish</button>
+                <button class="submit-btn" onclick="submitFeedback()">Yuborish</button>
+            </div>
+        </div>
+    </div>
     <script src="/static/app.js"></script>
 </body>
 </html>

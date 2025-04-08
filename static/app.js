@@ -43,9 +43,63 @@ function giveFeedback(button, type) {
         }
     }
 
-    // Here you can add API call to save feedback
+    // Store the feedback type and message for the modal
     const messageText = button.closest('.message-content').querySelector('.message-text').textContent;
-    console.log(`User gave ${type} feedback for message: ${messageText}`);
+    const feedbackModal = document.getElementById('feedbackModal');
+    feedbackModal.dataset.messageText = messageText;
+    feedbackModal.dataset.feedbackType = type;
+    
+    // Show the modal
+    openCommentModal(button);
+}
+
+function openCommentModal(button) {
+    const messageText = button.closest('.message-content').querySelector('.message-text').textContent;
+    const feedbackModal = document.getElementById('feedbackModal');
+    feedbackModal.dataset.messageText = messageText;
+    feedbackModal.classList.remove('hidden');
+    document.getElementById('feedbackComment').value = '';
+
+    // Get user's question from the previous message
+    const messageDiv = button.closest('#id' + new Date().getTime());
+    if (!messageDiv) {
+        const allMessages = document.querySelectorAll('[id^="id"]');
+        for (let msg of allMessages) {
+            if (msg.contains(button)) {
+                const userMessage = msg.querySelector('.user .message-content span');
+                if (userMessage) {
+                    feedbackModal.dataset.userQuestion = userMessage.textContent;
+                }
+                break;
+            }
+        }
+    }
+}
+
+function closeModal() {
+    const feedbackModal = document.getElementById('feedbackModal');
+    feedbackModal.classList.add('hidden');
+}
+
+function submitFeedback() {
+    const modal = document.getElementById('feedbackModal');
+    const comment = document.getElementById('feedbackComment').value;
+    const messageText = modal.dataset.messageText;
+    const feedbackType = modal.dataset.feedbackType || '';
+    const userQuestion = modal.dataset.userQuestion || '';
+
+    // Here you can send the feedback to your backend
+    console.log('Feedback:', {
+        type: feedbackType,
+        userQuestion: userQuestion,
+        aiResponse: messageText,
+        comment: comment
+    });
+
+    // Clear and close modal
+    document.getElementById('feedbackComment').value = '';
+    modal.classList.add('hidden');
+    modal.dataset.userQuestion = '';
 }
 
 async function onsubmitnew(event) {
@@ -120,6 +174,11 @@ async function onsubmitnew(event) {
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2"/>
                             </svg>
                         </button>
+                        <button class="action-btn comment-btn" onclick="openCommentModal(this)" title="Izoh qoldirish">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             `;
@@ -127,8 +186,7 @@ async function onsubmitnew(event) {
             button.removeAttribute('disabled');
             
             // Auto scroll to bottom after response
-            // const chatMessages = document.querySelector('.chat-messages');
-            // chatMessages.scrollTop = chatMessages.scrollHeight;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         })
         .catch(error => {
             console.error('Error:', error);
