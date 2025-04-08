@@ -6,7 +6,9 @@ from retriever.chroma_ import count_documents, create_collection, add_documents_
 # json_file_path = "./yozilganlar/rasmiy_statistika_togrisida_qonun.json"
 # json_file_path = "./yozilganlar/lex_uz.json"
 # json_file_path = "./yozilganlar/qarorlar.json"
-json_file_path = "./yozilganlar/reports_data.json"
+# json_file_path = "./yozilganlar/reports_data.json"
+
+json_file_path = "./yangi/kb_error.json"
 
 print(count_documents())
 

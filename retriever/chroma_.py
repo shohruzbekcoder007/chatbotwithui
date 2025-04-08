@@ -4,6 +4,8 @@ import time
 import os
 import json
 import uuid
+from torch import Tensor
+from torch.nn import functional as F
 
 def rank_by_query_word_presence(sentences, query):
     """
@@ -192,3 +194,63 @@ def count_documents():
     except Exception as e:
         print(f"Hujjatlarning sonini olishda xatolik: {str(e)}")
         return 0
+
+
+# context_found function aniq ishlamayapti sohaga tegishlilikni baholaydi tensor([]) <- docs_embeddings
+def context_found(query: str, retrieved_docs_embeddings: list) -> str:
+    """Savolning mavzu doirasida yoki tashqarisida ekanligini aniqlash.
+
+    Args:
+        query (str): Tekshiriladigan savol matni
+        retrieved_docs_embeddings (list): Topilgan hujjatlarning embedding vektorlari
+
+    Returns:
+        str: 'Out-of-domain savol' yoki 'Soha doirasida savol'
+    """
+    try:
+        # 1. Savol matnini embedding vektoriga o'tkazish
+        query_embedding = model.encode(query, convert_to_tensor=True)
+        
+        # 2. Hujjat embeddinglari listini PyTorch tensoriga o'tkazish
+        docs_embeddings = Tensor([emb for emb in retrieved_docs_embeddings if isinstance(emb, (list, tuple))])
+
+        print(docs_embeddings, "<- docs_embeddings")
+        
+        if docs_embeddings.size(0) == 0:
+            return "Out-of-domain savol"
+        
+        # 3. O'lchamlarni moslashtirish
+        query_embedding = query_embedding.view(1, -1)  # (1, embedding_size)
+        
+        # 4. Cosine similarity hisoblash
+        similarities = F.cosine_similarity(query_embedding, docs_embeddings)
+        
+        # 5. Eng yuqori o'xshashlik qiymatini olish
+        max_score = similarities.max().item()
+        
+        # 6. Natijani qaytarish
+        if max_score < 0.1:
+            return "Out-of-domain savol"
+        return "Soha doirasida savol"
+        
+    except Exception as e:
+        print(f"Xatolik yuz berdi: {str(e)}")
+        return "Out-of-domain savol"
+        query_embedding = query_embedding.view(1, -1)  # (1, embedding_size)
+        
+        # 4. Cosine similarity hisoblash
+        similarities = F.cosine_similarity(query_embedding, docs_embeddings)
+        
+        # 5. Eng yuqori o'xshashlik qiymatini olish
+        max_score = similarities.max().item()
+        
+        # 6. Natijani qaytarish
+        if max_score < 0.1:
+            return "Out-of-domain savol"
+        return "Soha doirasida savol"
+        
+    except Exception as e:
+        print(f"Xatolik yuz berdi: {str(e)}")
+        return "Out-of-domain savol"
+
+
