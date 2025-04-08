@@ -68,7 +68,7 @@ async def chat(request: ChatRequest, current_user: User | None = Depends(get_cur
             relevant_docs = []
             return {"response": "Ma'lumot bazamdan ushbu savol bo'yicha  ma'lumot topilmadi. Istasangiz o'z bilimlarimdan foydalanib javob beraman"}
         else:
-            relevant_docs = search_documents(request.query, 20)
+            relevant_docs = search_documents(request.query, 5)
 
             # if len(relevant_docs) == 0:
             #     return {"response": "Ma'lumot bazamdan ushbu savol bo'yicha  ma'lumot topilmadi. Istasangiz o'z bilimlarimdan foydalanib javob beraman"}
@@ -81,7 +81,7 @@ async def chat(request: ChatRequest, current_user: User | None = Depends(get_cur
             prev_relevant_docs = []
             return {"response": "Ma'lumot bazamdan ushbu savol bo'yicha  ma'lumot topilmadi. Istasangiz o'z bilimlarimdan foydalanib javob beraman"}
         else:
-            prev_relevant_docs = search_documents(context_query['content'], 20)
+            prev_relevant_docs = search_documents(context_query['content'], 5)
         
 
         context = "\n".join(relevant_docs)
@@ -90,7 +90,7 @@ async def chat(request: ChatRequest, current_user: User | None = Depends(get_cur
         prompt = f"""
         Answer the question using the following context:
         Context: {context} {prev_context}
-        Question: {request.query}
+        Question: {request.query} {context_query['content']}
         Expanded meaning of your question: {context_query['content']}
         """
 
