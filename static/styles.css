@@ -161,7 +161,7 @@ body {
     flex: 1;
     font-size: 16px;
     line-height: 1.5;
-    padding-top: 4px;
+    /* padding-top: 4px; */
     color: #374151;
 }
 
@@ -241,6 +241,26 @@ body {
     border-color: rgba(0,0,0,0.2);
 }
 
+.recommend.feedback-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.action-btn {
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    color: #6B7280;
+    transition: all 0.2s ease;
+    transform: scale(1);
+}
+
+.action-btn:hover {
+    background-color: #F3F4F6;
+    color: #374151;
+    transform: scale(1.1);
+}
+
 .loading {
     display: flex;
     gap: 8px;
@@ -287,10 +307,11 @@ body {
 }
 
 .upgrade-btn {
-    padding: 12px;
-    border-radius: 6px;
-    color: #374151;
-    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    color: #6B7280;
+    transition: all 0.2s ease;
+    transform: scale(1);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -298,7 +319,6 @@ body {
     width: 100%;
     background: transparent;
     border: none;
-    text-align: left;
 }
 
 .upgrade-btn:hover {
@@ -319,6 +339,25 @@ body {
     word-wrap: break-word;
 }
 
+.message-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    opacity: 0;
+    transition: all 0.3s ease;
+    transform: translateY(5px);
+}
+
+.bot .message-container:hover .message-actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .header-container {
     padding-left: calc(270px + 12px);
+}
+
+.bot .message-content .message-text {
+    padding-bottom: 4px;
 }
