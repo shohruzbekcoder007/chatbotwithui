@@ -9,7 +9,7 @@ from pydantic import BaseModel
 # from models.ollama import model
 from models.groq import model as model_groq
 from models.user import User
-from retriever.chroma_ import search_documents
+from retriever.chroma_ import search_documents, context_found
 from redis_obj.redis import redis_session
 from auth.router import router as auth_router
 from auth.utils import get_current_user
@@ -82,7 +82,6 @@ async def chat(request: ChatRequest, current_user: User | None = Depends(get_cur
             return {"response": "Ma'lumot bazamdan ushbu savol bo'yicha  ma'lumot topilmadi. Istasangiz o'z bilimlarimdan foydalanib javob beraman"}
         else:
             prev_relevant_docs = search_documents(context_query['content'], 5)
-        
 
         context = "\n".join(relevant_docs)
         prev_context = "\n".join(prev_relevant_docs)
@@ -90,11 +89,11 @@ async def chat(request: ChatRequest, current_user: User | None = Depends(get_cur
         prompt = f"""
         Answer the question using the following context:
         Context: {context} {prev_context}
-        Question: {request.query} {context_query['content']}
+        Question: {request.query} {context_query['content']}.
         Expanded meaning of your question: {context_query['content']}
         """
 
-        print("Prompt ->", prompt)
+        # print("Prompt ->", prompt)
 
         response = await model_groq.chat(prompt)
 
