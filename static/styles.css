@@ -261,6 +261,24 @@ body {
     transform: scale(1.1);
 }
 
+.like-btn.active {
+    color: #22c55e;
+    background-color: #dcfce7;
+}
+
+.like-btn.active:hover {
+    background-color: #bbf7d0;
+}
+
+.dislike-btn.active {
+    color: #ef4444;
+    background-color: #fee2e2;
+}
+
+.dislike-btn.active:hover {
+    background-color: #fecaca;
+}
+
 .loading {
     display: flex;
     gap: 8px;

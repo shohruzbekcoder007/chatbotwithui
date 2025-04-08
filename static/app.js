@@ -100,6 +100,8 @@ function submitFeedback() {
     document.getElementById('feedbackComment').value = '';
     modal.classList.add('hidden');
     modal.dataset.userQuestion = '';
+    modal.dataset.messageText = '';
+    modal.dataset.feedbackType = '';
 }
 
 async function onsubmitnew(event) {
