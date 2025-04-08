@@ -87,7 +87,9 @@ async function onsubmitnew(event) {
         </div>
     `;
 
-    // conversation.scrollTop = conversation.scrollHeight;
+    // Auto scroll to bottom after sending message
+    const chatMessages = document.querySelector('.chat-messages');
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 
     fetch('/chat', {
         method: 'POST',
@@ -98,7 +100,8 @@ async function onsubmitnew(event) {
     })
         .then(response => response.json())
         .then(data => {
-            document.querySelector(`#id${uuiddate} .bot .message-content`).innerHTML = `
+            const messageContent = document.querySelector(`#id${uuiddate} .bot .message-content`);
+            messageContent.innerHTML = `
                 <div class="message-text">${data.response}</div>
                 <div class="message-actions">
                     <div class="feedback-buttons">
@@ -122,7 +125,10 @@ async function onsubmitnew(event) {
             `;
             input.removeAttribute('disabled');
             button.removeAttribute('disabled');
-            // conversation.scrollTop = conversation.scrollHeight;
+            
+            // Auto scroll to bottom after response
+            // const chatMessages = document.querySelector('.chat-messages');
+            // chatMessages.scrollTop = chatMessages.scrollHeight;
         })
         .catch(error => {
             console.error('Error:', error);
