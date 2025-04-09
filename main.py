@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
-# from models.ollama import model as model_ollama
+# from models.ollama import model as model_groq
 from models.groq import model as model_groq
 from models.user import User
 from retriever.chroma_ import search_documents
