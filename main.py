@@ -1,18 +1,20 @@
 import os
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
-# from models.ollama import model as model_groq
 from models.groq import model as model_groq
 from models.user import User
-from retriever.chroma_ import search_documents
+from models.feedback import Feedback, FeedbackResponse
+from models.admin import Admin
 from redis_obj.redis import redis_session
 from auth.router import router as auth_router
+from auth.admin_auth import router as admin_router, get_current_admin
 from auth.utils import get_current_user
+from additional.additional import change_redis, get_docs_from_db, old_context
 
 # FastAPI ilovasini yaratish
 app = FastAPI()
@@ -22,24 +24,74 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
 # MongoDB va Beanie ni ishga tushirish
 @app.on_event("startup")
 async def startup_event():
-    client = AsyncIOMotorClient(os.getenv("DATABASE_URL", "mongodb://localhost:27017"))
-    await init_beanie(
-        database=client.get_default_database(),
-        document_models=[User]
-    )
+    try:
+        mongodb_url = os.getenv("DATABASE_URL")
+        if not mongodb_url:
+            raise ValueError("DATABASE_URL environment variable is not set")
+            
+        print(f"Connecting to MongoDB at: {mongodb_url}")
+        
+        client = AsyncIOMotorClient(
+            mongodb_url,
+            serverSelectionTimeoutMS=5000
+        )
+        
+        # Test connection
+        await client.admin.command('ping')
+        print("Successfully connected to MongoDB")
+        
+        await init_beanie(
+            database=client.get_default_database(),
+            document_models=[User, Feedback, Admin]
+        )
+    except Exception as e:
+        print(f"Error connecting to MongoDB: {str(e)}")
+        raise
 
 # Static fayllarni ulash
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/yozilganlar", StaticFiles(directory="yozilganlar"), name="yozilganlar")
 
-# Auth routerini qo'shish
+# Admin endpoints
+@app.get("/admin")
+async def admin_page():
+    return FileResponse('static/admin.html')
+
+@app.get("/api/admin/feedbacks")
+async def get_feedbacks(admin: Admin = Depends(get_current_admin)):
+    try:
+        feedbacks = await Feedback.find_all().to_list()
+        return {"success": True, "feedbacks": feedbacks}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+# Auth routerlarini qo'shish
 app.include_router(auth_router)
+app.include_router(admin_router)
+
+# Feedback endpoint
+@app.post("/api/feedback")
+async def submit_feedback(request: Request):
+    try:
+        data = await request.json()
+        feedback = Feedback(
+            message_text=data.get("message_text"),
+            answer_text=data.get("answer_text"),
+            feedback_type=data.get("feedback_type"),
+            comment=data.get("comment", ""),
+            user_id=data.get("user_id")
+        )
+        await feedback.insert()
+        return {"success": True, "id": str(feedback.id)}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
 
 # Request modelini yaratish
 class ChatRequest(BaseModel):
@@ -58,56 +110,44 @@ async def login_page():
 @app.post("/chat")
 async def chat(request: ChatRequest, current_user: User | None = Depends(get_current_user)):
     try:
-        # Get user_id from authenticated user or use anonymous
+
+        # user_id ni olish
         user_id = current_user.email if current_user else "anonymous"
-        # Oldingi sessiyalarni olish
-        previous_session = redis_session.get_user_session(user_id) or []
+        
+        # Contextdan savolni qayta olish
+        context_query = await old_context(model_groq, user_id, request.query)
 
+        # Eng mos javoblarni topish old_context
+        prev_relevant_docs = get_docs_from_db(context_query)
+        
         # Eng mos javoblarni topish
-        if request.query.strip() == "":
-            relevant_docs = []
-            return {"response": "Ma'lumot bazamdan ushbu savol bo'yicha  ma'lumot topilmadi. Istasangiz o'z bilimlarimdan foydalanib javob beraman"}
-        else:
-            relevant_docs = search_documents(request.query, 5)
-
-            # if len(relevant_docs) == 0:
-            #     return {"response": "Ma'lumot bazamdan ushbu savol bo'yicha  ma'lumot topilmadi. Istasangiz o'z bilimlarimdan foydalanib javob beraman"}
-
-        # Avvalgi sessiyalarni qo‘shish
-        previous_context = "\n".join(previous_session)
-        context_query = await model_groq.rewrite_query(request.query, previous_context)
-
-        if request.query.strip() == "":
-            prev_relevant_docs = []
-            return {"response": "Ma'lumot bazamdan ushbu savol bo'yicha  ma'lumot topilmadi. Istasangiz o'z bilimlarimdan foydalanib javob beraman"}
-        else:
-            prev_relevant_docs = search_documents(context_query['content'], 5)
+        relevant_docs = get_docs_from_db(request.query)
 
         context = "\n".join(relevant_docs)
         prev_context = "\n".join(prev_relevant_docs)
-        # Chatbot modeliga so‘rov yuborish
+
         prompt = f"""
         Answer the question using the following context:
-        Context: {context} {prev_context}
-        Question: {request.query} {context_query['content']}.
-        Expanded meaning of your question: {context_query['content']}
+        Context: {context}
+        Question: {request.query}.
         """
 
-        # print("Prompt ->", prompt)
+        prompt_old = f"""
+        Answer the question using the following context:
+        Context: {prev_context}
+        Question: {context_query}.
+        """
 
-        response = await model_groq.chat(prompt)
+        response_current = await model_groq.chat(prompt)
+        response_old = await model_groq.chat(prompt_old)
 
-        # Huggingface modelni ishlatish
-        # response_huggingface = model_huggingface.generate_text(prompt, context=context)
-        # print("response_huggingface ->", response_huggingface)
-
-
-        # Yangi javobni sessiyaga saqlash
-        new_session = previous_session + [f"User: {request.query}", f"Bot: {response}"]
-        redis_session.set_user_session(user_id, new_session)
+        response_add = await model_groq.logical_context(f"{response_current}\n ||| \n{response_old}")
         
-        return {"response": response}
-        # return {"response": response_huggingface}
+        # Yangi javobni sessiyaga saqlash
+        change_redis(user_id, request.query, response_add['content'])
+        
+        return {"response": response_add['content']}
+
     except Exception as e:
         return {"error": str(e)}
 

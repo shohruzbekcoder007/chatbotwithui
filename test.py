@@ -10,6 +10,7 @@ from retriever.chroma_ import count_documents, create_collection, add_documents_
 
 json_file_path = "./yangi/kb_error.json"
 
+# Barcha hujjatlarning soni
 print(count_documents())
 
 # Kolleksiyani yaratish

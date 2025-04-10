@@ -1,29 +1,65 @@
 import redis
 import json
+import os
+from typing import Optional
 
 class RedisSession:
     """Redis'da foydalanuvchi sessiyasini saqlash"""
-
     def __init__(self, host='localhost', port=6379, db=0, ttl=3600):
-        self.redis_client = redis.Redis(host=host, port=port, db=db, decode_responses=True)
+        try:
+            self.redis_client = redis.Redis(
+                host=os.getenv("REDIS_HOST", "localhost") or host,
+                port=int(os.getenv("REDIS_PORT", 6379)) or port,
+                db=db,
+                decode_responses=True,
+                socket_connect_timeout=5
+            )
+            # Test connection
+            self.redis_client.ping()
+            self.connected = True
+        except redis.ConnectionError:
+            print("Warning: Could not connect to Redis. Running without session storage.")
+            self.connected = False
+    
         self.ttl = ttl
 
     def set_user_session(self, user_id, data):
         """Foydalanuvchi sessiyasini Redis'ga yozish"""
-        self.redis_client.setex(f"session:{user_id}", self.ttl, json.dumps(data))
+        if not self.connected:
+            return
+        try:
+            self.redis_client.setex(f"session:{user_id}", self.ttl, json.dumps(data))
+        except redis.ConnectionError:
+            print("Warning: Redis connection failed while setting session")
 
-    def get_user_session(self, user_id):
+    def get_user_session(self, user_id) -> Optional[dict]:
         """Foydalanuvchi sessiyasini Redis'dan olish"""
-        data = self.redis_client.get(f"session:{user_id}")
-        return json.loads(data) if data else None
+        if not self.connected:
+            return None
+        try:
+            data = self.redis_client.get(f"session:{user_id}")
+            return json.loads(data) if data else None
+        except redis.ConnectionError:
+            print("Warning: Redis connection failed while getting session")
+            return None
 
     def delete_user_session(self, user_id):
         """Foydalanuvchi sessiyasini Redis'dan o'chirish"""
-        self.redis_client.delete(f"session:{user_id}")
+        if not self.connected:
+            return
+        try:
+            self.redis_client.delete(f"session:{user_id}")
+        except redis.ConnectionError:
+            print("Warning: Redis connection failed while deleting session")
 
     def delete_all_sessions(self):
         """Redis'da barcha sessiyalarni o'chirish"""
-        self.redis_client.flushdb()
+        if not self.connected:
+            return
+        try:
+            self.redis_client.flushdb()
+        except redis.ConnectionError:
+            print("Warning: Redis connection failed while flushing database")
 
 # Namuna ishlatish
 redis_session = RedisSession()

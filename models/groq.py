@@ -77,14 +77,12 @@ class GroqModel:
             self.invoke(messages2)
         )
 
-        all_responses = "\n".join([r["content"] for r in responses])
-
-        print("All responses ->", all_responses)
+        logical_context_w = await self.logical_context("\n".join([r["content"] for r in responses]))
 
         # Endi ushbu javoblarni birlashtirish uchun boshqa so'rov yuboramiz
         merge_messages = [
             {"role": "system", "content": "Siz quyidagi 3 ta model javobini o'qing va ularni yagona, izchil va aniq HTML formatdagi javobga birlashtiring. Faqat <p></p>, <b></b>, <i></i> teglaridan foydalaning. Yagona javobni qaytaring."},
-            {"role": "user", "content": f"{all_responses}"}
+            {"role": "user", "content": f"{logical_context_w}"}
         ]
 
         # Yakuniy birlashtirilgan javobni olish
@@ -124,7 +122,7 @@ class GroqModel:
             data = {
                 "model": self.model,
                 "messages": messages,
-                "temperature": 0.3,
+                "temperature": 0.7,
                 "max_tokens": 200,
                 "stream": False
             }
@@ -141,5 +139,32 @@ class GroqModel:
             print("Error in rewrite_query:", str(e))
             raise e
 
+    async def logical_context(self, text: str):
+        try:
+            messages = [
+                {"role": "system", "content": f"From the following text: 1. Remove sentences that are not consistent in content (irrelevant or off-topic), 2. Remove repeated phrases and sentences. Rewrite the text in a logically consistent and simplified way: TEXT:{text}"},
+                {"role": "system", "content": "Please provide the answer in Uzbek."},
+            ]
+            
+            data = {
+                "model": self.model,
+                "messages": messages,
+                "temperature": 0.7,
+                "max_tokens": 200,
+                "stream": False
+            }
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.post(self.base_url, headers=self.headers, json=data) as response:
+                    if response.status == 200:
+                        result = await response.json()
+                        return {'content': result['choices'][0]['message']['content']}
+                    else:
+                        error_text = await response.text()
+                        raise Exception(f"Error from Groq API: {error_text}")
+        except Exception as e:
+            print("Error in rewrite_query:", str(e))
+            raise e
+        
 # Model obyektini yaratish
 model = GroqModel()

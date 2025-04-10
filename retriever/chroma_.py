@@ -1,11 +1,39 @@
 import chromadb
-from sentence_transformers import SentenceTransformer
+from transformers import LongformerModel, LongformerTokenizer
+import torch
 import time
 import os
 import json
 import uuid
-from torch import Tensor
-from torch.nn import functional as F
+import numpy as np
+
+# GPU mavjudligini tekshirish va device tanlash
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print(f"Using device: {device}")
+
+# Modelni yuklash va device ga yuborish
+tokenizer = LongformerTokenizer.from_pretrained('allenai/longformer-base-4096')
+model = LongformerModel.from_pretrained('allenai/longformer-base-4096')
+model = model.to(device)
+
+def get_embedding(text, max_length=512):
+    """
+    Matndan embedding olish
+    """
+    # Tokenizatsiya
+    inputs = tokenizer(text, return_tensors="pt", max_length=max_length, 
+                      padding=True, truncation=True)
+    inputs = {k: v.to(device) for k, v in inputs.items()}
+    
+    # Modeldan o'tkazish
+    with torch.no_grad():
+        outputs = model(**inputs)
+    
+    # CLS token embedding olish ([CLS] token representation)
+    embeddings = outputs.pooler_output.cpu().numpy()  # `pooler_output` yaxshiroq embedding beradi
+    
+    # Numpy array ni list ga o'tkazish
+    return embeddings[0].tolist()
 
 def rank_by_query_word_presence(sentences, query):
     """
@@ -30,14 +58,11 @@ def rank_by_query_word_presence_regex(sentences, query):
         sentence_words = set(re.findall(r'\b\w+\b', sentence.lower()))  # Matndagi so‘zlarni ajratish
         return len(query_words.intersection(sentence_words))  # Query so‘zlarini hisoblash
     
-    return [sentence for sentence in sorted(sentences, key=count_query_words, reverse=True) if count_query_words(sentence) > 0]
-    
-    # return sorted(sentences, key=count_query_words, reverse=True)
+    # Gaplarni tartiblash va so'zlar mavjud bo'lmagan gaplarni chiqarib tashlash
+    return [sentence for sentence in sorted(sentences, key=count_query_words, reverse=True) 
+            if count_query_words(sentence) > 0]
 
-
-# Modelni yuklash
-model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
-
+# Chroma klientini yaratish
 def get_client(max_retries=3, retry_delay=2):
     """
     Chroma klientini yaratish va ulanishni tekshirish
@@ -60,17 +85,29 @@ client = get_client()
 
 def create_collection():
     """
-    Documents kolleksiyasini yaratish
+    ChromaDB da yangi kolleksiya yaratish
     """
     try:
-        collection = client.get_or_create_collection(
+        # Agar kolleksiya mavjud bo'lsa, o'chirib tashlash
+        try:
+            client.delete_collection("documents")
+            print("Eski kolleksiya o'chirildi")
+        except:
+            pass
+        
+        # Yangi kolleksiya yaratish
+        collection = client.create_collection(
             name="documents",
-            metadata={"hnsw:space": "cosine"}
+            metadata={
+                "hnsw:space": "cosine",  # Cosine similarity
+                "dimension": 768  # Longformer embedding o'lchami
+            }
         )
-        print("Collection muvaffaqiyatli yaratildi")
+        
+        print("Yangi kolleksiya yaratildi")
         return collection
     except Exception as e:
-        print(f"Collection yaratishda xatolik: {str(e)}")
+        print(f"Kolleksiya yaratishda xatolik: {str(e)}")
         return None
 
 def add_documents(texts: list[str]):
@@ -83,11 +120,11 @@ def add_documents(texts: list[str]):
     try:
         collection = client.get_or_create_collection("documents")
         # Matnlarni vektorlarga o'zgartirish
-        embeddings = model.encode(texts, normalize_embeddings=True)
+        embeddings = [get_embedding(text) for text in texts]
         
         # Hujjatlarni qo'shish
         collection.add(
-            embeddings=embeddings.tolist(),
+            embeddings=embeddings,
             documents=texts,
             ids=[f"doc_{i}" for i in range(len(texts))]
         )
@@ -116,11 +153,11 @@ def add_documents_from_json(json_file_path: str):
         
         collection = client.get_or_create_collection("documents")
         # Matnlarni vektorlarga o'zgartirish
-        embeddings = model.encode(texts)
+        embeddings = [get_embedding(text) for text in texts]
         
         # Hujjatlarni qo'shish
         collection.add(
-            embeddings=embeddings.tolist(),
+            embeddings=embeddings,
             documents=texts,
             ids=[f"doc_{uuid.uuid4().hex}-{i}" for i in range(len(texts))]
         )
@@ -147,18 +184,17 @@ def search_documents(query: str, limit: int = 10):
         collection = client.get_collection("documents")
 
         # So'rovni vektorga o'zgartirish
-        query_embedding = model.encode(query, normalize_embeddings=True)
-
+        query_embedding = get_embedding(query)
+        
         # Qidiruv
         results = collection.query(
-            query_embeddings=query_embedding.tolist(),
+            query_embeddings=[query_embedding],
             n_results=limit
         )
 
         # Query so'zlariga ko'ra gaplarni tartiblash
         filtered_results = rank_by_query_word_presence_regex(results["documents"][0] if results["documents"] else [], query)
         
-        # return results["documents"][0] if results["documents"] else []
         return filtered_results
     except Exception as e:
         print(f"Qidirishda xatolik: {str(e)}")
@@ -194,63 +230,3 @@ def count_documents():
     except Exception as e:
         print(f"Hujjatlarning sonini olishda xatolik: {str(e)}")
         return 0
-
-
-# context_found function aniq ishlamayapti sohaga tegishlilikni baholaydi tensor([]) <- docs_embeddings
-def context_found(query: str, retrieved_docs_embeddings: list) -> str:
-    """Savolning mavzu doirasida yoki tashqarisida ekanligini aniqlash.
-
-    Args:
-        query (str): Tekshiriladigan savol matni
-        retrieved_docs_embeddings (list): Topilgan hujjatlarning embedding vektorlari
-
-    Returns:
-        str: 'Out-of-domain savol' yoki 'Soha doirasida savol'
-    """
-    try:
-        # 1. Savol matnini embedding vektoriga o'tkazish
-        query_embedding = model.encode(query, convert_to_tensor=True)
-        
-        # 2. Hujjat embeddinglari listini PyTorch tensoriga o'tkazish
-        docs_embeddings = Tensor([emb for emb in retrieved_docs_embeddings if isinstance(emb, (list, tuple))])
-
-        print(docs_embeddings, "<- docs_embeddings")
-        
-        if docs_embeddings.size(0) == 0:
-            return "Out-of-domain savol"
-        
-        # 3. O'lchamlarni moslashtirish
-        query_embedding = query_embedding.view(1, -1)  # (1, embedding_size)
-        
-        # 4. Cosine similarity hisoblash
-        similarities = F.cosine_similarity(query_embedding, docs_embeddings)
-        
-        # 5. Eng yuqori o'xshashlik qiymatini olish
-        max_score = similarities.max().item()
-        
-        # 6. Natijani qaytarish
-        if max_score < 0.1:
-            return "Out-of-domain savol"
-        return "Soha doirasida savol"
-        
-    except Exception as e:
-        print(f"Xatolik yuz berdi: {str(e)}")
-        return "Out-of-domain savol"
-        query_embedding = query_embedding.view(1, -1)  # (1, embedding_size)
-        
-        # 4. Cosine similarity hisoblash
-        similarities = F.cosine_similarity(query_embedding, docs_embeddings)
-        
-        # 5. Eng yuqori o'xshashlik qiymatini olish
-        max_score = similarities.max().item()
-        
-        # 6. Natijani qaytarish
-        if max_score < 0.1:
-            return "Out-of-domain savol"
-        return "Soha doirasida savol"
-        
-    except Exception as e:
-        print(f"Xatolik yuz berdi: {str(e)}")
-        return "Out-of-domain savol"
-
-
