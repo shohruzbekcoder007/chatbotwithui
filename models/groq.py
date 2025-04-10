@@ -77,12 +77,7 @@ class GroqModel:
             self.invoke(messages2)
         )
 
-        # all_responses = "\n".join([r["content"] for r in responses])
-
-        # print("All responses ->", all_responses)
         logical_context_w = await self.logical_context("\n".join([r["content"] for r in responses]))
-
-        print(logical_context_w, "<-javob")
 
         # Endi ushbu javoblarni birlashtirish uchun boshqa so'rov yuboramiz
         merge_messages = [

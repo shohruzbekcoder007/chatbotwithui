@@ -9,7 +9,13 @@ langchain-core>=0.1.30
 sentence-transformers==2.6.1
 numpy==1.26.3
 torch>=2.2.0
-redis==5.0.1
+redis
+python-jose[cryptography]
+passlib[bcrypt]
+python-jwt>=4.0.0
+python-dotenv>=1.0.0
+email-validator>=2.0.0
+PyJWT>=2.0.0
 beanie==1.23.6
 python-jose==3.3.0
 passlib==1.7.4

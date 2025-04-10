@@ -22,58 +22,27 @@ async function copyMessage(button) {
 }
 
 // Handle feedback
+let currentFeedbackButton = null;
+
 function giveFeedback(button, type) {
-    const feedbackButtons = button.closest('.feedback-buttons');
-    const likeBtn = feedbackButtons.querySelector('.like-btn');
-    const dislikeBtn = feedbackButtons.querySelector('.dislike-btn');
+    currentFeedbackButton = button;
 
-    if (type === 'like') {
-        if (button.classList.contains('active')) {
-            button.classList.remove('active');
-        } else {
-            button.classList.add('active');
-            dislikeBtn.classList.remove('active');
-        }
-    } else {
-        if (button.classList.contains('active')) {
-            button.classList.remove('active');
-        } else {
-            button.classList.add('active');
-            likeBtn.classList.remove('active');
-        }
-    }
+    // Get the message text and user query
+    const messageContainer = button.closest('.message-container');
+    const messageText = messageContainer.querySelector('.message-text').textContent;
+    const userQuery = messageContainer.querySelector('.user-query').textContent;
 
-    // Store the feedback type and message for the modal
-    const messageText = button.closest('.message-content').querySelector('.message-text').textContent;
+    // Store the feedback type, message and user query for the modal
     const feedbackModal = document.getElementById('feedbackModal');
-    feedbackModal.dataset.messageText = messageText;
+    feedbackModal.dataset.messageText = messageText; // chatbot's answer
+    feedbackModal.dataset.answerText = userQuery; // user's question
     feedbackModal.dataset.feedbackType = type;
-    
-    // Show the modal
-    openCommentModal(button);
-}
 
-function openCommentModal(button) {
-    const messageText = button.closest('.message-content').querySelector('.message-text').textContent;
-    const feedbackModal = document.getElementById('feedbackModal');
-    feedbackModal.dataset.messageText = messageText;
-    feedbackModal.classList.remove('hidden');
+    // Clear previous comment
     document.getElementById('feedbackComment').value = '';
 
-    // Get user's question from the previous message
-    const messageDiv = button.closest('#id' + new Date().getTime());
-    if (!messageDiv) {
-        const allMessages = document.querySelectorAll('[id^="id"]');
-        for (let msg of allMessages) {
-            if (msg.contains(button)) {
-                const userMessage = msg.querySelector('.user .message-content span');
-                if (userMessage) {
-                    feedbackModal.dataset.userQuestion = userMessage.textContent;
-                }
-                break;
-            }
-        }
-    }
+    // Show the modal
+    feedbackModal.classList.remove('hidden');
 }
 
 function closeModal() {
@@ -82,21 +51,53 @@ function closeModal() {
 }
 
 function submitFeedback() {
-    const modal = document.getElementById('feedbackModal');
-    const comment = document.getElementById('feedbackComment').value;
-    const messageText = modal.dataset.messageText;
-    const feedbackType = modal.dataset.feedbackType || '';
-    const userQuestion = modal.dataset.userQuestion || '';
+    if (!currentFeedbackButton) return;
 
-    // Here you can send the feedback to your backend
-    console.log('Feedback:', {
-        type: feedbackType,
-        userQuestion: userQuestion,
-        aiResponse: messageText,
-        comment: comment
+    const modal = document.getElementById('feedbackModal');
+    const messageText = modal.dataset.messageText;
+    const feedbackType = modal.dataset.feedbackType;
+    const answerText = modal.dataset.answerText;
+    const comment = document.getElementById('feedbackComment').value;
+
+    // Send feedback to server
+    fetch('/api/feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            message_text: messageText,
+            answer_text: answerText,
+            feedback_type: feedbackType === 'comment' ? 'comment' : feedbackType,
+            comment: comment,
+            user_id: localStorage.getItem('user_id')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            console.error('Feedback error:', data.error);
+            alert('Xatolik yuz berdi');
+            return;
+        }
+
+        // Clear comment field
+        document.getElementById('feedbackComment').value = '';
+        
+        // Show success message
+        alert('Fikringiz uchun rahmat!');
+
+        // Only close modal for comments
+        if (feedbackType === 'comment') {
+            closeModal();
+        }
+    })
+    .catch(error => {
+        console.error('Error sending feedback:', error);
+        alert('Xatolik yuz berdi');
     });
 
-    // Clear and close modal
+    modal.style.display = 'none';
     document.getElementById('feedbackComment').value = '';
     modal.classList.add('hidden');
     modal.dataset.userQuestion = '';
@@ -158,7 +159,10 @@ async function onsubmitnew(event) {
         .then(data => {
             const messageContent = document.querySelector(`#id${uuiddate} .bot .message-content`);
             messageContent.innerHTML = `
-                <div class="message-text">${data.response}</div>
+                <div class="message-content">
+                    <div class="message-text">${data.response}</div>
+                    <div class="user-query" style="display: none;">${message}</div>
+                </div>
                 <div class="message-actions">
                     <div class="feedback-buttons">
                         <button class="action-btn copy-btn" onclick="copyMessage(this)" title="Nusxa olish">
@@ -176,7 +180,7 @@ async function onsubmitnew(event) {
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2"/>
                             </svg>
                         </button>
-                        <button class="action-btn comment-btn" onclick="openCommentModal(this)" title="Izoh qoldirish">
+                        <button class="action-btn comment-btn" onclick="giveFeedback(this, 'comment')" title="Izoh qoldirish">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
                             </svg>

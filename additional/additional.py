@@ -8,8 +8,6 @@ async def old_context(model: GroqModel | OllamaModel, user_id: str, request: str
 
     previous_session = redis_session.get_user_session(user_id) or []
 
-    print(previous_session, "<-previous_session")
-
     previous_context = "\n".join(previous_session)
 
     context_query = await model.rewrite_query(request, previous_context)
@@ -22,6 +20,7 @@ def get_docs_from_db(request: str):
         relevant_docs = []
     else:
         relevant_docs = search_documents(request, 5)
+
     return relevant_docs
 
 # Yangi javobni sessiyaga saqlash
