@@ -40,7 +40,7 @@ class GroqModel:
             {"role": "system", "content": "The questions are within the scope of the estate and reports."},
             {"role": "system", "content": "The questions are within the scope of the “ESTAT 4.0” and reports. Davlat statistika hisobotlarini elektron shaklda taqdim etishning avtomatlashtirilgan axborot tizimi va hisobotlar shakillari doirasida"},
             # {"role": "system", "content": "If there is no relevant information in the context, politely try to answer based on your knowledge. If you cannot find the answer or the answer is too far from statistical, reply: '<p>Kechirasiz, ushbu savol bo'yicha aniq ma'lumot topa olmadim. Iltimos, boshqa savol berishingiz mumkin.</p>'."},
-            {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)"},
+            # {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex."},
             {"role": "user", "content": prompt}
         ]
 
@@ -53,7 +53,7 @@ class GroqModel:
             {"role": "system", "content": "The questions are within the scope of the estate and reports."},
             {"role": "system", "content": "The questions are within the scope of the “ESTAT 4.0” and reports. Davlat statistika hisobotlarini elektron shaklda taqdim etishning avtomatlashtirilgan axborot tizimi va hisobotlar shakillari doirasida"},
             # {"role": "system", "content": "If there is no relevant information in the context, politely try to answer based on your knowledge. If you cannot find the answer or the answer is too far from statistical, reply: '<p>Kechirasiz, ushbu savol bo'yicha aniq ma'lumot topa olmadim. Iltimos, boshqa savol berishingiz mumkin.</p>'."},
-            {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)"},
+            # {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex."},
             {"role": "user", "content": prompt + ". Estat 4.0 va hisobot shakillari"}
         ]
 
@@ -66,7 +66,7 @@ class GroqModel:
             {"role": "system", "content": "The questions are within the scope of the estate and reports."},
             {"role": "system", "content": "The questions are within the scope of the “ESTAT 4.0” and reports. Davlat statistika hisobotlarini elektron shaklda taqdim etishning avtomatlashtirilgan axborot tizimi va hisobotlar shakillari doirasida"},
             {"role": "system", "content": "If there is no relevant information in the context, respond with: '<p>Ma'lumot bazamdan ushbu savol bo'yicha ma'lumot topilmadi. Iltimos, boshqa savol berishingiz mumkin.</p>'."},
-            {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)"},
+            # {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex."},
             {"role": "user", "content": prompt}
         ]
 
@@ -149,13 +149,16 @@ class GroqModel:
             messages = [
                 {"role": "system", "content": f"From the following text: 1. Remove sentences that are not consistent in content (irrelevant or off-topic), 2. Remove repeated phrases and sentences. Rewrite the text in a logically consistent and simplified way: TEXT:{text}"},
                 {"role": "system", "content": "Please provide the answer in Uzbek."},
+                {"role": "system", "content": "Please provide the answer in html format."},
+                {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex."},
+                {"role": "system", "content": "Do not explain how the task was completed."},
             ]
             
             data = {
                 "model": self.model,
                 "messages": messages,
                 "temperature": 0.7,
-                "max_tokens": 200,
+                "max_tokens": 1000,
                 "stream": False
             }
             

@@ -27,7 +27,7 @@ class OllamaModel:
             {"role": "system", "content": "The questions are within the scope of the estate and reports."},
             {"role": "system", "content": "The questions are within the scope of the “ESTAT 4.0” and reports. Davlat statistika hisobotlarini elektron shaklda taqdim etishning avtomatlashtirilgan axborot tizimi va hisobotlar shakillari doirasida"},
             # {"role": "system", "content": "If there is no relevant information in the context, politely try to answer based on your knowledge. If you cannot find the answer or the answer is too far from statistical, reply: '<p>Kechirasiz, ushbu savol bo'yicha aniq ma'lumot topa olmadim. Iltimos, boshqa savol berishingiz mumkin.</p>'."},
-            {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)"},
+            {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex."},
             {"role": "user", "content": prompt}
         ]
 
@@ -40,7 +40,7 @@ class OllamaModel:
             {"role": "system", "content": "The questions are within the scope of the estate and reports."},
             {"role": "system", "content": "The questions are within the scope of the “ESTAT 4.0” and reports. Davlat statistika hisobotlarini elektron shaklda taqdim etishning avtomatlashtirilgan axborot tizimi va hisobotlar shakillari doirasida"},
             # {"role": "system", "content": "If there is no relevant information in the context, politely try to answer based on your knowledge. If you cannot find the answer or the answer is too far from statistical, reply: '<p>Kechirasiz, ushbu savol bo'yicha aniq ma'lumot topa olmadim. Iltimos, boshqa savol berishingiz mumkin.</p>'."},
-            {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)"},
+            {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex."},
             {"role": "user", "content": prompt + ". Estat 4.0 va hisobot shakillari"}
         ]
 
@@ -53,7 +53,7 @@ class OllamaModel:
             {"role": "system", "content": "The questions are within the scope of the estate and reports."},
             {"role": "system", "content": "The questions are within the scope of the “ESTAT 4.0” and reports. Davlat statistika hisobotlarini elektron shaklda taqdim etishning avtomatlashtirilgan axborot tizimi va hisobotlar shakillari doirasida"},
             {"role": "system", "content": "If there is no relevant information in the context, respond with: '<p>Ma'lumot bazamdan ushbu savol bo'yicha ma'lumot topilmadi. Iltimos, boshqa savol berishingiz mumkin.</p>'."},
-            {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)"},
+            {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex."},
             {"role": "user", "content": prompt}
         ]
 
@@ -97,7 +97,7 @@ class OllamaModel:
             # So'rovni tayyorlash
             data = {
                 'model': self.model,
-                'prompt': f"System: {prompt}\n\nUser: {user}\n\nAssistant (respond in HTML format tags ) (only use this tags: <b></b>, <i></i>, <p></p>): {assistant}",
+                'prompt': f"System: {prompt}\n\nUser: {user}\n\nAssistant (respond in HTML format tags ): {assistant}",
                 'stream': False
             }
             

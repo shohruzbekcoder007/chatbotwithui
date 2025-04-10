@@ -24,21 +24,36 @@ class RedisSession:
         self.ttl = ttl
 
     def set_user_session(self, user_id, data):
-        """Foydalanuvchi sessiyasini Redis'ga yozish"""
+        """Foydalanuvchi sessiyasini Redis'ga yozish (oxirgi 5 ta yozuvni saqlaydi)"""
         if not self.connected:
             return
         try:
-            self.redis_client.setex(f"session:{user_id}", self.ttl, json.dumps(data))
+            key = f"session:{user_id}"
+            # Add new data to the beginning of the list
+            self.redis_client.lpush(key, json.dumps(data))
+            # Keep only the last 5 items
+            self.redis_client.ltrim(key, 0, 4)
+            # Set expiration time for the list
+            self.redis_client.expire(key, self.ttl)
         except redis.ConnectionError:
             print("Warning: Redis connection failed while setting session")
 
-    def get_user_session(self, user_id) -> Optional[dict]:
-        """Foydalanuvchi sessiyasini Redis'dan olish"""
+    def get_user_session(self, user_id, count: int = 1) -> Optional[list]:
+        """Foydalanuvchi sessiyasini Redis'dan olish
+        
+        Args:
+            user_id: Foydalanuvchi ID
+            count: Qaytariladigan yozuvlar soni (default=1, max=5)
+        Returns:
+            List of session data or None if no data exists
+        """
         if not self.connected:
             return None
         try:
-            data = self.redis_client.get(f"session:{user_id}")
-            return json.loads(data) if data else None
+            count = min(max(1, count), 5)  # Ensure count is between 1 and 5
+            key = f"session:{user_id}"
+            data = self.redis_client.lrange(key, 0, count - 1)
+            return [json.loads(item) for item in data] if data else None
         except redis.ConnectionError:
             print("Warning: Redis connection failed while getting session")
             return None
@@ -63,5 +78,7 @@ class RedisSession:
 
 # Namuna ishlatish
 redis_session = RedisSession()
-# redis_session.set_user_session("user123", {"last_query": "O‘zbekiston aholi soni"})
-# print(redis_session.get_user_session("user123"))  # {'last_query': 'O‘zbekiston aholi soni'}
+# Bir nechta so'rovlarni saqlash
+# redis_session.set_user_session("user123", {"last_query": "O'zbekiston aholi soni"})
+# redis_session.set_user_session("user123", {"last_query": "Toshkent ob-havosi"})
+# print(redis_session.get_user_session("user123", 2))  # Oxirgi 2 ta yozuvni olish

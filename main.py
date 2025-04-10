@@ -104,17 +104,27 @@ async def chat(request: ChatRequest, current_user: User | None = Depends(get_cur
         Answer the question using the following context:
         Context: {context}
         Question: {request.query}.
-        Expanded meaning of your question: {context_query}
+        """
+
+        prompt_old = f"""
+        Answer the question using the following context:
+        Context: {prev_context}
+        Question: {context_query}.
         """
 
         # print("Prompt ->", prompt)
 
-        response = await model_groq.chat(prompt)
-
-        # Yangi javobni sessiyaga saqlash
-        change_redis(user_id, request.query, response)
+        response_current = await model_groq.chat(prompt)
+        response_old = await model_groq.chat(prompt_old)
         
-        return {"response": response}
+        response_add = await model_groq.logical_context(f"{response_current}\n ||| \n{response_old}")
+        
+        # response = f"{response_current}\n ||| \n{response_old} \n ||| \n{response_add['content']}"
+        
+        # Yangi javobni sessiyaga saqlash
+        change_redis(user_id, request.query, response_add['content'])
+        
+        return {"response": response_add['content']}
 
     except Exception as e:
         return {"error": str(e)}
