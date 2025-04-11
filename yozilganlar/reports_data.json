@@ -1,773 +1,515 @@
 [
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-invest (asosiy) shakli\", \"Shakl nomi\": \"Investitsiya faoliyati, bino va inshootlarni foydalanishga topshirish to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 6-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-invest (asosiy) shakli - Investitsiya faoliyati, bino va inshootlarni foydalanishga topshirish to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 6-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-invest (xorijiy) shakli\", \"Shakl nomi\": \"O‘zbekiston respublikasiga chet eldan kiritilgan investitsiyalar va o‘zbekiston respublikasidan chet elga yo‘naltirilgan investitsiyalar to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 29-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-invest (xorijiy) shakli - O‘zbekiston respublikasiga chet eldan kiritilgan investitsiyalar va o‘zbekiston respublikasidan chet elga yo‘naltirilgan investitsiyalar to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 29-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-qurilish (jismoniy) shakli\", \"Shakl nomi\": \"Jismoniy shaxslar tomonidan obyektlar qurilishi to‘g‘risidagi hisobot\", \"Topshirish muddati\": \"hisobot choragi oxirgi oyining 25-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-qurilish (jismoniy) shakli - Jismoniy shaxslar tomonidan obyektlar qurilishi to‘g‘risidagi hisobot. Topshirish muddati - hisobot choragi oxirgi oyining 25-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-sanoat (mahalliylashtirish) shakli\", \"Shakl nomi\": \"Mahsulotlar va materiallar ishlab chiqarishni mahalliylashtirish chora-tadbirini amalga oshirish to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-sanoat (mahalliylashtirish) shakli - Mahsulotlar va materiallar ishlab chiqarishni mahalliylashtirish chora-tadbirini amalga oshirish to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-sanoat (metall) shakli\", \"Shakl nomi\": \"Qora va rangli metall mahsulotlari resurs bazalarining hosil bo‘lishi, ishlab chiqarilishi va sotilishi to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-sanoat (metall) shakli - Qora va rangli metall mahsulotlari resurs bazalarining hosil bo‘lishi, ishlab chiqarilishi va sotilishi to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-qx (tashkilot) shakli\", \"Shakl nomi\": \"“Qishloq xoʻjaligi faoliyati toʻgʻrisida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-qx (tashkilot) shakli - “Qishloq xoʻjaligi faoliyati toʻgʻrisida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-fx shakli\", \"Shakl nomi\": \"Fermer xoʻjaligi faoliyati toʻgʻrisidagi hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-fx shakli - Fermer xoʻjaligi faoliyati toʻgʻrisidagi hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-dx shakli\", \"Shakl nomi\": \"Dehqon va tomorqa xoʻjaliklari faoliyati toʻgʻrisida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-dx shakli - Dehqon va tomorqa xoʻjaliklari faoliyati toʻgʻrisida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-daftar shakli\", \"Shakl nomi\": \"Оchiq elektron tanlov asosida ijaraga berilgan yer uchastkalarida tashkil etilgan dehqon xoʻjaliklarining qishloq xoʻjaligi faoliyati toʻgʻrisida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-daftar shakli - Оchiq elektron tanlov asosida ijaraga berilgan yer uchastkalarida tashkil etilgan dehqon xoʻjaliklarining qishloq xoʻjaligi faoliyati toʻgʻrisida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-mehnat shakli\", \"Shakl nomi\": \"Mehnat hisoboti\", \"Topshirish muddati\": \"Hisobot davridan keyingi oyning 6-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-mehnat shakli - Mehnat hisoboti. Topshirish muddati - Hisobot davridan keyingi oyning 6-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-transport shakli\", \"Shakl nomi\": \"Avtomobil, elektr (tramvay, metropoliten, trolleybus) transporti ishi to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-transport shakli - Avtomobil, elektr (tramvay, metropoliten, trolleybus) transporti ishi to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-tadbirkor (o‘rta biznes) shakli\", \"Shakl nomi\": \"О‘rta biznes korxonasining 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 10-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-tadbirkor (o‘rta biznes) shakli - О‘rta biznes korxonasining 2024-yil uchun hisoboti. Topshirish muddati - hisobot davridan keyingi oyning 10-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"4-MIZ (12-korxona shakliga ilova)\", \"Shakl nomi\": \"Maxsus iqtisodiy zona, kichik sanoat zona, texnopark ishtirokchisi bo‘lgan tashkilotlar va klasterlar faoliyati to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 20-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "4-MIZ (12-korxona shakliga ilova) - Maxsus iqtisodiy zona, kichik sanoat zona, texnopark ishtirokchisi bo‘lgan tashkilotlar va klasterlar faoliyati to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 20-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"12-moliya shakli\", \"Shakl nomi\": \"Tashkilotning moliyaviy ahvoli to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 18-sanasidan kechiktirmay\", \"Davriyligi\": \"Oylik\"}"
+        "content":  "12-moliya shakli - Tashkilotning moliyaviy ahvoli to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 18-sanasidan kechiktirmay. Davriyligi - Oylik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"12-korxona shakli\", \"Shakl nomi\": \"Tashkilot faoliyati to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Oylik\"}"
+        "content":  "12-korxona shakli - Tashkilot faoliyati to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Oylik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"12-korxona (savdo) (12-korxona shakliga ilova)\", \"Shakl nomi\": \"Hududiy alohida bo‘linmalarga ega bo‘lgan yuridik shaxslarning ulgurji va chakana savdo tovar aylanmasi to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keying oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Oylik\"}"
+        "content":  "12-korxona (savdo) (12-korxona shakliga ilova) - Hududiy alohida bo‘linmalarga ega bo‘lgan yuridik shaxslarning ulgurji va chakana savdo tovar aylanmasi to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keying oyning 5-sanasidan kechiktirmay. Davriyligi - Oylik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"12-korxona (sanoat) (12-korxona shakliga ilova)\", \"Shakl nomi\": \"Hududiy alohida bo‘linmalarga ega bo‘lgan yuridik shaxslarning sanoat mahsuloti ishlab chiqarish to‘g‘risidagi hisoboti\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 6-sanasidan kechiktirmay, (yillik 6-mart)\", \"Davriyligi\": \"Oylik\"}"
+        "content":  "12-korxona (sanoat) (12-korxona shakliga ilova) - Hududiy alohida bo‘linmalarga ega bo‘lgan yuridik shaxslarning sanoat mahsuloti ishlab chiqarish to‘g‘risidagi hisoboti. Topshirish muddati - hisobot davridan keyingi oyning 6-sanasidan kechiktirmay, (yillik 6-mart). Davriyligi - Oylik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"12-korxona (xizmat) (12-korxona shakliga ilova)\", \"Shakl nomi\": \"Hududiy alohida bo‘linmalarga ega bo‘lgan yuridik shaxslar tomonidan ko‘rsatilgan xizmatlar to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Oylik\"}"
+        "content":  "12-korxona (xizmat) (12-korxona shakliga ilova) - Hududiy alohida bo‘linmalarga ega bo‘lgan yuridik shaxslar tomonidan ko‘rsatilgan xizmatlar to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Oylik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-invest (asosiy) shakli\", \"Наиминование формы\": \"Oтчет об инвестиционной деятельности, о вводе в эксплуатацию зданий и сооружений за ____ год\", \"Срок здачи\": \"не позднее 15 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-invest (asosiy) shakli - Investitsiya faoliyati, bino va inshootlarni fydalanishga topshirish to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-qurilish (jismoniy) shakli\", \"Наиминование формы\": \"отчет о вводе в действие индивидуальных жилых Домов и нежилых зданий физическими лицами за ____ год\", \"Срок здачи\": \"не позднее 25 января\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-qurilish (jismoniy) shakli - Jismoniy shaxslar tomonidan yakka tartibda qurilgan turar joylarni va noturar binolarni foydalanishga topshirish to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 25-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-invest (asosiy) shakli\", \"Наиминование формы\": \"Отчет об инвестиционной деятельности, о вводе в эксплуатацию зданий и сооружений\", \"Срок здачи\": \"не позднее 6-числа месяца, следующего за отчетным периодом\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-invest (asosiy) shakli - Investitsiya faoliyati, bino va inshootlarni foydalanishga topshirish to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 6-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-invest (xorijiy) shakli\", \"Наиминование формы\": \"Отчет об инвестициях в республику узбекистан из-за рубежа и инвестициях из республики узбекистан за рубеж\", \"Срок здачи\": \"не не позднее 29-числа месяца, следующего за отчетным периодом\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-invest (xorijiy) shakli - O‘zbekiston respublikasiga chet eldan kiritilgan investitsiyalar va o‘zbekiston respublikasidan chet elga yo‘naltirilgan investitsiyalar to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 29-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-qurilish (jismoniy) shakli\", \"Наиминование формы\": \"Отчет о строительстве объектов физическими лицами\", \"Срок здачи\": \"не позднее 25 числа последнего месяца отчетного квартала\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-qurilish (jismoniy) shakli - Jismoniy shaxslar tomonidan obyektlar qurilishi to‘g‘risidagi hisobot. Topshirish muddati - hisobot choragi oxirgi oyining 25-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-bozor (savdo joyi) shakli\", \"Наиминование формы\": \"Отчет торговых мест на дехканские рынки, торговые центры и специализированные рынки за ____ год\", \"Срок здачи\": \"Не позднее 15 января\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-bozor (savdo joyi) shakli - Dehqon bozorlari, savdo majmualari va ixtisoslashgan bozorlardagi savdo joylari to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-sanoat (mahalliylashtirish) shakli\", \"Наиминование формы\": \"Отчет о ходе реализации мер по локализации производства изделий и материалов\", \"Срок здачи\": \"не позднее 5-числа месяца, следующего за отчетным периодом\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-sanoat (mahalliylashtirish) shakli - Mahsulotlar va materiallar ishlab chiqarishni mahalliylashtirish chora-tadbirini amalga oshirish to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-sanoat (paxta) shakli\", \"Наиминование формы\": \"Отчет о результатах переработки хлопка-сырца урожая ____ года\", \"Срок здачи\": \"не позднее 20 сентября\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-sanoat (paxta) shakli - 2024-yil paxta xomashyosi hosilini qayta ishlash natijalari to‘g‘risida hisobot. Topshirish muddati - 20-sentabrdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-sanoat (suv quvuri) shakli\", \"Наиминование формы\": \"Отчет о работе водопроводных сооружений за ____ год\", \"Срок здачи\": \"не позднее 15 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-sanoat (suv quvuri) shakli - Suv quvuri inshootlari ishi to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-sanoat (kanalizatsiya)shakli\", \"Наиминование формы\": \"Отчет о работе канализации за ____ год\", \"Срок здачи\": \"не позднее 15 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-sanoat (kanalizatsiya)shakli - Kanalizatsiya ishi to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-sanoat (issiqlik)\", \"Наиминование формы\": \"Отчет о снабжении теплоэнергией за ____ год\", \"Срок здачи\": \"не позднее 15 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-sanoat (issiqlik) - Issiqlik energiyasi bilan ta’minlash to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-sanoat (metall) shakli\", \"Наиминование формы\": \"Отчет об образовании ресурсной базы, производстве и реализации продукции из черных и цветных металлов\", \"Срок здачи\": \"не позднее 5-числа месяца,  следующего за отчетным периодом\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-sanoat (metall) shakli - Qora va rangli metall mahsulotlari resurs bazalarining hosil bo‘lishi, ishlab chiqarilishi va sotilishi to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-energiya (yetkazish) shakli\", \"Наиминование формы\": \"Отчет о поставке топлива и источниках его поступления за ____ год\", \"Срок здачи\": \"не позднее15 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-energiya (yetkazish) shakli - Yoqilg‘i yetkazish va uning kelib tushish manbalari to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-energiya (sarflash) shakli\", \"Наиминование формы\": \"Отчет о поступлении, расходе и остатках топлива и энергии за ____ год\", \"Срок здачи\": \"не позднее 23-февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-energiya (sarflash) shakli - Yoqilg‘i va energiya kelib tushishi, sarfi va qoldiqlari to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 23-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-energiya (neftgaz) shakli\", \"Наиминование формы\": \"Отчет о производстве и распределении нефти и газового конденсата за ____ год\", \"Срок здачи\": \"не позднее 6 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-energiya (neftgaz) shakli - Neft va gaz kondensatini ishlab chiqarish hamda taqsimoti to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 6-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-energiya (ishlab chiqarish) shakli\", \"Наиминование формы\": \"Отчет об источниках и распределении электроэнергии за ____ год\", \"Срок здачи\": \"не позднее 16 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-energiya (ishlab chiqarish) shakli - Elektr energiya manbalari va taqsimoti to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 16-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-energiya (tarmoq) shakli\", \"Наиминование формы\": \"Отчет об источниках и распределении электроэнергии за ____ год\", \"Срок здачи\": \"не позднее 16 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-energiya (tarmoq) shakli - Elektr energiya manbalari va taqsimoti to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 16-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"3-paxta shakli\", \"Наиминование формы\": \"Отчет о заготовке хлопка-сырца\", \"Срок здачи\": \"не позднее6 октября, 5 ноября, 5 декабря\", \"Периодичности\": \"3-раза в год (по состоянию на 1-октября, на 1-ноября, на 1-декабря)\"}"
+        "content":  "3-paxta shakli - Paxta xomashyosini tayyorlash toʻgʻrisida hisobot. Topshirish muddati - 6-oktabr, 5-noyabr, 5-dekabr sanasidan kechiktirmay. Davriyligi - Yilda 3 marta (1-oktyabr, 1-noyabr, 1-dekabr holatiga)"
     },
     {
-        "content":  "{\"аббр. формы\": \"3-don shakli\", \"Наиминование формы\": \"Отчет о заготовке зерновых культур\", \"Срок здачи\": \"не позднее 7 июля, 5 августя, 5 декабря\", \"Периодичности\": \"3-раза в год (по состоянию на 1-июля, на 1-августа, на 1-декабря)\"}"
+        "content":  "3-don shakli - Don ekinlarini tayyorlash toʻgʻrisida hisobot. Topshirish muddati - 7-iyul, 5-avgust, 5-dekabr sanasidan kechiktirmay. Davriyligi - Yilda 3 marta (1-iyul, 1-avgust, 1-dekabr holatiga)"
     },
     {
-        "content":  "{\"аббр. формы\": \"3-pilla shakli\", \"Наиминование формы\": \"Отчет о закупке шелковичных коконов\", \"Срок здачи\": \"не позднее 7 июля, 5 октября, 5 декабря\", \"Периодичности\": \"3-раза в год (по состоянию на 1-июля, на 1-октября, на 1-декабря)\"}"
+        "content":  "3-pilla shakli - Pilla xaridi toʻgʻrisidagi hisobot. Topshirish muddati - 7-iyul, 5-oktabr, 5-dekabr sanasidan kechiktirmay. Davriyligi - Yilda 3 marta (1-iyul, 1-oktyabr, 1-dekabr holatiga)"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-qx (tashkilot) shakli\", \"Наиминование формы\": \"Отчет о сельскохозяйственной деятельности за ____ год\", \"Срок здачи\": \"не позднее 20 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-qx (tashkilot) shakli - Qishloq xoʻjaligi faoliyati toʻgʻrisida ____yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-qx (tashkilot) shakli\", \"Наиминование формы\": \"Отчет о сельскохозяйственной деятельности\", \"Срок здачи\": \"не позднее 5 числа месяца, следующего за отчетным периодом\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-qx (tashkilot) shakli - “Qishloq xoʻjaligi faoliyati toʻgʻrisida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-fx shakli\", \"Наиминование формы\": \"Oтчет о деятельности фермерского хозяйства за ____ год\", \"Срок здачи\": \"не позднее 27 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-fx shakli - Fermer xoʻjaligi faoliyati toʻgʻrisida 2024-yil uchun hisobot. Topshirish muddati - 27-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-fx shakli\", \"Наиминование формы\": \"Отчет о деятельности фермерского хозяйства\", \"Срок здачи\": \"не позднее 5 числа месяца, следующего за отчетным периодом\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-fx shakli - Fermer xoʻjaligi faoliyati toʻgʻrisidagi hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-dx shakli\", \"Наиминование формы\": \"Отчет о деятельности дехканских и подсобных хозяйств\", \"Срок здачи\": \"не позднее 5-числа месяца, следующего за отчетным периодом\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-dx shakli - Dehqon va tomorqa xoʻjaliklari faoliyati toʻgʻrisida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-eko (muhofaza) shakli\", \"Наиминование формы\": \"Отчет об охране окружающей среды за ____ год\", \"Срок здачи\": \"не позднее 20 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-eko (muhofaza) shakli - Atrof-muhitni muhofaza qilish toʻgʻrisida 2024-yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-eko (qo‘riqxona) shakli\", \"Наиминование формы\": \"Отчет по охраняемым природным территориям за____-год\", \"Срок здачи\": \"не позднее 20 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-eko (qo‘riqxona) shakli - Muhofaza etiladigan tabiiy hududlar boʻyicha 2024-yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-eko (rekultivatsiya) shakli\", \"Наиминование формы\": \"Отчет о рекультивации земель за ____ год\", \"Срок здачи\": \"не позднее 16 января\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-eko (rekultivatsiya) shakli - Yerlarni yaroqli holga keltirish toʻgʻrisida2024-yil uchun hisobot. Topshirish muddati - 16-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-o‘x (o‘rmon) shakli\", \"Наиминование формы\": \"Отчет о проведении лесокультурных работ за ____ год\", \"Срок здачи\": \"не позднее 20 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-o‘x (o‘rmon) shakli - Oʻrmon parvarishi ishlarini oʻtkazish toʻgʻrisida 2024-yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-ox (ovchilik) shakli\", \"Наиминование формы\": \"Отчет о деятельности охотничьего хозяйства за ____ год\", \"Срок здачи\": \"не позднее 20 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-ox (ovchilik) shakli - Ovchilik xoʻjaligi faoliyati toʻgʻrisida 2024-yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-daftar shakli\", \"Наиминование формы\": \"Отчет о сельскохозяйственной деятельности дехканских хозяйств, созданных на земельных участках, редоставленных в аренду на основе открытого электронного конкурса\", \"Срок здачи\": \"не позднее 5 числа месяца, следующего за отчетным периодом\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-daftar shakli - Оchiq elektron tanlov asosida ijaraga berilgan yer uchastkalarida tashkil etilgan dehqon xoʻjaliklarining qishloq xoʻjaligi faoliyati toʻgʻrisida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-hudud shakli\", \"Наиминование формы\": \"Отчет об административно-территориальных изменениях районов и городов за ____ год\", \"Срок здачи\": \"не позднее 16 декабря\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-hudud shakli - Tumаnlаr vа shаhаrlаrning mа’muriy-hududiy o‘zgаrishlаri to‘g‘risidа 2024-yil uchun hisobot. Topshirish muddati - 16-dekabrdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-mehnat shakli\", \"Наиминование формы\": \"Oтчет по труду за ____ год\", \"Срок здачи\": \"не позднее 1-февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-mehnat shakli - 2024-yil uchun mehnat hisoboti. Topshirish muddati - 1-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-mehnat shakli\", \"Наиминование формы\": \"Отчет по труду\", \"Срок здачи\": \"не позднее 6 числа месяца, следующего за отчетным периодом\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-mehnat shakli - Mehnat hisoboti. Topshirish muddati - Hisobot davridan keyingi oyning 6-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-ih shakli\", \"Наиминование формы\": \"Отчет о заработной плате работников по профессиям и должностямза апрель ____ год\", \"Срок здачи\": \"не позднее 26 мая\", \"Периодичности\": \"Единовременная за апрель месяц\"}"
+        "content":  "1-ih shakli - Kasb va lavozimlar bo`yicha xodimlarning ish haqi to‘g‘risida2024-yil aprel oyi uchun hisobot. Topshirish muddati - 26-maydan kechiktirmay. Davriyligi - Yilda bir marta aprel oyi uchun"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-oila shakli\", \"Наиминование формы\": \"Отчет о семьях за ____ год\", \"Срок здачи\": \"не позднее 3-апреля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-oila shakli - Oilаlаr to‘g‘risidа 2024-yil uchun hisobot. Topshirish muddati - 3-apreldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-energo (gaz)\", \"Наиминование формы\": \"Oтчет по использованию природного, сжиженного газа за ____ год\", \"Срок здачи\": \"не позднее 17 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-energo (gaz) - Tabiiy, suyultirilgan gazdan foydalanish bo‘yicha 2024-yil uchun hisobot. Topshirish muddati - 17-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kom (shahar) shakli\", \"Наиминование формы\": \"Отчет о благоустройстве городских населенных пунктов за ____ год\", \"Срок здачи\": \"не позднее 17 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kom (shahar) shakli - Shahar aholi punktlarini obodonlashtirish to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 17-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kom (ichimlik suvi) shakli\", \"Наиминование формы\": \"Отчет об обеспечении питьевой водой за ____ год\", \"Срок здачи\": \"не позднее 17 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kom (ichimlik suvi) shakli - Ichimlik suvi bilan ta’minlash to‘g‘risida2024-yil uchun hisobot. Topshirish muddati - 17-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kom (kvartira) shakli\", \"Наиминование формы\": \"Отчет о деятельности управляющих органов многоквартирных домов за ____ год\", \"Срок здачи\": \"не позднее 4-марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kom (kvartira) shakli - Ko‘p kvartirali uylarni boshqarish organlari faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 4-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-uy joy\", \"Наиминование формы\": \"отчет о числе семей, состоящих на учете в качестве нуждающихся для получения жилья и получивших жилье за ____ год\", \"Срок здачи\": \"не позднее 25-января\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-uy joy - uy-joy olish uchun turar joyga muhtojlar sifatida hisobda turgan va uy-joy olgan oilalar soni to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 25-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-transport shakli\", \"Наиминование формы\": \"Отчет об автомобильном транспорте и протяженности хозяйственных автодорог за ____ год\", \"Срок здачи\": \"не позднее 15 февраля не позднее 25 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-transport shakli - Avtomobil, elektr (tramvay, metropoliten, trolleybus) transporti va xo‘jalik avtomobil yo‘llari uzunligi to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-fevraldan kechiktirmay, 25-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-transport shakli\", \"Наиминование формы\": \"Отчет о работе автомобильного, электрического (трамвайного, метрополитенного,  троллейбусного) транспорта\", \"Срок здачи\": \"не позднее 5 числа месяца, следующегоза отчетным периодом\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-transport shakli - Avtomobil, elektr (tramvay, metropoliten, trolleybus) transporti ishi to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-temir yo’l (umumfoydalanmaydigan)\", \"Наиминование формы\": \"Отчет о железнодорожном транспорте необщего пользования за ____ год\", \"Срок здачи\": \"не позднее 17 января\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-temir yo’l (umumfoydalanmaydigan) - Umumiy foydalanilmaydigan temir yo‘l transporti to‘g‘risida 2024-yil uchun hisobot”. Topshirish muddati - 17-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-havo yo‘llari shakli\", \"Наиминование формы\": \"отчет об услугах воздушного транспорта общего пользования за ____ год\", \"Срок здачи\": \"не позднее 18 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-havo yo‘llari shakli - Umumiy foydalanishdagi havo transporti xizmatlari to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 18-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-akt (Internet) shakli\", \"Наиминование формы\": \"Oтчет об информационно-коммуникационных технологиях\", \"Срок здачи\": \"Не позднее 4-марта Не позднее 25 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-akt (Internet) shakli - Axborot-kommunikasiya texnologiyalari to‘g‘risida hisobot. Topshirish muddati - 4-martdan kechiktirmay, 25-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-akt shakli\", \"Наиминование формы\": \"Отчет о средствах информатизации и использовании информационно-коммуникационных технологий за ____ год\", \"Срок здачи\": \"не позднее 17 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-akt shakli - Axborotlashtirish vositalari va axborot-kommunikatsiya texnologiyalaridan foydalanish to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 17-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-aloqa shakli\", \"Наиминование формы\": \"Отчет об услугах и средствах связи\", \"Срок здачи\": \"Не позднее 4-марта Не позднее 25 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-aloqa shakli - Aloqa vositalari va xizmatlari to‘g‘risida hisobot. Topshirish muddati - 4-martdan kechiktirmay, 25-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-logistika shakli\", \"Наиминование формы\": \"Отчет о логистической, транспортно-экспедиционной деятельности за ____ год\", \"Срок здачи\": \"не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-logistika shakli - Logistika, transport-ekspeditorlik faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-umumta’lim shakli\", \"Наиминование формы\": \"Отчет общеобразовательного учреждения на начало ____учебного года\", \"Срок здачи\": \"не позднее 30 октября\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-umumta’lim shakli - ____ o‘quv yili boshiga umumta’lim muassasasining hisoboti. Topshirish muddati - 30-oktabrdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-o‘rta ta’lim shakli\", \"Наиминование формы\": \"Отчет образовательного учреждения начального, среднего, среднего специального профессионального образования и академического лицея на начало ____ учебного года\", \"Срок здачи\": \"не позднее 11-декабря\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-o‘rta ta’lim shakli - ____ o‘quv yili boshiga boshlang‘ich, o‘rta va o‘rta maxsus professional ta’lim muassasalari va akademik litseylar hisoboti. Topshirish muddati - 11-dekabrdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-oliy ta’lim shakli\", \"Наиминование формы\": \"Отчет высшей образовательной организации на начало ____/____ учебного года\", \"Срок здачи\": \"не позднее 18 декабря\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-oliy ta’lim shakli - ____/____ o‘quv yili boshiga oliy ta’lim tashkilotining hisoboti. Topshirish muddati - 18-dekabrdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-ta’lim (maktabdan tashqari) shakli\", \"Наиминование формы\": \"Отчет внешкольного образовательного организации на 1-января ____ года\", \"Срок здачи\": \"не позднее 13-февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-ta’lim (maktabdan tashqari) shakli - 2024-yil 1-yanvar holatiga maktabdan tashqari ta’lim tashkilotining hisoboti. Topshirish muddati - 13-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-internat\", \"Наиминование формы\": \"Отчет образовательного учреждения для детей-сирот и детей, оставшихся без попечения родителей за ____ год\", \"Срок здачи\": \"не позднее 30 января\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-internat - Ota-ona qaramog‘idan mahrum bo‘lgan va yetim bolalar uchun ta’lim muassasasining 2024-yil uchun hisoboti. Topshirish muddati - 30-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-madaniyat (bog’lar) shakli\", \"Наиминование формы\": \"Отчет о деятельности зоопарка, ботанического сада, парка культуры и отдыха за ____ год\", \"Срок здачи\": \"не позднее 7 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-madaniyat (bog’lar) shakli - Hayvonot bog‘i, botanika bog‘i, madaniyat va istirohat bog‘i faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 7-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-turizm shakli\", \"Наиминование формы\": \"Отчет о размещении и обслуживании посетителей за ____ год\", \"Срок здачи\": \"не позднее 20 февраля, юридические лица с участием иностранного капитала не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-turizm shakli - Tashrif buyuruvchilarga xizmat ko‘rsatish va joylashtirish to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay, chet el sarmoyasi ishtirokidagi yuridik shaxslar 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-fan shakli\", \"Наиминование формы\": \"Отчет о выполнении научно-исследовательских и опытно-конструкторских разработок и подготовке научных и научно-педагогических кадров высшей квалификации за ____ год\", \"Срок здачи\": \"не позднее 18 марта, юридические лица с участием иностранного капитала не позднее 25 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-fan shakli - Ilmiy tаdqiqot vа tаjribа-konstruktorlik ishlаnmаlаrni bаjаrilishi hаmdа oliy toifаli ilmiy vа ilmiy-pedаgogik kаdrlаrni tаyyorlаsh to‘g‘risidа 2024-yil uchun hisobot. Topshirish muddati - 18-martdan kechiktirmay, chet el sarmoyasi ishtirokidagi yuridik shaxslar 25-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-innovatsiya shakli\", \"Наиминование формы\": \"Отчет об инновационной деятельности за ____ год\", \"Срок здачи\": \"не позднее 18 марта, юридические лица с участием иностранного капитала не позднее 25 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-innovatsiya shakli - Innovаtsiya fаoliyati to‘g‘risidа 2024-yil uchun hisobot. Topshirish muddati - 18-martdan kechiktirmay, chet el sarmoyasi ishtirokidagi yuridik shaxslar 25-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-pensiya shakli\", \"Наиминование формы\": \"Отчет о численности пенсионеров и назначенных им пенсиях на 1-января ____ года\", \"Срок здачи\": \"не позднее 6 февраля не позднее 20 февраля не позднее 6 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-pensiya shakli - 2024-yil 1-yanvar holatiga pensionerlar soni va ularga tayinlangan pensiyalar to‘g‘risida hisobot. Topshirish muddati - 6-fevraldan kechiktirmay, 20-fevraldan kechiktirmay, 6-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-ijtimoiy yordam shakli\", \"Наиминование формы\": \"Отчет о выявлении и устройстве детей, оставшихся без попечения родителей за ____ год\", \"Срок здачи\": \"не позднее 27 января\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-ijtimoiy yordam shakli - Ota-ona qaramog‘isiz qolgan bolalarni aniqlash va joylashtirish bo‘yicha 2024-yil uchun hisobot. Topshirish muddati - 27-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-nogironlik shakli\", \"Наиминование формы\": \"Oтчет о лицах с инвалидностью и причинах инвалидности за ____ год\", \"Срок здачи\": \"в установленном порядке Инспекцией медико-социальной экспертизы при Министерстве занятосте и по сокрашению бедности Республики Узбекистан не позднее 20 февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-nogironlik shakli - Nogironligi bo‘lgan shaxslar va nogironlik sabablari to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - O‘zbekiston Respublikasi Qambag‘allikni qisqartirish va bandlik vazirligi Tibbiy-ijtimoiy ekspertiza inspeksiyasi tomonidan o‘rnatilgan muddatlarda 20-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-tib (aholi) shakli\", \"Наиминование формы\": \"Oтчет о деятельности учреждений, оказывающих медицинскую помощь населению за ____ год\", \"Срок здачи\": \"не позднее 29 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-tib (aholi) shakli - Aholiga tibbiy yordam ko‘rsatuvchi muassasalar faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 29-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-nnt shakli\", \"Наиминование формы\": \"Отчет о деятельности негосударственной некоммерческой организации за ____ год\", \"Срок здачи\": \"не позднее 4-марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-nnt shakli - Nodavlat notijorat tashkilotning faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 4-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-notijorat shakli\", \"Наиминование формы\": \"Отчет о деятельности некоммерческой организации за ____ год\", \"Срок здачи\": \"не позднее 11-февраля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-notijorat shakli - Notijorat tashkilotning faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 11-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"12-moliya shakli\", \"Наиминование формы\": \"Отчет о финансовом состоянии организации\", \"Срок здачи\": \"не позднее 18 числа месяца, следующего за отчетным периодом\", \"Периодичности\": \"Месячная\"}"
+        "content":  "12-moliya shakli - Tashkilotning moliyaviy ahvoli to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 18-sanasidan kechiktirmay. Davriyligi - Oylik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-moliya shakli\", \"Наиминование формы\": \"Oтчет о наличии и движении основных средств и других нефинансовых активов за ____ год\", \"Срок здачи\": \"не позднее 20 февраля не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-moliya shakli - Asosiy vositalarning mavjudligi va harakati hamda boshqa nomoliyaviy aktivlar to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-korxona shakli\", \"Наиминование формы\": \"Отчет об основных показателях хозяйственной деятельности организации за ____год\", \"Срок здачи\": \"не позднее 3-марта не позднее 3-апреля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-korxona shakli - Tashkilot xo‘jalik faoliyatining asosiy ko‘rsatkichlari to‘g‘risida2024-yil uchun hisobot. Topshirish muddati - 3-martdan kechiktirmay, 3-apreldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kb shakli\", \"Наиминование формы\": \"Отчет микрофирмы и малого предприятия за ____ год\", \"Срок здачи\": \"не позднее 27 февраля не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kb shakli - Mikrofirma va kichik korxonaning 2024-yil uchun hisoboti. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"12-korxona shakli\", \"Наиминование формы\": \"Отчет о деятельности организации\", \"Срок здачи\": \"не позднее 5 числа месяца, после отчетного периода\", \"Периодичности\": \"Месячная\"}"
+        "content":  "12-korxona shakli - Tashkilot faoliyati to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Oylik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-tadbirkor (kichik va o‘rta biznes) shakli\", \"Наиминование формы\": \"Oтчет предприятия малого и среднего бизнеса за ____ год\", \"Срок здачи\": \"не позднее 27 февраля не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-tadbirkor (kichik va o‘rta biznes) shakli - Kichik va o‘rta biznes korxonasining 2024-yil uchun hisoboti. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-tadbirkor (o‘rta biznes) shakli\", \"Наиминование формы\": \"Oтчет предприятия среднего бизнеса за ____ год\", \"Срок здачи\": \"не позднее 10 числа месяца, после отчетного периода\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-tadbirkor (o‘rta biznes) shakli - О‘rta biznes korxonasining 2024-yil uchun hisoboti. Topshirish muddati - hisobot davridan keyingi oyning 10-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kb (qurilish) (1-kb shakliga ilova)\", \"Наиминование формы\": \"Отчет о вводе в действие объектов, мощностей и использовании инвестиций на их строительство за ____ год\", \"Срок здачи\": \"не позднее 27 февраля не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kb (qurilish) (1-kb shakliga ilova) - Obyektlar, quvvatlarni ishga tushirish va ularning qurilishiga yo‘naltirilgan investitsiyalardan foydalanish to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kb (tif) (1-kb shakliga ilova)\", \"Наиминование формы\": \"Отчет об экспорте – импорте за ____ год\", \"Срок здачи\": \"не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kb (tif) (1-kb shakliga ilova) - 2024-yil uchun eksport-import to‘g‘risida hisobot. Topshirish muddati - 27 martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kb (kommunal) (1-kb shakliga ilova)\", \"Наиминование формы\": \"Отчет микрофирм и малых предприятий, осуществляющих централизованный отвод сточных вод, работы по благоустройству и наружному освещению, отпуск воды, теплоэнергиюи горячую воду населени ю и коммунально-бытовые нужды за ____год\", \"Срок здачи\": \"не позднее 27 февраля не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kb (kommunal) (1-kb shakliga ilova) - Oqova suvlarni markazlashtirilgan holda chiqarib yuborishni, obodonlashtirish va yoritish ishlarini amalga oshiruvchi, aholiga va maishiy-kommunal ehtiyojlarga suv, issiqlik energiyasi hamda issiq suv yetkazib beruvchi mikrofirma va kichik korxonalarning 2024-yil uchun hisoboti. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kb (qx) (1-kb shakliga ilova)\", \"Наиминование формы\": \"Отчет о сельскохозяйственной деятельности микрофирмы и малого предприятия за ____ год\", \"Срок здачи\": \"не позднее 27 февраля не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kb (qx) (1-kb shakliga ilova) - Mikrofirma va kichik korxonaning qishloq xoʻjaligi faoliyati toʻgʻrisida 2024-yil uchun hisoboti. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kb (eko) (1-KB shakliga ilova)\", \"Наиминование формы\": \"Отчет микрофирмы и малого предприятия об охране окружающей среды за ____год\", \"Срок здачи\": \"не позднее 27 февраля не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kb (eko) (1-KB shakliga ilova) - Atrof-muhitni muhofaza qilish toʻgʻrisida mikrofirma va kichik korxonaning 2024-yil uchun hisoboti. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kb (akt) (Internet) (1-kb shakliga ilova)\", \"Наиминование формы\": \"Отчет об информационно-коммуникационных технологиях за ____ год\", \"Срок здачи\": \"не позднее 4-марта не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kb (akt) (Internet) (1-kb shakliga ilova) - Axborot-kommunikatsiya texnologiyalari to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 4-martdan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kb (logistika) (1-kb shakliga ilova)\", \"Наиминование формы\": \"Отчет о логистической, транспортно-экспедиционной деятельности за ____год\", \"Срок здачи\": \"не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kb (logistika) (1-kb shakliga ilova) - Logistika, transport-ekspeditorlik faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kb (tib) (1-kb shakliga ilova)\", \"Наиминование формы\": \"Отчет о деятельности микрофирмы и малого предприятия оказывающих медицинские услуги населению за ____ год\", \"Срок здачи\": \"не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kb (tib) (1-kb shakliga ilova) - Аholigа tibbiy xizmаt ko‘rsаtuvchi mikrofirmа vа kichik korxonа fаoliyati to‘g‘risidа 2024-yil uchun hisobot. Topshirish muddati - 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kb (tur) (1-kb shakliga ilova)\", \"Наиминование формы\": \"Отчет микрофирмы и малого предприятия о размещении и обслуживании посетителей за ____ год\", \"Срок здачи\": \"не позднее 13-марта не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kb (tur) (1-kb shakliga ilova) - Tashrif buyuruvchilarga xizmat ko‘rsatish va joylashtirish to‘g‘risida mikrofirma va kichik korxonaning 2024-yil uchun hisoboti. Topshirish muddati - 13-martdan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-kb (kvartira) (1-kb shakliga ilova) shakli\", \"Наиминование формы\": \"Отчет о деятельности управляющих органов многоквартирных домов за ____ ГОД\", \"Срок здачи\": \"не позднее 27 февраля не позднее 27 марта\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-kb (kvartira) (1-kb shakliga ilova) shakli - Ko‘p kvartirali uylarni boshqarish organlari faoliyati to‘g‘risida 2024-yil uchun hisoboti. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"1-korxona (xizmat) (1-korxona shakliga ilova)\", \"Наиминование формы\": \"Отчет об объеме оказанных рыночных услуг коммерческами банками, страховыми и микрофинансовыми организациями, ломбардами\", \"Срок здачи\": \"не позднее 3-мартане позднее 3-апреля\", \"Периодичности\": \"Годовая\"}"
+        "content":  "1-korxona (xizmat) (1-korxona shakliga ilova) - Tijorat banklari, sug‘urta va mikromoliya tashkilotlari, hamda lombardlar tomonidan ko‘rsatilgan bozor xizmatlari hajmi to‘g‘risida hisobot. Topshirish muddati - 3-martdan kechiktirmay, 3-apreldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"12-korxona (savdo) (12-korxona shakliga ilova)\", \"Наиминование формы\": \"Отчет по оптовому и розничному товарообороту юридических лиц, имеющих территориально-обособленные подразделения\", \"Срок здачи\": \"не позднее 5-числа месяца, следующего за отчетным периодом\", \"Периодичности\": \"Месячная\"}"
+        "content":  "12-korxona (savdo) (12-korxona shakliga ilova) - Hududiy alohida bo‘linmalarga ega bo‘lgan yuridik shaxslarning ulgurji va chakana savdo tovar aylanmasi to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keying oyning 5-sanasidan kechiktirmay. Davriyligi - Oylik"
     },
     {
-        "content":  "{\"аббр. формы\": \"12-korxona (sanoat) (12-korxona shakliga ilova)\", \"Наиминование формы\": \"Отчет по производству промышленной продукции юридических лиц, имеющих территориально-обособленные подразделения\", \"Срок здачи\": \"не позднее 5-числа месяца, следующего за отчетным периодом (годовая 5 март)\", \"Периодичности\": \"месячная, годовая\"}"
+        "content":  "12-korxona (sanoat) (12-korxona shakliga ilova) - Hududiy alohida bo‘linmalarga ega bo‘lgan yuridik shaxslarning sanoat mahsuloti ishlab chiqarish to‘g‘risidagi hisoboti. Topshirish muddati - hisobot davridan keyingi oyning 6-sanasidan kechiktirmay, (yillik 6-mart). Davriyligi - Oylik, Yillik"
     },
     {
-        "content":  "{\"аббр. формы\": \"12-korxona (xizmat) (12-korxona shakliga ilova)\", \"Наиминование формы\": \"Отчет об оказанных услугах юридическими лицами, имеющими территориально-обособленные подразделения\", \"Срок здачи\": \"не позднее 5 числа месяца, следующего за отчетным периодом\", \"Периодичности\": \"Месячная\"}"
+        "content":  "12-korxona (xizmat) (12-korxona shakliga ilova) - Hududiy alohida bo‘linmalarga ega bo‘lgan yuridik shaxslar tomonidan ko‘rsatilgan xizmatlar to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 5-sanasidan kechiktirmay. Davriyligi - Oylik"
     },
     {
-        "content":  "{\"аббр. формы\": \"4-MIZ (12-korxona shakliga ilova)\", \"Наиминование формы\": \"Отчет о деятельности организаций, имеющих статус участника специальных экономических зон, малых промышленных зон, технопарков и кластеров\", \"Срок здачи\": \"не позднее 20 числа месяца, после отчетного периода\", \"Периодичности\": \"Квартальная\"}"
+        "content":  "4-MIZ (12-korxona shakliga ilova) - Maxsus iqtisodiy zona, kichik sanoat zona, texnopark ishtirokchisi bo‘lgan tashkilotlar va klasterlar faoliyati to‘g‘risida hisobot. Topshirish muddati - hisobot davridan keyingi oyning 20-sanasidan kechiktirmay. Davriyligi - Choraklik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-invest (asosiy) shakli\", \"Shakl nomi\": \"Investitsiya faoliyati, bino va inshootlarni fydalanishga topshirish to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "3-paxta shakli - Paxta xomashyosini tayyorlash toʻgʻrisida hisobot. Topshirish muddati - 6-oktabr, 5-noyabr, 5-dekabr sanasidan kechiktirmay. Davriyligi - Yilda 3 marta (1-oktyabr, 1-noyabr, 1-dekabr holatiga)"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-qurilish (jismoniy) shakli\", \"Shakl nomi\": \"Jismoniy shaxslar tomonidan yakka tartibda qurilgan turar joylarni va noturar binolarni foydalanishga topshirish to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"25-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "3-don shakli - Don ekinlarini tayyorlash toʻgʻrisida hisobot. Topshirish muddati - 7-iyul, 5-avgust, 5-dekabr sanasidan kechiktirmay. Davriyligi - Yilda 3 marta (1-iyul, 1-avgust, 1-dekabr holatiga)"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-invest (asosiy) shakli\", \"Shakl nomi\": \"Investitsiya faoliyati, bino va inshootlarni foydalanishga topshirish to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 6-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "3-pilla shakli - Pilla xaridi toʻgʻrisidagi hisobot. Topshirish muddati - 7-iyul, 5-oktabr, 5-dekabr sanasidan kechiktirmay. Davriyligi - Yilda 3 marta (1-iyul, 1-oktyabr, 1-dekabr holatiga)"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-invest (xorijiy) shakli\", \"Shakl nomi\": \"O‘zbekiston respublikasiga chet eldan kiritilgan investitsiyalar va o‘zbekiston respublikasidan chet elga yo‘naltirilgan investitsiyalar to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 29-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "1-invest (asosiy) shakli - Investitsiya faoliyati, bino va inshootlarni fydalanishga topshirish to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-qurilish (jismoniy) shakli\", \"Shakl nomi\": \"Jismoniy shaxslar tomonidan obyektlar qurilishi to‘g‘risidagi hisobot\", \"Topshirish muddati\": \"hisobot choragi oxirgi oyining 25-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "1-qurilish (jismoniy) shakli - Jismoniy shaxslar tomonidan yakka tartibda qurilgan turar joylarni va noturar binolarni foydalanishga topshirish to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 25-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-bozor (savdo joyi) shakli\", \"Shakl nomi\": \"Dehqon bozorlari, savdo majmualari va ixtisoslashgan bozorlardagi savdo joylari to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-bozor (savdo joyi) shakli - Dehqon bozorlari, savdo majmualari va ixtisoslashgan bozorlardagi savdo joylari to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-sanoat (mahalliylashtirish) shakli\", \"Shakl nomi\": \"Mahsulotlar va materiallar ishlab chiqarishni mahalliylashtirish chora-tadbirini amalga oshirish to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "1-sanoat (paxta) shakli - 2024-yil paxta xomashyosi hosilini qayta ishlash natijalari to‘g‘risida hisobot. Topshirish muddati - 20-sentabrdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-sanoat (paxta) shakli\", \"Shakl nomi\": \"2024-yil paxta xomashyosi hosilini qayta ishlash natijalari to‘g‘risida hisobot\", \"Topshirish muddati\": \"20-sentabrdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-sanoat (suv quvuri) shakli - Suv quvuri inshootlari ishi to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-sanoat (suv quvuri) shakli\", \"Shakl nomi\": \"Suv quvuri inshootlari ishi to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-sanoat (kanalizatsiya)shakli - Kanalizatsiya ishi to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-sanoat (kanalizatsiya)shakli\", \"Shakl nomi\": \"Kanalizatsiya ishi to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-sanoat (issiqlik) - Issiqlik energiyasi bilan ta’minlash to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-sanoat (issiqlik)\", \"Shakl nomi\": \"Issiqlik energiyasi bilan ta’minlash to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-energiya (yetkazish) shakli - Yoqilg‘i yetkazish va uning kelib tushish manbalari to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-sanoat (metall) shakli\", \"Shakl nomi\": \"Qora va rangli metall mahsulotlari resurs bazalarining hosil bo‘lishi, ishlab chiqarilishi va sotilishi to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "1-energiya (sarflash) shakli - Yoqilg‘i va energiya kelib tushishi, sarfi va qoldiqlari to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 23-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-energiya (yetkazish) shakli\", \"Shakl nomi\": \"Yoqilg‘i yetkazish va uning kelib tushish manbalari to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-energiya (neftgaz) shakli - Neft va gaz kondensatini ishlab chiqarish hamda taqsimoti to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 6-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-energiya (sarflash) shakli\", \"Shakl nomi\": \"Yoqilg‘i va energiya kelib tushishi, sarfi va qoldiqlari to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"23-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-energiya (ishlab chiqarish) shakli - Elektr energiya manbalari va taqsimoti to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 16-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-energiya (neftgaz) shakli\", \"Shakl nomi\": \"Neft va gaz kondensatini ishlab chiqarish hamda taqsimoti to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"6-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-energiya (tarmoq) shakli - Elektr energiya manbalari va taqsimoti to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 16-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-energiya (ishlab chiqarish) shakli\", \"Shakl nomi\": \"Elektr energiya manbalari va taqsimoti to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"16-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-qx (tashkilot) shakli - Qishloq xoʻjaligi faoliyati toʻgʻrisida ____yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-energiya (tarmoq) shakli\", \"Shakl nomi\": \"Elektr energiya manbalari va taqsimoti to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"16-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-fx shakli - Fermer xoʻjaligi faoliyati toʻgʻrisida 2024-yil uchun hisobot. Topshirish muddati - 27-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"3-paxta shakli\", \"Shakl nomi\": \"Paxta xomashyosini tayyorlash toʻgʻrisida hisobot\", \"Topshirish muddati\": \"6-oktabr, 5-noyabr, 5-dekabr sanasidan kechiktirmay\", \"Davriyligi\": \"Yilda 3 marta (1-oktyabr, 1-noyabr, 1-dekabr holatiga)\"}"
+        "content":  "1-eko (muhofaza) shakli - Atrof-muhitni muhofaza qilish toʻgʻrisida 2024-yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"3-don shakli\", \"Shakl nomi\": \"Don ekinlarini tayyorlash toʻgʻrisida hisobot\", \"Topshirish muddati\": \"7-iyul, 5-avgust, 5-dekabr sanasidan kechiktirmay\", \"Davriyligi\": \"Yilda 3 marta (1-iyul, 1-avgust, 1-dekabr holatiga)\"}"
+        "content":  "1-eko (qo‘riqxona) shakli - Muhofaza etiladigan tabiiy hududlar boʻyicha 2024-yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"3-pilla shakli\", \"Shakl nomi\": \"Pilla xaridi toʻgʻrisidagi hisobot\", \"Topshirish muddati\": \"7-iyul, 5-oktabr, 5-dekabr sanasidan kechiktirmay\", \"Davriyligi\": \"Yilda 3 marta (1-iyul, 1-oktyabr, 1-dekabr holatiga)\"}"
+        "content":  "1-eko (rekultivatsiya) shakli - Yerlarni yaroqli holga keltirish toʻgʻrisida2024-yil uchun hisobot. Topshirish muddati - 16-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-qx (tashkilot) shakli\", \"Shakl nomi\": \"Qishloq xoʻjaligi faoliyati toʻgʻrisida ____yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-o‘x (o‘rmon) shakli - Oʻrmon parvarishi ishlarini oʻtkazish toʻgʻrisida 2024-yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-qx (tashkilot) shakli\", \"Shakl nomi\": \"“Qishloq xoʻjaligi faoliyati toʻgʻrisida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "1-ox (ovchilik) shakli - Ovchilik xoʻjaligi faoliyati toʻgʻrisida 2024-yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-fx shakli\", \"Shakl nomi\": \"Fermer xoʻjaligi faoliyati toʻgʻrisida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-hudud shakli - Tumаnlаr vа shаhаrlаrning mа’muriy-hududiy o‘zgаrishlаri to‘g‘risidа 2024-yil uchun hisobot. Topshirish muddati - 16-dekabrdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-fx shakli\", \"Shakl nomi\": \"Fermer xoʻjaligi faoliyati toʻgʻrisidagi hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "1-mehnat shakli - 2024-yil uchun mehnat hisoboti. Topshirish muddati - 1-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-dx shakli\", \"Shakl nomi\": \"Dehqon va tomorqa xoʻjaliklari faoliyati toʻgʻrisida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "1-ih shakli - Kasb va lavozimlar bo`yicha xodimlarning ish haqi to‘g‘risida2024-yil aprel oyi uchun hisobot. Topshirish muddati - 26-maydan kechiktirmay. Davriyligi - Yilda bir marta aprel oyi uchun"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-eko (muhofaza) shakli\", \"Shakl nomi\": \"Atrof-muhitni muhofaza qilish toʻgʻrisida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-oila shakli - Oilаlаr to‘g‘risidа 2024-yil uchun hisobot. Topshirish muddati - 3-apreldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-eko (qo‘riqxona) shakli\", \"Shakl nomi\": \"Muhofaza etiladigan tabiiy hududlar boʻyicha 2024-yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-energo (gaz) - Tabiiy, suyultirilgan gazdan foydalanish bo‘yicha 2024-yil uchun hisobot. Topshirish muddati - 17-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-eko (rekultivatsiya) shakli\", \"Shakl nomi\": \"Yerlarni yaroqli holga keltirish toʻgʻrisida2024-yil uchun hisobot\", \"Topshirish muddati\": \"16-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kom (shahar) shakli - Shahar aholi punktlarini obodonlashtirish to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 17-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-o‘x (o‘rmon) shakli\", \"Shakl nomi\": \"Oʻrmon parvarishi ishlarini oʻtkazish toʻgʻrisida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kom (ichimlik suvi) shakli - Ichimlik suvi bilan ta’minlash to‘g‘risida2024-yil uchun hisobot. Topshirish muddati - 17-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-ox (ovchilik) shakli\", \"Shakl nomi\": \"Ovchilik xoʻjaligi faoliyati toʻgʻrisida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kom (kvartira) shakli - Ko‘p kvartirali uylarni boshqarish organlari faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 4-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-daftar shakli\", \"Shakl nomi\": \"Оchiq elektron tanlov asosida ijaraga berilgan yer uchastkalarida tashkil etilgan dehqon xoʻjaliklarining qishloq xoʻjaligi faoliyati toʻgʻrisida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "1-uy joy - uy-joy olish uchun turar joyga muhtojlar sifatida hisobda turgan va uy-joy olgan oilalar soni to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 25-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-hudud shakli\", \"Shakl nomi\": \"Tumаnlаr vа shаhаrlаrning mа’muriy-hududiy o‘zgаrishlаri to‘g‘risidа 2024-yil uchun hisobot\", \"Topshirish muddati\": \"16-dekabrdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-transport shakli - Avtomobil, elektr (tramvay, metropoliten, trolleybus) transporti va xo‘jalik avtomobil yo‘llari uzunligi to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 15-fevraldan kechiktirmay, 25-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-mehnat shakli\", \"Shakl nomi\": \"2024-yil uchun mehnat hisoboti\", \"Topshirish muddati\": \"1-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-temir yo’l (umumfoydalanmaydigan) - Umumiy foydalanilmaydigan temir yo‘l transporti to‘g‘risida 2024-yil uchun hisobot”. Topshirish muddati - 17-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-mehnat shakli\", \"Shakl nomi\": \"Mehnat hisoboti\", \"Topshirish muddati\": \"Hisobot davridan keyingi oyning 6-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "1-havo yo‘llari shakli - Umumiy foydalanishdagi havo transporti xizmatlari to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 18-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-ih shakli\", \"Shakl nomi\": \"Kasb va lavozimlar bo`yicha xodimlarning ish haqi to‘g‘risida2024-yil aprel oyi uchun hisobot\", \"Topshirish muddati\": \"26-maydan kechiktirmay\", \"Davriyligi\": \"Yilda bir marta aprel oyi uchun\"}"
+        "content":  "1-akt (Internet) shakli - Axborot-kommunikasiya texnologiyalari to‘g‘risida hisobot. Topshirish muddati - 4-martdan kechiktirmay, 25-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-oila shakli\", \"Shakl nomi\": \"Oilаlаr to‘g‘risidа 2024-yil uchun hisobot\", \"Topshirish muddati\": \"3-apreldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-akt shakli - Axborotlashtirish vositalari va axborot-kommunikatsiya texnologiyalaridan foydalanish to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 17-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-energo (gaz)\", \"Shakl nomi\": \"Tabiiy, suyultirilgan gazdan foydalanish bo‘yicha 2024-yil uchun hisobot\", \"Topshirish muddati\": \"17-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-aloqa shakli - Aloqa vositalari va xizmatlari to‘g‘risida hisobot. Topshirish muddati - 4-martdan kechiktirmay, 25-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kom (shahar) shakli\", \"Shakl nomi\": \"Shahar aholi punktlarini obodonlashtirish to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"17-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-logistika shakli - Logistika, transport-ekspeditorlik faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kom (ichimlik suvi) shakli\", \"Shakl nomi\": \"Ichimlik suvi bilan ta’minlash to‘g‘risida2024-yil uchun hisobot\", \"Topshirish muddati\": \"17-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-umumta’lim shakli - ____ o‘quv yili boshiga umumta’lim muassasasining hisoboti. Topshirish muddati - 30-oktabrdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kom (kvartira) shakli\", \"Shakl nomi\": \"Ko‘p kvartirali uylarni boshqarish organlari faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"4-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-o‘rta ta’lim shakli - ____ o‘quv yili boshiga boshlang‘ich, o‘rta va o‘rta maxsus professional ta’lim muassasalari va akademik litseylar hisoboti. Topshirish muddati - 11-dekabrdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-uy joy\", \"Shakl nomi\": \"uy-joy olish uchun turar joyga muhtojlar sifatida hisobda turgan va uy-joy olgan oilalar soni to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"25-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-oliy ta’lim shakli - ____/____ o‘quv yili boshiga oliy ta’lim tashkilotining hisoboti. Topshirish muddati - 18-dekabrdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-transport shakli\", \"Shakl nomi\": \"Avtomobil, elektr (tramvay, metropoliten, trolleybus) transporti va xo‘jalik avtomobil yo‘llari uzunligi to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-fevraldan kechiktirmay, 25-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-ta’lim (maktabdan tashqari) shakli - 2024-yil 1-yanvar holatiga maktabdan tashqari ta’lim tashkilotining hisoboti. Topshirish muddati - 13-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-transport shakli\", \"Shakl nomi\": \"Avtomobil, elektr (tramvay, metropoliten, trolleybus) transporti ishi to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
+        "content":  "1-internat - Ota-ona qaramog‘idan mahrum bo‘lgan va yetim bolalar uchun ta’lim muassasasining 2024-yil uchun hisoboti. Topshirish muddati - 30-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-temir yo’l (umumfoydalanmaydigan)\", \"Shakl nomi\": \"Umumiy foydalanilmaydigan temir yo‘l transporti to‘g‘risida 2024-yil uchun hisobot”\", \"Topshirish muddati\": \"17-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-madaniyat (bog’lar) shakli - Hayvonot bog‘i, botanika bog‘i, madaniyat va istirohat bog‘i faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 7-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-havo yo‘llari shakli\", \"Shakl nomi\": \"Umumiy foydalanishdagi havo transporti xizmatlari to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"18-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-turizm shakli - Tashrif buyuruvchilarga xizmat ko‘rsatish va joylashtirish to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay, chet el sarmoyasi ishtirokidagi yuridik shaxslar 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-akt (Internet) shakli\", \"Shakl nomi\": \"Axborot-kommunikasiya texnologiyalari to‘g‘risida hisobot\", \"Topshirish muddati\": \"4-martdan kechiktirmay, 25-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-fan shakli - Ilmiy tаdqiqot vа tаjribа-konstruktorlik ishlаnmаlаrni bаjаrilishi hаmdа oliy toifаli ilmiy vа ilmiy-pedаgogik kаdrlаrni tаyyorlаsh to‘g‘risidа 2024-yil uchun hisobot. Topshirish muddati - 18-martdan kechiktirmay, chet el sarmoyasi ishtirokidagi yuridik shaxslar 25-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-akt shakli\", \"Shakl nomi\": \"Axborotlashtirish vositalari va axborot-kommunikatsiya texnologiyalaridan foydalanish to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"17-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-innovatsiya shakli - Innovаtsiya fаoliyati to‘g‘risidа 2024-yil uchun hisobot. Topshirish muddati - 18-martdan kechiktirmay, chet el sarmoyasi ishtirokidagi yuridik shaxslar 25-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-aloqa shakli\", \"Shakl nomi\": \"Aloqa vositalari va xizmatlari to‘g‘risida hisobot\", \"Topshirish muddati\": \"4-martdan kechiktirmay, 25-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-pensiya shakli - 2024-yil 1-yanvar holatiga pensionerlar soni va ularga tayinlangan pensiyalar to‘g‘risida hisobot. Topshirish muddati - 6-fevraldan kechiktirmay, 20-fevraldan kechiktirmay, 6-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-logistika shakli\", \"Shakl nomi\": \"Logistika, transport-ekspeditorlik faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-ijtimoiy yordam shakli - Ota-ona qaramog‘isiz qolgan bolalarni aniqlash va joylashtirish bo‘yicha 2024-yil uchun hisobot. Topshirish muddati - 27-yanvardan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-umumta’lim shakli\", \"Shakl nomi\": \"____ o‘quv yili boshiga umumta’lim muassasasining hisoboti\", \"Topshirish muddati\": \"30-oktabrdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-nogironlik shakli - Nogironligi bo‘lgan shaxslar va nogironlik sabablari to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - O‘zbekiston Respublikasi Qambag‘allikni qisqartirish va bandlik vazirligi Tibbiy-ijtimoiy ekspertiza inspeksiyasi tomonidan o‘rnatilgan muddatlarda 20-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-o‘rta ta’lim shakli\", \"Shakl nomi\": \"____ o‘quv yili boshiga boshlang‘ich, o‘rta va o‘rta maxsus professional ta’lim muassasalari va akademik litseylar hisoboti\", \"Topshirish muddati\": \"11-dekabrdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-tib (aholi) shakli - Aholiga tibbiy yordam ko‘rsatuvchi muassasalar faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 29-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-oliy ta’lim shakli\", \"Shakl nomi\": \"____/____ o‘quv yili boshiga oliy ta’lim tashkilotining hisoboti\", \"Topshirish muddati\": \"18-dekabrdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-nnt shakli - Nodavlat notijorat tashkilotning faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 4-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-ta’lim (maktabdan tashqari) shakli\", \"Shakl nomi\": \"2024-yil 1-yanvar holatiga maktabdan tashqari ta’lim tashkilotining hisoboti\", \"Topshirish muddati\": \"13-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-notijorat shakli - Notijorat tashkilotning faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 11-fevraldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-internat\", \"Shakl nomi\": \"Ota-ona qaramog‘idan mahrum bo‘lgan va yetim bolalar uchun ta’lim muassasasining 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"30-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-moliya shakli - Asosiy vositalarning mavjudligi va harakati hamda boshqa nomoliyaviy aktivlar to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 20-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-madaniyat (bog’lar) shakli\", \"Shakl nomi\": \"Hayvonot bog‘i, botanika bog‘i, madaniyat va istirohat bog‘i faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"7-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-korxona shakli - Tashkilot xo‘jalik faoliyatining asosiy ko‘rsatkichlari to‘g‘risida2024-yil uchun hisobot. Topshirish muddati - 3-martdan kechiktirmay, 3-apreldan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-turizm shakli\", \"Shakl nomi\": \"Tashrif buyuruvchilarga xizmat ko‘rsatish va joylashtirish to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay, chet el sarmoyasi ishtirokidagi yuridik shaxslar 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kb shakli - Mikrofirma va kichik korxonaning 2024-yil uchun hisoboti. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-fan shakli\", \"Shakl nomi\": \"Ilmiy tаdqiqot vа tаjribа-konstruktorlik ishlаnmаlаrni bаjаrilishi hаmdа oliy toifаli ilmiy vа ilmiy-pedаgogik kаdrlаrni tаyyorlаsh to‘g‘risidа 2024-yil uchun hisobot\", \"Topshirish muddati\": \"18-martdan kechiktirmay, chet el sarmoyasi ishtirokidagi yuridik shaxslar 25-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kb (qurilish) (1-kb shakliga ilova) - Obyektlar, quvvatlarni ishga tushirish va ularning qurilishiga yo‘naltirilgan investitsiyalardan foydalanish to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-innovatsiya shakli\", \"Shakl nomi\": \"Innovаtsiya fаoliyati to‘g‘risidа 2024-yil uchun hisobot\", \"Topshirish muddati\": \"18-martdan kechiktirmay, chet el sarmoyasi ishtirokidagi yuridik shaxslar 25-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kb (tif) (1-kb shakliga ilova) - 2024-yil uchun eksport-import to‘g‘risida hisobot. Topshirish muddati - 27 martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-pensiya shakli\", \"Shakl nomi\": \"2024-yil 1-yanvar holatiga pensionerlar soni va ularga tayinlangan pensiyalar to‘g‘risida hisobot\", \"Topshirish muddati\": \"6-fevraldan kechiktirmay, 20-fevraldan kechiktirmay, 6-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kb (kommunal) (1-kb shakliga ilova) - Oqova suvlarni markazlashtirilgan holda chiqarib yuborishni, obodonlashtirish va yoritish ishlarini amalga oshiruvchi, aholiga va maishiy-kommunal ehtiyojlarga suv, issiqlik energiyasi hamda issiq suv yetkazib beruvchi mikrofirma va kichik korxonalarning 2024-yil uchun hisoboti. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-ijtimoiy yordam shakli\", \"Shakl nomi\": \"Ota-ona qaramog‘isiz qolgan bolalarni aniqlash va joylashtirish bo‘yicha 2024-yil uchun hisobot\", \"Topshirish muddati\": \"27-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kb (qx) (1-kb shakliga ilova) - Mikrofirma va kichik korxonaning qishloq xoʻjaligi faoliyati toʻgʻrisida 2024-yil uchun hisoboti. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-nogironlik shakli\", \"Shakl nomi\": \"Nogironligi bo‘lgan shaxslar va nogironlik sabablari to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"O‘zbekiston Respublikasi Qambag‘allikni qisqartirish va bandlik vazirligi Tibbiy-ijtimoiy ekspertiza inspeksiyasi tomonidan o‘rnatilgan muddatlarda 20-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kb (eko) (1-KB shakliga ilova) - Atrof-muhitni muhofaza qilish toʻgʻrisida mikrofirma va kichik korxonaning 2024-yil uchun hisoboti. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-tib (aholi) shakli\", \"Shakl nomi\": \"Aholiga tibbiy yordam ko‘rsatuvchi muassasalar faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"29-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kb (akt) (Internet) (1-kb shakliga ilova) - Axborot-kommunikatsiya texnologiyalari to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 4-martdan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-nnt shakli\", \"Shakl nomi\": \"Nodavlat notijorat tashkilotning faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"4-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kb (logistika) (1-kb shakliga ilova) - Logistika, transport-ekspeditorlik faoliyati to‘g‘risida 2024-yil uchun hisobot. Topshirish muddati - 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-notijorat shakli\", \"Shakl nomi\": \"Notijorat tashkilotning faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"11-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kb (tib) (1-kb shakliga ilova) - Аholigа tibbiy xizmаt ko‘rsаtuvchi mikrofirmа vа kichik korxonа fаoliyati to‘g‘risidа 2024-yil uchun hisobot. Topshirish muddati - 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"12-moliya shakli\", \"Shakl nomi\": \"Tashkilotning moliyaviy ahvoli to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 18-sanasidan kechiktirmay\", \"Davriyligi\": \"Oylik\"}"
+        "content":  "1-kb (tur) (1-kb shakliga ilova) - Tashrif buyuruvchilarga xizmat ko‘rsatish va joylashtirish to‘g‘risida mikrofirma va kichik korxonaning 2024-yil uchun hisoboti. Topshirish muddati - 13-martdan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-moliya shakli\", \"Shakl nomi\": \"Asosiy vositalarning mavjudligi va harakati hamda boshqa nomoliyaviy aktivlar to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-kb (kvartira) (1-kb shakliga ilova) shakli - Ko‘p kvartirali uylarni boshqarish organlari faoliyati to‘g‘risida 2024-yil uchun hisoboti. Topshirish muddati - 27-fevraldan kechiktirmay, 27-martdan kechiktirmay. Davriyligi - Yillik"
     },
     {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-korxona shakli\", \"Shakl nomi\": \"Tashkilot xo‘jalik faoliyatining asosiy ko‘rsatkichlari to‘g‘risida2024-yil uchun hisobot\", \"Topshirish muddati\": \"3-martdan kechiktirmay, 3-apreldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kb shakli\", \"Shakl nomi\": \"Mikrofirma va kichik korxonaning 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"12-korxona shakli\", \"Shakl nomi\": \"Tashkilot faoliyati to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Oylik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-tadbirkor (kichik va o‘rta biznes) shakli\", \"Shakl nomi\": \"Kichik va o‘rta biznes korxonasining 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-tadbirkor (o‘rta biznes) shakli\", \"Shakl nomi\": \"О‘rta biznes korxonasining 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 10-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kb (qurilish) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Obyektlar, quvvatlarni ishga tushirish va ularning qurilishiga yo‘naltirilgan investitsiyalardan foydalanish to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kb (tif) (1-kb shakliga ilova)\", \"Shakl nomi\": \"2024-yil uchun eksport-import to‘g‘risida hisobot\", \"Topshirish muddati\": \"27 martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kb (kommunal) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Oqova suvlarni markazlashtirilgan holda chiqarib yuborishni, obodonlashtirish va yoritish ishlarini amalga oshiruvchi, aholiga va maishiy-kommunal ehtiyojlarga suv, issiqlik energiyasi hamda issiq suv yetkazib beruvchi mikrofirma va kichik korxonalarning 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kb (qx) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Mikrofirma va kichik korxonaning qishloq xoʻjaligi faoliyati toʻgʻrisida 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kb (eko) (1-KB shakliga ilova)\", \"Shakl nomi\": \"Atrof-muhitni muhofaza qilish toʻgʻrisida mikrofirma va kichik korxonaning 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kb (akt) (Internet) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Axborot-kommunikatsiya texnologiyalari to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"4-martdan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kb (logistika) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Logistika, transport-ekspeditorlik faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kb (tib) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Аholigа tibbiy xizmаt ko‘rsаtuvchi mikrofirmа vа kichik korxonа fаoliyati to‘g‘risidа 2024-yil uchun hisobot\", \"Topshirish muddati\": \"27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kb (tur) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Tashrif buyuruvchilarga xizmat ko‘rsatish va joylashtirish to‘g‘risida mikrofirma va kichik korxonaning 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"13-martdan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-kb (kvartira) (1-kb shakliga ilova) shakli\", \"Shakl nomi\": \"Ko‘p kvartirali uylarni boshqarish organlari faoliyati to‘g‘risida 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"1-korxona (xizmat) (1-korxona shakliga ilova)\", \"Shakl nomi\": \"Tijorat banklari, sug‘urta va mikromoliya tashkilotlari, hamda lombardlar tomonidan ko‘rsatilgan bozor xizmatlari hajmi to‘g‘risida hisobot\", \"Topshirish muddati\": \"3-martdan kechiktirmay, 3-apreldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"12-korxona (savdo) (12-korxona shakliga ilova)\", \"Shakl nomi\": \"Hududiy alohida bo‘linmalarga ega bo‘lgan yuridik shaxslarning ulgurji va chakana savdo tovar aylanmasi to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keying oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Oylik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"12-korxona (sanoat) (12-korxona shakliga ilova)\", \"Shakl nomi\": \"Hududiy alohida bo‘linmalarga ega bo‘lgan yuridik shaxslarning sanoat mahsuloti ishlab chiqarish to‘g‘risidagi hisoboti\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 6-sanasidan kechiktirmay, (yillik 6-mart)\", \"Davriyligi\": \"Oylik, Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"12-korxona (xizmat) (12-korxona shakliga ilova)\", \"Shakl nomi\": \"Hududiy alohida bo‘linmalarga ega bo‘lgan yuridik shaxslar tomonidan ko‘rsatilgan xizmatlar to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 5-sanasidan kechiktirmay\", \"Davriyligi\": \"Oylik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi\": \"4-MIZ (12-korxona shakliga ilova)\", \"Shakl nomi\": \"Maxsus iqtisodiy zona, kichik sanoat zona, texnopark ishtirokchisi bo‘lgan tashkilotlar va klasterlar faoliyati to‘g‘risida hisobot\", \"Topshirish muddati\": \"hisobot davridan keyingi oyning 20-sanasidan kechiktirmay\", \"Davriyligi\": \"Choraklik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"3-paxta shakli\", \"Shakl nomi\": \"Paxta xomashyosini tayyorlash toʻgʻrisida hisobot\", \"Topshirish muddati\": \"6-oktabr, 5-noyabr, 5-dekabr sanasidan kechiktirmay\", \"Davriyligi\": \"Yilda 3 marta (1-oktyabr, 1-noyabr, 1-dekabr holatiga)\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"3-don shakli\", \"Shakl nomi\": \"Don ekinlarini tayyorlash toʻgʻrisida hisobot\", \"Topshirish muddati\": \"7-iyul, 5-avgust, 5-dekabr sanasidan kechiktirmay\", \"Davriyligi\": \"Yilda 3 marta (1-iyul, 1-avgust, 1-dekabr holatiga)\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"3-pilla shakli\", \"Shakl nomi\": \"Pilla xaridi toʻgʻrisidagi hisobot\", \"Topshirish muddati\": \"7-iyul, 5-oktabr, 5-dekabr sanasidan kechiktirmay\", \"Davriyligi\": \"Yilda 3 marta (1-iyul, 1-oktyabr, 1-dekabr holatiga)\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-invest (asosiy) shakli\", \"Shakl nomi\": \"Investitsiya faoliyati, bino va inshootlarni fydalanishga topshirish to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-qurilish (jismoniy) shakli\", \"Shakl nomi\": \"Jismoniy shaxslar tomonidan yakka tartibda qurilgan turar joylarni va noturar binolarni foydalanishga topshirish to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"25-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-bozor (savdo joyi) shakli\", \"Shakl nomi\": \"Dehqon bozorlari, savdo majmualari va ixtisoslashgan bozorlardagi savdo joylari to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-sanoat (paxta) shakli\", \"Shakl nomi\": \"2024-yil paxta xomashyosi hosilini qayta ishlash natijalari to‘g‘risida hisobot\", \"Topshirish muddati\": \"20-sentabrdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-sanoat (suv quvuri) shakli\", \"Shakl nomi\": \"Suv quvuri inshootlari ishi to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-sanoat (kanalizatsiya)shakli\", \"Shakl nomi\": \"Kanalizatsiya ishi to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-sanoat (issiqlik)\", \"Shakl nomi\": \"Issiqlik energiyasi bilan ta’minlash to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-energiya (yetkazish) shakli\", \"Shakl nomi\": \"Yoqilg‘i yetkazish va uning kelib tushish manbalari to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-energiya (sarflash) shakli\", \"Shakl nomi\": \"Yoqilg‘i va energiya kelib tushishi, sarfi va qoldiqlari to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"23-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-energiya (neftgaz) shakli\", \"Shakl nomi\": \"Neft va gaz kondensatini ishlab chiqarish hamda taqsimoti to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"6-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-energiya (ishlab chiqarish) shakli\", \"Shakl nomi\": \"Elektr energiya manbalari va taqsimoti to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"16-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-energiya (tarmoq) shakli\", \"Shakl nomi\": \"Elektr energiya manbalari va taqsimoti to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"16-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-qx (tashkilot) shakli\", \"Shakl nomi\": \"Qishloq xoʻjaligi faoliyati toʻgʻrisida ____yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-fx shakli\", \"Shakl nomi\": \"Fermer xoʻjaligi faoliyati toʻgʻrisida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-eko (muhofaza) shakli\", \"Shakl nomi\": \"Atrof-muhitni muhofaza qilish toʻgʻrisida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-eko (qo‘riqxona) shakli\", \"Shakl nomi\": \"Muhofaza etiladigan tabiiy hududlar boʻyicha 2024-yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-eko (rekultivatsiya) shakli\", \"Shakl nomi\": \"Yerlarni yaroqli holga keltirish toʻgʻrisida2024-yil uchun hisobot\", \"Topshirish muddati\": \"16-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-o‘x (o‘rmon) shakli\", \"Shakl nomi\": \"Oʻrmon parvarishi ishlarini oʻtkazish toʻgʻrisida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-ox (ovchilik) shakli\", \"Shakl nomi\": \"Ovchilik xoʻjaligi faoliyati toʻgʻrisida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-hudud shakli\", \"Shakl nomi\": \"Tumаnlаr vа shаhаrlаrning mа’muriy-hududiy o‘zgаrishlаri to‘g‘risidа 2024-yil uchun hisobot\", \"Topshirish muddati\": \"16-dekabrdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-mehnat shakli\", \"Shakl nomi\": \"2024-yil uchun mehnat hisoboti\", \"Topshirish muddati\": \"1-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-ih shakli\", \"Shakl nomi\": \"Kasb va lavozimlar bo`yicha xodimlarning ish haqi to‘g‘risida2024-yil aprel oyi uchun hisobot\", \"Topshirish muddati\": \"26-maydan kechiktirmay\", \"Davriyligi\": \"Yilda bir marta aprel oyi uchun\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-oila shakli\", \"Shakl nomi\": \"Oilаlаr to‘g‘risidа 2024-yil uchun hisobot\", \"Topshirish muddati\": \"3-apreldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-energo (gaz)\", \"Shakl nomi\": \"Tabiiy, suyultirilgan gazdan foydalanish bo‘yicha 2024-yil uchun hisobot\", \"Topshirish muddati\": \"17-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kom (shahar) shakli\", \"Shakl nomi\": \"Shahar aholi punktlarini obodonlashtirish to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"17-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kom (ichimlik suvi) shakli\", \"Shakl nomi\": \"Ichimlik suvi bilan ta’minlash to‘g‘risida2024-yil uchun hisobot\", \"Topshirish muddati\": \"17-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kom (kvartira) shakli\", \"Shakl nomi\": \"Ko‘p kvartirali uylarni boshqarish organlari faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"4-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-uy joy\", \"Shakl nomi\": \"uy-joy olish uchun turar joyga muhtojlar sifatida hisobda turgan va uy-joy olgan oilalar soni to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"25-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-transport shakli\", \"Shakl nomi\": \"Avtomobil, elektr (tramvay, metropoliten, trolleybus) transporti va xo‘jalik avtomobil yo‘llari uzunligi to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"15-fevraldan kechiktirmay, 25-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-temir yo’l (umumfoydalanmaydigan)\", \"Shakl nomi\": \"Umumiy foydalanilmaydigan temir yo‘l transporti to‘g‘risida 2024-yil uchun hisobot”\", \"Topshirish muddati\": \"17-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-havo yo‘llari shakli\", \"Shakl nomi\": \"Umumiy foydalanishdagi havo transporti xizmatlari to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"18-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-akt (Internet) shakli\", \"Shakl nomi\": \"Axborot-kommunikasiya texnologiyalari to‘g‘risida hisobot\", \"Topshirish muddati\": \"4-martdan kechiktirmay, 25-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-akt shakli\", \"Shakl nomi\": \"Axborotlashtirish vositalari va axborot-kommunikatsiya texnologiyalaridan foydalanish to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"17-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-aloqa shakli\", \"Shakl nomi\": \"Aloqa vositalari va xizmatlari to‘g‘risida hisobot\", \"Topshirish muddati\": \"4-martdan kechiktirmay, 25-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-logistika shakli\", \"Shakl nomi\": \"Logistika, transport-ekspeditorlik faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-umumta’lim shakli\", \"Shakl nomi\": \"____ o‘quv yili boshiga umumta’lim muassasasining hisoboti\", \"Topshirish muddati\": \"30-oktabrdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-o‘rta ta’lim shakli\", \"Shakl nomi\": \"____ o‘quv yili boshiga boshlang‘ich, o‘rta va o‘rta maxsus professional ta’lim muassasalari va akademik litseylar hisoboti\", \"Topshirish muddati\": \"11-dekabrdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-oliy ta’lim shakli\", \"Shakl nomi\": \"____/____ o‘quv yili boshiga oliy ta’lim tashkilotining hisoboti\", \"Topshirish muddati\": \"18-dekabrdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-ta’lim (maktabdan tashqari) shakli\", \"Shakl nomi\": \"2024-yil 1-yanvar holatiga maktabdan tashqari ta’lim tashkilotining hisoboti\", \"Topshirish muddati\": \"13-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-internat\", \"Shakl nomi\": \"Ota-ona qaramog‘idan mahrum bo‘lgan va yetim bolalar uchun ta’lim muassasasining 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"30-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-madaniyat (bog’lar) shakli\", \"Shakl nomi\": \"Hayvonot bog‘i, botanika bog‘i, madaniyat va istirohat bog‘i faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"7-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-turizm shakli\", \"Shakl nomi\": \"Tashrif buyuruvchilarga xizmat ko‘rsatish va joylashtirish to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay, chet el sarmoyasi ishtirokidagi yuridik shaxslar 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-fan shakli\", \"Shakl nomi\": \"Ilmiy tаdqiqot vа tаjribа-konstruktorlik ishlаnmаlаrni bаjаrilishi hаmdа oliy toifаli ilmiy vа ilmiy-pedаgogik kаdrlаrni tаyyorlаsh to‘g‘risidа 2024-yil uchun hisobot\", \"Topshirish muddati\": \"18-martdan kechiktirmay, chet el sarmoyasi ishtirokidagi yuridik shaxslar 25-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-innovatsiya shakli\", \"Shakl nomi\": \"Innovаtsiya fаoliyati to‘g‘risidа 2024-yil uchun hisobot\", \"Topshirish muddati\": \"18-martdan kechiktirmay, chet el sarmoyasi ishtirokidagi yuridik shaxslar 25-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-pensiya shakli\", \"Shakl nomi\": \"2024-yil 1-yanvar holatiga pensionerlar soni va ularga tayinlangan pensiyalar to‘g‘risida hisobot\", \"Topshirish muddati\": \"6-fevraldan kechiktirmay, 20-fevraldan kechiktirmay, 6-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-ijtimoiy yordam shakli\", \"Shakl nomi\": \"Ota-ona qaramog‘isiz qolgan bolalarni aniqlash va joylashtirish bo‘yicha 2024-yil uchun hisobot\", \"Topshirish muddati\": \"27-yanvardan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-nogironlik shakli\", \"Shakl nomi\": \"Nogironligi bo‘lgan shaxslar va nogironlik sabablari to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"O‘zbekiston Respublikasi Qambag‘allikni qisqartirish va bandlik vazirligi Tibbiy-ijtimoiy ekspertiza inspeksiyasi tomonidan o‘rnatilgan muddatlarda 20-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-tib (aholi) shakli\", \"Shakl nomi\": \"Aholiga tibbiy yordam ko‘rsatuvchi muassasalar faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"29-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-nnt shakli\", \"Shakl nomi\": \"Nodavlat notijorat tashkilotning faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"4-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-notijorat shakli\", \"Shakl nomi\": \"Notijorat tashkilotning faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"11-fevraldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-moliya shakli\", \"Shakl nomi\": \"Asosiy vositalarning mavjudligi va harakati hamda boshqa nomoliyaviy aktivlar to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"20-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-korxona shakli\", \"Shakl nomi\": \"Tashkilot xo‘jalik faoliyatining asosiy ko‘rsatkichlari to‘g‘risida2024-yil uchun hisobot\", \"Topshirish muddati\": \"3-martdan kechiktirmay, 3-apreldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kb shakli\", \"Shakl nomi\": \"Mikrofirma va kichik korxonaning 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kb (qurilish) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Obyektlar, quvvatlarni ishga tushirish va ularning qurilishiga yo‘naltirilgan investitsiyalardan foydalanish to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kb (tif) (1-kb shakliga ilova)\", \"Shakl nomi\": \"2024-yil uchun eksport-import to‘g‘risida hisobot\", \"Topshirish muddati\": \"27 martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kb (kommunal) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Oqova suvlarni markazlashtirilgan holda chiqarib yuborishni, obodonlashtirish va yoritish ishlarini amalga oshiruvchi, aholiga va maishiy-kommunal ehtiyojlarga suv, issiqlik energiyasi hamda issiq suv yetkazib beruvchi mikrofirma va kichik korxonalarning 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kb (qx) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Mikrofirma va kichik korxonaning qishloq xoʻjaligi faoliyati toʻgʻrisida 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kb (eko) (1-KB shakliga ilova)\", \"Shakl nomi\": \"Atrof-muhitni muhofaza qilish toʻgʻrisida mikrofirma va kichik korxonaning 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kb (akt) (Internet) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Axborot-kommunikatsiya texnologiyalari to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"4-martdan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kb (logistika) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Logistika, transport-ekspeditorlik faoliyati to‘g‘risida 2024-yil uchun hisobot\", \"Topshirish muddati\": \"27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kb (tib) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Аholigа tibbiy xizmаt ko‘rsаtuvchi mikrofirmа vа kichik korxonа fаoliyati to‘g‘risidа 2024-yil uchun hisobot\", \"Topshirish muddati\": \"27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kb (tur) (1-kb shakliga ilova)\", \"Shakl nomi\": \"Tashrif buyuruvchilarga xizmat ko‘rsatish va joylashtirish to‘g‘risida mikrofirma va kichik korxonaning 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"13-martdan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-kb (kvartira) (1-kb shakliga ilova) shakli\", \"Shakl nomi\": \"Ko‘p kvartirali uylarni boshqarish organlari faoliyati to‘g‘risida 2024-yil uchun hisoboti\", \"Topshirish muddati\": \"27-fevraldan kechiktirmay, 27-martdan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
-    },
-    {
-        "content":  "{\"Shakl abbreviaturasi (abbr.)\": \"1-korxona (xizmat) (1-korxona shakliga ilova)\", \"Shakl nomi\": \"Tijorat banklari, sug‘urta va mikromoliya tashkilotlari, hamda lombardlar tomonidan ko‘rsatilgan bozor xizmatlari hajmi to‘g‘risida hisobot\", \"Topshirish muddati\": \"3-martdan kechiktirmay, 3-apreldan kechiktirmay\", \"Davriyligi\": \"Yillik\"}"
+        "content":  "1-korxona (xizmat) (1-korxona shakliga ilova) - Tijorat banklari, sug‘urta va mikromoliya tashkilotlari, hamda lombardlar tomonidan ko‘rsatilgan bozor xizmatlari hajmi to‘g‘risida hisobot. Topshirish muddati - 3-martdan kechiktirmay, 3-apreldan kechiktirmay. Davriyligi - Yillik"
     }
 ]

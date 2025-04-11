@@ -83,20 +83,7 @@ class GroqModel:
             self.invoke(messages2)
         )
 
-        logical_context_w = await self.logical_context("\n".join([r["content"] for r in responses]))
-
-        print(logical_context_w, "<-logical_context_w")
-
-        # Endi ushbu javoblarni birlashtirish uchun boshqa so'rov yuboramiz
-        # merge_messages = [
-        #     {"role": "system", "content": "Siz quyidagi 3 ta model javobini o'qing va ularni yagona, izchil va aniq HTML formatdagi javobga birlashtiring. Faqat <p></p>, <b></b>, <i></i> teglaridan foydalaning. Yagona javobni qaytaring."},
-        #     {"role": "user", "content": f"{logical_context_w}"}
-        # ]
-
-        # # Yakuniy birlashtirilgan javobni olish
-        # merged = await self.invoke(merge_messages)
-
-        return logical_context_w["content"]
+        return "\n".join([r["content"] for r in responses])
 
     async def invoke(self, messages):
         try:
@@ -133,7 +120,7 @@ class GroqModel:
                 "model": self.model,
                 "messages": messages,
                 "temperature": 0.7,
-                "max_tokens": 200,
+                "max_tokens": 2000,
                 "stream": False
             }
             
@@ -156,13 +143,15 @@ class GroqModel:
                 {"role": "system", "content": "Do not include unrelated context and present it as separate information."},
                 {"role": "system", "content": f"From the following text: 1. Remove sentences that are not consistent in content (irrelevant or off-topic), 2. Remove repeated  sentences. Don't mix up the sentences. Rewrite the text in a logically consistent and simplified way: TEXT:{text}"},
                 {"role": "system", "content": "Please provide the answer in Uzbek."},
+                {"role": "system", "content": "Use the same meaning only once."},
+                {"role": "system", "content": "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)"},
             ]
             
             data = {
                 "model": self.model,
                 "messages": messages,
                 "temperature": 0.7,
-                "max_tokens": 200,
+                "max_tokens": 2000,
                 "stream": False
             }
             
