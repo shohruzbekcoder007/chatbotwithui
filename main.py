@@ -141,6 +141,10 @@ async def chat(request: ChatRequest, current_user: User | None = Depends(get_cur
         response_current = await model_groq.chat(prompt)
         response_old = await model_groq.chat(prompt_old)
 
+        # 3 ta savolni yaratish
+        questions = await model_groq.generate_questions(request.query)
+        # print(questions, "<--")
+
         response_add = await model_groq.logical_context(f"{response_current}\n ||| \n{response_old}")
         
         # Yangi javobni sessiyaga saqlash

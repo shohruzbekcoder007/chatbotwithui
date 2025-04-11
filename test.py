@@ -1,5 +1,5 @@
 from retriever.chroma_ import count_documents, create_collection, add_documents_from_json, remove_all_documents, search_documents
-# json_file_path = "./yozilganlar/malumot.json"
+json_file_path = "./yozilganlar/malumot.json"
 # json_file_path = "./yozilganlar/malumotgreet.json"
 # json_file_path = "./yozilganlar/estat.json"
 # json_file_path = "./yozilganlar/estat_yoriqnoma.json"
@@ -8,7 +8,7 @@ from retriever.chroma_ import count_documents, create_collection, add_documents_
 # json_file_path = "./yozilganlar/qarorlar.json"
 # json_file_path = "./yozilganlar/reports_data.json"
 
-json_file_path = "./yangi/kb_error.json"
+# json_file_path = "./yangi/kb_error.json"
 
 # Barcha hujjatlarning soni
 print(count_documents())

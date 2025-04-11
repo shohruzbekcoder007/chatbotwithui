@@ -21,6 +21,8 @@ def get_docs_from_db(request: str):
     else:
         relevant_docs = search_documents(request, 20)
 
+    # print(relevant_docs, "<---relevant_docs")
+
     return relevant_docs
 
 # Yangi javobni sessiyaga saqlash
