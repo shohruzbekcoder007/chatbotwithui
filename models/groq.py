@@ -154,7 +154,7 @@ class GroqModel:
             messages = [
                 {"role": "system", "content": "Let the information be based primarily on context and relegate additional answers to a secondary level."},
                 {"role": "system", "content": "Do not include unrelated context and present it as separate information."},
-                {"role": "system", "content": f"From the following text: 1. Remove sentences that are not consistent in content (irrelevant or off-topic), 2. Remove repeated phrases and sentences. Rewrite the text in a logically consistent and simplified way: TEXT:{text}"},
+                {"role": "system", "content": f"From the following text: 1. Remove sentences that are not consistent in content (irrelevant or off-topic), 2. Remove repeated  sentences. Don't mix up the sentences. Rewrite the text in a logically consistent and simplified way: TEXT:{text}"},
                 {"role": "system", "content": "Please provide the answer in Uzbek."},
             ]
             
