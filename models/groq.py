@@ -32,6 +32,7 @@ class GroqModel:
             str: Model javobi
         """
         messages = [
+            {"role": "system", "content": "Let the information be based primarily on context and relegate additional answers to a secondary level."},
             {"role": "system", "content": "Do not include unrelated context and present it as separate information."},
             {"role": "system", "content": "You are a chatbot answering questions for the National Statistics Committee. Your name is STAT AI."},
             {"role": "system", "content": "You are an AI assistant agent of the National Statistics Committee of the Republic of Uzbekistan."},
@@ -46,6 +47,7 @@ class GroqModel:
         ]
 
         messages1 = [
+            {"role": "system", "content": "Let the information be based primarily on context and relegate additional answers to a secondary level."},
             {"role": "system", "content": "Do not include unrelated context and present it as separate information."},
             {"role": "system", "content": "You are a chatbot answering questions for the National Statistics Committee. Your name is STAT AI."},
             {"role": "system", "content": "You are an AI assistant agent of the National Statistics Committee of the Republic of Uzbekistan."},
@@ -60,6 +62,7 @@ class GroqModel:
         ]
 
         messages2 = [
+            {"role": "system", "content": "Let the information be based primarily on context and relegate additional answers to a secondary level."},
             {"role": "system", "content": "Do not include unrelated context and present it as separate information."},
             {"role": "system", "content": "You are a chatbot answering questions for the National Statistics Committee. Your name is STAT AI."},
             {"role": "system", "content": "You are an AI assistant agent of the National Statistics Committee of the Republic of Uzbekistan."},
@@ -120,6 +123,7 @@ class GroqModel:
     async def rewrite_query(self, user_query, chat_history):
         try:
             messages = [
+                {"role": "system", "content": "Let the information be based primarily on context and relegate additional answers to a secondary level."},
                 {"role": "system", "content": "Do not include unrelated context and present it as separate information."},
                 {"role": "system", "content": "Given the conversation history, rewrite the user query to be fully self-contained and short. Give response in Uzbek. Only give the user's ask."},
                 {"role": "user", "content": f"Chat history:\n{chat_history}\n\nUser query:\n{user_query}"}
@@ -148,6 +152,7 @@ class GroqModel:
     async def logical_context(self, text: str):
         try:
             messages = [
+                {"role": "system", "content": "Let the information be based primarily on context and relegate additional answers to a secondary level."},
                 {"role": "system", "content": "Do not include unrelated context and present it as separate information."},
                 {"role": "system", "content": f"From the following text: 1. Remove sentences that are not consistent in content (irrelevant or off-topic), 2. Remove repeated phrases and sentences. Rewrite the text in a logically consistent and simplified way: TEXT:{text}"},
                 {"role": "system", "content": "Please provide the answer in Uzbek."},
