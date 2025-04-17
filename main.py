@@ -267,6 +267,9 @@ async def chat(request: Request, chat_request: ChatRequest):
         relevant_docs = get_docs_from_db(chat_request.query)
         relevant_docs_add = get_docs_from_db(context_query)
 
+        print(relevant_docs, "<-relevant_docs->", len(relevant_docs))
+        print(relevant_docs_add, "<-relevant_docs_add->", len(relevant_docs_add))
+
         combined_results = relevant_docs + relevant_docs_add
 
         unique_results = remove_duplicate_texts(combined_results)

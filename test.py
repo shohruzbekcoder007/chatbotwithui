@@ -5,13 +5,17 @@ from retriever.langchain_chroma import chroma_manager
 # json_file_path = "./yozilganlar/malumotgreet.json"
 # json_file_path = "./yozilganlar/estat.json"
 # json_file_path = "./yozilganlar/estat_yoriqnoma.json"
-# json_file_path = "./yozilganlar/rasmiy_statistika_togrisida_qonun.json"
 # json_file_path = "./yozilganlar/lex_uz.json"
 # json_file_path = "./yozilganlar/qarorlar.json"
 # json_file_path = "./yozilganlar/reports_data.json"
-# json_file_path = "./yozilganlar/kadrlar_malakasini_oshirish.json"
-
 # json_file_path = "./yangi/kb_error.json"
+
+# json_file_path = "./yozilganlar/rasmiy_statistika_togrisida_qonun.json"
+# json_file_path = "./yozilganlar/kadrlar_malakasini_oshirish.json"
+# json_file_path = "./yozilganlar/rasmiy_statistikani_tayyorlash _va_tarqatish.json"
+# json_file_path = "./yozilganlar/greet.json"
+json_file_path = "./yozilganlar/gender.json"
+
 
 # Kolleksiyani o'chirish va yangisini yaratish
 # create_collection()
