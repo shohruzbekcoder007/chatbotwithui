@@ -8,8 +8,8 @@ class RedisSession:
     def __init__(self, host='localhost', port=6379, db=0, ttl=3600):
         try:
             self.redis_client = redis.Redis(
-                host=os.getenv("REDIS_HOST", "localhost") or host,
-                port=int(os.getenv("REDIS_PORT", 6379)) or port,
+                host,
+                port,
                 db=db,
                 decode_responses=True,
                 socket_connect_timeout=5

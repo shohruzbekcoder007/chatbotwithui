@@ -72,30 +72,40 @@
         </div>
     </div>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
             
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Form data yaratish
             const formData = new FormData();
-            formData.append('username', document.getElementById('email').value);
-            formData.append('password', document.getElementById('password').value);
+            formData.append('username', email);  // OAuth2 talabiga ko'ra username field
+            formData.append('password', password);
             
             try {
                 const response = await fetch('/auth/token', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    credentials: 'include'  // Cookie'larni yuborish va saqlash uchun
                 });
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    localStorage.setItem('stataichatbottoken', data.access_token);
-                    window.location.href = '/';
-                } else {
-                    const error = await response.json();
-                    alert(error.detail || 'Login failed');
+                if (!response.ok) {
+                    throw new Error('Login failed');
                 }
+                
+                const data = await response.json();
+                
+                // localStorage-da token saqlash
+                localStorage.setItem('token', data.access_token);
+                
+                // Asosiy sahifaga yo'naltirish - server chat_id yaratadi
+                window.location.href = '/';
+                
             } catch (error) {
-                alert('An error occurred');
-                console.error('Error:', error);
+                console.error('Login error:', error);
+                document.getElementById('errorMessage').textContent = 'Login failed. Please check your credentials.';
+                document.getElementById('errorMessage').style.display = 'block';
             }
         });
     </script>

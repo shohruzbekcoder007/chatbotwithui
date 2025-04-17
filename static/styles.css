@@ -380,6 +380,78 @@ body {
     padding-bottom: 4px;
 }
 
+/* Chat item container va action tugmalari uchun stillar */
+.chat-item-container {
+    position: relative;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.chat-item-container:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.chat-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+}
+
+.chat-actions {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+    gap: 6px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 5px;
+    border-radius: 4px;
+    z-index: 5;
+}
+
+.chat-item-container:hover .chat-actions {
+    display: flex;
+}
+
+.edit-chat-btn, .delete-chat-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-chat-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #4299e1;
+}
+
+.delete-chat-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #e53e3e;
+}
+
+.chat-name {
+    margin-left: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+}
+
+.no-chats-message {
+    text-align: center;
+    padding: 16px;
+    color: #718096;
+    font-size: 14px;
+}
+
 /* Modal styles */
 .modal {
     position: fixed;
@@ -452,4 +524,37 @@ body {
 
 .comment-btn {
     margin-left: 0.5rem;
+}
+
+/* Toast styling */
+#toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: white;
+    font-size: 14px;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    max-width: 90%;
+    width: auto;
+    display: block;
+    word-wrap: break-word;
+}
+
+#toast.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+#toast.bg-red-500 {
+    background-color: #ef4444;
+}
+
+#toast.bg-gray-800 {
+    background-color: #1f2937;
 }

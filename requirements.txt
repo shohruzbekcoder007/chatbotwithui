@@ -1,22 +1,30 @@
+# Web framework
 python-dotenv==1.0.1
 fastapi==0.104.1
 uvicorn==0.24.0
+
+# LLM and Vector DB dependencies
 transformers==4.36.2
 chromadb==0.4.22
-langchain>=0.3.0
-langchain-community>=0.0.28
-langchain-core>=0.1.30
 sentence-transformers==2.6.1
 numpy==1.26.3
-torch>=2.2.0
-redis
-python-jose[cryptography]
-passlib[bcrypt]
+torch==2.2.0
+
+# LangChain packages
+langchain
+langchain-core
+langchain-community
+langchain-groq
+langchain-ollama
+langchain-qdrant
+langchain-huggingface
+
+# Authentication and database
+redis>=5.0.0
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
 python-jwt>=4.0.0
-python-dotenv>=1.0.0
 email-validator>=2.0.0
 PyJWT>=2.0.0
 beanie==1.23.6
-python-jose==3.3.0
-passlib==1.7.4
 python-multipart==0.0.6

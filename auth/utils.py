@@ -12,7 +12,14 @@ SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-keep-it-secret")  # Change
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# bcrypt o'rniga pbkdf2_sha256 sxemasidan foydalanish
+# Bu Python standart kutubxonasida mavjud, qo'shimcha bog'liqliklar talab qilmaydi
+pwd_context = CryptContext(
+    schemes=["pbkdf2_sha256"],
+    default="pbkdf2_sha256",
+    pbkdf2_sha256__default_rounds=30000,  # Optimal xavfsizlik darajasi
+    deprecated="auto"
+)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token", auto_error=False)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
