@@ -1,6 +1,6 @@
 from retriever.langchain_chroma import search_documents
 from redis_obj.redis import redis_session
-from models.langchain_groq import LangChainGroqModel
+from models.langchain_groqCustom import LangChainGroqModel
 from models.langchain_ollama import LangChainOllamaModel
 from typing import List
 

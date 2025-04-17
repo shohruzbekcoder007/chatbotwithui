@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
-from models.langchain_groq import model as model_groq
+from models.langchain_groqCustom import model as model_groq
 from models.user import User
 from models.feedback import Feedback, FeedbackResponse
 from models.admin import Admin
