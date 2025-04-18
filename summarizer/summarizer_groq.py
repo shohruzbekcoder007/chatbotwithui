@@ -171,34 +171,3 @@ class GroqSummarizer:
         return await self.summarize_chunks(chunks, max_chunk_length, max_combined_length)
 
 groq_summarizer = GroqSummarizer()
-# combined_summary = groq_summarizer.process_text_chunks(chunks)
-# print(combined_summary, "<- combined_summary")
-# Misol uchun kod
-# if __name__ == "__main__":
-#     # Groq summarizer-ni ishga tushirish
-#     summarizer = GroqSummarizer()
-    
-#     # Misol 1: Bitta matnni qisqartirish
-#     text = """
-#     Sun'iy intellekt (AI) - bu odamlar va hayvonlar ko'rsatadigan tabiiy intellektdan farqli o'laroq, mashinalar tomonidan namoyish etiladigan intellektdir.
-#     AI tadqiqotlari intellektual agentlarni o'rganish sohasi sifatida ta'riflangan bo'lib, bu har qanday tizimga ishora qiladi, u o'z muhitini idrok etadi va o'z maqsadlariga erishish imkoniyatini maksimal darajada oshiradigan harakatlarni amalga oshiradi.
-#     "Sun'iy intellekt" atamasi avval "o'rganish" va "muammolarni hal qilish" kabi inson miyasi bilan bog'liq bo'lgan "odam" kognitiv ko'nikmalarini taqlid qiladigan va ko'rsatadigan mashinalarni tasvirlash uchun ishlatilgan.
-#     Bu ta'rif o'zidan keyin AI bo'yicha etakchi tadqiqotchilar tomonidan rad etilgan, ular endi AI ni ratsionallik va oqilona harakat qilish nuqtai nazaridan tasvirlaydilar, bu intellektni qanday ifodalash mumkinligini cheklamaydi.
-#     """
-    
-#     # Matnni qisqartirish
-#     summary = summarizer.process_text_chunks([text])
-#     print("Bitta matn qisqartmasi:\n", summary)
-    
-#     # Misol 2: Matn bo'laklari ro'yxatini qisqartirish
-#     chunks = [
-#         "Sun'iy intellekt (AI) - bu odamlar va hayvonlar ko'rsatadigan tabiiy intellektdan farqli o'laroq, mashinalar tomonidan namoyish etiladigan intellektdir.",
-#         "AI ilovalari rivojlangan veb-qidiruv tizimlari, tavsiya tizimlari (YouTube, Amazon va Netflix tomonidan foydalaniladigan), inson nutqini tushunish (Siri va Alexa kabi), o'z-o'zini boshqaradigan mashinalar (masalan, Waymo), generativ yoki ijodiy vositalar (ChatGPT va AI san'at), avtomatlashtirilgan qaror qabul qilish va strategik o'yin tizimlarida (shaxmat va Go kabi) eng yuqori darajada raqobatlashishni o'z ichiga oladi.",
-#         "Mashinalar tobora qobiliyatli bo'lib borgan sari, 'intellektni' talab qiladi deb hisoblanadigan vazifalar ko'pincha AI ta'rifidan chiqarib tashlanadi, bu AI effekti deb ataladigan hodisa.",
-#         "Masalan, optik belgilarni tanib olish ko'pincha AI deb hisoblanadigan narsalardan chiqarib tashlanadi, chunki u oddiy texnologiyaga aylanib qolgan."
-#     ]
-    
-#     # Bo'laklarni qayta ishlash
-#     combined_summary = summarizer.process_text_chunks(chunks)
-#     print(combined_summary, "<- combined_summary")
-#     print("\nBo'laklardan birlashtirilgan qisqartma:\n", combined_summary)

@@ -50,50 +50,6 @@ class LangChainGroqModel:
             "Integrate information that is not available in context. Kontextda mavjud bo'lmagan ma'lumotlarni qo'shma",
             "Don't make up your own questions and answers, just use the information provided. O'zing savolni javobni to'qib chiqarma faqat berilgan ma'lumotlardan foydalan."
         ]
-        
-        # Fayl nomi
-        self.history_file = "session_histories.json"
-        self.session_histories = self._load_histories()
-
-    def _load_histories(self):
-        """Fayldan tarixlarni yuklash"""
-        try:
-            if os.path.exists(self.history_file):
-                with open(self.history_file, "r", encoding="utf-8") as file:
-                    serialized_histories = json.load(file)
-                    
-                    # JSON ma'lumotlarni message obyektlariga o'tkazish
-                    histories = {}
-                    for session_id, messages in serialized_histories.items():
-                        histories[session_id] = [
-                            self._create_message_from_dict(msg)
-                            for msg in messages
-                        ]
-                    return histories
-        except Exception as e:
-            print(f"Tarixni o'qishda xatolik: {str(e)}")
-        
-        return {}
-        
-    def _save_histories(self):
-        """Tarixlarni faylga saqlash"""
-        try:
-            # Tarixlarni faylga saqlash
-            with open(self.history_file, "w", encoding="utf-8") as file:
-                # Xabarlar obyektlarini JSON formatga o'tkazish
-                serialized_histories = {}
-                for session_id, messages in self.session_histories.items():
-                    serialized_histories[session_id] = [
-                        {
-                            "type": self._get_message_type(msg),
-                            "content": msg.content
-                        }
-                        for msg in messages
-                    ]
-                
-                json.dump(serialized_histories, file, ensure_ascii=False, indent=4)
-        except Exception as e:
-            print(f"Tarixni saqlashda xatolik: {str(e)}")
             
     def _get_message_type(self, message: BaseMessage) -> str:
         """Message turini aniqlash"""
