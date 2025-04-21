@@ -34,7 +34,12 @@ async def old_context(model: LangChainGroqModel | LangChainOllamaModel, user_id:
 
     previous_session = redis_session.get_user_session(user_id) or []
 
+    if(len(previous_session) > 0):
+        previous_session = filter_salutations(previous_session)
+
     previous_context = "\n".join(previous_session)
+
+    print(previous_context, "<-previous_context->", len(previous_session))
 
     context_query = await model.rewrite_query(request, previous_context)
 
@@ -44,3 +49,6 @@ async def old_context(model: LangChainGroqModel | LangChainOllamaModel, user_id:
         return context_query.get('content', request)
     else:
         return context_query or request
+
+def filter_salutations(results):
+    return [r for r in results if not any(kw in r.lower() for kw in ['salom', 'assalomu alaykum', 'hurmatli'])]

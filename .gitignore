@@ -39,3 +39,4 @@ ENV/
 
 local_models/
 clean_env/
+summarizer_model/

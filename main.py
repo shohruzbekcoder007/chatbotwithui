@@ -1,7 +1,6 @@
 import os
-import asyncio
-from fastapi import FastAPI, Request, Depends, HTTPException, Response
-from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
+from fastapi import FastAPI, Request, Depends, Response
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
@@ -10,20 +9,17 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 from models.langchain_groqCustom import model as model_groq
 from models.user import User
-from models.feedback import Feedback, FeedbackResponse
+from models.feedback import Feedback
 from models.admin import Admin
 from models.chat_message import ChatMessage
 from models.user_chat_list import UserChatList
 from auth.router import router as auth_router
 from auth.admin_auth import router as admin_router, get_current_admin
-from auth.utils import get_current_user
-from additional.additional import get_docs_from_db, change_redis, old_context
+from additional.additional import filter_salutations, get_docs_from_db, change_redis, old_context
 from summarizer.summarizer_groq import groq_summarizer
-from redis_obj.redis import redis_session
 from retriever.langchain_chroma import remove_duplicate_texts
 from auth.utils import SECRET_KEY, ALGORITHM, jwt
 from typing import Optional
-from starlette.middleware.base import BaseHTTPMiddleware
 from datetime import datetime
 import uuid
 
@@ -267,27 +263,22 @@ async def chat(request: Request, chat_request: ChatRequest):
         relevant_docs = get_docs_from_db(chat_request.query)
         relevant_docs_add = get_docs_from_db(context_query)
 
-        print(relevant_docs, "<-relevant_docs->", len(relevant_docs))
-        print(relevant_docs_add, "<-relevant_docs_add->", len(relevant_docs_add))
-
         combined_results = relevant_docs + relevant_docs_add
 
         unique_results = remove_duplicate_texts(combined_results)
 
-        print(unique_results, "<-unique_results->")
-        
         output_and_system_token = 3400
         all_model_token = 8192
 
         prompt_token = all_model_token - output_and_system_token
 
-        propt_without_history_token = model_groq.count_tokens("\n".join(relevant_docs) + "\n".join(relevant_docs_add))
+        propt_without_history_token = model_groq.count_tokens("\n".join(unique_results))
 
         if propt_without_history_token > prompt_token:
-            summarized_text = await groq_summarizer.process_text_chunks(relevant_docs)
+            summarized_text = await groq_summarizer.process_text_chunks(unique_results)
             context = summarized_text
         else:
-            context = "\n".join(relevant_docs)
+            context = "\n".join(unique_results)
         
         prompt = f"""
         Don't stray from the context and don't fabricate your own answers.

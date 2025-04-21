@@ -558,3 +558,18 @@ body {
 #toast.bg-gray-800 {
     background-color: #1f2937;
 }
+
+.bot .message-text p {
+    text-indent: 30px;
+    padding: 10px 0;
+}
+
+.bot .message-text ul li {
+    list-style-type: disc !important;
+    padding: 4px 0;
+}
+
+.bot li {
+    list-style-type: disc !important;
+    padding: 4px 0;
+}
