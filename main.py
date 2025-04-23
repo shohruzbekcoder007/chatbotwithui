@@ -7,7 +7,8 @@ from fastapi.templating import Jinja2Templates
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
-from models.langchain_groqCustom import model as model_groq
+# from models.langchain_groqCustom import model as model_groq
+from models.langchain_ollamaCustom import model as model_ollama
 from models.user import User
 from models.feedback import Feedback
 from models.admin import Admin
@@ -258,7 +259,7 @@ async def chat(request: Request, chat_request: ChatRequest):
         print(f"Using chat ID: {chat_id}")
         
         # Contextdan savolni qayta olish
-        context_query = await old_context(model_groq, user_id, chat_request.query)
+        context_query = await old_context(model_ollama, user_id, chat_request.query)
         
         relevant_docs = get_docs_from_db(chat_request.query)
         relevant_docs_add = get_docs_from_db(context_query)
@@ -272,7 +273,7 @@ async def chat(request: Request, chat_request: ChatRequest):
 
         prompt_token = all_model_token - output_and_system_token
 
-        propt_without_history_token = model_groq.count_tokens("\n".join(unique_results))
+        propt_without_history_token = model_ollama.count_tokens("\n".join(unique_results))
 
         if propt_without_history_token > prompt_token:
             summarized_text = await groq_summarizer.process_text_chunks(unique_results)
@@ -291,7 +292,7 @@ async def chat(request: Request, chat_request: ChatRequest):
         print(f"{chat_request.query}. {context_query}.")
 
         try:
-            response_current = await model_groq.chat(prompt)
+            response_current = await model_ollama.chat(prompt)
         except Exception as chat_error:
             print(f"Error in chat model: {str(chat_error)}")
             return {"error": str(chat_error)}

@@ -37,11 +37,11 @@ class LangChainOllamaModel:
     
     def __init__(self, 
                 session_id: Optional[str] = None,
-                model_name: str = "llama3",
+                model_name: str = "gemma:7b",
                 base_url: str = "http://localhost:11434",
                 temperature: float = 0.7,
                 num_ctx: int = 4096,
-                num_gpu: int = 1,
+                num_gpu: int = 0,
                 num_thread: int = 4):
         """
         Ollama modelini LangChain bilan ishlatish uchun klass.
@@ -69,15 +69,16 @@ class LangChainOllamaModel:
         # System prompts ro'yxati
         self.default_system_prompts = [
             "Let the information be based primarily on context and relegate additional answers to a secondary level.",
-            "Do not include unrelated context and present it as separate information.",
+            "Do NOT integrate information that is not available in context. Kontextda mavjud bo'lmagan ma'lumotlarni qo‘shmaslik kerak."
             "You are a chatbot answering questions for the National Statistics Committee. Your name is STAT AI.",
             "You are an AI assistant agent of the National Statistics Committee of the Republic of Uzbekistan.",
             "You must respond only in Uzbek. Ensure there are no spelling mistakes.",
             "You should generate responses strictly based on the given prompt information without creating new content on your own.",
             "You are only allowed to answer questions related to the National Statistics Committee.",
             "The questions are within the scope of the estate and reports.",
-            "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)",
-            "Faqat o'zbek tilida javob ber.",
+            "don't add unrelated context",
+            # "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)",
+            "Each response must be formatted in HTML. Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> and <pre> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity"
             "Integrate information that is not available in context. Kontextda mavjud bo'lmagan ma'lumotlarni qo'shma",
             "Don't make up your own questions and answers, just use the information provided. O'zing savolni javobni to'qib chiqarma faqat berilgan ma'lumotlardan foydalan."
         ]
@@ -94,9 +95,11 @@ class LangChainOllamaModel:
                 model=self.model_name,
                 base_url=self.base_url,
                 temperature=self.temperature,
-                num_ctx=self.num_ctx,
-                num_gpu=self.num_gpu,
-                num_thread=self.num_thread
+                context_window=self.num_ctx,
+                extra_model_kwargs={
+                    "num_gpu": self.num_gpu,
+                    "num_thread": self.num_thread
+                }
             )
             _MODEL_CACHE[cache_key] = model
         
@@ -319,7 +322,7 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "llama3", base_url: str = "http://localhost:11434"):
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "gemma:7b", base_url: str = "http://localhost:11434"):
     """
     Model obyektini olish (mavjud bo'lsa cache dan, aks holda yangi yaratish)
     
