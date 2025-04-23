@@ -37,7 +37,7 @@ class LangChainOllamaModel:
     
     def __init__(self, 
                 session_id: Optional[str] = None,
-                model_name: str = "gemma:7b",
+                model_name: str = "gemma3:27b",
                 base_url: str = "http://localhost:11434",
                 temperature: float = 0.7,
                 num_ctx: int = 4096,
@@ -77,10 +77,12 @@ class LangChainOllamaModel:
             "You are only allowed to answer questions related to the National Statistics Committee.",
             "The questions are within the scope of the estate and reports.",
             "don't add unrelated context",
-            # "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)",
+            "Don't response MarkDown format."
+            "Output the results only in HTML format. (only use this tags: <b></b>, <i></i>, <p></p>)",
             "Each response must be formatted in HTML. Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> and <pre> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity"
-            "Integrate information that is not available in context. Kontextda mavjud bo'lmagan ma'lumotlarni qo'shma",
+            # "Integrate information that is not available in context. Kontextda mavjud bo'lmagan ma'lumotlarni qo'shma",
             "Don't make up your own questions and answers, just use the information provided. O'zing savolni javobni to'qib chiqarma faqat berilgan ma'lumotlardan foydalan."
+            "Please write the following text in HTML format using <h1> for the title and <p> for the paragraph"
         ]
     
     def _get_model(self):
@@ -175,6 +177,10 @@ class LangChainOllamaModel:
             try:
                 # Ollama modelini chaqirish
                 response = await self.model.ainvoke(messages)
+                if isinstance(response, dict):
+                    # Yangi LangChain versiyasi uchun
+                    return response.get("content", str(response))
+                # Eski versiya uchun
                 return response.content
             except Exception as e:
                 logger.error(f"Model chaqirishda xatolik: {str(e)}")
@@ -221,7 +227,7 @@ class LangChainOllamaModel:
         # Faqat 3 ta savolni qaytarish
         return questions[:3]
     
-    async def rewrite_query(self, user_query: str, chat_history: str = "") -> Dict[str, str]:
+    async def rewrite_query(self, user_query: str, chat_history: str = "") -> str:
         """
         Foydalanuvchi so'rovini qayta yozish
         
@@ -230,59 +236,25 @@ class LangChainOllamaModel:
             chat_history: Chat tarixi (ixtiyoriy)
             
         Returns:
-            Dict[str, str]: Qayta yozilgan so'rov
+            str: Qayta yozilgan so'rov
         """
+        system_prompt = """
+        Sen so'rovlarni qayta yozish uchun yordamchisan. Berilgan chat tarixini hisobga olib, 
+        foydalanuvchi so'rovini kontekstga mos ravishda qayta yozishing kerak.
+        """
+        
+        messages = [
+            SystemMessage(content=system_prompt),
+            HumanMessage(content=f"Chat tarixi:\n{chat_history}\n\nAsl so'rov: {user_query}\n\nSo'rovni qayta yozing:")
+        ]
+        
         try:
-            system_message = SystemMessage(
-                content=(
-                    "ATTENTION! YOU ARE THE QUESTION REWRITER. DO NOT ANSWER, JUST REWRITE THE QUESTION!\n\n"
-                    "Task: Rewrite the user's question in a MORE COMPLETE and SPECIFIC form using the context of the conversation.\n"
-                    "Rules:\n"
-                    "1. IMPORTANT: JUST REWRITE THE QUESTION. DO NOT ANSWER THE QUESTION!\n"
-                    "2. ONLY ONE QUESTION RETURN. DO NOT ANSWER, EXPLANATION, TUTORIAL - ONLY QUESTION.\n"
-                    "3. Indexes (bu, shu, u, ular, ushbu, o'sha) should be replaced with exact information.\n"
-                    "4. If the previous conversation refers to a topic, specify it exactly.\n"
-                    "5. Save the grammar structure of the question, only replace the index/unclear parts.\n\n"
-                    "6. Answer in Uzbek.\n\n"
-                    f"CHAT HISTORY:\n{chat_history}\n"
-                )
-            )
-
-            user_message = HumanMessage(
-                content=f"QAYTA YOZILADIGAN SAVOL: {user_query}\n\nQAYTA YOZILGAN SAVOL FORMAT: faqat savol berilishi kerak, javob emas"
-            )
-
-            # Modeldan javob olish
-            response_text = await self._invoke([system_message, user_message])
-            
-            # Javobni tahlil qilish va tozalash
-            response_text = response_text.strip()
-            
-            # Prefiks va suffikslarni olib tashlash
-            prefixes_to_remove = ["QAYTA YOZILGAN SAVOL:", "QAYTA YOZILGAN SAVOL", "Qayta yozilgan savol:", "SAVOL:", "Savol:"]
-            for prefix in prefixes_to_remove:
-                if response_text.startswith(prefix):
-                    response_text = response_text[len(prefix):].strip()
-            
-            # HTML, markdown formatlarini tozalash
-            response_text = response_text.replace("```html", "").replace("```", "")
-            
-            # Agar natija savol emas, balki javob ko'rinishida bo'lsa, original so'rovni qaytarish
-            javob_belgilari = ["<p>", "</p>", "<b>", "</b>", "<i>", "</i>", "javob:", "Javob:"]
-            if any(marker in response_text for marker in javob_belgilari) or len(response_text.split()) > 30:
-                return {"content": user_query}  # Javob emas, original so'rovni qaytarish
-
-            # Agar qayta yozilgan savol juda qisqa bo'lsa, original savolni qaytarish
-            if len(response_text.split()) < 3:
-                return {"content": user_query}
-
-            return {"content": response_text}
-
+            response = await self._invoke(messages)
+            return response if isinstance(response, str) else str(response)
         except Exception as e:
-            logger.error(f"Error in rewrite_query: {str(e)}")
-            # Xatolik yuz berganda xavfsiz yo'l - original savolni qaytarish
-            return {"content": user_query}
-
+            logger.error(f"So'rovni qayta yozishda xatolik: {str(e)}")
+            return user_query  # Xatolik bo'lsa asl so'rovni qaytarish
+    
     def count_tokens(self, text: str) -> int:
         """
         Matndagi tokenlar sonini taxminiy hisoblash.
@@ -322,7 +294,7 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "gemma:7b", base_url: str = "http://localhost:11434"):
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "gemma3:27b", base_url: str = "http://localhost:11434"):
     """
     Model obyektini olish (mavjud bo'lsa cache dan, aks holda yangi yaratish)
     

@@ -56,8 +56,8 @@ class ChromaDBVisualizer:
         try:
             # ChromaDB dan ma'lumotlarni olish
             try:
-                # Avval to'g'ridan-to'g'ri get() metodi bilan urinib ko'rish
-                collection_data = self.chroma_manager.vectorstore.get()
+                # Kolleksiyadan barcha ma'lumotlarni olish
+                collection_data = self.chroma_manager.collection.get()
                 
                 if not collection_data['embeddings'] or len(collection_data['embeddings']) == 0:
                     raise ValueError("Kolleksiyada ma'lumotlar topilmadi yoki bo'sh ma'lumotlar qaytarildi")
@@ -67,40 +67,29 @@ class ChromaDBVisualizer:
                 metadatas = collection_data.get('metadatas', [{}] * len(texts))
                 
             except (KeyError, ValueError, AttributeError) as e:
-                # Agar to'g'ridan-to'g'ri olish ishlamasa, kolleksiyadan barcha hujjatlarni olish
+                # Agar to'g'ridan-to'g'ri olish ishlamasa, query orqali olish
                 print(f"To'g'ridan-to'g'ri olishda xatolik: {e}. Boshqa usul bilan urinib ko'rilmoqda...")
                 
-                # Barcha hujjatlarni olish
-                docs = self.chroma_manager.vectorstore.similarity_search(
-                    query="",  # Bo'sh so'rov barcha hujjatlarni qaytaradi
-                    k=1000  # Maksimal hujjatlar soni
+                # Bo'sh so'rov bilan qidirish
+                query_results = self.chroma_manager.collection.query(
+                    query_texts=[""],  # Bo'sh so'rov
+                    n_results=1000,  # Maksimal hujjatlar soni
+                    include=['embeddings', 'documents', 'metadatas']  # Barcha ma'lumotlarni olish
                 )
                 
-                if not docs:
+                if not query_results['embeddings'] or len(query_results['embeddings']) == 0:
                     print("Kolleksiyada ma'lumotlar topilmadi")
                     return np.array([]), [], []
                 
-                # Matnlarni va metadatalarni olish
-                texts = [doc.page_content for doc in docs]
-                # Metadatalarni olish - agar doc.metadata mavjud bo'lsa
-                metadatas = []
-                for doc in docs:
-                    try:
-                        metadatas.append(doc.metadata if hasattr(doc, 'metadata') else {})
-                    except:
-                        metadatas.append({})
-                
-                # Embeddinglarni qayta hisoblash
-                embeddings = self.chroma_manager.embeddings.embed_documents(texts)
-                embeddings = np.array(embeddings)
+                embeddings = np.array(query_results['embeddings'])
+                texts = query_results['documents']
+                metadatas = query_results.get('metadatas', [{}] * len(texts))
             
             print(f"Olingan embeddings: {embeddings.shape}, Matnlar soni: {len(texts)}, Metadatalar soni: {len(metadatas)}")
             return embeddings, texts, metadatas
         
         except Exception as e:
-            import traceback
-            print(f"Embeddings va matnlarni olishda xatolik: {str(e)}")
-            print(traceback.format_exc())
+            print(f"Embeddings va matnlarni olishda xatolik: {e}")
             return np.array([]), [], []
 
     def reduce_dimensions(self, embeddings: np.ndarray, method: str = 'tsne', 

@@ -39,8 +39,6 @@ async def old_context(model: LangChainGroqModel | LangChainOllamaModel, user_id:
 
     previous_context = "\n".join(previous_session)
 
-    print(previous_context, "<-previous_context->", len(previous_session))
-
     context_query = await model.rewrite_query(request, previous_context)
 
     # Agar qaytarilgan qiymat dict bo'lsa (LangChainGroqModel uchun), uning content qismini olish
