@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAT AI Assistant</title>
+    <link href="/static/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+    <script defer src="/static/alpine.min.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-10">
+        <div class="w-full header-container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <!-- <h1 class="text-xl font-semibold">STAT AI</h1> -->
+                <div class="relative" x-data="{ open: false, selectedModel: 'EStat' }">
+                    <button class="flex items-center justify-between w-[200px] px-3 py-2 text-sm text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50" @click="open = !open">
+                        <span x-text="selectedModel"></span>
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div x-show="open" @click.outside="open = false" style="width: 280px;" class="absolute left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50" style="display: none">
+                        <div class="p-2 space-y-1">
+                            <button @click="selectedModel = 'EStat Plus'; open = false" class="flex items-center justify-between w-full px-3 py-2 text-sm rounded-md hover:bg-gray-100">
+                                <div class="flex items-center space-x-3">
+                                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <div class="flex flex-col items-start">
+                                        <span class="font-medium">EStat Plus</span>
+                                        <span class="text-xs text-gray-500">Kengaytirilgan statistik tahlil</span>
+                                    </div>
+                                </div>
+                            </button>
+                            <button @click="selectedModel = 'EStat'; open = false" class="flex items-center justify-between w-full px-3 py-2 text-sm rounded-md hover:bg-gray-100">
+                                <div class="flex items-center space-x-3">
+                                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                    </svg>
+                                    <div class="flex flex-col items-start">
+                                        <span class="font-medium">EStat</span>
+                                        <span class="text-xs text-gray-500">Asosiy statistik tahlil</span>
+                                    </div>
+                                </div>
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4" x-data="{ 
+                    userName: '', 
+                    showDropdown: false,
+                    logoutAndRedirect() {
+                        localStorage.removeItem('token');
+                        userName = '';
+                        // Redirect to root, server will handle chat_id creation
+                        window.location.href = '/';
+                    },
+                    storeCurrentChatId() {
+                        // Just redirect to root if needed
+                        const urlParams = new URLSearchParams(window.location.search);
+                        if (!urlParams.get('chat_id')) {
+                            window.location.href = '/';
+                        }
+                    }
+                }" x-init="async () => {
+                    // Faqat yangi token tizimidan foydalanish
+                    const token = localStorage.getItem('token');
+                    
+                    if (token) {
+                        try {
+                            const response = await fetch('/auth/me', {
+                                headers: {
+                                    'Authorization': 'Bearer ' + token
+                                },
+                                credentials: 'include' // Include cookies
+                            });
+                            if (response.ok) {
+                                const data = await response.json();
+                                userName = data.name;
+                                console.log('User authenticated:', data);
+                            } else {
+                                console.log('Authentication failed with stored token');
+                            }
+                        } catch (error) {
+                            console.error('Error fetching user data:', error);
+                        }
+                    } else {
+                        console.log('No token found in localStorage');
+                    }
+                }">
+                <template x-if="!userName">
+                    <a href="/login" @click="storeCurrentChatId()" class="text-gray-600 hover:text-gray-900">Login/Register</a>
+                </template>
+                <template x-if="userName">
+                    <div class="relative">
+                        <button @click="showDropdown = !showDropdown" class="flex items-center justify-between w-[200px] px-3 py-2 text-sm text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50">
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                                <span x-text="userName"></span>
+                            </div>
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div x-show="showDropdown" @click.outside="showDropdown = false" style="width: 280px" class="absolute right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50" style="display: none">
+                            <div class="p-2 space-y-1">
+                                <div class="px-3 py-2 border-b border-gray-100">
+                                    <div class="text-sm font-medium" x-text="userName"></div>
+                                    <div class="text-xs text-gray-500">Aktiv foydalanuvchi</div>
+                                </div>
+                                <a href="#" class="flex items-center w-full px-3 py-2 text-sm rounded-md hover:bg-gray-100">
+                                    <svg class="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    <div class="flex flex-col items-start">
+                                        <span class="font-medium">Sozlamalar</span>
+                                        <span class="text-xs text-gray-500">Profil va xavfsizlik</span>
+                                    </div>
+                                </a>
+                                <div class="border-t border-gray-100 my-1"></div>
+                                <button @click="logoutAndRedirect()" class="flex items-center w-full px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-red-600 hover:bg-red-50">
+                                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                    </svg>
+                                    <div class="flex flex-col items-start">
+                                        <span class="font-medium">Chiqish</span>
+                                        <span class="text-xs text-gray-500">Tizimdan chiqish</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </header>
+
+    <div class="sidebar">
+        <button class="new-chat-btn">
+            <svg stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                <path d="M12 4.5v15m7.5-7.5h-15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Yangi chat
+        </button>
+        <div class="chat-history">
+            <!-- chatlar ro'yxati bo'ladi  -->
+        </div>
+        <div class="bottom-buttons">
+            <button class="upgrade-btn">
+                <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" width="16" height="16">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Imkoniyatlarni kengaytirish
+            </button>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="chat-container">
+            <div class="chat">
+                <div class="chat-messages">
+                    <div class="message bot">
+                        <div class="message-container">
+                            <div class="avatar">AI</div>
+                            <div class="message-content">
+                                <div class="message-text">Men Stat AI Chatbotman. Sizga qanday yordam bera olaman?</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message bot">
+                        <div class="message-container">
+                            <div class="avatar">AI</div>
+                            <div class="message-content">
+                                <div class="message-text">Menga Statistika sohasida savol berishingiz mumkin.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="conversation">
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <form class="chat-input" onsubmit="onsubmitnew(event)">
+                    <input type="text" placeholder="Xabar yozing...">
+                    <button type="submit">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(90 12 12)"/>
+                        </svg>
+                    </button>
+                </form>
+                <div class="recommended-texts">
+                    <div class="recommended-text" onclick="sendRecommendedText(this)">Statistika nima?</div>
+                    <div class="recommended-text" onclick="sendRecommendedText(this)">Statistik ma'lumotlarni tahlil qilish usullari</div>
+                    <div class="recommended-text" onclick="sendRecommendedText(this)">Regressiya tahlili nima?</div>
+                    <div class="recommended-text" onclick="sendRecommendedText(this)">Salom</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-lg font-medium">Fikr bildirish</h3>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="feedbackComment" class="w-full p-2 border rounded" rows="4" placeholder="Izoh yozing..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeModal()">Bekor qilish</button>
+                <button class="submit-btn" onclick="submitFeedback()">Yuborish</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat nomini o'zgartirish uchun modal -->
+    <div id="renameChatModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 class="text-lg font-medium mb-4">Chat nomini o'zgartirish</h3>
+            <input type="text" id="newChatName" class="w-full border border-gray-300 rounded-md px-3 py-2 mb-4" placeholder="Yangi chat nomi">
+            <input type="hidden" id="currentChatId">
+            <div class="flex justify-end space-x-2">
+                <button id="cancelRenameBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Bekor qilish</button>
+                <button id="confirmRenameBtn" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatni o'chirish uchun modal -->
+    <div id="deleteChatModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 class="text-lg font-medium mb-4">Chatni o'chirish</h3>
+            <p class="mb-4">Rostdan ham chatni o'chirmoqchimisiz?</p>
+            <input type="hidden" id="deleteChatId">
+            <div class="flex justify-end space-x-2">
+                <button id="cancelDeleteBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Bekor qilish</button>
+                <button id="confirmDeleteBtn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">O'chirish</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Xabar ko'rsatish uchun toast -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-md shadow-lg">
+        <span id="toastMessage"></span>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="/static/app.js"></script>
+</body>
+</html>

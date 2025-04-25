@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AI Chat</title>
+    <link href="/static/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('/static/images/bgimage2.jpg') no-repeat center center;
+            background-size: cover;
+            min-height: 100vh;
+        }
+        .login-container {
+            /* background: white url(/static/images/robot.png) no-repeat center bottom; */
+            /* background-size: contain; */
+            background: rgb(255, 255, 255);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .login-button {
+            background: #2196f3;
+            transition: all 0.3s ease;
+        }
+        .login-button:hover {
+            background: #1976d2;
+            transform: translateY(-2px);
+        }
+        .input-field {
+            background: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: #333;
+            outline: none;
+        }
+        .input-field::placeholder {
+            color: #9e9e9e;
+        }
+        .input-field:focus, .input-field:hover {
+            background: transparent;
+            /* border: none; */
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="login-container rounded-lg p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Login</h1>
+            </div>
+
+            <form id="loginForm" class="space-y-6">
+                <div class="space-y-4">
+                    <input type="email" id="email" required 
+                           placeholder="Email"
+                           class="input-field w-full px-4 py-3 rounded-lg focus:outline-none transition-all">
+                    <input type="password" id="password" required 
+                           placeholder="Password"
+                           class="input-field w-full px-4 py-3 rounded-lg focus:outline-none transition-all">
+                </div>
+                
+                <button type="submit" 
+                        class="login-button w-full text-white rounded-lg py-3 px-4 font-semibold
+                               shadow-lg">
+                    Login
+                </button>
+            </form>
+            
+            <div class="mt-6 flex justify-between items-center text-sm">
+                <a href="/static/register.html" class="text-blue-600 hover:text-blue-800 transition-colors">Register</a>
+                <a href="/" class="text-blue-600 hover:text-blue-800 transition-colors">Continue as guest</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Form data yaratish
+            const formData = new FormData();
+            formData.append('username', email);  // OAuth2 talabiga ko'ra username field
+            formData.append('password', password);
+            
+            try {
+                const response = await fetch('/auth/token', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'  // Cookie'larni yuborish va saqlash uchun
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Login failed');
+                }
+                
+                const data = await response.json();
+                
+                // localStorage-da token saqlash
+                localStorage.setItem('token', data.access_token);
+                
+                // Asosiy sahifaga yo'naltirish - server chat_id yaratadi
+                window.location.href = '/';
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('errorMessage').textContent = 'Login failed. Please check your credentials.';
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
