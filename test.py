@@ -1,5 +1,5 @@
-# from retriever.langchain_chroma import count_documents, add_documents_from_json, create_collection, remove_all_documents, search_documents
-from retriever.langchain_chroma_new import count_documents, add_documents_from_json, create_collection, remove_all_documents, search_documents
+from retriever.langchain_chroma import count_documents, add_documents_from_json, create_collection, remove_all_documents, search_documents
+# from retriever.langchain_chroma_new import count_documents, add_documents_from_json, create_collection, remove_all_documents, search_documents
 # from retriever.langchain_chroma_two import count_documents, add_documents_from_json, create_collection, remove_all_documents, search_documents
 
 json_file_path = "./tayyor_json/rasmiy_statistika_togrisida_qonun.json"

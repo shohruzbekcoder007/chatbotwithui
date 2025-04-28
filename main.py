@@ -7,8 +7,8 @@ from fastapi.templating import Jinja2Templates
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
-from models.langchain_groqCustom import model as model_llm
-# from models.langchain_ollamaCustom import model as model_llm
+# from models.langchain_groqCustom import model as model_llm
+from models.langchain_ollamaCustom import model as model_llm
 from models.user import User
 from models.feedback import Feedback
 from models.admin import Admin
@@ -259,16 +259,16 @@ async def chat(request: Request, chat_request: ChatRequest):
         print(f"Using chat ID: {chat_id}")
         
         # Contextdan savolni qayta olish
-        context_query = await old_context(model_llm, user_id, chat_request.query)
+        # context_query = await old_context(model_llm, user_id, chat_request.query)
 
-        print(context_query, "<<-context_query")
+        # print(context_query, "<<-context_query")
         
         relevant_docs = get_docs_from_db(chat_request.query)
-        relevant_docs_add = get_docs_from_db(context_query)
+        # relevant_docs_add = get_docs_from_db(context_query)
 
         # ChromaDB natijalaridan faqat matnlarni olish
         docs = relevant_docs.get("documents", []) if isinstance(relevant_docs, dict) else []
-        docs_add = relevant_docs_add.get("documents", []) if isinstance(relevant_docs_add, dict) else []
+        # docs_add = relevant_docs_add.get("documents", []) if isinstance(relevant_docs_add, dict) else []
         
 
         # print(docs, "<--- docs and docs_add")
