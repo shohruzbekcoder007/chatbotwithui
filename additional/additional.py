@@ -51,3 +51,6 @@ async def old_context(model: LangChainGroqModel | LangChainOllamaModel, user_id:
 
 def filter_salutations(results):
     return [r for r in results if not any(kw in r.lower() for kw in ['salom', 'assalomu alaykum', 'hurmatli'])]
+
+
+# langchain yordamida 2 ta text arrayni combain qiliadigan yan'ni bir xillaridan faqat 1 ta qoldiradigan function yozib ber
