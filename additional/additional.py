@@ -1,4 +1,5 @@
 from retriever.langchain_chroma import search_documents
+# from retriever.langchain_chroma_two import search_documents
 from redis_obj.redis import redis_session
 from models.langchain_groqCustom import LangChainGroqModel
 from models.langchain_ollama import LangChainOllamaModel
@@ -9,7 +10,7 @@ def get_docs_from_db(request: str):
     if request.strip() == "":
         relevant_docs = []
     else:
-        relevant_docs = search_documents(request, 50)
+        relevant_docs = search_documents(request, 10)
 
     return relevant_docs
 

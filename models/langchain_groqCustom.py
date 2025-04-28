@@ -31,7 +31,7 @@ class LangChainGroqModel:
         self.model = ChatGroq(
             model_name=self.model_name,
             groq_api_key=self.api_key,
-            temperature=0.4,
+            temperature=0.7,
             max_tokens=1000
         )
         
