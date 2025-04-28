@@ -150,12 +150,14 @@ class ChromaManager:
         """Hujjatlar orasidan qidirish"""
         try:
             # Query embedding ni olish va numpy array ni list ga o'tkazish
-            query_embedding = self.model.encode(query).astype(float).tolist()
+            query_embedding = self.model.encode([query], normalize_embeddings=True)[0]
+            # print(f"Qidirish uchun embedding: {query_embedding}")
             
             # Qidirish
             results = self.collection.query(
-                query_embeddings=[query_embedding],
-                n_results=n_results
+                query_embeddings=[query_embedding.tolist()],
+                n_results=n_results,
+                include=["documents", "metadatas"]
             )
             return results
         except Exception as e:

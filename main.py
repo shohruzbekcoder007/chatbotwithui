@@ -7,8 +7,8 @@ from fastapi.templating import Jinja2Templates
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
-from models.langchain_groqCustom import model as model_groq
-# from models.langchain_ollamaCustom import model as model_ollama
+# from models.langchain_groqCustom import model as model_groq
+from models.langchain_ollamaCustom import model as model_groq
 from models.user import User
 from models.feedback import Feedback
 from models.admin import Admin
@@ -17,7 +17,8 @@ from models.user_chat_list import UserChatList
 from auth.router import router as auth_router
 from auth.admin_auth import router as admin_router, get_current_admin
 from additional.additional import filter_salutations, get_docs_from_db, change_redis, old_context
-from summarizer.summarizer_groq import groq_summarizer
+from summarizer.summarizer_groq import groq_summarizer as model_summarizer
+# from summarizer.summarizer import summarizer as model_summarizer
 from retriever.langchain_chroma import remove_duplicate_texts
 from auth.utils import SECRET_KEY, ALGORITHM, jwt
 from typing import Optional
@@ -269,12 +270,14 @@ async def chat(request: Request, chat_request: ChatRequest):
         docs_add = relevant_docs_add.get("documents", []) if isinstance(relevant_docs_add, dict) else []
         
 
-        print(docs, "<--- docs and docs_add")
-        combined_results = docs[0] + docs_add[0]
+        # print(docs, "<--- docs and docs_add")
+        combined_results = docs[0] #+ docs_add[0]
 
         unique_results = remove_duplicate_texts(combined_results)
 
-        print(f"Unique results count: {len(unique_results)}", unique_results)
+        # print(f"\n------------- Unique results count: {len(unique_results)}", unique_results)
+        for i, result in enumerate(unique_results):
+            print(f"Result {i+1}: {result}\n")
 
         output_and_system_token = 3400
         all_model_token = 8192
@@ -283,11 +286,11 @@ async def chat(request: Request, chat_request: ChatRequest):
 
         propt_without_history_token = model_groq.count_tokens("\n".join(unique_results))
 
-        if propt_without_history_token > prompt_token:
-            summarized_text = await groq_summarizer.process_text_chunks(unique_results)
-            context = summarized_text
-        else:
-            context = "\n".join(unique_results)
+        # if propt_without_history_token > prompt_token:
+        #     summarized_text = await model_summarizer.process_text_chunks(unique_results)
+        #     context = summarized_text
+        # else:
+        context = ";\n".join(unique_results)
         
         prompt = f"""
         Don't stray from the context and don't fabricate your own answers.
@@ -297,16 +300,19 @@ async def chat(request: Request, chat_request: ChatRequest):
         Question: {chat_request.query}.
         """
 
+        user_query = f"{chat_request.query} or {context_query}"
+        system_query = f"Context: {context} "
+
         print(f"{chat_request.query}. {context_query}.")
 
         try:
-            response_current = await model_groq.chat(prompt)
+            response_current = await model_groq.chat(system_query, chat_request.query)
         except Exception as chat_error:
             print(f"Error in chat model: {str(chat_error)}")
             return {"error": str(chat_error)}
         
         # Yangi javobni sessiyaga saqlash
-        change_redis(user_id, chat_request.query, response_current)
+        # change_redis(user_id, chat_request.query, response_current)
         
         # Savol va javobni MongoDB ga saqlash (faqat autentifikatsiya qilingan foydalanuvchilar uchun)
         if user_id != "anonymous":
@@ -347,7 +353,7 @@ async def chat(request: Request, chat_request: ChatRequest):
         else:
             print(f"Anonymous user, message not saved to database. Chat ID: {chat_id}")
 
-        return {"response": response_current.replace("\n", "<br>")}
+        return {"response": response_current}
 
     except Exception as e:
         print(f"Error in chat endpoint: {str(e)}")

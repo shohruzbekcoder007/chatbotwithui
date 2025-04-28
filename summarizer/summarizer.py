@@ -180,7 +180,7 @@ class TextSummarizer:
         
         return final_summary
         
-    def process_text_chunks(self, chunks_list: List[str], **kwargs) -> str:
+    async def process_text_chunks(self, chunks_list: List[str], **kwargs) -> str:
         """
         Process a list of text chunks, summarize each one, and combine them.
         This is a convenience method that runs the async summarize_chunks method.
@@ -196,37 +196,37 @@ class TextSummarizer:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         try:
-            return loop.run_until_complete(self.summarize_chunks(chunks_list, **kwargs))
+            return loop.run_until_complete(await self.summarize_chunks(chunks_list, **kwargs))
         finally:
             loop.close()
 
-# summarizer = TextSummarizer()
+summarizer = TextSummarizer()
 
 # Example usage
-if __name__ == "__main__":
-    # Initialize the summarizer
-    summarizer = TextSummarizer()
+# if __name__ == "__main__":
+#     # Initialize the summarizer
+#     summarizer = TextSummarizer()
     
-    # Example 1: Summarize a single text
-    text = """
-    Artificial intelligence (AI) is intelligence demonstrated by machines, as opposed to the natural intelligence displayed by animals and humans. 
-    AI research has been defined as the field of study of intelligent agents, which refers to any system that perceives its environment and takes actions that maximize its chance of achieving its goals.
-    The term "artificial intelligence" had previously been used to describe machines that mimic and display "human" cognitive skills that are associated with the human mind, such as "learning" and "problem-solving". 
-    This definition has since been rejected by major AI researchers who now describe AI in terms of rationality and acting rationally, which does not limit how intelligence can be articulated.
-    """
+#     # Example 1: Summarize a single text
+#     text = """
+#     Artificial intelligence (AI) is intelligence demonstrated by machines, as opposed to the natural intelligence displayed by animals and humans. 
+#     AI research has been defined as the field of study of intelligent agents, which refers to any system that perceives its environment and takes actions that maximize its chance of achieving its goals.
+#     The term "artificial intelligence" had previously been used to describe machines that mimic and display "human" cognitive skills that are associated with the human mind, such as "learning" and "problem-solving". 
+#     This definition has since been rejected by major AI researchers who now describe AI in terms of rationality and acting rationally, which does not limit how intelligence can be articulated.
+#     """
     
-    # Generate summary for single text
-    summary = summarizer.summarize(text)
-    print("Single text summary:\n", summary)
+#     # Generate summary for single text
+#     summary = summarizer.summarize(text)
+#     print("Single text summary:\n", summary)
     
-    # Example 2: Process and summarize a list of text chunks
-    chunks = [
-        "Artificial intelligence (AI) is intelligence demonstrated by machines, as opposed to the natural intelligence displayed by animals and humans.",
-        "AI applications include advanced web search engines, recommendation systems (used by YouTube, Amazon and Netflix), understanding human speech (such as Siri and Alexa).",
-        "Self-driving cars (e.g., Waymo), generative or creative tools (ChatGPT and AI art), automated decision-making, and competing at the highest level in strategic game systems (such as chess and Go).",
-        "As machines become increasingly capable, tasks considered to require 'intelligence' are often removed from the definition of AI, a phenomenon known as the AI effect."
-    ]
+#     # Example 2: Process and summarize a list of text chunks
+#     chunks = [
+#         "Artificial intelligence (AI) is intelligence demonstrated by machines, as opposed to the natural intelligence displayed by animals and humans.",
+#         "AI applications include advanced web search engines, recommendation systems (used by YouTube, Amazon and Netflix), understanding human speech (such as Siri and Alexa).",
+#         "Self-driving cars (e.g., Waymo), generative or creative tools (ChatGPT and AI art), automated decision-making, and competing at the highest level in strategic game systems (such as chess and Go).",
+#         "As machines become increasingly capable, tasks considered to require 'intelligence' are often removed from the definition of AI, a phenomenon known as the AI effect."
+#     ]
     
-    # Process the chunks
-    combined_summary = summarizer.process_text_chunks(chunks)
-    print("\nCombined summary from chunks:\n", combined_summary)
+#     # Process the chunks
+#     combined_summary = summarizer.process_text_chunks(chunks)
+#     print("\nCombined summary from chunks:\n", combined_summary)

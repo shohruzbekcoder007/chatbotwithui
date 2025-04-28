@@ -385,7 +385,7 @@ class ChromaDBVisualizer:
         else:
             raise ValueError(f"Noto'g'ri o'lcham: {dimension}. 2 yoki 3 bo'lishi kerak.")
 
-    def visualize_query_results(self, query: str, limit: int = 5, method: str = 'tsne',
+    def visualize_query_results(self, query: str, limit: int = 10, method: str = 'tsne',
                                dimension: int = 2, title: str = None, save_path: str = None,
                                min_results: int = 3):
         """

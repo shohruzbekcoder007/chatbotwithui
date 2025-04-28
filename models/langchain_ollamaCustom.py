@@ -37,12 +37,12 @@ class LangChainOllamaModel:
     
     def __init__(self, 
                 session_id: Optional[str] = None,
-                model_name: str = "gemma3:27b",
+                model_name: str = "mistral-small3.1:24b",
                 base_url: str = "http://localhost:11434",
-                temperature: float = 0.7,
-                num_ctx: int = 4096,
-                num_gpu: int = 0,
-                num_thread: int = 4):
+                temperature: float = 0.4,
+                num_ctx: int = 8192,
+                num_gpu: int = 1,
+                num_thread: int = 16):
         """
         Ollama modelini LangChain bilan ishlatish uchun klass.
         
@@ -76,13 +76,14 @@ class LangChainOllamaModel:
             "You should generate responses strictly based on the given prompt information without creating new content on your own.",
             "You are only allowed to answer questions related to the National Statistics Committee.",
             "The questions are within the scope of the estate and reports.",
-            "don't add unrelated context",
-            "Don't response MarkDown format."
-            "Output the results only in HTML format. (only use this tags: <b></b>, <i></i>, <p></p>)",
-            "Each response must be formatted in HTML. Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> and <pre> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity"
-            # "Integrate information that is not available in context. Kontextda mavjud bo'lmagan ma'lumotlarni qo'shma",
             "Don't make up your own questions and answers, just use the information provided. O'zing savolni javobni to'qib chiqarma faqat berilgan ma'lumotlardan foydalan."
-            "Please write the following text in HTML format using <h1> for the title and <p> for the paragraph"
+            "don't add unrelated context",
+            # "If the question is not related to the context, please say that you cannot answer.",
+            "Don't response MarkDown format."
+            "Output the results use only in HTML tags. (only use this tags: <b></b>, <i></i>, <p></p>)",
+            "Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> and <pre> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity"
+            # "Integrate information that is not available in context. Kontextda mavjud bo'lmagan ma'lumotlarni qo'shma",
+            "Please write the following text in HTML tags using <h1> for the title and <p> for the paragraph"
         ]
     
     def _get_model(self):
@@ -133,7 +134,7 @@ class LangChainOllamaModel:
             # Noma'lum turlar uchun default HumanMessage
             return HumanMessage(content=content)
     
-    async def chat(self, prompt: str) -> str:
+    async def chat(self, prompt: str, query) -> str:
         """
         Modelga savol yuborish va javob olish
         
@@ -144,22 +145,24 @@ class LangChainOllamaModel:
             str: Model javobi
         """
         # System va user promptlaridan xabarlar yaratish
-        messages = self._create_messages(self.default_system_prompts, prompt)
+        messages = self._create_messages(prompt, query)
         
         # Modelni chaqirish
         response = await self._invoke(messages)
         
         return response
     
-    def _create_messages(self, system_prompts: List[str], user_prompt: str) -> List[BaseMessage]:
+    def _create_messages(self, system_prompts: str, user_prompt: str) -> List[BaseMessage]:
         """
         System va user promptlaridan LangChain message obyektlarini yaratish
         """
         messages = []
         
         # System promptlarni qo'shish
-        for prompt in system_prompts:
-            messages.append(SystemMessage(content=prompt))
+        # for prompt in system_prompts:
+        #     messages.append(SystemMessage(content=prompt))
+        messages.append(SystemMessage(content=";\n".join(self.default_system_prompts)))
+        messages.append(SystemMessage(content=system_prompts))
         
         # User promptni qo'shish
         messages.append(HumanMessage(content=user_prompt))
@@ -190,15 +193,23 @@ class LangChainOllamaModel:
         """
         Berilgan matnni mantiqiy qayta ishlash
         """
-        system_prompt = """
-        Sen mantiqiy kontekst yaratuvchi yordamchisan. Berilgan mavzu bo'yicha mantiqiy va faktlarga asoslangan 
-        ma'lumotlarni tuzib berishing kerak. Faqat haqiqiy faktlarni ishlatib, barcha ma'lumotlarni aniq va qisqa shaklda yozib ber.
-        """
         
-        messages = [
-            SystemMessage(content=system_prompt),
-            HumanMessage(content=f"Quyidagi mavzu haqida mantiqiy kontekst yaratib ber: {text}")
+        system_prompts = [
+            "Let the information be based primarily on context and relegate additional answers to a secondary level.",
+            "Don't add unrelated context",
+            f"From the following text: 1. Remove sentences that are not consistent in content (irrelevant or off-topic), 2. Remove repeated sentences. Don't mix up the sentences. Rewrite the text in a logically consistent and simplified way: TEXT:{text}",
+            "Please provide the answer in Uzbek.",
+            "Faqat o'zbek tilida javob ber.",
+            "Kontextda mavjud bo'lmagan ma'lumotlarni qo'shma",
+            "Use the same meaning only once.",
+            "Bir xil manodagi gaplar bo'lsa ularni qisqartir",
+            "I will not answer you, the answer is as follows, without words, the answer is self-replying",
+            "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)"
         ]
+        
+        # Kontekst tarixisiz xabarlarni tayyorlash
+        messages = self._create_messages(system_prompts, "")
+        
         
         return await self._invoke(messages)
     
@@ -206,13 +217,11 @@ class LangChainOllamaModel:
         """
         Berilgan savolga asoslanib 3 ta sinonim savol yaratish
         """
-        system_prompt = """
-        Sen savol generatsiya qiluvchi yordamchisan. Berilgan savolga o'xshash, lekin boshqacha so'z birikmalaridan 
-        foydalangan 3 ta savol yaratishing kerak. Savollar original savol bilan bir xil ma'noni anglatishi, 
-        lekin boshqacha so'zlar bilan ifodalanishi kerak.
-        
-        Faqat 3 ta savolni qaytarish, har bir savolni alohida qatorda.
-        """
+        system_prompt = """Quyidagi savolga 3 ta sinonim shaklida savol yozing. Har bir sinonim asl savol bilan bir xil ma'noni bildirishi kerak, lekin turlicha ifodalangan bo'lsin. Keraksiz yoki qo'shimcha ma'no qo'shmang.
+                    Ma'lumotni list ko'rinishida ber
+                    Salomlashish va shunga o'xshagan savollar bo'lsa bosh array qaytar
+                    savollarni boshiga nmer qo'ymang
+                Savol: {question}"""
         
         messages = [
             SystemMessage(content=system_prompt),
@@ -238,14 +247,22 @@ class LangChainOllamaModel:
         Returns:
             str: Qayta yozilgan so'rov
         """
-        system_prompt = """
-        Sen so'rovlarni qayta yozish uchun yordamchisan. Berilgan chat tarixini hisobga olib, 
-        foydalanuvchi so'rovini kontekstga mos ravishda qayta yozishing kerak.
-        """
+        system_prompt = (
+                    "ATTENTION! YOU ARE THE QUESTION REWRITER. DO NOT ANSWER, JUST REWRITE THE QUESTION!\n\n"
+                    "Task: Rewrite the user's question in a MORE COMPLETE and SPECIFIC form using the context of the conversation.\n"
+                    "Rules:\n"
+                    "1. IMPORTANT: JUST REWRITE THE QUESTION. DO NOT ANSWER THE QUESTION!\n"
+                    "2. ONLY ONE QUESTION RETURN. DO NOT ANSWER, EXPLANATION, TUTORIAL - ONLY QUESTION.\n"
+                    "3. Indexes (bu, shu, u, ular, ushbu, o'sha) should be replaced with exact information.\n"
+                    "4. If the previous conversation refers to a topic, specify it exactly.\n"
+                    "5. Save the grammar structure of the question, only replace the index/unclear parts.\n\n"
+                    "6. Answer in Uzbek.\n\n"
+                    f"CHAT HISTORY:\n{chat_history}\n"
+        )
         
         messages = [
             SystemMessage(content=system_prompt),
-            HumanMessage(content=f"Chat tarixi:\n{chat_history}\n\nAsl so'rov: {user_query}\n\nSo'rovni qayta yozing:")
+            HumanMessage(content=f"Asl so'rov: {user_query}\n\nSo'rovni qayta yozing:")
         ]
         
         try:
@@ -310,4 +327,4 @@ def get_model_instance(session_id: Optional[str] = None, model_name: str = "gemm
     return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url)
 
 # Asosiy model obyekti (eski kod bilan moslik uchun)
-model = get_model_instance()
+model = LangChainOllamaModel()
