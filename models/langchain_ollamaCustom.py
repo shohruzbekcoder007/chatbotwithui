@@ -79,7 +79,9 @@ class LangChainOllamaModel:
             "Don't add unrelated context.",
             "Answer only use HTML tags."
             "Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> and <pre> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity.",
-            "Don't make up your own questions and answers, just use the information provided."
+            "Don't make up your own questions and answers, just use the information provided.",
+            "Give a complete and accurate answer",
+            "If the answer is not clear, add the sentence \"Please clarify the question\""
         ]
     
     def _get_model(self):

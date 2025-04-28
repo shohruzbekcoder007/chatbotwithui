@@ -259,29 +259,29 @@ async def chat(request: Request, chat_request: ChatRequest):
         print(f"Using chat ID: {chat_id}")
         
         # Contextdan savolni qayta olish
-        # context_query = await old_context(model_llm, user_id, chat_request.query)
+        context_query = await old_context(model_llm, user_id, chat_request.query)
 
         # print(context_query, "<<-context_query")
         
         relevant_docs = get_docs_from_db(chat_request.query)
-        # relevant_docs_add = get_docs_from_db(context_query)
+        relevant_docs_add = get_docs_from_db(context_query)
 
         # ChromaDB natijalaridan faqat matnlarni olish
         docs = relevant_docs.get("documents", []) if isinstance(relevant_docs, dict) else []
-        # docs_add = relevant_docs_add.get("documents", []) if isinstance(relevant_docs_add, dict) else []
+        docs_add = relevant_docs_add.get("documents", []) if isinstance(relevant_docs_add, dict) else []
         
 
         # print(docs, "<--- docs and docs_add")
-        combined_results = docs[0] # + docs_add[0]
+        combined_results = docs[0] + docs_add[0]
 
-        unique_results = combined_results # remove_duplicate_texts(combined_results)
+        unique_results = combined_results #remove_duplicate_texts(combined_results)
 
         print(f"Unique results count: {len(unique_results)}", unique_results)
 
-        output_and_system_token = 3400
-        all_model_token = 8192
+        # output_and_system_token = 3400
+        # all_model_token = 8192
 
-        prompt_token = all_model_token - output_and_system_token
+        # prompt_token = all_model_token - output_and_system_token
 
         # propt_without_history_token = model_llm.count_tokens("\n".join(unique_results))
 
