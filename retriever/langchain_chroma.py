@@ -5,7 +5,7 @@ import numpy as np
 from typing import List, Dict, Any, Optional
 import chromadb
 import torch
-from transformers import AutoTokenizer, AutoModel
+from sentence_transformers import SentenceTransformer
 import re
 import uuid
 
@@ -14,12 +14,10 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"Using device: {device}")
 
 class CustomEmbeddingFunction:
-    def __init__(self, model_name='Linq-AI-Research/Linq-Embed-Mistral', device='cuda'):
+    def __init__(self, model_name='BAAI/bge-m3', device='cuda'):
         print(f"Model yuklanmoqda: {model_name}")
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModel.from_pretrained(model_name)
         self.device = torch.device(device if torch.cuda.is_available() and device=='cuda' else 'cpu')
-        self.model = self.model.to(self.device)
+        self.model = SentenceTransformer(model_name, device=str(self.device))
         self.max_length = 4096
 
     def __call__(self, input: List[str]) -> List[List[float]]:
@@ -28,18 +26,12 @@ class CustomEmbeddingFunction:
             # Matnni tozalash
             text = self._preprocess_text(text)
             
-            # Tokenizatsiya va embedding
-            inputs = self.tokenizer(text, 
-                                  return_tensors='pt', 
-                                  max_length=self.max_length, 
-                                  padding=True, 
-                                  truncation=True)
-            inputs = {k: v.to(self.device) for k, v in inputs.items()}
-            
-            with torch.no_grad():
-                outputs = self.model(**inputs)
-                embedding = outputs.last_hidden_state[:, 0].cpu().numpy()
-            embeddings.append(embedding[0].tolist())
+            # SentenceTransformer orqali embedding olish
+            embedding = self.model.encode(text, 
+                                       normalize_embeddings=True,
+                                       max_length=self.max_length,
+                                       truncation=True)
+            embeddings.append(embedding.tolist())
         
         return embeddings
     
@@ -74,7 +66,7 @@ class CustomEmbeddingFunction:
         Returns:
             int: Tokenlar soni
         """
-        return len(self.tokenizer.encode(text))
+        return len(self.model.tokenize(text))
 
 class ChromaManager:
     """ChromaDB wrapper"""
@@ -100,7 +92,7 @@ class ChromaManager:
                 self.collection = self.client.create_collection(
                     name=collection_name,
                     embedding_function=self.embeddings,
-                    metadata={"hnsw:space": "cosine"}
+                    metadata={"hnsw:space": "cosine"}  # Cosine similarity uchun
                 )
                 print(f"Yangi kolleksiya yaratildi: {collection_name}")
             
@@ -176,21 +168,56 @@ class ChromaManager:
         except Exception as e:
             print(f"Hujjatlarni qo'shishda xatolik: {e}")
     
-    def search_documents(self, query: str, n_results: int = 5) -> Dict[str, List]:
+    def search_documents(self, query: str, n_results: int = 5):
         """Hujjatlar orasidan qidirish"""
-        try:
-            # Query embedding ni olish va numpy array ni list ga o'tkazish
-            query_embedding = self.embeddings([query])[0]
+        return self.hybrid_search(query, n_results)
 
-            # Qidirish
-            results = self.collection.query(
-                query_embeddings=[query_embedding],
-                n_results=n_results
+    def hybrid_search(self, query: str, n_results: int = 5):
+        """
+        Hybrid qidiruv - semantic va keyword qidiruvlarni birlashtirib ishlatish
+        """
+        try:
+            # Semantic search
+            semantic_results = self.collection.query(
+                query_texts=[query],
+                n_results=n_results * 2,  # Ko'proq natija olish
+                include=['documents', 'distances', 'metadatas']
             )
-            return results
+
+            # Keyword search
+            keyword_results = self.collection.query(
+                query_texts=[query],
+                n_results=n_results * 2,
+                where_document={"$contains": query},  # Exact match qidirish
+                include=['documents', 'distances', 'metadatas']
+            )
+
+            # Natijalarni birlashtirish
+            all_docs = []
+            seen_docs = set()
+
+            # Semantic natijalarni qo'shish
+            if semantic_results and 'documents' in semantic_results:
+                for doc in semantic_results['documents'][0]:
+                    if doc not in seen_docs:
+                        all_docs.append(doc)
+                        seen_docs.add(doc)
+
+            # Keyword natijalarni qo'shish
+            if keyword_results and 'documents' in keyword_results:
+                for doc in keyword_results['documents'][0]:
+                    if doc not in seen_docs:
+                        all_docs.append(doc)
+                        seen_docs.add(doc)
+
+            # n_results gacha cheklash
+            all_docs = all_docs[:n_results]
+
+            return {"documents": [all_docs], "distances": []}
+
         except Exception as e:
-            print(f"Qidirishda xatolik: {e}")
-            return {"documents": [], "metadatas": [], "distances": []}
+            print(f"Qidirishda xatolik: {str(e)}")
+            return {"documents": [[]], "distances": []}
 
     def delete_all_documents(self):
         """Barcha hujjatlarni o'chirish"""
@@ -203,6 +230,18 @@ class ChromaManager:
         except Exception as e:
             print(f"Hujjatlarni o'chirishda xatolik: {e}")
             return False
+
+    def create_collection(self):
+        """ChromaDB collection yaratish"""
+        try:
+            self.collection = self.client.create_collection(
+                name=self.collection_name,
+                embedding_function=self.embeddings,
+                metadata={"hnsw:space": "cosine"}  # Cosine similarity uchun
+            )
+            print(f"Yangi kolleksiya yaratildi: {self.collection_name}")
+        except Exception as e:
+            print(f"Kolleksiya yaratishda xatolik: {str(e)}")
 
 def add_documents_from_json(json_file_path: str):
     """JSON fayldan ma'lumotlarni o'qib ChromaDB ga qo'shish"""
@@ -272,3 +311,7 @@ def remove_all_documents():
 def search_documents(query: str, n_results: int = 5):
     """Hujjatlar orasidan qidirish"""
     return chroma_manager.search_documents(query, n_results)
+
+def create_collection():
+    """ChromaDB collection yaratish"""
+    return chroma_manager.create_collection()
