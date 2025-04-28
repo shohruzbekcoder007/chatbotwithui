@@ -8,6 +8,7 @@ json_file_path = "./tayyor_json/rasmiy_statistika_togrisida_qonun.json"
 # json_file_path = "./tayyor_json/greet.json"
 # json_file_path = "./tayyor_json/gender.json"
 # json_file_path = "./tayyor_json/statistika_ishlarini_tashkil_etish_va_yuritish.json"
+# json_file_path = "./tayyor_json/davlat_va_bojxona_tashqi_savdo.json"
 
 
 
@@ -25,8 +26,8 @@ json_file_path = "./tayyor_json/rasmiy_statistika_togrisida_qonun.json"
 print(f"Jami hujjatlar soni: {count_documents()}")
 
 # Avval barcha hujjatlarni o'chirish
-remove_all_documents()
-create_collection()
+# remove_all_documents()
+# create_collection()
 
 # JSON fayldan ma'lumotlarni o'qib ChromaDB ga qo'shish
 add_documents_from_json(json_file_path)
