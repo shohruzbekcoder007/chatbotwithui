@@ -10,7 +10,7 @@ def get_docs_from_db(request: str):
     if request.strip() == "":
         relevant_docs = []
     else:
-        relevant_docs = search_documents(request, 10)
+        relevant_docs = search_documents(request, 4)
 
     return relevant_docs
 
