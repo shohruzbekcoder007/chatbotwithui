@@ -1,0 +1,9 @@
+FROM gemma3:27b
+
+PARAMETER rope_scaling.type linear
+PARAMETER rope_scaling.factor 4
+PARAMETER num_ctx 8192
+PARAMETER num_gpu 1
+PARAMETER num_thread 8
+PARAMETER gpu_memory_utilization 0.9
+PARAMETER gpu_memory 20
