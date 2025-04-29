@@ -309,8 +309,8 @@ def remove_all_documents():
     return chroma_manager.delete_all_documents()
 
 def search_documents(query: str, n_results: int = 5):
-    """Hujjatlar orasidan qidirish"""
-    return chroma_manager.search_documents(query, n_results)
+    """Hujjatlar orasidan hybrid qidirish"""
+    return chroma_manager.hybrid_search(query, n_results)
 
 def create_collection():
     """ChromaDB collection yaratish"""

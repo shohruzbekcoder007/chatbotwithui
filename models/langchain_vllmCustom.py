@@ -37,13 +37,15 @@ class LangChainVLLMModel:
     
     def __init__(self, 
                 session_id: Optional[str] = None,
-                model_name: str = "meta-llama/Llama-2-7b-chat-hf",
+                model_name: str = "google/gemma-3-27b-it",
                 tensor_parallel_size: int = 1,
-                gpu_memory_utilization: float = 0.9,
+                gpu_memory_utilization: float = 0.75,  # 75% GPU xotirasi
                 max_model_len: int = 4096,
                 trust_remote_code: bool = True,
                 temperature: float = 0.7,
-                max_tokens: int = 1000):
+                max_tokens: int = 1000,
+                quantization: str = "awq",  # AWQ kvantlash
+                block_size: int = 16):  # Block size
         """
         VLLM modelini LangChain bilan ishlatish uchun klass.
         
@@ -56,6 +58,8 @@ class LangChainVLLMModel:
             trust_remote_code: Remote code ga ishonish
             temperature: Generatsiya uchun temperature
             max_tokens: Maksimal token uzunligi
+            quantization: Kvantlash turi ('awq', 'squeezellm', None)
+            block_size: KV cache block size
         """
         self.session_id = session_id or "default"
         self.model_name = model_name
@@ -65,6 +69,8 @@ class LangChainVLLMModel:
         self.trust_remote_code = trust_remote_code
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.quantization = quantization
+        self.block_size = block_size
         
         # Model yaratish yoki cache dan olish
         self.model = self._get_model()
@@ -72,37 +78,74 @@ class LangChainVLLMModel:
         # System prompts ro'yxati
         self.default_system_prompts = [
             "Let the information be based primarily on context and relegate additional answers to a secondary level.",
-            "Do not include unrelated context and present it as separate information.",
-            "You are a chatbot answering questions for the National Statistics Committee. Your name is STAT AI.",
-            "You are an AI assistant agent of the National Statistics Committee of the Republic of Uzbekistan.",
-            "You must respond only in Uzbek. Ensure there are no spelling mistakes.",
+            "You are an AI assistant that helps users with their questions.",
             "You should generate responses strictly based on the given prompt information without creating new content on your own.",
             "You are only allowed to answer questions related to the National Statistics Committee.",
             "The questions are within the scope of the estate and reports.",
-            "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)",
-            "Faqat o'zbek tilida javob ber.",
-            "Integrate information that is not available in context. Kontextda mavjud bo'lmagan ma'lumotlarni qo'shma",
-            "Don't make up your own questions and answers, just use the information provided. O'zing savolni javobni to'qib chiqarma faqat berilgan ma'lumotlardan foydalan."
+            "Output the results only in HTML format, no markdown, no latex. (only use these tags: <b></b>, <i></i>, <p></p>)",
+            "O'zbek va rus tillarida javob ber.",
+            "Отвечай на русском языке, если вопрос задан на русском.",
+            "Integrate information that is not available in context.",
+            "Don't make up your own questions and answers, just use the information provided."
         ]
     
     def _get_model(self):
         """Model olish (cache dan yoki yangi yaratish)"""
         global _MODEL_CACHE
         
-        cache_key = f"{self.model_name}_{self.tensor_parallel_size}"
+        cache_key = f"{self.model_name}_{self.tensor_parallel_size}_{self.quantization}"
         
         if cache_key not in _MODEL_CACHE:
             logger.info(f"VLLM model yaratilmoqda: {self.model_name}")
-            model = VLLM(
-                model=self.model_name,
-                tensor_parallel_size=self.tensor_parallel_size,
-                gpu_memory_utilization=self.gpu_memory_utilization,
-                max_model_len=self.max_model_len,
-                trust_remote_code=self.trust_remote_code,
-                temperature=self.temperature,
-                max_tokens=self.max_tokens
-            )
-            _MODEL_CACHE[cache_key] = model
+            
+            try:
+                # Xotira monitoringi
+                import psutil
+                import torch
+                
+                # GPU xotira monitoringi
+                if torch.cuda.is_available():
+                    gpu_memory = torch.cuda.get_device_properties(0).total_memory
+                    suggested_vram = int(gpu_memory * self.gpu_memory_utilization)
+                    
+                # VLLM model konfiguratsiyasi
+                model_kwargs = {
+                    "model": self.model_name,
+                    "tensor_parallel_size": self.tensor_parallel_size,
+                    "gpu_memory_utilization": self.gpu_memory_utilization,
+                    "max_model_len": self.max_model_len,
+                    "trust_remote_code": self.trust_remote_code,
+                    "temperature": self.temperature,
+                    "max_tokens": self.max_tokens,
+                    "quantization": self.quantization,
+                    "block_size": self.block_size,
+                    "dtype": "float16",  # FP16 tezroq va kamroq xotira
+                    "max_num_batched_tokens": 4096,  # Batch size cheklovi
+                    "max_num_seqs": 256,  # Maksimal parallel sequences
+                    "disable_cache": False,  # KV-cache yoqilgan
+                    "swap_space": 4,  # CPU RAM ga swap qilish (GB)
+                    "max_num_cpu_threads": psutil.cpu_count(logical=False)  # Fizik CPU yadrolar
+                }
+                
+                # Modelni yaratish
+                model = VLLM(**model_kwargs)
+                
+                # Cache ga saqlash
+                _MODEL_CACHE[cache_key] = model
+                
+                # Xotira holatini tekshirish
+                if torch.cuda.is_available():
+                    gpu_usage = torch.cuda.memory_allocated() / torch.cuda.max_memory_allocated()
+                    if gpu_usage > 0.9:
+                        logger.warning(f"Yuqori GPU xotira sarfi: {gpu_usage:.1%}")
+                
+                ram_usage = psutil.virtual_memory().percent
+                if ram_usage > 90:
+                    logger.warning(f"Yuqori RAM sarfi: {ram_usage}%")
+                
+            except Exception as e:
+                logger.error(f"Model yaratishda xato: {str(e)}")
+                raise
         
         return _MODEL_CACHE[cache_key]
     
@@ -132,18 +175,22 @@ class LangChainVLLMModel:
             # Noma'lum turlar uchun default HumanMessage
             return HumanMessage(content=content)
     
-    async def chat(self, prompt: str) -> str:
+    async def chat(self, context: str, prompt: str) -> str:
         """
         Modelga savol yuborish va javob olish
         
         Args:
+            context (str): Kontekst ma'lumotlari
             prompt (str): Savol matni
         
         Returns:
             str: Model javobi
         """
+        # Kontekst va savolni birlashtirish
+        full_prompt = f"Context:\n{context}\n\nQuestion:\n{prompt}"
+        
         # System va user promptlaridan xabarlar yaratish
-        messages = self._create_messages(self.default_system_prompts, prompt)
+        messages = self._create_messages(self.default_system_prompts, full_prompt)
         
         # Modelni chaqirish
         response = await self._invoke(messages)
@@ -198,3 +245,16 @@ class LangChainVLLMModel:
         
         formatted_messages.append("<|ai|>")
         return "\n".join(formatted_messages)
+
+
+model = LangChainVLLMModel(
+    session_id="user123",
+    model_name="meta-llama/Llama-2-7b-chat-hf",
+    tensor_parallel_size=1,
+    gpu_memory_utilization=0.8,
+    max_model_len=4096,
+    temperature=0.7,
+    max_tokens=500,
+    quantization="awq",
+    block_size=16
+)
