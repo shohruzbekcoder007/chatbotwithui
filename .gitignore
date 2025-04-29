@@ -36,3 +36,4 @@ ENV/
 chroma_db/
 local_embedding_model/
 *.log
+.env*
