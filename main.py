@@ -116,6 +116,55 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def admin_page():
     return FileResponse('static/admin.html')
 
+from fastapi import FastAPI, WebSocket
+import psutil
+import GPUtil
+import asyncio
+import json
+
+# app = FastAPI()
+
+
+@app.websocket("/ws/system")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        while True:
+            # CPU, RAM
+            cpu_percent = psutil.cpu_percent()
+            ram = psutil.virtual_memory()
+            ram_percent = ram.percent
+            ram_total = round(ram.total / (1024 ** 3), 2)
+            ram_used = round(ram.used / (1024 ** 3), 2)
+
+            # GPU
+            gpus = GPUtil.getGPUs()
+            gpu_data = []
+            for gpu in gpus:
+                gpu_data.append({
+                    "name": gpu.name,
+                    "load": gpu.load * 100,
+                    "memory_used": gpu.memoryUsed,
+                    "memory_total": gpu.memoryTotal,
+                    "temperature": gpu.temperature,
+                })
+
+            data = {
+                "cpu": cpu_percent,
+                "ram": {
+                    "percent": ram_percent,
+                    "used": ram_used,
+                    "total": ram_total
+                },
+                "gpu": gpu_data
+            }
+
+            await websocket.send_text(json.dumps(data))
+            await asyncio.sleep(1)
+    except Exception as e:
+        print(f"WebSocket disconnected: {e}")
+
+
 @app.get("/api/admin/feedbacks")
 async def get_feedbacks(admin: Admin = Depends(get_current_admin)):
     try:

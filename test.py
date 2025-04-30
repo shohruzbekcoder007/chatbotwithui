@@ -37,6 +37,8 @@ print(f"Eski hujjatlar soni: {count_documents()}")
 
 
 import os
+import time
+
 def process_all_json_files(folder_path: str = "./tayyor_json/"):
     remove_all_documents()
     create_collection()
@@ -46,6 +48,7 @@ def process_all_json_files(folder_path: str = "./tayyor_json/"):
                 full_path = os.path.join(root, file)
                 add_documents_from_json(full_path)
                 print(f"######################################  Qo'shilgan fayl: {full_path}")
+                time.sleep(1)  # 0.5 soniya kutish
 
 process_all_json_files("./tayyor_json/")
 # Barcha hujjatlarning sonini ko'rish
