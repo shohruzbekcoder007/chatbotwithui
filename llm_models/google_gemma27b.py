@@ -1,63 +1,251 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, pipeline
-import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 import os
+import torch
 from dotenv import load_dotenv
+from typing import List, Dict, Optional
+from queue import Queue
+from threading import Lock
+import time
+import uuid
 
-# .env faylini yuklash
-load_dotenv()
+class GemmaModel:
+    _instance = None
+    _lock = Lock()
+    _is_initialized = False
+    
+    def __new__(cls):
+        if cls._instance is None:
+            with cls._lock:
+                if cls._instance is None:
+                    cls._instance = super().__new__(cls)
+        return cls._instance
+    
+    def __init__(self):
+        if not GemmaModel._is_initialized:
+            with self._lock:
+                if not GemmaModel._is_initialized:
+                    self.system_prompt = """Siz O'zbek tilidagi AI yordamchisiz. Savolga aniq va tushunarli javob bering.
+                    Agar savolga javob bera olmasangiz, buni ochiq ayting."""
+                    self._initialize_model()
+                    self.request_queue = Queue()
+                    self.processing = False
+                    GemmaModel._is_initialized = True
+    
+    def _initialize_model(self):
+        """Modelni inizializatsiya qilish"""
+        load_dotenv()
+        self.token = os.getenv("HUGGINGFACE_TOKEN")
+        if not self.token:
+            raise ValueError("HUGGINGFACE_TOKEN environment variable not set")
+            
+        # GPU tekshirish
+        print("\nGPU Diagnostikasi:")
+        print(f"CUDA mavjudmi: {torch.cuda.is_available()}")
+        if torch.cuda.is_available():
+            print(f"GPU nomi: {torch.cuda.get_device_name(0)}")
+            print(f"CUDA versiyasi: {torch.version.cuda}")
+        
+        # 4-bit kvantlash sozlamalari
+        self.quantization_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_use_double_quant=True,
+        )
+        
+        print(" Tokenizer yuklanmoqda...")
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            "google/gemma-7b-it",
+            token=self.token,
+            trust_remote_code=True
+        )
+        
+        print(" Model yuklanmoqda...")
+        self.model = AutoModelForCausalLM.from_pretrained(
+            "google/gemma-7b-it",
+            device_map="auto",
+            token=self.token,
+            trust_remote_code=True,
+            quantization_config=self.quantization_config
+        )
+        print("Model yuklandi va ishlatishga tayyor!")
+    
+    async def generate_response(self, messages: List[Dict[str, str]], 
+                        max_tokens: int = 100,
+                        temperature: float = 0.7) -> str:
+        """Chat xabarlariga javob generatsiya qilish"""
+        try:
+            # Oddiy prompt yaratish
+            prompt = ""
+            for msg in messages:
+                if msg["role"] == "user":
+                    prompt += f"Human: {msg['content']}\n"
+                else:
+                    prompt += f"Assistant: {msg['content']}\n"
+            
+            prompt += "Assistant: "  # Model javob berishi uchun
+            print("Final prompt:", prompt)
+            
+            # Input tokenizatsiya
+            inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+            
+            # Generatsiya
+            outputs = self.model.generate(
+                **inputs,
+                max_new_tokens=max_tokens,
+                do_sample=True,
+                temperature=temperature,
+                pad_token_id=self.tokenizer.pad_token_id,
+                eos_token_id=self.tokenizer.eos_token_id
+            )
+            
+            # Javobni dekodlash
+            response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+            response = response.replace(prompt, "").strip()
+            print("Raw response:", response)
+            
+            return response
+            
+        except Exception as e:
+            print(f"Error in generate_response: {str(e)}")
+            if torch.cuda.is_available():
+                print(f"GPU memory: {torch.cuda.memory_allocated()/1024**2:.2f}MB")
+            return str(e)
 
-# Model identifikatori va saqlash yo'li
-model_id = "google/gemma-7b-it"  # 27b o'rniga 7b modelini ishlatamiz, chunki u ochiq foydalanish uchun mavjud
-local_dir = "local_model"
+    async def chat(self, context: str, query: str) -> str:
+        """
+        Modelga savol yuborish va javob olish
 
-# Hugging Face tokenini environment variable'dan olish
-token = os.getenv("HUGGINGFACE_TOKEN")
-if not token:
-    raise ValueError("HUGGINGFACE_TOKEN environment variable not set")
+        Args:
+            context (str): Kontekst matni
+            query (str): Savol matni
 
-# 4bit konfiguratsiyasi (VRAMni tejash uchun)
-bnb_config = BitsAndBytesConfig(
-    load_in_4bit=True,                      # 4-bit yuklash
-    bnb_4bit_use_double_quant=True,         # Ikki bosqichli kvantlash
-    bnb_4bit_quant_type="nf4",              # NF4 kvantlash turi
-    bnb_4bit_compute_dtype=torch.float16    # Hisoblashda float16 ishlatish
-)
+        Returns:
+            str: Model javobi
+        """
+        try:
+            # System va user promptlaridan xabarlar yaratish
+            messages = self._create_messages(context, query)
+            print("Created messages:", messages)
 
-# Tokenizerni yuklash va saqlash
-print(" Tokenizer yuklanmoqda...")
-tokenizer = AutoTokenizer.from_pretrained(
-    model_id,
-    token=token,
-    trust_remote_code=True
-)
-tokenizer.save_pretrained(local_dir)
+            # Modelni chaqirish
+            response = await self.generate_response(messages)
+            print("Got response:", response)
+            
+            return response
+            
+        except Exception as e:
+            print(f"Error in chat method: {str(e)}")
+            return str(e)
 
-# Modelni yuklash va saqlash (4bit, VRAM uchun optimallashtirilgan)
-print(" Model yuklanmoqda...")
-model = AutoModelForCausalLM.from_pretrained(
-    model_id,
-    device_map="auto",               # Avtomatik GPU/CPU taqsimoti
-    quantization_config=bnb_config,  # 4-bit config
-    torch_dtype=torch.float16,       # GPU uchun yengil format
-    token=token                      # Hugging Face token
-)
-model.save_pretrained(local_dir)
+    def _create_messages(self, context: str, query: str) -> list:
+        """
+        User/Assistant promptlarini yaratish
 
-print(" Model va tokenizer saqlandi:", local_dir)
+        Args:
+            context (str): Kontekst matni
+            query (str): Savol matni
 
-# Test: local_model dan yuklab, javob olish
-print(" Local modeldan foydalanilmoqda...")
-model = AutoModelForCausalLM.from_pretrained(
-    local_dir,
-    device_map="auto",
-    quantization_config=bnb_config,
-    torch_dtype=torch.float16
-)
-tokenizer = AutoTokenizer.from_pretrained(local_dir)
+        Returns:
+            list: Xabarlar
+        """
+        messages = []
+        
+        # System promptni qo'shish
+        if hasattr(self, 'system_prompt') and self.system_prompt:
+            messages.append({"role": "user", "content": "Quyidagi ko'rsatmalarga amal qiling:"})
+            messages.append({"role": "assistant", "content": "Xo'p, ko'rsatmalarni tinglayman."})
+            messages.append({"role": "user", "content": self.system_prompt})
+            messages.append({"role": "assistant", "content": "Tushundim, aytilgan ko'rsatmalarga amal qilaman."})
+        
+        # Kontekst qo'shish
+        if context and context.strip():
+            messages.append({"role": "user", "content": context})
+        
+        # Savolni qo'shish
+        if query and query.strip():
+            messages.append({"role": "user", "content": query})
+        
+        print("Final messages:", messages)
+        return messages
+    
+    def start_processing(self):
+        """Queue processing ni boshlash"""
+        import threading
+        if not self.processing:
+            self.processing = True
+            thread = threading.Thread(target=self.process_queue, daemon=True)
+            thread.start()
+    
+    def get_queue_size(self) -> int:
+        """Queue dagi so'rovlar soni"""
+        return self.request_queue.qsize()
 
-pipe = pipeline("text-generation", model=model, tokenizer=tokenizer)
-
-prompt = "O'zbekiston Respublikasi Prezidenti kim?"
-response = pipe(prompt, max_new_tokens=100, do_sample=True, temperature=0.7)
-
-print(" Javob:\n", response[0]["generated_text"])
+    def process_queue(self):
+        """Queue dagi so'rovlarni qayta ishlash"""
+        while True:
+            try:
+                with self._lock:
+                    if self.request_queue.empty():
+                        continue
+                    
+                    request_id, messages, max_tokens, temperature, result = self.request_queue.get()
+                    
+                    try:
+                        # Chat formatini qo'llash
+                        prompt = self.tokenizer.apply_chat_template(messages, tokenize=False)
+                        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+                        
+                        with torch.inference_mode():
+                            outputs = self.model.generate(
+                                **inputs,
+                                max_new_tokens=max_tokens,
+                                do_sample=True,
+                                temperature=temperature
+                            )
+                        
+                        response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+                        response = response.replace(prompt, "").strip()
+                        
+                        result["status"] = "completed"
+                        result["response"] = response
+                        
+                    except Exception as e:
+                        result["status"] = "error"
+                        result["error"] = str(e)
+                    
+                    self.request_queue.task_done()
+                    
+            except Exception as e:
+                print(f"Queue processing error: {str(e)}")
+                time.sleep(1)
+    
+# # Modeldan foydalanish misoli
+# if __name__ == "__main__":
+#     # Model obyektini yaratish
+#     gemma = GemmaModel()
+#     gemma.start_processing()
+    
+#     # Test so'rovlar
+#     messages = [
+#         {"role": "user", "content": "O'zbekiston qayerda joylashgan?"}
+#     ]
+    
+#     # Parallel so'rovlar yuborish
+#     import threading
+#     def test_request(user_id):
+#         response = gemma.chat("", messages[0]["content"])
+#         print(f"\nUser {user_id}:")
+#         print(f"Savol: {messages[0]['content']}")
+#         print(f"Javob: {response}")
+    
+#     # 3 ta parallel so'rov
+#     threads = []
+#     for i in range(3):
+#         thread = threading.Thread(target=test_request, args=(i,))
+#         threads.append(thread)
+#         thread.start()
+    
+#     # Barcha so'rovlar tugashini kutish
+#     for thread in threads:
+#         thread.join()
