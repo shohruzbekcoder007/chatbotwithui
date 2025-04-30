@@ -83,11 +83,17 @@ class GemmaModel:
                 else:
                     prompt += f"Assistant: {msg['content']}\n"
             
-            prompt += "Assistant: "  # Model javob berishi uchun
+            prompt += "Assistant: "
             print("Final prompt:", prompt)
             
             # Input tokenizatsiya
-            inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+            inputs = self.tokenizer(
+                prompt, 
+                return_tensors="pt",
+                padding=True,
+                truncation=True,
+                max_length=2048  # Tokenlar sonini cheklash
+            ).to(self.model.device)
             
             # Generatsiya
             outputs = self.model.generate(
@@ -96,14 +102,15 @@ class GemmaModel:
                 do_sample=True,
                 temperature=temperature,
                 pad_token_id=self.tokenizer.pad_token_id,
-                eos_token_id=self.tokenizer.eos_token_id
+                eos_token_id=self.tokenizer.eos_token_id,
+                num_beams=1,  # Beam search o'rniga greedy
+                top_k=50,     # Top-k sampling
+                top_p=0.9     # Nucleus sampling
             )
             
             # Javobni dekodlash
             response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
             response = response.replace(prompt, "").strip()
-            print("Raw response:", response)
-            
             return response
             
         except Exception as e:
@@ -141,22 +148,13 @@ class GemmaModel:
     def _create_messages(self, context: str, query: str) -> list:
         """
         User/Assistant promptlarini yaratish
-
-        Args:
-            context (str): Kontekst matni
-            query (str): Savol matni
-
-        Returns:
-            list: Xabarlar
         """
         messages = []
         
-        # System promptni qo'shish
+        # System promptni qisqa qo'shish
         if hasattr(self, 'system_prompt') and self.system_prompt:
-            messages.append({"role": "user", "content": "Quyidagi ko'rsatmalarga amal qiling:"})
-            messages.append({"role": "assistant", "content": "Xo'p, ko'rsatmalarni tinglayman."})
             messages.append({"role": "user", "content": self.system_prompt})
-            messages.append({"role": "assistant", "content": "Tushundim, aytilgan ko'rsatmalarga amal qilaman."})
+            messages.append({"role": "assistant", "content": "Tushundim."})
         
         # Kontekst qo'shish
         if context and context.strip():
@@ -166,7 +164,6 @@ class GemmaModel:
         if query and query.strip():
             messages.append({"role": "user", "content": query})
         
-        print("Final messages:", messages)
         return messages
     
     def start_processing(self):
