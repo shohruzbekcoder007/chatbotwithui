@@ -37,7 +37,7 @@ class LangChainOllamaModel:
     
     def __init__(self, 
                 session_id: Optional[str] = None,
-                model_name: str = "mistral-small3.1:24b",
+                model_name: str = "llava:34b",
                 base_url: str = "http://localhost:11434",
                 temperature: float = 0.7,
                 num_ctx: int = 4096,
@@ -176,16 +176,49 @@ class LangChainOllamaModel:
             
             try:
                 # Ollama modelini chaqirish
-                response = await self.model.ainvoke(messages)
+                response = await asyncio.wait_for(self.model.ainvoke(messages), timeout=15.0)
                 if isinstance(response, dict):
                     # Yangi LangChain versiyasi uchun
                     return response.get("content", str(response))
                 # Eski versiya uchun
                 return response.content
+                
+            except asyncio.TimeoutError:
+                logger.warning("So‘rov muddati tugadi — model chaqiruvi bekor qilindi.")
+                # GPU yukini tozalash yoki logga qo‘shish
+                self._handle_timeout_cleanup()
+                return "Xatolik: Modeldan javob olish muddati tugadi. Iltimos, keyinroq urinib ko‘ring."
+
             except Exception as e:
                 logger.error(f"Model chaqirishda xatolik: {str(e)}")
                 return f"Xatolik yuz berdi: {str(e)}"
-    
+
+    def _handle_timeout_cleanup(self):
+        """
+        Timeoutdan keyin aynan shu sessiyaga tegishli protsessni tozalash.
+        """
+        import psutil
+        logger.info(f"Timeoutdan keyingi tozalash (session: {self.session_id})")
+        print("Timeoutdan keyin tozalash jarayoni...")
+
+        try:
+            current_pid = os.getpid()  # Joriy PID
+            for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+                try:
+                    # Faqat tegishli protsesslarni qidiring
+                    if proc.info['cmdline'] and "ollama" in " ".join(proc.info['cmdline']):
+                        if str(self.session_id) in " ".join(proc.info['cmdline']):
+                            logger.info(f"Sessionga tegishli protsess topildi: PID={proc.pid}")
+                            proc.terminate()
+                            logger.info(f"Protsess {proc.pid} to‘xtatildi.")
+                            return
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    continue
+
+            logger.warning("Sessionga tegishli protsess topilmadi.")
+        except Exception as e:
+            logger.error(f"Timeout tozalashda xatolik: {str(e)}")
+
     async def logical_context(self, text: str) -> str:
         """
         Berilgan matnni mantiqiy qayta ishlash
@@ -294,7 +327,7 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "mistral-small3.1:24b", base_url: str = "http://localhost:11434") -> LangChainOllamaModel:
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "mistral-small:24b", base_url: str = "http://localhost:11434") -> LangChainOllamaModel:
     return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url)
 
 # Asosiy model obyekti (eski kod bilan moslik uchun)
