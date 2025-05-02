@@ -317,12 +317,12 @@ async def chat(request: Request, chat_request: ChatRequest):
 
         print(f"Unique results count: {len(unique_results)}", unique_results)
 
-        context1 = "Kontekst matni"
-        query1 = "O'zbekiston poytaxti qaysi shahar?"
-        response1 = await gemma.chat(context1, query1)
-        print(f"Model javobi: {response1}")
+        # context1 = "Kontekst matni"
+        # query1 = "O'zbekiston poytaxti qaysi shahar?"
+        # response1 = await gemma.chat(context1, query1)
+        # print(f"Model javobi: {response1}")
 
-        return {"success": True, "response": response1}
+        # return {"success": True, "response": response1}
 
         context = "\n".join(unique_results)
 
