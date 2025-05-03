@@ -32,9 +32,9 @@ class LangChainOllamaModel:
     
     def __init__(self, 
                 session_id: Optional[str] = None,
-                model_name: str = "mistral-small3.1:24b",
-                base_url: str = "http://localhost:11434",
-                temperature: float = 0.7,
+                model_name: str = "mistral-small:24b",
+                base_url: str = "http://172.16.8.39:11434",
+                temperature: float = 0.7 ,
                 num_ctx: int = 4096,
                 num_gpu: int = 1,
                 num_thread: int = 8):
@@ -73,7 +73,7 @@ class LangChainOllamaModel:
             "The questions are within the scope of the estate and reports.",
             "Don't add unrelated context.",
             "Answer only use HTML tags."
-            "Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> and <pre> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity.",
+            "Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity.",
             "Don't make up your own questions and answers, just use the information provided.",
             "Give a complete and accurate answer",
             "If the answer is not clear, add the sentence \"Iltimos, savolga aniqlik kiriting\""
@@ -289,7 +289,7 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "mistral-small3.1:24b", base_url: str = "http://localhost:11434") -> LangChainOllamaModel:
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "mistral-small:24b", base_url: str = "http://172.16.8.39:11434") -> LangChainOllamaModel:
     return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url)
 
 # Asosiy model obyekti (eski kod bilan moslik uchun)
