@@ -16,7 +16,7 @@ from models.chat_message import ChatMessage
 from models.user_chat_list import UserChatList
 from auth.router import router as auth_router
 from auth.admin_auth import router as admin_router, get_current_admin
-from additional.additional import combine_text_arrays, get_docs_from_db, change_redis, old_context
+from additional.additional import change_translate, combine_text_arrays, get_docs_from_db, change_redis, is_russian, old_context
 from auth.utils import SECRET_KEY, ALGORITHM, jwt
 from typing import Optional
 from datetime import datetime
@@ -298,8 +298,17 @@ async def chat(request: Request, chat_request: ChatRequest):
         print(f"Using user_id from request.state: {user_id}")
         
         # Chat ID ni olish (agar berilgan bo'lsa)
-        chat_id = chat_request.chat_id    
+        chat_id = chat_request.chat_id
         print(f"Using chat ID: {chat_id}")
+
+        question = chat_request.query
+        language = 'uz'
+
+        if(is_russian(question)):
+            question = await change_translate("Статья 6", "uz")
+            language = 'ru'
+
+        print(question, "<<-question", language, "<<-language")
         
         # Contextdan savolni qayta olish
         context_query = await old_context(user_id, chat_request.query)

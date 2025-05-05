@@ -2,15 +2,24 @@ from retriever.langchain_chroma import search_documents
 from redis_obj.redis import redis_session
 from models.langchain_ollama import rewrite_query
 from typing import List
+import unicodedata
+from translate.translate import translator
+
 
 # Eng mos javoblarni topish db dan olish
 def get_docs_from_db(request: str):
-    if request.strip() == "":
-        relevant_docs = []
-    else:
+    try:
+        if not request or request.strip() == "":
+            return []
+        
         relevant_docs = search_documents(request, 4)
-
-    return relevant_docs
+        if not relevant_docs:
+            return []
+            
+        return relevant_docs
+    except Exception as e:
+        print(f"Error in get_docs_from_db: {str(e)}")
+        return []
 
 # Yangi javobni sessiyaga saqlash
 def change_redis(user_id: str, query: str, response: str):
@@ -55,3 +64,32 @@ async def combine_text_arrays(text1: List[str], text2: List[str]) -> List[str]:
     # Set orqali duplicatelarni o'chiramiz
     unique_texts = set(text1 + text2)
     return list(unique_texts)
+
+def is_russian(text: str) -> bool:
+    """
+    Check if the text contains Cyrillic characters
+    """
+    for c in text:
+        try:
+            if 'CYRILLIC' in unicodedata.name(c):
+                return True
+        except ValueError:
+            pass
+    return False
+
+async def change_translate(text: str, lang: str) -> str:
+    try:
+        if not text:
+            return ""
+
+        natija = await translator.russian_to_uzbek("Статья 6") or ""
+        print(natija, "<- natija") 
+        if lang == "uz":
+            return await translator.russian_to_uzbek(text) or ""
+        elif lang == "ru":
+            return await translator.uzbek_to_russian(text) or ""
+        else:
+            return text
+    except Exception as e:
+        print(f"Tarjima xatosi: {str(e)}")
+        return text  # Original matnni qaytarish
