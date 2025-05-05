@@ -1,8 +1,6 @@
 from retriever.langchain_chroma import search_documents
-# from retriever.langchain_chroma_two import search_documents
 from redis_obj.redis import redis_session
-from models.langchain_groqCustom import LangChainGroqModel
-from models.langchain_ollama import LangChainOllamaModel
+from models.langchain_ollama import rewrite_query
 from typing import List
 
 # Eng mos javoblarni topish db dan olish
@@ -31,7 +29,7 @@ def change_redis(user_id: str, query: str, response: str):
     redis_session.set_user_session(user_id, new_session)
 
 # sesiya orqali savolni qayta olish
-async def old_context(model: LangChainGroqModel | LangChainOllamaModel, user_id: str, request: str):
+async def old_context(user_id: str, request: str):
 
     previous_session = redis_session.get_user_session(user_id) or []
 
@@ -40,10 +38,8 @@ async def old_context(model: LangChainGroqModel | LangChainOllamaModel, user_id:
 
     previous_context = "\n".join(previous_session)
 
-    context_query = await model.rewrite_query(request, previous_context)
+    context_query = await rewrite_query(request, previous_context)
 
-    # Agar qaytarilgan qiymat dict bo'lsa (LangChainGroqModel uchun), uning content qismini olish
-    # Agar string bo'lsa (LangChainOllamaModel uchun yaroqli), to'g'ridan to'g'ri qaytarish
     if isinstance(context_query, dict):
         return context_query.get('content', request)
     else:
@@ -52,8 +48,6 @@ async def old_context(model: LangChainGroqModel | LangChainOllamaModel, user_id:
 def filter_salutations(results):
     return [r for r in results if not any(kw in r.lower() for kw in ['salom', 'assalomu alaykum', 'hurmatli'])]
 
-
-# langchain yordamida 2 ta text arrayni combain qiliadigan yan'ni bir xillaridan faqat 1 ta qoldiradigan function yozib ber
 async def combine_text_arrays(text1: List[str], text2: List[str]) -> List[str]:
     """
     2 ta text arrayni combain qiliadigan yan'ni bir xillaridan faqat 1 ta qoldiradigan function
