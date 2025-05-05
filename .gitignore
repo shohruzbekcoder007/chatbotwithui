@@ -40,3 +40,4 @@ local_models/
 *.log
 .env*
 .env
+answers.txt
