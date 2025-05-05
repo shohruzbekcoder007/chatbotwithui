@@ -15,7 +15,7 @@ from retriever.langchain_chroma import count_documents, add_documents_from_json,
 # json_file_path = "./tayyor_json/statistika_elektron_shaklda_taqdim_etish_nizom.json"
 # json_file_path = "./tayyor_json/estat.json"
 # json_file_path = "./tayyor_json/estat_yoriqnoma.json"
-json_file_path = "./tayyor_json/reports_data.json"
+# json_file_path = "./tayyor_json/reports_data.json"
 
 
 

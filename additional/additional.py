@@ -10,7 +10,7 @@ def get_docs_from_db(request: str):
     if request.strip() == "":
         relevant_docs = []
     else:
-        relevant_docs = search_documents(request, 5)
+        relevant_docs = search_documents(request, 4)
 
     return relevant_docs
 
@@ -54,3 +54,10 @@ def filter_salutations(results):
 
 
 # langchain yordamida 2 ta text arrayni combain qiliadigan yan'ni bir xillaridan faqat 1 ta qoldiradigan function yozib ber
+async def combine_text_arrays(text1: List[str], text2: List[str]) -> List[str]:
+    """
+    2 ta text arrayni combain qiliadigan yan'ni bir xillaridan faqat 1 ta qoldiradigan function
+    """
+    # Set orqali duplicatelarni o'chiramiz
+    unique_texts = set(text1 + text2)
+    return list(unique_texts)

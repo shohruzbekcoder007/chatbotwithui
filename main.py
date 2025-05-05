@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, Request, Depends, Response
+from fastapi import FastAPI, WebSocket, Request, Depends, Response
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,19 +16,32 @@ from models.chat_message import ChatMessage
 from models.user_chat_list import UserChatList
 from auth.router import router as auth_router
 from auth.admin_auth import router as admin_router, get_current_admin
-from additional.additional import filter_salutations, get_docs_from_db, change_redis, old_context
-from summarizer.summarizer_groq import groq_summarizer
-# from retriever.langchain_chroma import remove_duplicate_texts
+from additional.additional import combine_text_arrays, get_docs_from_db, change_redis, old_context
 from auth.utils import SECRET_KEY, ALGORITHM, jwt
 from typing import Optional
 from datetime import datetime
 import uuid
+import psutil
+import GPUtil
+import asyncio
+import json
+
+from llm_models.google_gemma27b import GemmaModel
+
+# Model obyektini yaratish
+gemma = GemmaModel()
+gemma.start_processing()
 
 # FastAPI ilovasini yaratish
 app = FastAPI()
 
 # Templates
 templates = Jinja2Templates(directory="static")
+
+# Request modelini yaratish
+class ChatRequest(BaseModel):
+    query: str
+    chat_id: Optional[str] = None
 
 # CORS sozlamalari
 app.add_middleware(
@@ -118,15 +131,6 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def admin_page():
     return FileResponse('static/admin.html')
 
-from fastapi import FastAPI, WebSocket
-import psutil
-import GPUtil
-import asyncio
-import json
-
-# app = FastAPI()
-
-
 @app.websocket("/ws/system")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
@@ -166,7 +170,6 @@ async def websocket_endpoint(websocket: WebSocket):
     except Exception as e:
         print(f"WebSocket disconnected: {e}")
 
-
 @app.get("/api/admin/feedbacks")
 async def get_feedbacks(admin: Admin = Depends(get_current_admin)):
     try:
@@ -174,10 +177,6 @@ async def get_feedbacks(admin: Admin = Depends(get_current_admin)):
         return {"success": True, "feedbacks": feedbacks}
     except Exception as e:
         return {"success": False, "error": str(e)}
-
-# Auth routerlarini qo'shish
-app.include_router(auth_router)
-app.include_router(admin_router)
 
 # Feedback endpoint
 @app.post("/api/feedback")
@@ -195,11 +194,6 @@ async def submit_feedback(request: Request):
         return {"success": True, "id": str(feedback.id)}
     except Exception as e:
         return {"success": False, "error": str(e)}
-
-# Request modelini yaratish
-class ChatRequest(BaseModel):
-    query: str
-    chat_id: Optional[str] = None
 
 @app.get("/")
 async def read_root(request: Request, response: Response, chat_id: Optional[str] = None):
@@ -310,7 +304,7 @@ async def chat(request: Request, chat_request: ChatRequest):
         # Contextdan savolni qayta olish
         context_query = await old_context(model_llm, user_id, chat_request.query)
 
-        # print(context_query, "<<-context_query")
+        print(context_query, "<<-context_query")
         
         relevant_docs = get_docs_from_db(chat_request.query)
         relevant_docs_add = get_docs_from_db(context_query)
@@ -318,26 +312,18 @@ async def chat(request: Request, chat_request: ChatRequest):
         # ChromaDB natijalaridan faqat matnlarni olish
         docs = relevant_docs.get("documents", []) if isinstance(relevant_docs, dict) else []
         docs_add = relevant_docs_add.get("documents", []) if isinstance(relevant_docs_add, dict) else []
-        
 
-        # print(docs, "<--- docs and docs_add")
-        combined_results = docs[0] + docs_add[0]
-
-        unique_results = combined_results #remove_duplicate_texts(combined_results)
+        unique_results = await combine_text_arrays(docs[0], docs_add[0])
 
         print(f"Unique results count: {len(unique_results)}", unique_results)
 
-        # output_and_system_token = 3400
-        # all_model_token = 8192
+        context1 = "Kontekst matni"
+        query1 = "O'zbekiston poytaxti qaysi shahar?"
+        response1 = await gemma.chat(context1, query1)
+        print(f"Model javobi: {response1}")
 
-        # prompt_token = all_model_token - output_and_system_token
+        return {"success": True, "response": response1}
 
-        # propt_without_history_token = model_llm.count_tokens("\n".join(unique_results))
-
-        # if propt_without_history_token > prompt_token:
-        #     summarized_text = await groq_summarizer.process_text_chunks(unique_results)
-        #     context = summarized_text
-        # else:
         context = "\n".join(unique_results)
 
         try:
@@ -625,6 +611,10 @@ async def create_chat(request: Request):
     except Exception as e:
         print(f"Error creating chat: {str(e)}")
         return {"success": False, "error": str(e)}
+
+# Auth routerlarini qo'shish
+app.include_router(auth_router)
+app.include_router(admin_router)
 
 if __name__ == "__main__":
     import uvicorn
