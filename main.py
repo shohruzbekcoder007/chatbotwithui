@@ -7,8 +7,8 @@ from fastapi.templating import Jinja2Templates
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
-# from models.langchain_groqCustom import model as model_llm
-from models.langchain_ollamaCustom import model as model_llm
+from models.langchain_groqCustom import model as model_llm
+# from models.langchain_ollamaCustom import model as model_llm
 from models.user import User
 from models.feedback import Feedback
 from models.admin import Admin
@@ -36,7 +36,7 @@ import json
 app = FastAPI()
 
 # Templates
-templates = Jinja2Templates(directory="static")
+# templates = Jinja2Templates(directory="static")
 
 # Request modelini yaratish
 class ChatRequest(BaseModel):
