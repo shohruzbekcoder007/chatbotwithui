@@ -7,8 +7,8 @@ from fastapi.templating import Jinja2Templates
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
-# from models.langchain_groqCustom import model as model_llm
-from models.langchain_ollamaCustom import model as model_llm
+from models.langchain_groqCustom import model as model_llm
+# from models.langchain_ollamaCustom import model as model_llm
 from models.user import User
 from models.feedback import Feedback
 from models.admin import Admin
@@ -29,14 +29,14 @@ import json
 from llm_models.google_gemma27b import GemmaModel
 
 # Model obyektini yaratish
-gemma = GemmaModel()
-gemma.start_processing()
+# gemma = GemmaModel()
+# gemma.start_processing()
 
 # FastAPI ilovasini yaratish
 app = FastAPI()
 
 # Templates
-templates = Jinja2Templates(directory="static")
+# templates = Jinja2Templates(directory="static")
 
 # Request modelini yaratish
 class ChatRequest(BaseModel):
