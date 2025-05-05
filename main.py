@@ -26,11 +26,11 @@ import GPUtil
 import asyncio
 import json
 
-from llm_models.google_gemma27b import GemmaModel
+# from llm_models.google_gemma27b import GemmaModel
 
-# Model obyektini yaratish
-gemma = GemmaModel()
-gemma.start_processing()
+# # Model obyektini yaratish
+# gemma = GemmaModel()
+# gemma.start_processing()
 
 # FastAPI ilovasini yaratish
 app = FastAPI()
