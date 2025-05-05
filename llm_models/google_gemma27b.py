@@ -210,6 +210,7 @@ class GemmaModel:
                     except Exception as e:
                         result["status"] = "error"
                         result["error"] = str(e)
+                        print(f"Error in processing request {request_id}: {str(e)}")
                     
                     self.request_queue.task_done()
                     

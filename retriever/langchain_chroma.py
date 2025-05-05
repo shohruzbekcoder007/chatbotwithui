@@ -8,6 +8,9 @@ import torch
 from sentence_transformers import SentenceTransformer
 import re
 import uuid
+import logging
+
+from retriever.encoder import cross_encode_sort
 
 # GPU mavjudligini tekshirish va device tanlash
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -17,21 +20,53 @@ class CustomEmbeddingFunction:
     def __init__(self, model_name='BAAI/bge-m3', device='cuda'):
         print(f"Model yuklanmoqda: {model_name}")
         self.device = torch.device(device if torch.cuda.is_available() and device=='cuda' else 'cpu')
-        self.model = SentenceTransformer(model_name, device=str(self.device))
+        
+        # Local model papkasini yaratish
+        local_models_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'local_models')
+        os.makedirs(local_models_dir, exist_ok=True)
+        
+        # Model nomini local papka uchun moslashtirish
+        model_folder_name = model_name.replace('/', '_')
+        local_model_path = os.path.join(local_models_dir, model_folder_name)
+        
+        # Xotira cheklovlarini sozlash
+        torch.cuda.set_per_process_memory_fraction(0.95)  # GPU xotirasining 95% ini ishlatish
+        
+        # Logging darajasini pasaytirish
+        logging.getLogger("accelerate").setLevel(logging.WARNING)
+        
+        # Agar model local'da mavjud bo'lsa, local'dan yuklash
+        if os.path.exists(local_model_path):
+            print(f"Model local'dan yuklanmoqda: {local_model_path}")
+            self.model = SentenceTransformer(local_model_path, device=str(self.device))
+        else:
+            print(f"Model internetdan yuklanmoqda va local'ga saqlanadi: {model_name}")
+            self.model = SentenceTransformer(model_name, device=str(self.device))
+            # Modelni local'ga saqlash
+            self.model.save(local_model_path)
+            print(f"Model local'ga saqlandi: {local_model_path}")
+            
         self.max_length = 4096
+        self.batch_size = 256  # Batch size ni belgilash
 
     def __call__(self, input: List[str]) -> List[List[float]]:
+        # Matnlarni tozalash
+        texts = [self._preprocess_text(text) for text in input]
+        
+        # Batch processing
         embeddings = []
-        for text in input:
-            # Matnni tozalash
-            text = self._preprocess_text(text)
-            
-            # SentenceTransformer orqali embedding olish
-            embedding = self.model.encode(text, 
-                                       normalize_embeddings=True,
-                                       max_length=self.max_length,
-                                       truncation=True)
-            embeddings.append(embedding.tolist())
+        for i in range(0, len(texts), self.batch_size):
+            batch_texts = texts[i:i + self.batch_size]
+            # Batch encoding with normalization and truncation
+            batch_embeddings = self.model.encode(
+                batch_texts,
+                batch_size=self.batch_size,
+                normalize_embeddings=True,
+                max_length=self.max_length,
+                truncation=True,
+                show_progress_bar=False
+            )
+            embeddings.extend(batch_embeddings.tolist())
         
         return embeddings
     
@@ -62,7 +97,7 @@ class CustomEmbeddingFunction:
         
         Args:
             text: Kiruvchi matn
-            
+        
         Returns:
             int: Tokenlar soni
         """
@@ -118,7 +153,7 @@ class ChromaManager:
             # Ma'lumotlarni tekshirish
             if not result or 'documents' not in result:
                 raise ValueError("Noto'g'ri format: documents topilmadi")
-                
+            
             if not result['documents']:
                 raise ValueError("Bo'sh ma'lumotlar qaytarildi")
             
@@ -211,7 +246,9 @@ class ChromaManager:
                         seen_docs.add(doc)
 
             # n_results gacha cheklash
-            all_docs = all_docs[:n_results]
+            # all_docs = all_docs[:n_results]
+
+            all_docs = cross_encode_sort(query, all_docs, n_results)
 
             return {"documents": [all_docs], "distances": []}
 

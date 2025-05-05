@@ -35,7 +35,6 @@ print(f"Eski hujjatlar soni: {count_documents()}")
 # JSON fayldan ma'lumotlarni o'qib ChromaDB ga qo'shish
 # add_documents_from_json(json_file_path)
 
-
 import os
 import time
 

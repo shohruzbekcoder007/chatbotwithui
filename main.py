@@ -26,11 +26,11 @@ import GPUtil
 import asyncio
 import json
 
-from llm_models.google_gemma27b import GemmaModel
+# from llm_models.google_gemma27b import GemmaModel
 
-# Model obyektini yaratish
-gemma = GemmaModel()
-gemma.start_processing()
+# # Model obyektini yaratish
+# gemma = GemmaModel()
+# gemma.start_processing()
 
 # FastAPI ilovasini yaratish
 app = FastAPI()
@@ -302,7 +302,7 @@ async def chat(request: Request, chat_request: ChatRequest):
         print(f"Using chat ID: {chat_id}")
         
         # Contextdan savolni qayta olish
-        context_query = await old_context(model_llm, user_id, chat_request.query)
+        context_query = await old_context(user_id, chat_request.query)
 
         print(context_query, "<<-context_query")
         
@@ -313,16 +313,13 @@ async def chat(request: Request, chat_request: ChatRequest):
         docs = relevant_docs.get("documents", []) if isinstance(relevant_docs, dict) else []
         docs_add = relevant_docs_add.get("documents", []) if isinstance(relevant_docs_add, dict) else []
 
+        # print(docs, "<<-docs")
+        # print(docs_add, "<<-docs_add")
+
         unique_results = await combine_text_arrays(docs[0], docs_add[0])
+        
 
         print(f"Unique results count: {len(unique_results)}", unique_results)
-
-        context1 = "Kontekst matni"
-        query1 = "O'zbekiston poytaxti qaysi shahar?"
-        response1 = await gemma.chat(context1, query1)
-        print(f"Model javobi: {response1}")
-
-        return {"success": True, "response": response1}
 
         context = "\n".join(unique_results)
 

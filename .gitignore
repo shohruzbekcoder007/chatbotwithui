@@ -33,7 +33,11 @@ ENV/
 *.swo
 
 # Project specific
+local_models/
 chroma_db/
 local_embedding_model/
+local_models/
 *.log
 .env*
+.env
+answers.txt
