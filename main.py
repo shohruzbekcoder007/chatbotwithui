@@ -26,9 +26,9 @@ import GPUtil
 import asyncio
 import json
 
-from llm_models.google_gemma27b import GemmaModel
+# from llm_models.google_gemma27b import GemmaModel
 
-# Model obyektini yaratish
+# # Model obyektini yaratish
 # gemma = GemmaModel()
 # gemma.start_processing()
 
