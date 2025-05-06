@@ -3,7 +3,6 @@ from fastapi import FastAPI, WebSocket, Request, Depends, Response
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.templating import Jinja2Templates
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
@@ -305,17 +304,17 @@ async def chat(request: Request, chat_request: ChatRequest):
         language = 'uz'
 
         if(is_russian(question)):
-            question = await change_translate("Статья 6", "uz")
+            question = await change_translate(question, "uz")
             language = 'ru'
 
-        print(question, "<<-question", language, "<<-language")
+        print(chat_request.chat_id, "<<- orginal question\n", question, "<<-question\n", language, "<<-language")
         
         # Contextdan savolni qayta olish
-        context_query = await old_context(user_id, chat_request.query)
+        context_query = await old_context(user_id, question)
 
-        print(context_query, "<<-context_query")
+        print(context_query, "<<- 2 - context_query")
         
-        relevant_docs = get_docs_from_db(chat_request.query)
+        relevant_docs = get_docs_from_db(question)
         relevant_docs_add = get_docs_from_db(context_query)
 
         # ChromaDB natijalaridan faqat matnlarni olish
@@ -327,13 +326,12 @@ async def chat(request: Request, chat_request: ChatRequest):
 
         unique_results = await combine_text_arrays(docs[0], docs_add[0])
         
-
         print(f"Unique results count: {len(unique_results)}", unique_results)
 
         context = "\n".join(unique_results)
 
         try:
-            response_current = await model_llm.chat(context, chat_request.query)
+            response_current = await model_llm.chat(context, question, language)
         except Exception as chat_error:
             print(f"Error in chat model: {str(chat_error)}")
             return {"error": str(chat_error)}

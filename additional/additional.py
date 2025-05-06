@@ -1,3 +1,4 @@
+import re
 from retriever.langchain_chroma import search_documents
 from redis_obj.redis import redis_session
 from models.langchain_ollama import rewrite_query
@@ -69,24 +70,28 @@ def is_russian(text: str) -> bool:
     """
     Check if the text contains Cyrillic characters
     """
-    for c in text:
-        try:
-            if 'CYRILLIC' in unicodedata.name(c):
-                return True
-        except ValueError:
-            pass
-    return False
+    cyrillic_count = len(re.findall(r'[а-яА-ЯёЁ]', text))
+    latin_count = len(re.findall(r'[a-zA-Z]', text))
+    
+    if cyrillic_count > latin_count:
+        return True
+    elif latin_count > cyrillic_count:
+        return False
+    else:
+        return False
+    
 
-async def change_translate(text: str, lang: str) -> str:
+async def change_translate(text: str, to_lang: str) -> str:
     try:
         if not text:
+            print("Tarjima qilish uchun matn bo'sh")
             return ""
 
-        natija = await translator.russian_to_uzbek("Статья 6") or ""
-        print(natija, "<- natija") 
-        if lang == "uz":
-            return await translator.russian_to_uzbek(text) or ""
-        elif lang == "ru":
+        if to_lang == "uz":
+            print("------------------------------- Tarjima qilinmoqda uzbek tiliga")
+            return translator._russian_to_uzbek_sync(text) or ""
+        elif to_lang == "ru":
+            print("------------------------------- Tarjima qilinmoqda rus tiliga")
             return await translator.uzbek_to_russian(text) or ""
         else:
             return text

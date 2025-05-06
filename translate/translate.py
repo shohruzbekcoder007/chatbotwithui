@@ -131,21 +131,21 @@ class Translator:
 
 translator = Translator()
 
-# Example usage:
-async def main():
-    # Russian to Uzbek example (long text)
-    russian_text = """Статья 66. """
+# # Example usage:
+# async def main():
+#     # Russian to Uzbek example (long text)
+#     russian_text = """Статья 66. """
     
-    print(f"Russian text:\n{russian_text}\n")
-    result = await translator.russian_to_uzbek(russian_text)
-    print(f"Uzbek translation:\n{result}\n")
+#     print(f"Russian text:\n{russian_text}\n")
+#     result = await translator.russian_to_uzbek(russian_text)
+#     print(f"Uzbek translation:\n{result}\n")
     
-    # Uzbek to Russian example (long text)
-    uzbek_text = """66-modda."""
+#     # Uzbek to Russian example (long text)
+#     uzbek_text = """66-modda."""
     
-    print(f"Uzbek text:\n{uzbek_text}\n")
-    result = await translator.uzbek_to_russian(uzbek_text)
-    print(f"Russian translation:\n{result}")
+#     print(f"Uzbek text:\n{uzbek_text}\n")
+#     result = await translator.uzbek_to_russian(uzbek_text)
+#     print(f"Russian translation:\n{result}")
 
-if __name__ == "__main__":
-    asyncio.run(main())
+# if __name__ == "__main__":
+#     asyncio.run(main())

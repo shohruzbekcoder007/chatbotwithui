@@ -72,7 +72,8 @@ class LangChainOllamaModel:
             "You are a chatbot answering questions for the National Statistics Committee. Your name is STAT AI.",
             "Let the information be based primarily on context and relegate additional answers to a secondary level.",
             "Do NOT integrate information that is not available in context. Kontextda mavjud bo'lmagan ma'lumotlarni qo‘shmaslik kerak.",
-            "You must respond only in Uzbek. Ensure there are no spelling mistakes.",
+            "You must respond only in {language}. Ensure there are no spelling mistakes.",
+            "Translate the answers into {language}.",
             "You should generate responses strictly based on the given prompt information without creating new content on your own.",
             "You are only allowed to answer questions related to the National Statistics Committee.",
             "The questions are within the scope of the estate and reports.",
@@ -133,7 +134,7 @@ class LangChainOllamaModel:
             # Noma'lum turlar uchun default HumanMessage
             return HumanMessage(content=content)
     
-    async def chat(self, context: str, query: str) -> str:
+    async def chat(self, context: str, query: str, language: str = "uz") -> str:
         """
         Modelga savol yuborish va javob olish
         
@@ -144,26 +145,31 @@ class LangChainOllamaModel:
             str: Model javobi
         """
         # System va user promptlaridan xabarlar yaratish
-        messages = self._create_messages(context, query)
+        messages = self._create_messages(context, query, language)
         
         # Modelni chaqirish
         response = await self._invoke(messages)
         
         return response
     
-    def _create_messages(self, system_prompts: str, user_prompt: str) -> List[BaseMessage]:
+    def _create_messages(self, system_prompts: str, user_prompt: str, language: str = "uz") -> List[BaseMessage]:
         """
         System va user promptlaridan LangChain message obyektlarini yaratish
         """
+        detect_lang = {
+            "uz": "uzbek",
+            "ru": "russian",
+        }
         messages = []
         
         # System promptlarni qo'shish
-        # for prompt in system_prompts:
-        messages.append(SystemMessage(content="\n".join(self.default_system_prompts)))
+        messages.append(SystemMessage(content="\n".join(self.default_system_prompts).format(language=detect_lang[language])))
         messages.append(SystemMessage(content=system_prompts))
         
         # User promptni qo'shish
         messages.append(HumanMessage(content=user_prompt))
+        if language == "ru":
+            messages.append(HumanMessage(content="Answer translate the result into Russian for me."))
         
         return messages
     
