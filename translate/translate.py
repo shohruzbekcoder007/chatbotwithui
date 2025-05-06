@@ -42,6 +42,7 @@ class Translator:
         """Split text into sentences"""
         # Split by common sentence endings while preserving them
         sentences = re.split(r'([.!?])', text)
+        print(f"Split sentences pre re: {sentences}")
         # Combine sentence endings with their sentences
         result = []
         for i in range(0, len(sentences)-1, 2):
@@ -76,8 +77,11 @@ class Translator:
     def _russian_to_uzbek_sync(self, text: str) -> str:
         """Synchronous function for Russian to Uzbek translation"""
         # Split text into sentences and then combine into manageable chunks
+        print(f"Original text: {text}")
         sentences = self._split_into_sentences(text)
+        print(f"Sentences: {sentences}")
         chunks = self._combine_sentences_into_chunks(sentences, self.max_chunk_length)
+        print(f"Chunks: {chunks}")
         
         # Translate each chunk
         translated_chunks = []
@@ -131,21 +135,21 @@ class Translator:
 
 translator = Translator()
 
-# # Example usage:
-# async def main():
-#     # Russian to Uzbek example (long text)
-#     russian_text = """Статья 66. """
+# Example usage:
+async def main():
+    # Russian to Uzbek example (long text)
+    russian_text = """Статья 9"""
     
-#     print(f"Russian text:\n{russian_text}\n")
-#     result = await translator.russian_to_uzbek(russian_text)
-#     print(f"Uzbek translation:\n{result}\n")
+    print(f"Russian text:\n{russian_text}\n")
+    result = await translator.russian_to_uzbek(russian_text)
+    print(f"Uzbek translation:\n{result}\n")
     
-#     # Uzbek to Russian example (long text)
-#     uzbek_text = """66-modda."""
+    # # Uzbek to Russian example (long text)
+    # uzbek_text = """66-modda."""
     
-#     print(f"Uzbek text:\n{uzbek_text}\n")
-#     result = await translator.uzbek_to_russian(uzbek_text)
-#     print(f"Russian translation:\n{result}")
+    # print(f"Uzbek text:\n{uzbek_text}\n")
+    # result = await translator.uzbek_to_russian(uzbek_text)
+    # print(f"Russian translation:\n{result}")
 
-# if __name__ == "__main__":
-#     asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

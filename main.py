@@ -303,6 +303,11 @@ async def chat(request: Request, chat_request: ChatRequest):
         question = chat_request.query
         language = 'uz'
 
+        if len(chat_request.query.split(" ")) < 3:
+            res = "Iltimos savolingizni to'liqroq kiriting"
+            print(res)
+            return {"response": res}
+
         if(is_russian(question)):
             question = await change_translate(question, "uz")
             language = 'ru'
@@ -310,28 +315,28 @@ async def chat(request: Request, chat_request: ChatRequest):
         print(chat_request.query, "<<- orginal question\n", question, "<<-question\n", language, "<<-language")
         
         # Contextdan savolni qayta olish
-        context_query = await old_context(user_id, question)
+        # context_query = await old_context(user_id, question)
 
-        print(context_query, "<<- 2 - context_query")
+        # print(context_query, "<<- 2 - context_query")
         
         relevant_docs = get_docs_from_db(question)
-        relevant_docs_add = get_docs_from_db(context_query)
+        # relevant_docs_add = get_docs_from_db(context_query)
 
         # ChromaDB natijalaridan faqat matnlarni olish
         docs = relevant_docs.get("documents", []) if isinstance(relevant_docs, dict) else []
-        docs_add = relevant_docs_add.get("documents", []) if isinstance(relevant_docs_add, dict) else []
+        # docs_add = relevant_docs_add.get("documents", []) if isinstance(relevant_docs_add, dict) else []
 
         # print(docs, "<<-docs")
         # print(docs_add, "<<-docs_add")
 
-        unique_results = await combine_text_arrays(docs[0], docs_add[0])
+        unique_results = await combine_text_arrays(docs[0], [""]) #, docs_add[0])
         
         print(f"Unique results count: {len(unique_results)}", unique_results)
 
         context = "\n".join(unique_results)
 
         try:
-            response_current = await model_llm.chat(context, question, language)
+            response_current = await model_llm.chat(context, question or chat_request.query, language)
         except Exception as chat_error:
             print(f"Error in chat model: {str(chat_error)}")
             return {"error": str(chat_error)}

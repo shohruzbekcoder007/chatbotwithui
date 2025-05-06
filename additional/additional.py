@@ -92,7 +92,7 @@ async def change_translate(text: str, to_lang: str) -> str:
             return translator._russian_to_uzbek_sync(text) or ""
         elif to_lang == "ru":
             print("------------------------------- Tarjima qilinmoqda rus tiliga")
-            return await translator.uzbek_to_russian(text) or ""
+            return translator._uzbek_to_russian_sync(text) or ""
         else:
             return text
     except Exception as e:

@@ -152,14 +152,15 @@ class LangChainOllamaModel:
             # HTML, markdown formatlarini tozalash
             response_text = response_text.replace("```html", "").replace("```", "")
             
+            print(f"Rewritten query: {response_text}")
             # Agar natija savol emas, balki javob ko'rinishida bo'lsa, original so'rovni qaytarish
             javob_belgilari = ["<p>", "</p>", "<b>", "</b>", "<i>", "</i>", "javob:", "Javob:"]
-            if any(marker in response_text for marker in javob_belgilari) or len(response_text.split()) > 30:
+            if any(marker in response_text for marker in javob_belgilari) or len(response_text.split(" ")) > 30:
                 return {"content": user_query}  # Javob emas, original so'rovni qaytarish
 
             # Agar qayta yozilgan savol juda qisqa bo'lsa, original savolni qaytarish
-            if len(response_text.split()) < 3:
-                return {"content": user_query}
+            # if len(response_text.split()) < 3:
+            #     return {"content": user_query}
 
             return {"content": response_text}
 

@@ -83,6 +83,7 @@ class LangChainOllamaModel:
             "Don't make up your own questions and answers, just use the information provided. O'zing savolni javobni to'qib chiqarma faqat berilgan ma'lumotlardan foydalan.",
             "Give a complete and accurate answer",
             "Don't add unrelated context",
+            "Write the information as if you knew it in advance, don't imply that it was gathered from context.",
             "If the answer is not clear or not answer, please clarify from the user. For Example: \"Savolingizni tushunmadim, Iltimos savolga aniqlik kiriting\"",
         ]
     
@@ -177,6 +178,8 @@ class LangChainOllamaModel:
         """
         LangChain orqali modelni chaqirish (semaphore bilan cheklangan)
         """
+        for message in messages:
+            print(f"{self._get_message_type(message)}: {message.content}")
         # Global semaphore bilan cheklash
         async with _MODEL_SEMAPHORE:
             logger.info(f"Model chaqirilmoqda (session: {self.session_id})")
