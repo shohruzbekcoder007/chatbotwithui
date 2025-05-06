@@ -307,7 +307,7 @@ async def chat(request: Request, chat_request: ChatRequest):
             question = await change_translate(question, "uz")
             language = 'ru'
 
-        print(chat_request.chat_id, "<<- orginal question\n", question, "<<-question\n", language, "<<-language")
+        print(chat_request.query, "<<- orginal question\n", question, "<<-question\n", language, "<<-language")
         
         # Contextdan savolni qayta olish
         context_query = await old_context(user_id, question)
