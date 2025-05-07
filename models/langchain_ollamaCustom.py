@@ -42,7 +42,9 @@ class LangChainOllamaModel:
                 temperature: float = 0.7 ,
                 num_ctx: int = 4096,
                 num_gpu: int = 1,
-                num_thread: int = 8):
+                gpu_layers: int = 100,
+                kv_cache: bool = True, # buni xalaqit berishi mumkin
+                num_thread: int = 32):
         """
         Ollama modelini LangChain bilan ishlatish uchun klass.
         
@@ -85,6 +87,7 @@ class LangChainOllamaModel:
             "Don't add unrelated context",
             "Write the information as if you knew it in advance, don't imply that it was gathered from context.",
             "If the answer is not clear or not answer, please clarify from the user. For Example: \"Savolingizni tushunmadim, Iltimos savolga aniqlik kiriting\"",
+            "Javobdan so'ng albatta keyingi savollar taklif qil"
         ]
     
     def _get_model(self):
@@ -178,15 +181,15 @@ class LangChainOllamaModel:
         """
         LangChain orqali modelni chaqirish (semaphore bilan cheklangan)
         """
-        for message in messages:
-            print(f"{self._get_message_type(message)}: {message.content}")
+        # for message in messages:
+            # print(f"{self._get_message_type(message)}: {message.content}")
         # Global semaphore bilan cheklash
         async with _MODEL_SEMAPHORE:
             logger.info(f"Model chaqirilmoqda (session: {self.session_id})")
             
             try:
                 # Ollama modelini chaqirish
-                response = await asyncio.wait_for(self.model.ainvoke(messages), timeout=15.0)
+                response = await asyncio.wait_for(self.model.ainvoke(messages), timeout=60.0)
                 if isinstance(response, dict):
                     # Yangi LangChain versiyasi uchun
                     return response.get("content", str(response))
