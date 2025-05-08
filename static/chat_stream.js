@@ -45,7 +45,6 @@ async function onsubmitstream(event) {
             },
             body: JSON.stringify({
                 content: userText,
-                context: "", // kerakli system prompt bo‘lsa shu yerga qo‘sh
                 language: "uz"
             })
         });
@@ -67,10 +66,11 @@ async function onsubmitstream(event) {
 
             // SSE protokol bo‘yicha "data: " prefiksi bo‘ladi
             chunk.split("\n").forEach(line => {
-                if (line.startsWith("data: ")) {
-                    const token = line.replace("data: ", "");
+                if (line) {
+                    const token = line;
                     fullText += token;
                     messageTextSpan.innerHTML = fullText;
+                    console.log(token);
                     setTimeout(() => scrollToBottom(), 0);
                 }
             });
