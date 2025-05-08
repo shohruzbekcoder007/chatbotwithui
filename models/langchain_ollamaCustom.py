@@ -64,6 +64,8 @@ class LangChainOllamaModel:
         self.num_ctx = num_ctx
         self.num_gpu = num_gpu
         self.num_thread = num_thread
+        self.gpu_layers = gpu_layers
+        self.kv_cache = kv_cache
         
         # Model yaratish yoki cache dan olish
         self.model = self._get_model()
@@ -87,7 +89,7 @@ class LangChainOllamaModel:
             "Don't add unrelated context",
             "Write the information as if you knew it in advance, don't imply that it was gathered from context.",
             "If the answer is not clear or not answer, please clarify from the user. For Example: \"Savolingizni tushunmadim, Iltimos savolga aniqlik kiriting\"",
-            "Javobdan so'ng albatta keyingi savollar taklif qil"
+            "For each answer, prefix one follow-up short question with ‘Tavsiya qilingan savol:’; if the answer is a greeting, include nothing. ‘<br><p><b>Tavsiya qilingan keyingi savol:</b> Rasmiy statistika to‘g‘risidagi qonun nechta bo'limdan iborat?</p>’. answer with html tags",
         ]
     
     def _get_model(self):
@@ -105,7 +107,9 @@ class LangChainOllamaModel:
                 context_window=self.num_ctx,
                 extra_model_kwargs={
                     "num_gpu": self.num_gpu,
-                    "num_thread": self.num_thread
+                    "num_thread": self.num_thread,
+                    "gpu_layers": self.gpu_layers,
+                    "kv_cache": self.kv_cache
                 }
             )
             _MODEL_CACHE[cache_key] = model
