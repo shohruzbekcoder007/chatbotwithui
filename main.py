@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, WebSocket, Request, Depends, Response
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from beanie import init_beanie
@@ -329,7 +329,7 @@ async def chat(request: Request, chat_request: ChatRequest):
         # print(docs, "<<-docs")
         # print(docs_add, "<<-docs_add")
 
-        unique_results = await combine_text_arrays(docs[0], docs_add[0]) #, docs_add[0])
+        unique_results = await combine_text_arrays(docs[0], docs_add[0])
         
         # print(f"Unique results count: {len(unique_results)}", unique_results)
 
@@ -388,6 +388,45 @@ async def chat(request: Request, chat_request: ChatRequest):
     except Exception as e:
         print(f"Error in chat endpoint: {str(e)}")
         return {"error": str(e)}
+
+
+########################## STREAMING START ##########################
+
+class ChatRequest(BaseModel):
+    content: str
+
+def sse_format(data: str):
+    return f"data: {data}\n\n"
+
+def generate_response(messages):
+    # model_llm.chat(context, (question or req.content), language)
+    for part in chat('llama3.2:3b', messages=messages, stream=True):
+        yield sse_format(part['message']['content'])
+
+
+@app.post("/chat/stream")
+async def stream_chat(req: ChatRequest):
+
+    question = req.content
+    language = 'uz'
+
+    if(is_russian(question)):
+        question = await change_translate(question, "uz")
+        language = 'ru'
+
+    relevant_docs = get_docs_from_db(question)
+    docs = relevant_docs.get("documents", []) if isinstance(relevant_docs, dict) else []
+    context = "\n".join(docs[0])
+
+    async def event_generator():
+        async for token in model_llm.chat_stream(context=context, query=question, language=language):
+            # print(token, end="", flush=True)
+            yield f"data: {token}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+########################## STREAMING END ##########################
+
 
 @app.get("/api/chat-history/{chat_id}")
 async def get_chat_history(request: Request, chat_id: str):

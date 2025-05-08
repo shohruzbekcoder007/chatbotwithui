@@ -111,6 +111,10 @@ body {
     overflow-y: auto;
     /* padding-bottom: 150px; */
     scroll-behavior: smooth;
+    
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .message {
@@ -300,6 +304,7 @@ body {
 
 .conversation {
     display: contents;
+    overflow-y: auto;
 }
 
 ::-webkit-scrollbar {

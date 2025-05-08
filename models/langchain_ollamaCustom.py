@@ -1,13 +1,10 @@
 import os
-import json
 import asyncio
 import logging
-from typing import List, Dict, Any, Optional, Union, ClassVar
+from typing import List, Dict, Any, Optional, ClassVar
 from dotenv import load_dotenv
 from functools import lru_cache
-
-# LangChain importlari
-from langchain_core.language_models import BaseChatModel
+from typing import AsyncGenerator
 from langchain_core.messages import (
     AIMessage,
     HumanMessage, 
@@ -340,6 +337,43 @@ class LangChainOllamaModel:
         result = int((estimate1 + estimate2) / 2)
         
         return max(1, result)
+
+    async def chat_stream(self, context: str, query: str, language: str = "uz") -> AsyncGenerator[str, None]:
+        """
+        Javobni SSE orqali stream ko‘rinishda yuborish
+        
+        Args:
+            context (str): System prompt
+            query (str): User savoli
+            language (str): Til
+        
+        Yields:
+            str: Modeldan kelayotgan har bir token yoki parcha
+        """
+        messages = self._create_messages(context, query, language)
+        async for chunk in self._stream_invoke(messages):
+            yield chunk
+
+    async def _stream_invoke(self, messages: List[BaseMessage]) -> AsyncGenerator[str, None]:
+        """
+        LangChain modelidan tokenlar ketma-ket stream tarzida olish
+        """
+        async with _MODEL_SEMAPHORE:
+            try:
+                logger.info(f"Model stream boshladi (session: {self.session_id})")
+                async for chunk in self.model.astream(messages):
+                    # LangChain chunk object: {'type': 'chat', 'message': AIMessage(content='...')}
+                    if hasattr(chunk, "content"):
+                        yield chunk.content
+                    elif isinstance(chunk, dict):
+                        yield chunk.get("content", "")
+            except asyncio.TimeoutError:
+                logger.warning("Stream timeout.")
+                self._handle_timeout_cleanup()
+                yield "data: [TIMEOUT] Modeldan javob olish vaqti tugadi\n\n"
+            except Exception as e:
+                logger.error(f"Stream xatoligi: {str(e)}")
+                yield f"data: [ERROR] {str(e)}\n\n"
 
 
 # Factory funksiya - model obyektini olish

@@ -73,6 +73,24 @@
             font-size: 14px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
+
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
     </style>
 </head>
 
@@ -340,8 +358,7 @@
                         <div class="message-container">
                             <div class="avatar">AI</div>
                             <div class="message-content">
-                                <div class="message-text">Men Stat AI Chatbotman. Sizga qanday yordam bera olaman?
-                                </div>
+                                <div class="message-text">Men Stat AI Chatbotman. Sizga qanday yordam bera olaman?</div>
                             </div>
                         </div>
                     </div>
@@ -353,12 +370,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="conversation">
-                    </div>
+                    <div class="conversation"></div>
                 </div>
             </div>
             <div class="chat-input-container">
-                <form class="chat-input" onsubmit="onsubmitnew(event)">
+                <form class="chat-input" onsubmit="onsubmitstream(event)">
                     <input type="text" placeholder="Xabar yozing...">
                     <button type="submit">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -431,7 +447,9 @@
         <span id="toastMessage"></span>
     </div>
 
+
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="/static/chat_stream.js"></script>
     <script src="/static/app.js"></script>
 </body>
 
