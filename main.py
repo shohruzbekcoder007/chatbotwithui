@@ -16,6 +16,7 @@ from models.user_chat_list import UserChatList
 from auth.router import router as auth_router
 from auth.admin_auth import router as admin_router, get_current_admin
 from additional.additional import change_translate, combine_text_arrays, get_docs_from_db, change_redis, is_russian, old_context
+from retriever.langchain_chroma import questions_manager
 from auth.utils import SECRET_KEY, ALGORITHM, jwt
 from typing import Optional
 from datetime import datetime
@@ -58,12 +59,12 @@ async def add_user_id_to_request(request: Request, call_next):
     user_id = "anonymous"
     token = None
     
-    # 1. Authorization headerdan token olish
+    #     - Authorization headerdan token olish
     auth_header = request.headers.get("Authorization")
     if auth_header and auth_header.startswith("Bearer "):
         token = auth_header.replace("Bearer ", "")
     
-    # 2. Cookie'dan token olish (agar header'da bo'lmasa)
+    #     - Cookie'dan token olish (agar header'da bo'lmasa)
     if token is None:
         token = request.cookies.get("access_token")
     
@@ -381,7 +382,7 @@ async def chat(request: Request, chat_request: ChatRequest):
                 })
                 print(f"Updated timestamp for existing chat: {chat_id}")
         else:
-            print(f"Anonymous user, message not saved to database. Chat ID: {chat_id}")
+            print(f"Anonymous user, message not saved to     - Chat ID: {chat_id}")
 
         return {"response": response_current}
 
@@ -398,15 +399,8 @@ class ChatRequest(BaseModel):
 def sse_format(data: str):
     return f"data: {data}\n\n"
 
-def generate_response(messages):
-    # model_llm.chat(context, (question or req.content), language)
-    for part in chat('llama3.2:3b', messages=messages, stream=True):
-        yield sse_format(part['message']['content'])
-
-
 @app.post("/chat/stream")
 async def stream_chat(req: ChatRequest):
-
     question = req.content
     language = 'uz'
 
@@ -416,12 +410,25 @@ async def stream_chat(req: ChatRequest):
 
     relevant_docs = get_docs_from_db(question)
     docs = relevant_docs.get("documents", []) if isinstance(relevant_docs, dict) else []
-    context = "\n".join(docs[0])
+    context = "\n- ".join(docs[0])
+    print(f"Context: {context}")
+
+    
+    results = questions_manager.search_documents(query=question, n_results=10)
+    suggested_context = "\n- ".join(results.get("documents", [[]])[0]) if isinstance(results, dict) else []
+    # print(f"Suggested Context: {suggested_context}")
 
     async def event_generator():
         async for token in model_llm.chat_stream(context=context, query=question, language=language):
             # print(token, end="", flush=True)
-            yield f"data: {token}\n\n"
+            yield f"{token}\n\n"
+        
+        # yield f"<br><br>\n\n<b>Tavsiya qilgan savol</b>:  {results.get("documents", [[]])[0][0]}"
+        yield f"<br><br>\n\n<b>Tavsiya qilgan savol</b>: "
+
+        async for part in model_llm.get_stream_suggestion_question(suggested_context, question, context):
+            yield f"{(part)}\n\n"
+        
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 

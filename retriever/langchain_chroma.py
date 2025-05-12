@@ -115,25 +115,17 @@ class ChromaManager:
         self.client = chromadb.PersistentClient(path=persistent_dir)
         
         try:
-            # Mavjud kolleksiyani olish yoki yangi yaratish
-            try:
-                self.collection = self.client.get_collection(
-                    name=collection_name,
-                    embedding_function=self.embeddings
-                )
-                print(f"Mavjud kolleksiya ochildi: {collection_name}")
-            except:
-                # Agar kolleksiya mavjud bo'lmasa, yangi yaratish
-                self.collection = self.client.create_collection(
-                    name=collection_name,
-                    embedding_function=self.embeddings,
-                    metadata={"hnsw:space": "cosine"}  # Cosine similarity uchun
-                )
-                print(f"Yangi kolleksiya yaratildi: {collection_name}")
-            
+            self.collection = self.client.get_collection(
+                name=collection_name,
+                embedding_function=self.embeddings
+            )
         except Exception as e:
-            print(f"Xatolik yuz berdi: {str(e)}")
-            raise e
+            print(f"Kolleksiyani olishda xatolik: {str(e)}")
+            self.collection = self.client.create_collection(
+                name=collection_name,
+                embedding_function=self.embeddings,
+                metadata={"hnsw:space": "cosine"}
+            )
 
     def get_all_documents(self) -> Dict:
         """
@@ -268,15 +260,15 @@ class ChromaManager:
             print(f"Hujjatlarni o'chirishda xatolik: {e}")
             return False
 
-    def create_collection(self):
+    def create_collection(self, collection_name: Optional[str] = None):
         """ChromaDB collection yaratish"""
         try:
             self.collection = self.client.create_collection(
-                name=self.collection_name,
+                name=self.collection_name if collection_name else self.collection_name,
                 embedding_function=self.embeddings,
                 metadata={"hnsw:space": "cosine"}  # Cosine similarity uchun
             )
-            print(f"Yangi kolleksiya yaratildi: {self.collection_name}")
+            print(f"Yangi kolleksiya yaratildi: {collection_name if collection_name else self.collection_name}")
         except Exception as e:
             print(f"Kolleksiya yaratishda xatolik: {str(e)}")
 
@@ -335,6 +327,9 @@ def add_documents_from_json(json_file_path: str):
 
 # ChromaManager instansiyasini yaratib
 chroma_manager = ChromaManager()
+
+# Qustionlar uchun alohida ChromaManager yaratish
+questions_manager = ChromaManager(collection_name="questions")
 
 # Funksiyalarni eksport qilish
 def count_documents():

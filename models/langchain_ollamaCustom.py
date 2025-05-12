@@ -85,8 +85,9 @@ class LangChainOllamaModel:
             "Give a complete and accurate answer",
             "Don't add unrelated context",
             "Write the information as if you knew it in advance, don't imply that it was gathered from context.",
+            # "If the answer is long, add a summary at the end of the answer using the format: '<br><p>  SUMMARY </p>'.",
+            # "after answer, prefix one follow-up correctly short question with ‘Tavsiya qilingan savol:’, if the answer is a greeting, include nothing. ‘<br><p><b>Tavsiya qilingan keyingi savol:</b> Rasmiy statistika to‘g‘risidagi qonun nechta bo'limdan iborat?</p>’. answer with html tags",
             "If the answer is not clear or not answer, please clarify from the user. For Example: \"Savolingizni tushunmadim, Iltimos savolga aniqlik kiriting\"",
-            "For each answer, prefix one follow-up short question with ‘Tavsiya qilingan savol:’; if the answer is a greeting, include nothing. ‘<br><p><b>Tavsiya qilingan keyingi savol:</b> Rasmiy statistika to‘g‘risidagi qonun nechta bo'limdan iborat?</p>’. answer with html tags",
         ]
     
     def _get_model(self):
@@ -367,6 +368,8 @@ class LangChainOllamaModel:
                         yield chunk.content
                     elif isinstance(chunk, dict):
                         yield chunk.get("content", "")
+                    else:
+                        yield str(chunk)
             except asyncio.TimeoutError:
                 logger.warning("Stream timeout.")
                 self._handle_timeout_cleanup()
@@ -374,6 +377,41 @@ class LangChainOllamaModel:
             except Exception as e:
                 logger.error(f"Stream xatoligi: {str(e)}")
                 yield f"data: [ERROR] {str(e)}\n\n"
+
+    async def get_stream_suggestion_question(self, suggested_context: str, query: str, answer: str) -> AsyncGenerator[str, None]:
+        """
+        Stream tarzida tavsiya qilingan savolni real vaqtda generatsiya qilish (generate API bilan)
+
+        Args:
+            context (str): Savollar konteksti (faqat tanlash mumkin bo‘lgan savollar)
+            query (str): Foydalanuvchi so‘rovi
+
+        Yields:
+            str: Har bir token yoki matn bo‘lagi
+        """
+        system_prompt = (
+            "Siz tavsiya beruvchi yordamchisiz. Foydalanuvchining sorovi va unga berilgan javobga asoslanib, "
+            "quyida berilgan kontekst savollari ichidan mantiqan eng yaqin bitta savolni tanlashingiz kerak.\n\n"
+            "Faqat **bitta** savolni tanlang. Yangi savol o‘ylab topmang, faqat taqdim etilgan savollar ichidan tanlang.\n"
+            "Agar foydalanuvchining so‘rovi noaniq bo‘lsa, uni aniqlashtirishni so‘rang.\n"
+            "Sizga berilgan kontekstda mavjud bo‘lgan savollardan faqat 1 tasini tanlang. Faqat bitta savolni tanlang. Faqatgina savolni yozing, boshqa hech qanday ma'lumot yozmang.\n\n"
+            "Each response must be formatted in HTML. Every response should maintain semantic and visual clarity"
+        )
+
+        full_prompt = (
+            f"Taqdim etilgan savollar:\n{suggested_context}\n\n" 
+            f"Foydalanuvchi sorovi:\n{query}\n\n"
+            f"Yordamchi javobi:\n{answer}\n\n"
+            f"Tavsiya qilingan keyingi savol: <b> </b>"
+        )
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": full_prompt}
+        ]
+
+
+        async for chunk in self._stream_invoke(messages):
+            yield chunk
 
 
 # Factory funksiya - model obyektini olish

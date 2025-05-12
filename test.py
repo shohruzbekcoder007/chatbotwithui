@@ -41,14 +41,14 @@ import time
 def process_all_json_files(folder_path: str = "./tayyor_json/"):
     remove_all_documents()
     create_collection()
-    for root, dirs, files in os.walk(folder_path):
-        for file in files:
-            if file.endswith(".json"):
-                full_path = os.path.join(root, file)
-                add_documents_from_json(full_path)
-                print(f"######################################  Qo'shilgan fayl: {full_path}")
-                time.sleep(1)  # 0.5 soniya kutish
+    for file in os.listdir(folder_path):
+        if file.endswith(".json"):
+            full_path = os.path.join(folder_path, file)
+            add_documents_from_json(full_path)
+            print(f"######################################  Qo'shilgan fayl: {full_path}")
+            time.sleep(0.1)  # 0.5 soniya kutish
 
 process_all_json_files("./tayyor_json/")
 # Barcha hujjatlarning sonini ko'rish
 print(f"Jami hujjatlar soni: {count_documents()}")
+
