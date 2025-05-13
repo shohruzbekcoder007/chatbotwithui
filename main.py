@@ -421,7 +421,7 @@ async def stream_chat(req: ChatRequest):
     async def event_generator():
         async for token in model_llm.chat_stream(context=context, query=question, language=language):
             # print(token, end="", flush=True)
-            yield f"data: {token}\n\n"
+            yield f"{token}\n\n"
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 

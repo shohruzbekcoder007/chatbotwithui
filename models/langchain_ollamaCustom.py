@@ -12,6 +12,20 @@ from langchain_core.messages import (
     BaseMessage
 )
 from langchain_community.chat_models import ChatOllama
+from datetime import datetime
+
+# Joriy sanani olish funksiyasi
+def get_current_date(format: str = "%Y-%m-%d") -> str:
+    """
+    Joriy sanani ko'rsatilgan formatda olish.
+    
+    Args:
+        format (str): Sana uchun format (masalan, YYYY-MM-DD)
+        
+    Returns:
+        str: Formatlangan joriy sana
+    """
+    return datetime.now().strftime(format)
 
 # .env faylidan konfiguratsiyani o'qish
 load_dotenv()
@@ -149,6 +163,7 @@ class LangChainOllamaModel:
         Returns:
             str: Model javobi
         """
+
         # System va user promptlaridan xabarlar yaratish
         messages = self._create_messages(context, query, language)
         
