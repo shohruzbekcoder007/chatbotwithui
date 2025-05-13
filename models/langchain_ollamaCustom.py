@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 _MODEL_CACHE = {}
 
 # Global semaphore - bir vaqtda nechta so'rov bajarilishi mumkinligini cheklaydi
-_MODEL_SEMAPHORE = asyncio.Semaphore(5)  # Bir vaqtda 5 ta so'rovga ruxsat
+_MODEL_SEMAPHORE = asyncio.Semaphore(10)  # Bir vaqtda 5 ta so'rovga ruxsat
 
 class LangChainOllamaModel:
     """Ollama bilan LangChain integratsiyasi - ko'p foydalanuvchilar uchun optimallashtirilgan"""
@@ -37,7 +37,7 @@ class LangChainOllamaModel:
                 model_name: str = "mistral-small:24b",
                 base_url: str = "http://localhost:11434",
                 temperature: float = 0.7 ,
-                num_ctx: int = 4096,
+                num_ctx: int = 2048,
                 num_gpu: int = 1,
                 gpu_layers: int = 100,
                 kv_cache: bool = True, # buni xalaqit berishi mumkin
@@ -107,7 +107,8 @@ class LangChainOllamaModel:
                     "num_gpu": self.num_gpu,
                     "num_thread": self.num_thread,
                     "gpu_layers": self.gpu_layers,
-                    "kv_cache": self.kv_cache
+                    # "kv_cache": self.kv_cache,
+                    "batch_size": 512,
                 }
             )
             _MODEL_CACHE[cache_key] = model
@@ -378,7 +379,7 @@ class LangChainOllamaModel:
                 logger.error(f"Stream xatoligi: {str(e)}")
                 yield f"data: [ERROR] {str(e)}\n\n"
 
-    async def get_stream_suggestion_question(self, suggested_context: str, query: str, answer: str) -> AsyncGenerator[str, None]:
+    async def get_stream_suggestion_question(self, suggested_context: str, query: str, answer: str, language: str) -> AsyncGenerator[str, None]:
         """
         Stream tarzida tavsiya qilingan savolni real vaqtda generatsiya qilish (generate API bilan)
 
@@ -389,26 +390,34 @@ class LangChainOllamaModel:
         Yields:
             str: Har bir token yoki matn bo‘lagi
         """
+        detect_lang = {
+            "uz": "O'zbek",
+            "ru": "Rus",
+        }
         system_prompt = (
             "Siz tavsiya beruvchi yordamchisiz. Foydalanuvchining sorovi va unga berilgan javobga asoslanib, "
             "quyida berilgan kontekst savollari ichidan mantiqan eng yaqin bitta savolni tanlashingiz kerak.\n\n"
             "Faqat **bitta** savolni tanlang. Yangi savol o‘ylab topmang, faqat taqdim etilgan savollar ichidan tanlang.\n"
+            "Sizga berilgan kontekstda mavjud bo‘lgan savollardan faqat 1 tasini tanlang. Faqat bitta savolni tanlang. Faqatgina savolning o'zini yozing, boshqa hech qanday ma'lumot qo'shib yozmang.\n\n"
+            "Each response must be formatted in HTML (answer only <i> tag). Every response should maintain semantic and visual clarity\n"
+            "Yangi Savol {language} tilida bo'lishi kerak.\n"
             "Agar foydalanuvchining so‘rovi noaniq bo‘lsa, uni aniqlashtirishni so‘rang.\n"
-            "Sizga berilgan kontekstda mavjud bo‘lgan savollardan faqat 1 tasini tanlang. Faqat bitta savolni tanlang. Faqatgina savolni yozing, boshqa hech qanday ma'lumot yozmang.\n\n"
-            "Each response must be formatted in HTML. Every response should maintain semantic and visual clarity"
+            "Agar foydalanuvchi savoli salomlashish yoki tanishish to'g'risida bo'lsa, statistika nizomi to'g'risidagi savolni yozing.\n"
         )
 
         full_prompt = (
             f"Taqdim etilgan savollar:\n{suggested_context}\n\n" 
             f"Foydalanuvchi sorovi:\n{query}\n\n"
             f"Yordamchi javobi:\n{answer}\n\n"
-            f"Tavsiya qilingan keyingi savol: <b> </b>"
+            f"Tavsiya qilinadigan keyingi savol: <b> </b>"
         )
         messages = [
-            {"role": "system", "content": system_prompt},
+            {"role": "system", "content": system_prompt.format(language=detect_lang[language])},
             {"role": "user", "content": full_prompt}
         ]
-
+        if language == "ru":
+            messages.append( {"role": "user", "content":"Answer translate the result into Russian for me."})
+        
 
         async for chunk in self._stream_invoke(messages):
             yield chunk

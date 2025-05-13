@@ -426,7 +426,7 @@ async def stream_chat(req: ChatRequest):
         # yield f"<br><br>\n\n<b>Tavsiya qilgan savol</b>:  {results.get("documents", [[]])[0][0]}"
         yield f"<br><br>\n\n<b>Tavsiya qilgan savol</b>: "
 
-        async for part in model_llm.get_stream_suggestion_question(suggested_context, question, context):
+        async for part in model_llm.get_stream_suggestion_question(suggested_context, question, context, language):
             yield f"{(part)}\n\n"
         
 
