@@ -1,7 +1,5 @@
 import os
-import time
 import json
-import numpy as np
 from typing import List, Dict, Any, Optional
 import chromadb
 import torch
@@ -126,6 +124,7 @@ class ChromaManager:
                 embedding_function=self.embeddings,
                 metadata={"hnsw:space": "cosine"}
             )
+            print(f"Kolleksiya yaratildi: {collection_name}")
 
     def get_all_documents(self) -> Dict:
         """
@@ -251,10 +250,17 @@ class ChromaManager:
     def delete_all_documents(self):
         """Barcha hujjatlarni o'chirish"""
         try:
-            if self.collection:
-                self.client.delete_collection(self.collection_name)
-            self.__init__()
-            print("Barcha hujjatlar o'chirildi")
+            all_docs = self.collection.get()
+            all_ids = all_docs["ids"]
+            before = self.collection.count()
+            if all_ids:
+                self.collection.delete(ids=all_ids)
+                after = self.collection.count()
+                self.__init__(self.collection_name) 
+                print("Hujjatlar o'chirildi.")
+                print(f"O'chirishdan oldin: {before}, keyin: {after}")
+            else:
+                print("O'chirish uchun hujjat yo'q.")
             return True
         except Exception as e:
             print(f"Hujjatlarni o'chirishda xatolik: {e}")
@@ -326,10 +332,10 @@ def add_documents_from_json(json_file_path: str):
         return False
 
 # ChromaManager instansiyasini yaratib
-chroma_manager = ChromaManager()
+chroma_manager = ChromaManager("documents")
 
 # Qustionlar uchun alohida ChromaManager yaratish
-questions_manager = ChromaManager(collection_name="questions")
+questions_manager = ChromaManager(collection_name="questions")  # Uncommenting this line
 
 # Funksiyalarni eksport qilish
 def count_documents():

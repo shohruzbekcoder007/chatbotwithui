@@ -15,12 +15,6 @@ from typing import List, Dict, Any, Optional, Tuple, Union
 import json
 import pandas as pd
 
-# Yorliqlarni joylashtirish uchun qo'shimcha kutubxona
-try:
-    from adjustText import adjust_text
-except ImportError:
-    print("adjustText kutubxonasi topilmadi. 'pip install adjustText' buyrug'i bilan o'rnating")
-
 # Asosiy loyiha papkasiga yo'l
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

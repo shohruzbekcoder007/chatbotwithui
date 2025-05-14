@@ -40,7 +40,7 @@ import time
 
 def process_all_json_files(folder_path: str = "./tayyor_json/"):
     remove_all_documents()
-    create_collection()
+    # create_collection()
     for file in os.listdir(folder_path):
         if file.endswith(".json"):
             full_path = os.path.join(folder_path, file)
