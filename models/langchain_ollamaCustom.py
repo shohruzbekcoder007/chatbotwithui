@@ -412,7 +412,7 @@ class LangChainOllamaModel:
         system_prompt = (
             "Siz tavsiya beruvchi yordamchisiz. Foydalanuvchining sorovi va unga berilgan javobga asoslanib, "
             "quyida berilgan kontekst savollari ichidan mantiqan eng yaqin bitta savolni tanlashingiz kerak.\n\n"
-            "Faqat **bitta** savolni tanlang. Yangi savol o‘ylab topmang, faqat taqdim etilgan savollar ichidan tanlang.\n"
+            "Faqat **bitta** savolni tanlang. Yangi savol o‘ylab topmang, faqat taqdim etilgan savollar ichidan 1 tasini tanlang.\n"
             "Sizga berilgan kontekstda mavjud bo‘lgan savollardan faqat 1 tasini tanlang. Faqat bitta savolni tanlang. Faqatgina savolning o'zini yozing, boshqa hech qanday ma'lumot qo'shib yozmang.\n\n"
             "Each response must be formatted in HTML (answer only <i> tag). Every response should maintain semantic and visual clarity\n"
             "Yangi Savol {language} tilida bo'lishi kerak.\n"
@@ -424,7 +424,7 @@ class LangChainOllamaModel:
             f"Taqdim etilgan savollar:\n{suggested_context}\n\n" 
             f"Foydalanuvchi sorovi:\n{query}\n\n"
             f"Yordamchi javobi:\n{answer}\n\n"
-            f"Tavsiya qilinadigan keyingi savol: <b> </b>"
+            f"Tavsiya qilinadigan keyingi savol: <i></i>\n\n"
         )
         messages = [
             {"role": "system", "content": system_prompt.format(language=detect_lang[language])},
