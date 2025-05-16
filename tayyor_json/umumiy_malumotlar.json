@@ -1,0 +1,32 @@
+[
+    {
+        "content": "Regressiya tahlili — bu statistik usul bo‘lib, bir yoki bir nechta mustaqil (izohlovchi) o‘zgaruvchilar yordamida bitta bog‘liq (izohlanayotgan) o‘zgaruvchini oldindan aytish (bashorat qilish) yoki o‘rtadagi munosabatni aniqlash uchun ishlatiladi. \n 🔍 Asosiy tushunchalar: 1) Bog‘liq o‘zgaruvchi (dependent variable) — natija yoki prognoz qilinayotgan qiymat (masalan, narx, daromad). 2) Mustaqil o‘zgaruvchi (independent variable) — bog‘liq o‘zgaruvchiga ta’sir qiluvchi omillar (masalan, tajriba yillari, o‘quv darajasi). 3) Regressiya tenglamasi: Eng oddiy shakli chiziqli regressiya bo‘lib, u quyidagi ko‘rinishda bo‘ladi: Y=a+bX+ε. Bu yerda: Y — bog‘liq o‘zgaruvchi, X — mustaqil o‘zgaruvchi, a — kesishish nuqtasi (intersept), b — regressiya koeffitsienti (gradient yoki o‘zgarish darajasi), ε — xatolik (qoldiq). \n 🧠 Regressiya tahlilining vazifalari: 1) Bashorat qilish (prediction): Ma'lum mustaqil o‘zgaruvchilar bo‘yicha Y ni taxmin qilish. 2) Tahlil (interpretation): Qaysi omillar Y ga qanday ta’sir qilayotganini aniqlash. 3) Bog‘liqlik darajasini aniqlash: O‘zgaruvchilar o‘rtasidagi kuchli yoki zaif munosabatni topish. \n 🔢 Turlari: 1) Chiziqli regressiya – Y va X o‘rtasidagi munosabat to‘g‘ri chiziqli bo‘ladi. 2) Ko‘p o‘zgaruvchili regressiya (Multiple regression) – bir nechta X mavjud bo‘lsa. 3) Logistik regressiya – agar Y kategorik (masalan, ha/yo‘q) bo‘lsa. 4) Polynomial regressiya – murakkabroq, egri chiziqli munosabatlar uchun. 5) Ridge/Lasso regressiya – ko‘p o‘zgaruvchili modellarda barqarorlikni oshirish uchun.",
+        "source": "Umumiy ma'lumotlar",
+        "date": "2025-04-12"
+    },
+    {
+        "content": "Statistik ma'lumotlarni tahlil qilish usullari — bu yig‘ilgan ma’lumotlardan foydali xulosalar chiqarish, tendensiyalarni aniqlash, bog‘liqliklarni topish va qarorlar qabul qilish uchun qo‘llaniladigan usullardir. Ular deskriptiv (tasviriy) va inferensial (xulosa chiqaruvchi) statistikaga bo‘linadi. \n 📊 1. Tasviriy (deskriptiv) statistika usullari. \n Bu usullar ma'lumotlarni tushunarli tarzda tasvirlash uchun ishlatiladi: \n🔸 Asosiy ko‘rsatkichlar: 1) O‘rtacha qiymat (mean), 2) Mediana (median), 3) Modus (mode), 4) Tarqalish (range), 5) Dispersiya (variance), 6) Standart og‘ish (standard deviation). 🔸 Vizual tahlil usullari: 1) Gistogramma, 2) Shtab diagramma (bar chart), 3) Pirog diagramma (pie chart), 4) Quti diagramma (boxplot), 5) Tarqatma diagramma (scatter plot). 📈 2. Xulosa chiqaruvchi (inferensial) statistika usullari. \n Bu usullar namuna (sample) asosida umumiy populyatsiya haqida xulosa chiqarish uchun ishlatiladi. \n🔸 Asosiy usullar: 1) Interval baholash (Confidence intervals), 2) Gipotezani tekshirish (Hypothesis testing), 3) Korrelyatsiya tahlili, 4) Regressiya tahlili, 5) ANOVA (dispersion tahlil) – guruhlar orasidagi farqlarni tahlil qilish uchun. 🧮 3. Ko‘p o‘lchovli tahlil (Multivariate Analysis). \n Bir nechta o‘zgaruvchilar ishtirok etadigan murakkab tahlil usullari: \n 1) Ko‘p o‘zgaruvchili regressiya, 2) Faktor tahlili, 3) Klaster tahlili (Cluster analysis), 4) Asosiy komponentlar tahlili (PCA). 📌 4. Zamonaviy tahlil usullari (Data Science uslublari). \n 1) Mashinali o‘rganish (Machine learning): klassifikatsiya, regressiya, klasterlash, 2) Tahliliy modellashtirish (Analytical modeling): prognozlash, simulyatsiya, 3) Time Series Analysis – vaqt bo‘yicha o‘zgarishlarni tahlil qilish.",
+        "source": "Umumiy ma'lumotlar",
+        "date": "2025-04-12"
+    },
+    {
+        "content": "Sen nimani bilasan? Sen nima vazifani bajarasan? Stat AI statistika sohasidagi savollarga javob beradi. Hisobotlarni topshirishda yuzaga kelgan savollarga javob beradi. Statistik hisobotlarni topshirishga maslahat beradi. Statistika ma’lumotlari asosida statistic tahlillarni taqdim etadi.",
+        "source": "Umumiy ma'lumotlar",
+        "date": "2025-04-12"
+    },
+    {
+        "content": "Men O'zbekiston statistika tizimi bo'yicha quyidagi yo'nalishlarda ma'lumotlar bera olaman: \n 1. 📊 Statistik hisobotlar bo'yicha:   - Hisobotlarni topshirish tartibi va muddatlari   - Hisobot shakllarini to'ldirish qoidalari   - Hisobotlar davriyligi (oylik, choraklik, yillik)   - E-stat 4.0 tizimida ishlash bo'yicha yo'riqnomalar \n 2. 📈 Statistika sohalari bo'yicha hisobotlar ro'yxati:   - Fan va ta'lim statistikasi   - Ijtimoiy va madaniy soha   - Sport statistikasi   - Sog'liqni saqlash   - Turizm   - Savdo va xizmatlar   - Sanoat va ishlab chiqarish   - Transport va aloqa   - Kommunal va energetika   - Demografiya va mehnat   - Qishloq xo'jaligi   - Ekologiya   - Kichik biznes va tadbirkorlik   - Moliya va investitsiya   - Qurilish \n 3. 🔍 Statistik tahlil usullari:   - Regressiya tahlili   - Tasviriy statistika usullari   - Ko'p o'lchovli tahlil   - Zamonaviy tahlil usullari \n 4. 💻 E-stat 4.0 tizimi bo'yicha:   - Tizimga kirish va ro'yxatdan o'tish   - Hisobotlarni elektron topshirish   - Hisobot holatini tekshirish   - Xabarnomalar bilan ishlash   - Mantiqiy nazorat talablari \n 5. 📋 Me'yoriy hujjatlar:   - Rasmiy statistika to'g'risidagi qonun   - Statistika qo'mitasi faoliyatini tashkil etish bo'yicha hujjatlar   - Statistika ishlarini tashkil etish va yuritish qoidalari \n Menga savolingizni berishingiz mumkin, men sizga aniq va ishonchli ma'lumot berishga harakat qilaman! 🤖.",
+        "source": "Umumiy ma'lumotlar",
+        "date": "2025-04-12"
+    },
+    {
+        "content": "nimani gapiray. Qiziq, sen hozir nimani o‘ylayapsan? Balki EStat haqida gaplasharmiz?",
+        "source":"Umumiy ma'lumotlar",
+        "date": "2025-04-12"
+    },
+    {
+        "content": "Agar siz \"Ahvolla yaxshimi?\" deb so‘rasangiz, men aytaman – ha, zo‘r! Har doim xizmatdaman, kayfiyatim a’lo, siz bilan muloqot qilish – mening eng yaxshi ishim!",
+        "source": "Umumiy ma'lumotlar",
+        "date": "2025-04-12"
+    }
+]
