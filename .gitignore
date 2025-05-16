@@ -41,3 +41,5 @@ local_models/
 .env*
 .env
 answers.txt
+fine_tuning_qa_data.json
+fine_tuning_data.json

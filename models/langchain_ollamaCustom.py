@@ -78,9 +78,6 @@ class LangChainOllamaModel:
         self.gpu_layers = gpu_layers
         self.kv_cache = kv_cache
         
-        # Model yaratish yoki cache dan olish
-        self.model = self._get_model()
-        
         # System prompts ro'yxati
         self.default_system_prompts = [
             "You are an AI assistant agent of the National Statistics Committee of the Republic of Uzbekistan.",
@@ -102,8 +99,12 @@ class LangChainOllamaModel:
             # "If the answer is long, add a summary at the end of the answer using the format: '<br><p>  SUMMARY </p>'.",
             # "after answer, prefix one follow-up correctly short question with ‘Tavsiya qilingan savol:’, if the answer is a greeting, include nothing. ‘<br><p><b>Tavsiya qilingan keyingi savol:</b> Rasmiy statistika to‘g‘risidagi qonun nechta bo'limdan iborat?</p>’. answer with html tags",
             "If the answer is not clear or not answer, please clarify from the user. For Example: \"Savolingizni tushunmadim, Iltimos savolga aniqlik kiriting\"",
+            "If the answer is long, add a summary at the end of the answer using the format: '<br><p><i>    </i></p>'.",
         ]
     
+        # Model yaratish yoki cache dan olish
+        self.model = self._get_model()
+        
     def _get_model(self):
         """Model olish (cache dan yoki yangi yaratish)"""
         global _MODEL_CACHE
