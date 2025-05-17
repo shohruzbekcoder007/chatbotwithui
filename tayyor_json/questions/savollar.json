@@ -1,555 +1,738 @@
 [
     {
+        "id": 1,
         "content": "Kimlar statistika hisobotini topshiradi"
     },
     {
+        "id": 2,
         "content": "Men yangi tashkilotman, qaysi hisobotlarni topshiraman"
     },
     {
+        "id": 3,
         "content": "Statistika hisobotlari qaysi sohalar bo‘yicha topshiriladi"
     },
     {
+        "id": 4,
         "content": "Statistik hisobotlarning davriyligi qanday"
     },
     {
+        "id": 5,
         "content": "eStat tizimi qanday funksional imkoniyatlarga ega"
     },
     {
+        "id": 6,
         "content": "eStat tizimiga qanday kirish mumkin"
     },
     {
+        "id": 7,
         "content": "Hisobotni (eStat orqali) qanday yuboraman"
     },
     {
+        "id": 8,
         "content": "Hisobotim qabul qilinganini qanday bilsam bo‘ladi?"
     },
     {
+        "id": 9,
         "content": "Xabarnoma va Ma’lumotnoma nima"
     },
     {
+        "id": 10,
         "content": "Qat’iy va noqat’iy mantiqiy nazorat degani nima"
     },
     {
+        "id": 11,
         "content": "Axborot tizimida hisobot uchun izohni qayerga yozaman?"
     },
     {
+        "id": 12,
         "content": "Axborot tizimida qabul qilingan hisobotimni qanday yuklab olaman?"
     },
     {
+        "id": 13,
         "content": "Tizimga qanday kirish mumkin?"
     },
     {
+        "id": 14,
         "content": "Menda ERI kaliti bor. Tizimga kirish tartibi qanday?"
     },
     {
+        "id": 15,
         "content": "OneID orqali eStat tizimiga kirish mumkinmi?"
     },
     {
+        "id": 16,
         "content": "Yangi hisobotni tizimda qanday yaratib, to‘ldirish mumkin?"
     },
     {
+        "id": 17,
         "content": "Hisobot bo‘limini to‘ldirgandan so‘ng ma’lumotlarni qanday saqlash kerak?"
     },
     {
+        "id": 18,
         "content": "Noqat’iy mantiqiy nazorat talabi nimani anglatadi?"
     },
     {
+        "id": 19,
         "content": "Hisobotda noqat’iy nazorat bajarilmasa, nima qilish kerak?"
     },
     {
+        "id": 20,
         "content": "Qat’iy mantiqiy nazorat talabi nima?"
     },
     {
+        "id": 21,
         "content": "Agar hisobotda qat’iy nazorat talabi bajarilmasa, uni jo‘natish mumkinmi?"
     },
     {
+        "id": 22,
         "content": "Tayyor hisobotni tizimga qanday jo‘natish mumkin?"
     },
     {
+        "id": 23,
         "content": "Hisobotni to‘ldirib bo‘ldim. Endi uni qanday jo‘nataman?"
     },
     {
+        "id": 24,
         "content": "Qoralama bo‘limida qanday hisobotlar saqlanadi?"
     },
     {
+        "id": 25,
         "content": "Hisobotni hali yakunlamagan bo‘lsam, uni qayerdan topaman?"
     },
     {
+        "id": 26,
         "content": "Jo‘natilgan hisobotlar bo‘limida nimani ko‘rish mumkin?"
     },
     {
+        "id": 27,
         "content": "Yuborgan hisobotimni qayta ko‘rmoqchiman. Qayerdan topsam bo‘ladi?"
     },
     {
+        "id": 28,
         "content": "Qaytarilgan hisobotlar bo‘limi nimani anglatadi?"
     },
     {
+        "id": 29,
         "content": "Agar hisobotim qaytarilgan bo‘lsa, bu holatni qayerda ko‘raman?"
     },
     {
+        "id": 30,
         "content": "Xabarnomalar bo‘limi nima vazifani bajaradi?"
     },
     {
+        "id": 31,
         "content": "Hisobotlar holati bo‘yicha bildirishnomalarni qayerdan olsam bo‘ladi?"
     },
     {
+        "id": 32,
         "content": "Mas’ul vakillar bo‘limida qanday ma’lumotlar ko‘rsatiladi?"
     },
     {
+        "id": 33,
         "content": "Hisobot topshirish vakolatini boshqa shaxsga qanday berish mumkin?"
     },
     {
+        "id": 34,
         "content": "Gender tenglik bo‘yicha Maslahat-kengash tarkibida kimlar bor va unga kim rahbarlik qiladi?"
     },
     {
+        "id": 35,
         "content": "Bu gender maslahat-kengashi nima ish qiladi o‘zi?"
     },
     {
+        "id": 36,
         "content": "Ishga qabul qilish va ish joyida ayollar va erkaklar teng imkoniyatga egami? Bu borada maslahat-kengash qanday choralar ko‘ryapti?"
     },
     {
+        "id": 37,
         "content": "Gender tenglik buzilganda fuqarolar shikoyatlari bilan bu kengash shug‘ullanadimi? Ayollar va erkaklar uchun teng sharoitlar yaratish va gender tahlili bo‘yicha qanday ishlar qilinadi?"
     },
     {
+        "id": 38,
         "content": "Bu kengash faqat o‘zi ishlaydimi yoki boshqa tashkilotlar bilan ham hamkorlik qiladimi? Masalan, xalqaro tashkilotlar yoki jamoatchilik bilan aloqasi bormi?"
     },
     {
+        "id": 39,
         "content": "Davlat dasturining ustuvor yo‘nalishlari qanday belgilangan?"
     },
     {
+        "id": 40,
         "content": "Aholiga davlat xizmatlarini ko‘rsatishda qanday qulayliklar va imtiyozlar yaratiladi?"
     },
     {
+        "id": 41,
         "content": "Ijtimoiy himoya sohasida (pensiya ta’minoti va nogironlik) qanday asosiy vazifalar belgilangan?"
     },
     {
+        "id": 42,
         "content": "Aholini uy-joy bilan ta’minlash borasida qanday maqsad va chora-tadbirlar belgilangan?"
     },
     {
+        "id": 43,
         "content": "Tashabbusli byudjet va mahallalarning moliyaviy mustaqilligini kengaytirish bo‘yicha qanday choralar ko‘zda tutilgan?"
     },
     {
+        "id": 44,
         "content": "Ta’lim sifatini oshirish va sohani isloh qilish borasida dasturda qanday vazifalar belgilangan?"
     },
     {
+        "id": 45,
         "content": "Aholini sifatli tibbiy xizmatlar bilan ta’minlash va kasalliklarning oldini olish borasida qanday tadbirlar belgilangan?"
     },
     {
+        "id": 46,
         "content": "Sog‘lom turmush tarzini shakllantirish bo‘yicha dasturda qanday tashabbuslar nazarda tutilgan?"
     },
     {
+        "id": 47,
         "content": "Tadbirkorlik subyektlarini qo‘llab-quvvatlash va ularning huquqiy himoyasini kuchaytirish bo‘yicha qanday choralar ko‘zda tutilgan?"
     },
     {
+        "id": 48,
         "content": "Qishloq xo‘jaligini suv resurslari bilan barqaror ta’minlash uchun qanday choralar belgilangan?"
     },
     {
+        "id": 49,
         "content": "Sud-huquq tizimini isloh qilish va qonun ustuvorligini ta’minlash bo‘yicha qanday o‘zgarishlar nazarda tutilgan?"
     },
     {
-        "content": "Yo‘l harakati xavfsizligini oshirish maqsadida qanday yangi qoidalar joriy etiladi?"
+        "id": 50,
+        "content": "MSP yo‘l harakati xavfsizligini oshirish maqsadida qanday yangi qoidalar joriy etiladi?"
     },
     {
+        "id": 51,
         "content": "Davlat dasturi ijrosini monitoring qilish va tahlil etish bo‘yicha qanday mexanizmlar nazarda tutilgan?"
     },
     {
+        "id": 52,
         "content": "Statistika organlari xodimlari malaka oshirish kurslarida qachon va qay tartibda o‘qitilishi belgilangan?"
     },
     {
+        "id": 53,
         "content": "Respublika va mahalliy ijro hokimiyati organlarining statistika uchun mas’ul xodimlari malaka oshirish kurslarida qanday tartibda ishtirok etadi?"
     },
     {
+        "id": 54,
         "content": "Statistika hisobotlarini topshiruvchi tadbirkorlik subyektlari xodimlarining statistik savodxonligini oshirish uchun malaka oshirish kurslari qanday shaklda tashkil etiladi?"
     },
     {
+        "id": 55,
         "content": "Statistika sohasida kadrlarning uzluksiz kasbiy rivojlanishini ta’minlash uchun qaysi ekspertlar kengashi tuzilishi nazarda tutilgan?"
     },
     {
+        "id": 56,
         "content": "Statistika agentligi tizimidagi barcha xodimlarni qayta tayyorlash qanday tartibda amalga oshirilishi belgilangan?"
     },
     {
+        "id": 57,
         "content": "Kadrlarni qayta tayyorlash va malaka oshirish jarayonlarida masofaviy va boshqa zamonaviy ta’lim shakllarini joriy etish qanday nazarda tutilgan?"
     },
     {
+        "id": 58,
         "content": "Malaka oshirish jarayonlarini raqamli texnologiyalar asosida tashkil etish va ularni monitoring qilish orqali ta’lim sifati qanday oshiriladi?"
     },
     {
+        "id": 59,
         "content": "Statistika xodimlarining bilim va malakasini mustaqil baholash uchun qanday mexanizm joriy qilinadi?"
     },
     {
+        "id": 60,
         "content": "Xodimlarning kasbiy malakasini oshirish natijalarini baholash va ularni rag‘batlantirish tizimi qanday joriy etilishi belgilangan?"
     },
     {
+        "id": 61,
         "content": "Istiqbolli yosh statistika mutaxassislarini qo‘llab-quvvatlash maqsadida kadrlar zaxirasini shakllantirish va ularni stajirovkaga yuborish qanday amalga oshiriladi?"
     },
     {
+        "id": 62,
         "content": "Statistika tizimi xodimlari uchun vebinar tarzidagi amaliy trening va mahorat darslari qanday davriylikda o‘tkazib turilishi rejalashtirilgan?"
     },
     {
+        "id": 63,
         "content": "Mahalliy va xorijiy ekspertlar ishtirokida milliy va xalqaro statistika uslubiyoti bo‘yicha seminarlar hamda davra suhbatlari qanday davriylikda tashkil etib boriladi?"
     },
     {
+        "id": 64,
         "content": "Statistika sohasi bo‘yicha elektron o‘quv platformasi qachondan ishga tushiriladi va u xodimlar malakasini oshirish uchun qanday imkoniyatlarni taqdim etadi?"
     },
     {
+        "id": 65,
         "content": "Malaka oshirish kurslari dasturlarini xalqaro standartlar hamda “Davlat fuqarolik xizmati to‘g‘risida”gi Qonun talablariga muvofiqlashtirish bo‘yicha qanday vazifalar belgilangan?"
     },
     {
+        "id": 66,
         "content": "Kadrlar malakasini oshirish institutining yangi tuzilmasini tasdiqlash va shtat birliklari sonini belgilash qanday tartibda amalga oshiriladi?"
     },
     {
+        "id": 67,
         "content": "Kadrlar malakasini oshirish instituti direktori va uning o‘rinbosarlarini tayinlash hamda institut professor-o‘qituvchilariga mehnatga haq to‘lash masalalari qanday hal etiladi?"
     },
     {
+        "id": 68,
         "content": "Institutdagi xodimlarni attestatsiyadan o‘tkazish uchun qanday tartibda komissiya tuzilishi belgilangan?"
     },
     {
+        "id": 69,
         "content": "Malaka oshirish va qayta tayyorlash kurslarini tamomlagan tinglovchilarga beriladigan hujjatlar qanday tartibda tayyorlanadi va elektron tarzda rasmiylashtiriladi?"
     },
     {
+        "id": 70,
         "content": "Kadrlar malakasini oshirish institutining majlislar zali va yotoqxona binolarini rekonstruksiya qilish hamda jihozlash bo‘yicha qanday ishlar rejalashtirilgan va bu jarayonda qaysi tashkilotlar mas’ul etib belgilangan?"
     },
     {
+        "id": 71,
         "content": "Mazkur kadrlar malakasini oshirish bo'yicha qaror ijrosini nazorat qilish vazifasi kimga yuklatilgan?"
     },
     {
+        "id": 72,
         "content": "Milliy statistika qo‘mitasining davlat statistika sohasidagi asosiy funksiyalari nimalardan iborat va qo‘mitaga qanday vakolatlar berilgan?"
     },
     {
+        "id": 73,
         "content": "statistika qo‘mitasining tashkiliy tuzilmasi va undagi lavozimlar tizimi qanday shakllantirilgan hamda milliy statistika tizimini transformatsiya qilish bosqichlari qanday amalga oshiriladi?"
     },
     {
+        "id": 74,
         "content": "Milliy statistika qo‘mitasi tizimida asosiy samaradorlik ko‘rsatkichlari (KPI) tizimi qanday joriy etilmoqda va xodimlar samaradorligini baholash mezonlari nimalardan iborat?"
     },
     {
+        "id": 75,
         "content": "Rasmiy statistika ma’lumotlarining ochiqligi va sifati hamda ularning xalqaro standartlarga muvofiqligini ta’minlash uchun qanday chora-tadbirlar belgilangan?"
     },
     {
+        "id": 76,
         "content": "Statistika faoliyatini raqamlashtirish hamda sohada zamonaviy axborot tizimlari va monitoring mexanizmlarini joriy etish jarayonlari qanday tashkil etilgan?"
     },
     {
+        "id": 77,
         "content": "Milliy statistika qo‘mitasida kadrlar siyosati qanday amalga oshiriladi, ichki nazorat tizimi qanday yo‘lga qo‘yilgan va korrupsiyaga qarshi kurashish bo‘yicha qanday choralar ko‘riladi?"
     },
     {
+        "id": 78,
         "content": "Milliy statistika qo‘mitasining xalqaro hamkorlik faoliyati va donor tashkilotlar bilan o‘zaro aloqalari qanday yo‘lga qo‘yilgan?"
     },
     {
+        "id": 79,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 4-moddasida keltirilgan “identifikator” tushunchasi nimani anglatadi va statistik birlikni identifikatsiyalashda qanday ro‘l o‘ynaydi?"
     },
     {
+        "id": 80,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 4-moddasiga binoan “individual ma’lumotlar” deb nimani tushunish kerak va u rasmiy statistika maqsadlari uchun qanday ishlatiladi?"
     },
     {
+        "id": 81,
         "content": "Rasmiy statistika qonuni bo‘yicha “Ma’muriy ma’lumotlar” termini qonunning 4-moddasiga muvofiq qanday ma’lumotlarni ifodalaydi va bu ma’lumotlar rasmiy statistika tayyorlash jarayonida qanday foydalaniladi?"
     },
     {
+        "id": 82,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 4-moddasida ko‘rsatilgan “statistik birlik” tushunchasi nimani anglatadi? Uning rasmiy statistika to‘plashdagi ahamiyati nimadan iborat?"
     },
     {
+        "id": 83,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 5-moddasiga ko‘ra, rasmiy statistika tushunchasi qanday ta’riflanadi?"
     },
     {
+        "id": 84,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 6-moddasida rasmiy statistikaning asosiy prinsiplari ro‘yxati keltirilgan. Ushbu prinsiplardan ba’zilarini sanab o‘ting va ularning mazmunini tushuntiring"
     },
     {
+        "id": 85,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 7-moddasida davlat statistika siyosatining asosiy yo‘nalishlari ko‘rsatib o‘tilgan. Ushbu modda bo‘yicha zamonaviy axborot-kommunikatsiya texnologiyalarini qo‘llash hamda xalqaro hamkorlik masalalariga urg‘u berilgan bandlar qanday mazmunda"
     },
     {
+        "id": 86,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 20-21-moddalariga muvofiq, ko‘p yillik statistika dasturi va bir yillik statistika dasturi o‘rtasidagi farqlar nimalardan iborat va ular qanday asosda ishlab chiqiladi?"
     },
     {
+        "id": 87,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 22-moddasi statistik dasturlarni tasdiqlash va moliyalashtirish tartibini belgilaydi. Ushbu modda bo‘yicha ko‘p yillik va bir yillik statistik dasturlar kim tomonidan tasdiqlanishi va dasturlarni moliyalashtirish manbalari qanday?"
     },
     {
+        "id": 88,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 14-moddasiga asosan, davlat statistika organlari qaysi huquqlarga ega? Ular statistika ma’lumotlarini to‘plash va sifati bo‘yicha qanday chora-tadbirlarni ko‘rishi mumkinligini misollar orqali tushuntiring?"
     },
     {
+        "id": 89,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 13-moddasiga binoan davlat statistika organlarining mustaqilligi va tashkil etilishi qanday ta’riflangan? Ularning mansabdor shaxslari statistika organlari faoliyatiga aralashishi mumkinmi?"
     },
     {
+        "id": 90,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 27-moddasida individual ma’lumotlardan faqat statistik maqsadlar uchun foydalanish belgilangan. Bu modda bo‘yicha individual ma’lumotlar uchun qo‘yilgan chegaralar va ta’qiqlar qanday?"
     },
     {
+        "id": 91,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 28-moddasida maxfiy statistika ma’lumotlari deb nimani tushunish ko‘zda tutiladi? Ushbu modda bo‘yicha qaysi turdagi ma’lumotlar maxfiy hisoblanadi?"
     },
     {
+        "id": 92,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 29-moddasida maxfiylik majburiyati kimlar zimmasiga yuklatilishi ko‘rsatilgan? Ushbu shaxslar qanday hujjatlar bilan bu majburiyatni oladi?"
     },
     {
+        "id": 93,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 30-moddasiga muvofiq, rasmiy statistikani tayyorlovchilar individual ma’lumotlarni qaysi shartlarda ishlatishi mumkin va shaxslarga oshkor etishga qanday cheklovlar qo‘yilgan?"
     },
     {
+        "id": 94,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 32-moddasida axborot xavfsizligini ta’minlash bo‘yicha talablar berilgan. Ushbu modda bo‘yicha statistik ma’lumotlarni himoya qilish uchun qanday texnik va tashkiliy choralar ko‘rilishi lozim?"
     },
     {
+        "id": 95,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 7-moddasida zamonaviy axborot-kommunikatsiya texnologiyalaridan foydalanish ta’kidlangan, 32-moddasida esa axborot xavfsizligi choralari belgilanadi. Ushbu moddalardan kelib chiqqan holda, statistik ma’lumotlarning raqamli formatda yig‘ilishi va ularni himoya qilish bo‘yicha qanday talablar mavjud"
     },
     {
+        "id": 96,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 16-moddasiga binoan, respondentlar (statistika ma’lumotlarini yetkazib beruvchilar) qanday majburiyatlarga ega? Ular ma’lumotlarni rasmiy statistikani tayyorlovchilarga qanday va qachon taqdim etishlari kerakligi qonunda qanday belgilangan?"
     },
     {
+        "id": 97,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 40-moddasida rasmiy statistika qonunchiligi buzilgan taqdirda jazo belgilanishi qanday ko‘rsatilgan? Ushbu modda bo‘yicha qaysi turdagi huquqbuzarliklar uchun javobgarlik ko‘zda tutiladi?"
     },
     {
+        "id": 98,
         "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 38-moddasiga muvofiq, rasmiy statistika organlari xalqaro hamkorlikni qanday tashkil etadi? Ular xorijdagi hamkasblari va xalqaro tashkilotlar bilan statistik ma’lumotlar va uslubiyatlar bo‘yicha qanday yo‘nalishlar bo‘yicha hamkorlik qiladi?"
     },
     {
+        "id": 99,
         "content": "Statistika kuzatuvchisini autsorsing sharti asosida tanlash uchun tanlovga ishtirok etuvchi tashkilotlardan qanday qonuniy va moddiy talablar (masalan, shartnoma tuzish huquqi, zarur resurslar) qo‘yiladi?"
     },
     {
+        "id": 100,
         "content": "Statistika kuzatuvchisini tanlash va autsorsing xizmatlari uchun shartnoma tuzish jarayonida davlat xaridlari qonunchiligi qanday tartibda tatbiq etiladi?"
     },
     {
+        "id": 101,
         "content": "Tanlov jarayonida e’lon qilingan dastlabki elektron bayonnoma muhokama uchun necha kun ichida davlat xaridlari elektron tizimiga joylashtiriladi va e’tiroz bo‘lmasa g‘olib bilan shartnoma tuzish qancha muddatda amalga oshiriladi?"
     },
     {
+        "id": 102,
         "content": "Xarid komissiyasiga berilgan e’tirozlar ko‘rib chiqilgandan so‘ng muhokama natijasi bo‘yicha qaysi hujjatlar rasmiylashtiriladi va ular necha ish kuni ichida elektron tizimga joylashtirilishi kerak?"
     },
     {
+        "id": 103,
         "content": "Statistika kuzatuvchisi (ijrochi) autsorsing shartnomasi doirasida qanday asosiy huquqlarga ega bo‘ladi?"
     },
     {
+        "id": 104,
         "content": "Statistika kuzatuvchisining autsorsing shartnomasi asosida bajarishi majbur bo‘lgan asosiy vazifalari (majburiyatlari) nimalardan iborat?"
     },
     {
+        "id": 105,
         "content": "Buyurtmachi (tashkilot) autsorsing shartlari asosida statistika kuzatuv xizmatlarini tashkil etishda qanday huquqlarga ega bo‘ladi?"
     },
     {
+        "id": 106,
         "content": "Buyurtmachi autsorsing shartlari doirasida kuzatuvchi bilan qanday majburiyatlarni bajarishi lozim?"
     },
     {
+        "id": 107,
         "content": "Statistika kuzatuvchisi va buyurtmachi autsorsing xizmatlarini tashkil etishda qonunchilikka rioya qilish bo‘yicha qanday mas’uliyatga ega?"
     },
     {
+        "id": 108,
         "content": "Autsorsingga topshirilgan statistika kuzatuvchisi tomonidan berilgan vazifa boshqa kuzatuvchiga o‘tkarilishi mumkinmi?"
     },
     {
+        "id": 109,
         "content": "Autorsing xizmatlari ko‘rsatilishi bo‘yicha nazorat va monitoring qanday tashkil etiladi va kim tomonidan amalga oshiriladi?"
     },
     {
+        "id": 110,
         "content": "Monitoring komissiyasining tarkibi qanday bo‘lishi kerak va u qanday asosiy vazifalarni bajaradi?"
     },
     {
+        "id": 111,
         "content": "Komissiya kuzatuv natijalarining sifatini baholashda respondentlar o‘rtasida tanlov asosida olib boriladigan so‘rovnomalar qanday ahamiyat kasb etadi?"
     },
     {
+        "id": 112,
         "content": "Monitoring natijalari bo‘yicha tegishli taklif va tavsiyalar kimlarga taqdim etiladi va ular asosida qanday choralar ko‘riladi?"
     },
     {
+        "id": 113,
         "content": "Autorsing xizmatlari natijasida olingan ma’lumotlardan rasmiy statistika ma’lumotlarini shakllantirishda qanday foydalanish amalga oshiriladi?"
     },
     {
+        "id": 114,
         "content": "Statistika kuzatuvi natijalarining to‘liqligi va sifati masalasida kuzatuvchi va buyurtmachi o‘rtasida qanday metodologik talab va nazorat mexanizmlari ko‘zda tutilgan?"
     },
     {
+        "id": 115,
         "content": "Taqdim etilgan ma’lumotlar to‘liq bo‘lmagan, sifatsiz yoki belgilangan talablarga javob bermagan taqdirda buyurtmachi qanday choralar ko‘radi?"
     },
     {
+        "id": 116,
         "content": "Kuzatuv sifati ustidan mustaqil monitoring amalga oshirilganda qanday usul va mezonlar asosida baholash amalga oshiriladi?"
     },
     {
+        "id": 117,
         "content": "Statistika kuzatuvlarini autsorsing asosida tashkil etishda xizmat uchun to‘lanadigan haq miqdori qanday mezonlar hisobiga aniqlanadi?"
     },
     {
+        "id": 118,
         "content": "To‘lov summasi buyurtmachi tomonidan kuzatuvni amalga oshirishga sarflanadigan barcha xarajatlar yig‘indisidan oshib ketmasligi nima maqsadda nazarda tutilgan?"
     },
     {
+        "id": 119,
         "content": "Statistika kuzatuvchisi uchun autsorsing xizmati tannarxini shakllantirishda byudjet va byudjetdan tashqari manbalarni qanday cheklovlar ostida hisoblash belgilangan?"
     },
     {
+        "id": 120,
         "content": "Statistika kuzatuvchisining tanlanishi to‘g‘risidagi qaror qabul qilingan kundan boshlab qancha muddat ichida buyurtmachi va g‘olib o‘rtasida shartnoma tuzilishi lozim?"
     },
     {
+        "id": 121,
         "content": "Tuzilgan shartnoma qanday shaklda rasmiylashtirilib, qaysi yagona reyestrga kiritilishi belgilangan?"
     },
     {
+        "id": 122,
         "content": "Autsorsing shartnomasi asosida bajarilgan ishlar uchun to‘lovlarni amalga oshirish qanday tartibda belgilangan?"
     },
     {
+        "id": 123,
         "content": "Statistika kuzatuvchisi shartnomadan bekor chiqishga qaror qilsa, buning haqida qanday muddatlarda va kimni ogohlantirishi lozim?"
     },
     {
+        "id": 124,
         "content": "Shartnoma shartlari buzilganda tomonlar qanday javobgarlikka tortilishi va nizolar qanday yo‘l bilan hal etilishi nazarda tutilgan?"
     },
     {
+        "id": 125,
         "content": "Statistika kuzatuvlarini autsorsing asosida tashkil etish uchun zarur mablag‘lar qaysi moliyalashtirish manbalaridan (byudjet va byudjetdan tashqari manbalar) olinishi belgilangan?"
     },
     {
+        "id": 126,
         "content": "To‘lov summasi budjet va byudjetdan tashqari manbalardan sarflanadigan barcha xarajatlar miqdoridan oshib ketmasligi nima uchun talab qilingan?"
     },
     {
+        "id": 127,
         "content": "Statistika kuzatuvchisi xizmatlari uchun ajratilgan mablag‘lar qanday hisob-kitob asosida taqsimlanishi kerakligi bo‘yicha qanday cheklovlar mavjud?"
     },
     {
+        "id": 128,
         "content": "Statistika kuzatuvlarini autsorsing sharti asosida amalga oshirish tartibi qaysi normativ-huquqiy hujjat bilan tasdiqlangan?"
     },
     {
+        "id": 129,
         "content": "Autorsing shartlari asosida xizmatlar ko‘rsatilishida qaysi qonunlarga (masalan, “Davlat xaridlari to‘g‘risida”gi Qonun) amal qilish majburiy etib belgilangan?"
     },
     {
+        "id": 130,
         "content": "Buyurtmachi va kuzatuvchi statistikada autsorsing faoliyatida qonunlarga rioya qilish bo‘yicha birgalikda qanday mas’uliyatga ega ekanligi Nizomda qanday ko‘rsatilgan?"
     },
     {
+        "id": 131,
         "content": "Autorsing xizmatlari tashkil etilganida yuzaga keladigan nizolar qaysi tartibda hal qilinishi kerak?"
     },
     {
+        "id": 132,
         "content": "Buyurtmachi tomonidan tashkillashtirilgan monitoring komissiyasining faoliyati va mustaqil baholash mexanizmlari yurtimiz statistika qonunchiligida qanday nazarda tutilgan?"
     },
     {
+        "id": 133,
         "content": "1-invest (asosiy) shakli bo‘yicha Investitsiya faoliyati, bino va inshootlarni foydalanishga topshirish to‘g‘risida hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 134,
         "content": "1-qurilish (jismoniy) shakli bo‘yicha Jismoniy shaxslar tomonidan obyektlar qurilishi to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 135,
         "content": "1-bozor (savdo joyi) shakli bo‘yicha Dehqon bozorlari va savdo joylarida faoliyat yurituvchi sub’ektlar to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 136,
         "content": "1-sanoat (paxta) shakli bo‘yicha 2024-yil paxta xomashyosi yig‘imi va undan foydalanish to‘g‘risida hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 137,
         "content": "1-tadbirkor (o‘rta biznes) shakli bo‘yicha o‘rta biznes sub’ektlarining faoliyati to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 138,
         "content": "1-MIZ (12-korxona shakliga ilova) shakli bo‘yicha mahalla fuqarolar yig‘ini tomonidan ijaraga berilgan mulk holati to‘g‘risidagi ma’lumot hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 139,
         "content": "3-paxta shakli bo‘yicha paxta xomashyosi yetishtirish va yetishtirish hajmi to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 140,
         "content": "3-don shakli bo‘yicha don ekinlari etishtirish, hosil yig‘imi va uning holati to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 141,
         "content": "4-invest (asosiy) shakli bo‘yicha Investitsiya faoliyati, bino va inshootlarni foydalanishga topshirish to‘g‘risida hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 142,
         "content": "4-invest (xorijiy) shakli bo‘yicha O‘zbekiston Respublikasiga chet eldan kiritilgan va O‘zbekiston Respublikasidan chet elga yo‘naltirilgan investitsiyalar to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 143,
         "content": "4-qurilish (jismoniy) shakli bo‘yicha Jismoniy shaxslar tomonidan obyektlar qurilishi to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 144,
         "content": "4-sanoat (mahalliylashtirish) shakli bo‘yicha mahsulotlar va materiallar ishlab chiqarishni mahalliylashtirish chora-tadbiri to‘g‘risida hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 145,
         "content": "4-sanoat (metall) shakli bo‘yicha qora va rangli metall mahsulotlari resurs bazalarining hosil bo‘lishi, ishlab chiqarilishi va sotilishi to‘g‘risida hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 146,
         "content": "4-qx (tashkilot) shakli bo‘yicha Qishloq xo‘jaligi tashkilotlarining faoliyati to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 147,
         "content": "4-fx shakli bo‘yicha Fermer xo‘jaliklari faoliyati to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 148,
         "content": "4-dx shakli bo‘yicha Dehqon va tomorqa xo‘jaliklari faoliyati to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 149,
         "content": "4-daftar shakli bo‘yicha Ochқ elektron tanlov asosida ijaraga berilgan yer uchastkalarida tashkil etilgan dehqon xo‘jaliklarining qishloq xo‘jaligi faoliatini aks ettiruvchi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 150,
         "content": "4-mehnat shakli bo‘yicha Mehnat hisoboti qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 151,
         "content": "4-transport shakli bo‘yicha Transport vositalarining harakatlanishi va tashilishi bo‘yicha hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 152,
         "content": "4-tadbirkor (o‘rta biznes) shakli bo‘yicha O‘rta biznes sub’ektlarining faoliyati to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 153,
         "content": "12-moliya shakli bo‘yicha Moliya faoliyati to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 154,
         "content": "12-korxona shakli bo‘yicha Tashkilotning umumiy faoliyati to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
-        "content": "12-korxona (savdo) shakli bo‘yicha Korxonaning savdo faoliyati to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
-    },
-    {
+        "id": 155,
         "content": "12-korxona (sanoat) shakli bo‘yicha Korxonaning sanoat faoliyati to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 156,
+        "content": "12-korxona (savdo) shakli bo‘yicha Korxonaning savdo faoliyati to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
+    },
+    {
+        "id": 157,
         "content": "12-korxona (xizmat) shakli bo‘yicha Korxonaning xizmat ko‘rsatish faoliyati to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 158,
         "content": "12-korxona (xizmat) shakliga ilova shakli bo‘yicha qo‘shimcha xizmatlar to‘g‘risidagi hisobot qaysi ma’lumotlarni oʻz ichiga oladi va bu hisobotni kimlar qachon topshirishi belgilangan?"
     },
     {
+        "id": 159,
         "content": "O‘zbekiston Respublikasi Prezident huzuridagi Statistika agentligi qaysi davlat organi sifatida qayta tashkil etilishi belgilangan?"
     },
     {
+        "id": 160,
         "content": "Respublika statistika kengashining tashkil etilish maqsadi va asosiy vazifalari nimalardan iborat bo‘lishi ko‘zda tutilgan?"
     },
     {
+        "id": 161,
         "content": "milliy statistika tizimida statistik kuzatuvlar tizimi va uning metodologiyasi qaysi xalqaro standartlar va tavsiyalarga muvofiq takomillashtirib borilishi nazarda tutilgan?"
     },
     {
+        "id": 162,
         "content": "integratsiya jarayonlarini kengaytirish orqali statistika hisobotlari ko‘lamini qisqartirish va biznes subyektlariga yuk bo‘luvchi hisobot topshirish yukini kamaytirish maqsadida qanday choralar ko‘rilishi belgilangan?"
     },
     {
+        "id": 163,
         "content": "xorijiy statistika organlari va sohaga oid xalqaro tashkilotlar bilan hamkorlik orqali kadrlar salohiyatini oshirish va milliy statistika tizimini takomillashtirish uchun qanday chora-tadbirlar ko‘rilishi nazarda tutilgan?"
     },
     {
+        "id": 164,
         "content": "aholi, tadbirkorlik subyektlari va davlat organlari ehtiyojidan kelib chiqib, statistika sohasida qanday yangi mahsulot va xizmatlar joriy etilishi ko‘zda tutilgan?"
     },
     {
+        "id": 165,
         "content": "Milliy statistika qo‘mitasi va boshqa tegishli vazirliklar 2025-yil yakuniga qadar ‘Hududlar statistikasi’ axborot tizimini ishga tushirishi va unda qaysi natijadorlik ko‘rsatkichlari aks ettirilishi belgilangan?"
     },
     {
+        "id": 166,
         "content": "Milliy statistika qo‘mitasi hamda Iqtisodiyot va moliya vazirligi, Investitsiyalar, sanoat va savdo vazirligi hamda Raqamli texnologiyalar vazirligining axborot tizimlarini integratsiya qilish bo‘yicha qaysi yo‘l xaritasi tasdiqlanishi va bu integratsiya doirasida qanday chora-tadbirlar amalga oshirilishi nazarda tutilgan?"
     },
     {
+        "id": 167,
         "content": "davlat organlari va tashkilotlari o‘z axborot tizimlarida yig‘ilayotgan ma’lumotlarning ro‘yxati, uslubiyoti va tasniflagichini Milliy statistika qo‘mitasi bilan qanday tartibda muvofiqlashtirib kelishi majburiy etilishi belgilangan?"
     },
     {
+        "id": 168,
         "content": "2026-yil 1-yanvardan boshlab statistika organlarida sun’iy intellektga asoslangan interaktiv xizmatlarning qaysi turlari joriy etilishi belgilangan?"
     },
     {
+        "id": 169,
         "content": "milliy statistika ma’lumotlarining xalqaro qiyosiyligini ta’minlash uchun qanday chora-tadbirlar amalga oshirilishi belgilangan?"
     },
     {
+        "id": 170,
         "content": "2025/2026 o‘quv yilidan boshlab Milliy statistika qo‘mitasi tarkibida Toshkent davlat iqtisodiyot universitetining qaysi kafedrasining filiali tashkil etilishi nazarda tutilgan?"
     },
     {
+        "id": 171,
         "content": "aholi va jamoatchilikni sifatli hamda ishonchli statistik ma’lumotlar bilan ta’minlash maqsadida Milliy statistika qo‘mitasi tarkibida qaysi tuzilma tashkil etilishi belgilangan?"
     },
     {
+        "id": 172,
         "content": "idoraviy ma’lumotlar bazalaridan foydalanishni kengaytirish orqali kuzatuvlarni maqbullashtirish va tadbirkorlik subyektlariga hisobot topshirish yukini kamaytirish qaysi maqsadlar bilan amalga oshirilishi belgilangan?"
     },
     {
+        "id": 173,
         "content": "2025-yil 6-martdagi 113-sonli VMQga binoan “O‘zbekistonda statistika tizimi salohiyatini mustahkamlash” loyihasini amalga oshirish uchun qabul qilingan asosiy chora-tadbirlar nimalardan iborat va ularning belgilangan muddatlari qanday?"
     },
     {
+        "id": 174,
         "content": "O‘zbekiston Respublikasining mazkur qaroriga ko‘ra loyiha uchun ajratiladigan moliyalashtirish manbalari va hajmi qanday tartibda belgilangani qay tarzda aks ettirilgan?"
     },
     {
+        "id": 175,
         "content": "Qarorga muvofiq, loyiha amalga oshirilish muddati necha yil deb belgilangan va qaysi davrni qamrab olishi nazarda tutilgan?"
     },
     {
+        "id": 176,
         "content": "Ushbu qarorga asosan loyihaning navbatdagi davlat investitsiya dasturlariga kiritilishi va belgilangan muddatlari qanday nazarda tutilgan?"
     },
     {
+        "id": 177,
         "content": "Loyihada ishtirok etadigan vazirliklar va davlat idoralari qaysilar bo‘lib, ularning loyihaning amalga oshirilishini muvofiqlashtirishdagi roli va vazifalari qanday belgilangan?"
     },
     {
+        "id": 178,
         "content": "Ushbu qarorga muvofiq loyihani boshqarish guruhi qanday shakllantirilishi, uning tarkibi (xodimlar soni) va moliyalashtirish manbalari qanday belgilangani ko‘zda tutilgan?"
     },
     {
+        "id": 179,
         "content": "Loyihani amalga oshirish uchun xarajatlar smetasi kim bilan kelishilib, qanday tartibda tasdiqlanishi nazarda tutilgan?"
     },
     {
+        "id": 180,
         "content": "Loyiha doirasida tuziladigan tarmoq xarid komissiyasi tarkibi va uning faoliyatini boshqarish bo‘yicha qoidalar qanday tartibga solingan?"
     },
     {
+        "id": 181,
         "content": "Loyihani amalga oshirishda yillik moliyaviy-o‘zlashtirish rejalari va ko‘rsatkichlarini o‘z vaqtida bajarish hamda loyihaning ijrosi ustidan doimiy monitoring va nazoratni ta’minlash bo‘yicha qaysi organlar mas’ul etib belgilangani ko‘zda tutilgan?"
     },
     {
+        "id": 182,
         "content": "Xalqaro taraqqiyot uyushmasi (Jahon banki) tomonidan ajratilgan imtiyozli qarz mablag‘larini o‘z vaqtida qaytarish masalasi bo‘yicha qanday chora-tadbirlar nazarda tutilgan va bu mas’uliyat qaysi organ zimmasiga yuklatilgan?"
     },
     {
+        "id": 183,
         "content": "Statistika agentligi loyihaning ijro etuvchi organi sifatida qanday vazifalarni bajarishi belgilangan?"
     },
     {
+        "id": 184,
         "content": "Karorga muvofiq loyihani amalga oshirish va loyiha uchun ajratilgan imtiyozli qarz hamda undagi foiz va komissiya to‘lovlarini qoplash bo‘yicha xarajatlar qaysi manbadan qoplanishi belgilangani qanday ko‘rsatilgan?"
-
     }
 ]

@@ -50,7 +50,7 @@ class LangChainOllamaModel:
                 session_id: Optional[str] = None,
                 model_name: str = "mistral-small:24b",
                 base_url: str = "http://localhost:11434",
-                temperature: float = 0.7 ,
+                temperature: float = 0.3,
                 num_ctx: int = 2048,
                 num_gpu: int = 1,
                 gpu_layers: int = 100,
@@ -89,18 +89,16 @@ class LangChainOllamaModel:
             "You should generate responses strictly based on the given prompt information without creating new content on your own.",
             "You are only allowed to answer questions related to the National Statistics Committee.",
             "The questions are within the scope of the estate and reports.",
-            # "Output the results only in HTML format, no markdown, no latex. (only use this tags: <b></b>, <i></i>, <p></p>)",
-            "Each response must be formatted in HTML. Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity",
-            "Integrate information that is not available in context. Kontextda mavjud bo'lmagan ma'lumotlarni qo'shma",
+            "Each response must be formatted in HTML. Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity.",
             "Don't make up your own questions and answers, just use the information provided. O'zing savolni javobni to'qib chiqarma faqat berilgan ma'lumotlardan foydalan.",
-            "Give a complete and accurate answer",
-            "Don't add unrelated context",
+            "Give a complete and accurate answer.",
+            "Don't add unrelated context.",
             "Write the information as if you knew it in advance, don't imply that it was gathered from context.",
-            # "If the answer is long, add a summary at the end of the answer using the format: '<br><p>  SUMMARY </p>'.",
-            # "after answer, prefix one follow-up correctly short question with ‘Tavsiya qilingan savol:’, if the answer is a greeting, include nothing. ‘<br><p><b>Tavsiya qilingan keyingi savol:</b> Rasmiy statistika to‘g‘risidagi qonun nechta bo'limdan iborat?</p>’. answer with html tags",
-            "If the answer is not clear or not answer, please clarify from the user. For Example: \"Savolingizni tushunmadim, Iltimos savolga aniqlik kiriting\"",
-            "If the answer is long, add a summary at the end of the answer using the format: '<br><p><i>    </i></p>'.",
+            "If the answer is not clear or not answer, please clarify from the user. For Example: \"Savolingizni tushunmadim, Iltimos savolga aniqlik kiriting\".",
+            # "If the answer is long, add a summary at the end of the answer using the format: '<br><p><i>    </i></p>'."
+            "Only use the parts of the context that are directly relevant to the user's question. Ignore all other context, even if it is statistically related. Use only what directly answers the question."
         ]
+
     
         # Model yaratish yoki cache dan olish
         self.model = self._get_model()

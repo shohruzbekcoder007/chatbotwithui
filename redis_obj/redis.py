@@ -61,6 +61,35 @@ class RedisSession:
         except redis.ConnectionError:
             print("Warning: Redis connection failed while flushing database")
 
+    def set_question_session(self, user_question_id, data):
+        """Foydalanuvchi sessiyasini Redis'ga yozish"""
+        if not self.connected:
+            return
+        try:
+            self.redis_client.setex(f"question:{user_question_id}", self.ttl, json.dumps(data))
+        except redis.ConnectionError:
+            print("Warning: Redis connection failed while setting question")
+
+    def delete_question_session(self, user_question_id):
+        """Foydalanuvchi sessiyasini Redis'dan o'chirish"""
+        if not self.connected:
+            return
+        try:
+            self.redis_client.delete(f"question:{user_question_id}")
+        except redis.ConnectionError:
+            print("Warning: Redis connection failed while deleting question")
+    
+    def get_question_session(self, user_question_id) -> Optional[dict]:
+        """Foydalanuvchi sessiyasini Redis'dan olish"""
+        if not self.connected:
+            return None
+        try:
+            data = self.redis_client.get(f"question:{user_question_id}")
+            return json.loads(data) if data else None
+        except redis.ConnectionError:
+            print("Warning: Redis connection failed while getting question")
+            return None
+        
 # Namuna ishlatish
 redis_session = RedisSession()
 # redis_session.set_user_session("user123", {"last_query": "O‘zbekiston aholi soni"})
