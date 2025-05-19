@@ -334,8 +334,8 @@ async def chat(request: Request, chat_request: ChatRequest):
         
         # print(f"Unique results count: {len(unique_results)}", unique_results)
 
-        context = "\n".join(unique_results)
-
+        context = "\n- ".join(unique_results)
+        
         try:
             response_current = await model_llm.chat(context, (question or chat_request.query) + context_query, language)
         except Exception as chat_error:
@@ -395,14 +395,23 @@ async def chat(request: Request, chat_request: ChatRequest):
 
 class ChatRequest(BaseModel):
     content: str
+    chat_id: Optional[str] = None
 
 def sse_format(data: str):
     return f"data: {data}\n\n"
 
 @app.post("/chat/stream")
-async def stream_chat(req: ChatRequest):
+async def stream_chat(request: Request, req: ChatRequest):
+    chat_id = req.chat_id
+    print(f" REQ: {req}")
+    if not chat_id:
+        return {"error": "Chat ID is missing. Please provide a valid chat ID."}
+
     question = req.content
     language = 'uz'
+
+    user_id = request.state.user_id
+    print(f"Using user_id from request.state: {user_id}")
 
     if(is_russian(question)):
         question = await change_translate(question, "uz")
@@ -410,25 +419,51 @@ async def stream_chat(req: ChatRequest):
 
     relevant_docs = get_docs_from_db(question)
     docs = relevant_docs.get("documents", []) if isinstance(relevant_docs, dict) else []
-    context = "\n- ".join(docs[0])
+    context = "\n- ".join(docs[0]) if docs else ""
     print(f"Context: {context}")
 
-    
-    results = questions_manager.search_documents(query=question, n_results=10)
-    suggested_context = "\n- ".join(results.get("documents", [[]])[0]) if isinstance(results, dict) else []
-    # print(f"Suggested Context: {suggested_context}")
-
     async def event_generator():
+        global response_current
+        response_current = ""
         async for token in model_llm.chat_stream(context=context, query=question, language=language):
-            # print(token, end="", flush=True)
+            response_current += token
             yield f"{token}\n\n"
-        
-        # yield f"<br><br>\n\n<b>Tavsiya qilgan savol</b>:  {results.get("documents", [[]])[0][0]}"
-        yield f"<br><br>\n\n<b>Tavsiya qilgan savol</b>: "
 
-        async for part in model_llm.get_stream_suggestion_question(suggested_context, question, context, language):
-            yield f"{(part)}\n\n"
-        
+        yield "\n <b> Tavsiya qilingan savol: </b>: " 
+
+        async for token in model_llm.get_stream_suggestion_question(context, question, response_current, language):
+            yield f"{token}\n\n"
+
+        # if user_id != "anonymous":
+        chat_message = ChatMessage(
+            user_id=user_id,
+            chat_id=chat_id,
+            message=req.content,
+            response=response_current,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
+        )
+        await chat_message.insert()
+        print(f"Saved message to MongoDB with ID: {chat_message.id}")
+
+        existing_chat = await UserChatList.find_one(
+            UserChatList.user_id == user_id,
+            UserChatList.chat_id == chat_id
+        )
+
+        if not existing_chat:
+            user_chat = UserChatList(
+                user_id=user_id,
+                chat_id=chat_id,
+                name=f"Suhbat: {req.content[:30]}...",
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            await user_chat.insert()
+            print(f"Added chat to user's chat list: {chat_id}")
+        else:
+            await existing_chat.set({"updated_at": datetime.utcnow()})
+            print(f"Updated timestamp for existing chat: {chat_id}")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 

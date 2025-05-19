@@ -4,13 +4,23 @@ function scrollToBottom() {
         conversation.scrollTop = conversation.scrollHeight;
     });
 }
-
+function getChatIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('chat_id');
+}
 async function onsubmitstream(event) {
     event.preventDefault();
 
     const input = event.target.querySelector('input');
     const userText = input.value.trim();
     if (!userText) return;
+
+    const chatId = getChatIdFromUrl();
+    if (!chatId) {
+        console.error("Chat ID not found in the URL.");
+        alert("Chat ID topilmadi. Iltimos, sahifani qayta yuklang.");
+        return;
+    }
 
     addMessage('user', userText); // foydalanuvchi xabarini ko'rsatish
     input.value = "";
@@ -45,6 +55,7 @@ async function onsubmitstream(event) {
             },
             body: JSON.stringify({
                 content: userText,
+                chat_id: chatId,
                 language: "uz"
             })
         });

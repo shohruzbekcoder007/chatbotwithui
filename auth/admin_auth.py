@@ -3,7 +3,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from models.admin import Admin, AdminLogin, AdminResponse
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-import jwt
+from jose import jwt
 import os
 
 router = APIRouter()
