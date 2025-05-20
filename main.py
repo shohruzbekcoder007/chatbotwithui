@@ -514,6 +514,19 @@ async def stream_chat(request: Request, req: ChatRequest):
             else:
                 await existing_chat.set({"updated_at": datetime.utcnow()})
                 print(f"Updated timestamp for existing chat: {chat_id}")
+            if not existing_chat:
+                user_chat = UserChatList(
+                    user_id=user_id,
+                    chat_id=chat_id,
+                    name=f"Suhbat: {req.content[:30]}...",
+                    created_at=datetime.utcnow(),
+                    updated_at=datetime.utcnow()
+                )
+                await user_chat.insert()
+                print(f"Added chat to user's chat list: {chat_id}")
+            else:
+                await existing_chat.set({"updated_at": datetime.utcnow()})
+                print(f"Updated timestamp for existing chat: {chat_id}")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
