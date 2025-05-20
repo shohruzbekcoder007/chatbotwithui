@@ -23,52 +23,102 @@ def get_docs_from_db(request: str):
         return []
 
 # Yangi javobni sessiyaga saqlash
-def change_redis(user_id: str, query: str, response: str):
-
-    # Oldingi sessiyani olish
-    current_session = redis_session.get_user_session(user_id) or []
+def change_redis(user_id: str, query: str, response: str, chat_id: str = None):
+    """
+    Foydalanuvchi savoli va javobini Redis-ga saqlash
     
-    # Yangi so'rov va javobni qo'shish
-    new_session = current_session + [f"User: {query}, Bot: {response}"]
-    
-    # Faqat oxirgi 3 ta almashinuvni (6 ta element - 3 ta so'rov va 3 ta javob) saqlash
-    if len(new_session) > 3:
-        new_session = new_session[-3:]
-    
-    # Yangilangan sessiyani saqlash
-    redis_session.set_user_session(user_id, new_session)
+    Args:
+        user_id: Foydalanuvchi ID si
+        query: Foydalanuvchi savoli
+        response: AI javob matni
+        chat_id: Chat ID si (ixtiyoriy)
+    """
+    try:
+        # Agar chat_id berilmagan bo'lsa
+        if not chat_id:
+            chat_id = "default"
+            
+        # Redis set_question_session funksiyasini chaqirish
+        redis_session.set_question_session(user_id, chat_id, query, response)
+        return True
+    except Exception as e:
+        print(f"Redis-ga saqlashda xatolik: {str(e)}")
+        return False
 
 def change_redis_question(user_id: str, question: str, chat_id: str):
-
-    # Oldingi sessiyani olish
-    current_session = redis_session.get_question_session(""+user_id+""+chat_id) or []
+    """
+    Foydalanuvchi savolini Redis-ga saqlash
     
-    # Yangi so'rov va javobni qo'shish
-    new_session = current_session + [f"question_id: {question}"]
-    
-    # Faqat oxirgi 3 ta almashinuvni (6 ta element - 3 ta so'rov va 3 ta javob) saqlash
-    if len(new_session) > 3:
-        new_session = new_session[-3:]
-    
-    # Yangilangan sessiyani saqlash
-    redis_session.set_user_session(user_id, new_session)
+    Args:
+        user_id: Foydalanuvchi ID si
+        question: Foydalanuvchi savoli
+        chat_id: Chat ID si
+    """
+    try:
+        # Oldingi sessiyani olish
+        current_session = redis_session.get_user_session(f"{user_id}_{chat_id}") or {}
+        
+        # Savollar ro'yxatini olish
+        questions = current_session.get("questions", [])
+        
+        # Yangi savolni qo'shish
+        questions.append(question)
+        
+        # Faqat oxirgi 5 ta savolni saqlash
+        if len(questions) > 5:
+            questions = questions[-5:]
+        
+        # Yangilangan ma'lumotlarni saqlash
+        current_session["questions"] = questions
+        redis_session.set_user_session(f"{user_id}_{chat_id}", current_session)
+        
+        return True
+    except Exception as e:
+        print(f"Savolni Redis-ga saqlashda xatolik: {str(e)}")
+        return False
 
 # sesiya orqali savolni qayta olish
-async def old_context(user_id: str, request: str):
-
-    previous_session = redis_session.get_user_session(user_id) or []
-
-    if(len(previous_session) > 0):
-        previous_session = filter_salutations(previous_session)
-
-    previous_context = "\n".join(previous_session)
-
-    context_query = await rewrite_query(request, previous_context)
-
-    if isinstance(context_query, dict):
-        return context_query.get('content', request)
-    else:
-        return context_query or request
+async def old_context(user_id: str, request: str, chat_id: str = None):
+    """
+    Oldingi savol-javoblar kontekstini hisobga olgan holda so'rovni qayta yozish
+    
+    Args:
+        user_id: Foydalanuvchi ID si
+        request: Joriy savol
+        chat_id: Chat ID si (ixtiyoriy)
+        
+    Returns:
+        str: Kontekst bilan to'ldirilgan savol
+    """
+    try:
+        # Redis-dan savol-javoblar tarixini olish
+        chat_history = redis_session.get_question_session(user_id, chat_id)
+        
+        if not chat_history:
+            return request
+            
+        # Salomlashuvlarni filtrlash
+        filtered_history = []
+        for item in chat_history:
+            question = item.get("question", "")
+            answer = item.get("answer", "")
+            
+            if not any(kw in question.lower() for kw in ['salom', 'assalomu alaykum', 'hurmatli']):
+                filtered_history.append(f"User: {question}\nAI: {answer}")
+                
+        # Tarixni matn formatiga o'girish
+        previous_context = "\n\n".join(filtered_history)
+        
+        # Savol qayta yozish funksiyasini chaqirish
+        context_query = await rewrite_query(request, previous_context)
+        
+        if isinstance(context_query, dict):
+            return context_query.get('content', request)
+        else:
+            return context_query or request
+    except Exception as e:
+        print(f"Savolni kontekst bilan qayta yozishda xatolik: {str(e)}")
+        return request
 
 def filter_salutations(results):
     return [r for r in results if not any(kw in r.lower() for kw in ['salom', 'assalomu alaykum', 'hurmatli'])]

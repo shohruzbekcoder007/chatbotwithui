@@ -1,11 +1,25 @@
 import redis
 import json
 import os
+import datetime
 from typing import Optional
 
 class RedisSession:
     """Redis'da foydalanuvchi sessiyasini saqlash"""
-    def __init__(self, host='localhost', port=6379, db=0, ttl=3600):
+    def __init__(self, host='localhost', port=6379, db=0, ttl=3600, use_file_fallback=True):
+        self.ttl = ttl
+        self.file_fallback = use_file_fallback
+        self.file_storage_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "session_data")
+        
+        # Fayl katalogini yaratish (agar mavjud bo'lmasa)
+        if self.file_fallback and not os.path.exists(self.file_storage_path):
+            try:
+                os.makedirs(self.file_storage_path)
+                print(f"File storage directory created at {self.file_storage_path}")
+            except Exception as e:
+                print(f"Failed to create file storage directory: {str(e)}")
+        
+        # Redis serverga ulanish
         try:
             self.redis_client = redis.Redis(
                 host,
@@ -17,80 +31,240 @@ class RedisSession:
             # Test connection
             self.redis_client.ping()
             self.connected = True
+            print("Successfully connected to Redis server")
         except redis.ConnectionError:
-            print("Warning: Could not connect to Redis. Running without session storage.")
+            print("Warning: Could not connect to Redis. Running with file-based storage.")
             self.connected = False
-    
-        self.ttl = ttl
-
+            
+    def _get_file_path(self, key):
+        """Sessiya kaliti uchun fayl yo'lini olish"""
+        # Xavfsiz fayl nomi yaratish
+        safe_key = key.replace(":", "_").replace("/", "_")
+        return os.path.join(self.file_storage_path, f"{safe_key}.json")
+            
     def set_user_session(self, user_id, data):
         """Foydalanuvchi sessiyasini Redis'ga yozish"""
-        if not self.connected:
-            return
-        try:
-            self.redis_client.setex(f"session:{user_id}", self.ttl, json.dumps(data))
-        except redis.ConnectionError:
-            print("Warning: Redis connection failed while setting session")
+        if self.connected:
+            try:
+                self.redis_client.setex(f"session:{user_id}", self.ttl, json.dumps(data))
+                return True
+            except redis.ConnectionError:
+                print("Warning: Redis connection failed while setting session")
+                
+        # Redis serverga ulanib bo'lmaganda fayl tizimiga yozish
+        if self.file_fallback:
+            try:
+                file_path = self._get_file_path(f"session:{user_id}")
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    json.dump(data, f, ensure_ascii=False, indent=2)
+                return True
+            except Exception as e:
+                print(f"Warning: File storage failed: {str(e)}")
+        
+        return False
 
     def get_user_session(self, user_id) -> Optional[dict]:
         """Foydalanuvchi sessiyasini Redis'dan olish"""
-        if not self.connected:
-            return None
-        try:
-            data = self.redis_client.get(f"session:{user_id}")
-            return json.loads(data) if data else None
-        except redis.ConnectionError:
-            print("Warning: Redis connection failed while getting session")
-            return None
+        if self.connected:
+            try:
+                data = self.redis_client.get(f"session:{user_id}")
+                if data:
+                    return json.loads(data)
+            except redis.ConnectionError:
+                print("Warning: Redis connection failed while getting session")
+                
+        # Redis serverga ulanib bo'lmaganda fayl tizimidan o'qish
+        if self.file_fallback:
+            try:
+                file_path = self._get_file_path(f"session:{user_id}")
+                if os.path.exists(file_path):
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        return json.load(f)
+            except Exception as e:
+                print(f"Warning: File reading failed: {str(e)}")
+        
+        return None
 
     def delete_user_session(self, user_id):
         """Foydalanuvchi sessiyasini Redis'dan o'chirish"""
-        if not self.connected:
-            return
-        try:
-            self.redis_client.delete(f"session:{user_id}")
-        except redis.ConnectionError:
-            print("Warning: Redis connection failed while deleting session")
+        if self.connected:
+            try:
+                self.redis_client.delete(f"session:{user_id}")
+            except redis.ConnectionError:
+                print("Warning: Redis connection failed while deleting session")
+
+        # Redis serverga ulanib bo'lmaganda fayl tizimidan o'chirish
+        if self.file_fallback:
+            try:
+                file_path = self._get_file_path(f"session:{user_id}")
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            except Exception as e:
+                print(f"Warning: File deletion failed: {str(e)}")
 
     def delete_all_sessions(self):
         """Redis'da barcha sessiyalarni o'chirish"""
-        if not self.connected:
-            return
-        try:
-            self.redis_client.flushdb()
-        except redis.ConnectionError:
-            print("Warning: Redis connection failed while flushing database")
+        if self.connected:
+            try:
+                self.redis_client.flushdb()
+            except redis.ConnectionError:
+                print("Warning: Redis connection failed while flushing database")
 
-    def set_question_session(self, user_question_id, data):
-        """Foydalanuvchi sessiyasini Redis'ga yozish"""
-        if not self.connected:
-            return
-        try:
-            self.redis_client.setex(f"question:{user_question_id}", self.ttl, json.dumps(data))
-        except redis.ConnectionError:
-            print("Warning: Redis connection failed while setting question")
+        # Redis serverga ulanib bo'lmaganda barcha sessiya fayllarini o'chirish
+        if self.file_fallback:
+            try:
+                import shutil
+                shutil.rmtree(self.file_storage_path)
+                print("All session files deleted")
+            except Exception as e:
+                print(f"Warning: Failed to delete session files: {str(e)}")
 
-    def delete_question_session(self, user_question_id):
-        """Foydalanuvchi sessiyasini Redis'dan o'chirish"""
+    def set_question_session(self, user_id: str, chat_id: str, question: str):
+        """
+        Foydalanuvchi savoli va javobini Redis-ga saqlash
+        
+        Args:
+            user_id: Foydalanuvchi ID si
+            chat_id: Chat ID si
+            question: Foydalanuvchi savoli
+            answer: Javob matni
+        """
         if not self.connected:
             return
         try:
-            self.redis_client.delete(f"question:{user_question_id}")
-        except redis.ConnectionError:
-            print("Warning: Redis connection failed while deleting question")
+            # Sessiya kaliti uchun user_id va chat_id ni birlashtirish
+            session_key = f"{user_id}:{chat_id}"
+            session_data = self.get_user_session(session_key) or {}
+            
+            # Oldingi savollar ro'yxatini olish yoki yangi ro'yxat yaratish
+            chat_history = session_data.get("chat_history", [])
+            
+            # Yangi savol-javobni qo'shish
+            chat_history.append({
+                "question": question,
+                "timestamp": str(datetime.datetime.now()),
+                "chat_id": chat_id
+            })
+            
+            # Ro'yxatni 10 ta so'nggi savol-javob bilan cheklash
+            if len(chat_history) > 10:
+                chat_history = chat_history[-10:]
+                
+            # Yangilangan ma'lumotlarni saqlash
+            session_data["chat_history"] = chat_history
+            self.set_user_session(session_key, session_data)
+            
+            return True
+        except Exception as e:
+            print(f"Warning: Failed to save question and answer: {str(e)}")
+            return False
+
+    def get_question_session(self, user_id: str, chat_id: str = None) -> list:
+        """
+        Foydalanuvchi savol-javoblar tarixini Redis-dan olish
+        
+        Args:
+            user_id: Foydalanuvchi ID si
+            chat_id: Chat ID si (ixtiyoriy)
+            
+        Returns:
+            list: Savol-javoblar tarixi, [{"question": "...", "answer": "..."}, ...]
+        """
+        if not self.connected:
+            return []
+        try:
+            if chat_id:
+                # Aniq chat uchun ma'lumotlarni olish
+                session_key = f"{user_id}:{chat_id}"
+                session_data = self.get_user_session(session_key) or {}
+                return session_data.get("chat_history", [])
+            else:
+                # Barcha chatlar uchun ma'lumotlarni yig'ib olish
+                all_history = []
+                # Redis-dan kalitlarni izlash
+                for key in self.redis_client.keys(f"session:{user_id}:*"):
+                    session_data = self.get_user_session(key.replace("session:", "")) or {}
+                    all_history.extend(session_data.get("chat_history", []))
+                
+                # Vaqt bo'yicha tartiblash
+                all_history.sort(key=lambda x: x.get("timestamp", ""))
+                return all_history
+        except Exception as e:
+            print(f"Warning: Failed to get question session: {str(e)}")
+            return []
+        
+    def set_suggestion_question(self, user_id: str, chat_id: str, suggested_question: str):
+        """
+        Tavsiya etilgan savollarni Redis-ga saqlash
     
-    def get_question_session(self, user_question_id) -> Optional[dict]:
-        """Foydalanuvchi sessiyasini Redis'dan olish"""
-        if not self.connected:
-            return None
+        Args:
+            user_id: Foydalanuvchi ID si
+            chat_id: Chat ID si
+            suggested_question: Tavsiya etilgan savol
+        """
+        if not self.connected and not self.file_fallback:
+            print("Neither Redis nor file fallback is available")
+            return False
+            
         try:
-            data = self.redis_client.get(f"question:{user_question_id}")
-            return json.loads(data) if data else None
-        except redis.ConnectionError:
-            print("Warning: Redis connection failed while getting question")
-            return None
+            # Sessiya kaliti uchun user_id va chat_id ni birlashtirish
+            session_key = f"{user_id}:{chat_id}"
+            session_data = self.get_user_session(session_key) or {}
+        
+            # Oldingi tavsiya etilgan savollar ro'yxatini olish yoki yangi ro'yxat yaratish
+            suggested_questions = session_data.get("suggested_questions", [])
+        
+            # Yangi tavsiya etilgan savolni qo'shish
+            if suggested_question and suggested_question not in suggested_questions:
+                suggested_questions.append(suggested_question)
+            
+            # Ro'yxatni 10 ta so'nggi tavsiya etilgan savol bilan cheklash
+            if len(suggested_questions) > 10:
+                suggested_questions = suggested_questions[-10:]
+                
+            # Yangilangan ma'lumotlarni saqlash
+            session_data["suggested_questions"] = suggested_questions
+            print(f"Saving suggested question: {suggested_question}")
+            return self.set_user_session(session_key, session_data)
+        except Exception as e:
+            print(f"Warning: Failed to save suggested question: {str(e)}")
+            return False
+
+    def get_suggested_questions(self, user_id: str, chat_id: str) -> list:
+        """
+        Tavsiya etilgan savollarni Redis-dan olish
+    
+        Args:
+            user_id: Foydalanuvchi ID si
+            chat_id: Chat ID si
+        
+        Returns:
+            list: Tavsiya etilgan savollar ro'yxati
+        """
+        if not self.connected:
+            return []
+        try:
+            # Sessiya kaliti uchun user_id va chat_id ni birlashtirish
+            session_key = f"{user_id}:{chat_id}"
+            session_data = self.get_user_session(session_key) or {}
+        
+            # Tavsiya etilgan savollar ro'yxatini olish
+            return session_data.get("suggested_questions", [])
+        except Exception as e:
+            print(f"Warning: Failed to get suggested questions: {str(e)}")
+            return []
         
 # Namuna ishlatish
-redis_session = RedisSession()
-# redis_session.set_user_session("user123", {"last_query": "O‘zbekiston aholi soni"})
-# print(redis_session.get_user_session("user123"))  # {'last_query': 'O‘zbekiston aholi soni'}
+# Redis ulanish parametrlari
+REDIS_HOST = 'localhost'  # Redis server host
+REDIS_PORT = 6379         # Redis server port
+REDIS_DB = 0              # Redis database
+
+# Redis sessiyasini yaratish
+redis_session = RedisSession(use_file_fallback=True)
+
+# Redis bilan ulanishni tekshirish
+if not redis_session.connected:
+    print("XATO: Redis serveriga ulanib bo'lmadi. Redis server ishga tushirilganligini tekshiring.")
+else:
+    print("INFO: Redis serveriga ulanish muvaffaqiyatli amalga oshirildi.")

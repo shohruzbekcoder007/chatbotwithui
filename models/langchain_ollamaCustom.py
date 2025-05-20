@@ -96,7 +96,8 @@ class LangChainOllamaModel:
             "Write the information as if you knew it in advance, don't imply that it was gathered from context.",
             "If the answer is not clear or not answer, please clarify from the user. For Example: \"Savolingizni tushunmadim, Iltimos savolga aniqlik kiriting\".",
             # "If the answer is long, add a summary at the end of the answer using the format: '<br><p><i>    </i></p>'."
-            "Only use the parts of the context that are directly relevant to the user's question. Ignore all other context, even if it is statistically related. Use only what directly answers the question."
+            "Only use the parts of the context that are directly relevant to the user's question. Ignore all other context, even if it is statistically related. Use only what directly answers the question.",
+            "/nothink"
         ]
 
     
@@ -424,6 +425,7 @@ class LangChainOllamaModel:
             f"Foydalanuvchi sorovi:\n{query}\n\n"
             f"Yordamchi javobi:\n{answer}\n\n"
             f"Tavsiya qilinadigan keyingi savol: <i></i>\n\n"
+            "/nothink"
         )
         messages = [
             {"role": "system", "content": system_prompt.format(language=detect_lang[language])},

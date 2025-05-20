@@ -279,7 +279,7 @@ def save_to_json(thread_id, query, answer):
 def send_request(thread_id):
     url = "http://127.0.0.1:8000/chat/"  # kerakli endpoint
     query = random.choice(questions).get("content")
-    print(f"[Thread-{thread_id}] Query: {query}")
+    # print(f"[Thread-{thread_id}] Query: {query}")
 
     try:
         response = requests.post(url, json={"query": query})
@@ -291,6 +291,7 @@ def send_request(thread_id):
         return
 
     with write_lock:
+        print(f"[Thread-{thread_id}] Query: {query}")
         # with open("answers.txt", "a", encoding="utf-8") as f:
         #     f.write(f"[Thread-{thread_id}] Query: {query}\n")
         #     f.write(f"[Thread-{thread_id}] Answer: {answer}\n\n")
@@ -299,18 +300,19 @@ def send_request(thread_id):
         save_to_json(thread_id, query, answer)
 
 # 🔹 Nechta parallel so'rov yuborilsin
-NUM_THREADS = 15
+NUM_THREADS = 5
 
 threads = []
 for i in range(NUM_THREADS):
-    send_request(i+1)
-    time.sleep(2)  # Har bir so'rov orasida 0.5 soniya kutish
-    # t = threading.Thread(target=send_request, args=(i+1,))
-    # threads.append(t)
-    # t.start()
+    # send_request(i+1)
+    # time.sleep(1)  # Har bir so'rov orasida 0.5 soniya kutish
+    t = threading.Thread(target=send_request, args=(i+1,))
+    threads.append(t)
+    t.start()
 
 # 🔹 Barcha thread tugaguncha kutamiz
-# for t in threads:
-#     t.join()
+for t in threads:
+    time.sleep(1)  # Har bir so'rov orasida 0.5 soniya kutish
+    t.join()
 
 print("✅ Barcha so'rovlar yakunlandi. Natijalar: answers.txt faylida.")
