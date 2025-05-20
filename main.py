@@ -1,4 +1,5 @@
 import os
+import time
 from fastapi import FastAPI, WebSocket, Request, Depends, Response
 from fastapi.responses import FileResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -15,7 +16,7 @@ from models.chat_message import ChatMessage
 from models.user_chat_list import UserChatList
 from auth.router import router as auth_router
 from auth.admin_auth import router as admin_router, get_current_admin
-from additional.additional import change_translate, combine_text_arrays, get_docs_from_db, change_redis, is_russian, old_context
+from additional.additional import change_translate, combine_text_arrays, get_docs_from_db, change_redis, is_russian, old_context, clean_html_tags
 from retriever.langchain_chroma import questions_manager
 from auth.utils import SECRET_KEY, ALGORITHM, jwt
 from typing import Optional
@@ -414,12 +415,12 @@ async def stream_chat(request: Request, req: ChatRequest):
     user_id = request.state.user_id
     # print(f"Using user_id from request.state: {user_id}")
 
-    suggestion_text = "\n <b> Tavsiya qilingan savol: </b> " 
+    suggestion_text = "\n <br><br><b> Tavsiya qilingan savol: </b> " 
 
     if(is_russian(question)):
         question = await change_translate(question, "uz")
         language = 'ru'
-        suggestion_text = "\n <b> Предложенный вопрос: </b> "
+        suggestion_text = "\n <br><br><b> Предложенный вопрос: </b> "
 
     # Kontekstni tayyorlash
     relevant_docs = get_docs_from_db(question)
@@ -455,31 +456,33 @@ async def stream_chat(request: Request, req: ChatRequest):
 
         # yield suggestion_text
         
-        # questions_manager_questions = questions_manager.search_documents(response_current, 10)
-        # sq_docs = questions_manager_questions.get("documents", []) if isinstance(questions_manager_questions, dict) else []
-        # question_docs = []
-        # for doc in sq_docs:
-        #     # Tavsiya qilingan savollarni oldingi savollar bilan solishtirish
-        #     if doc not in list(previous_questions):
-        #         question_docs.append(doc)
-                
-        # suggestion_context = "\n- ".join(question_docs) if question_docs else ""
-
-        # # suggested_question = ""
-        # # if question_docs and len(question_docs) > 0:
-
-        # yield f"{suggestion_text}"
-    
-        # # Stream orqali tavsiya qilingan savollarni olish
-        # async for token in model_llm.get_stream_suggestion_question(suggestion_context, question, response_current, language):
-        #     # Tavsiya qilingan savol oldingi savollar orasida bo'lmasligi kerak
-        #     suggested_question += token
-        #     yield f"{token}\n\n"  # Un-commenting this line to yield tokens
-        
-        # Tavsiya qilingan savolni chiqarish
+        questions_manager_questions = questions_manager.search_documents(response_current, 10)
+        suggested_question = ""
+        if questions_manager_questions:
+            sq_docs = questions_manager_questions.get("documents", []) if isinstance(questions_manager_questions, dict) else []
+            print(sq_docs, "<<- sq_docs")
+            question_docs = []
+            print(f"\n\nOldingi savollar: {list(previous_questions)}")
+            for doc in sq_docs[0]:
+                # Tavsiya qilingan savollarni oldingi savollar bilan solishtirish
+                if doc.lower() not in list(previous_questions):
+                    question_docs.append(doc)
+                    
+            suggestion_context = "\n- ".join(question_docs) if question_docs else ""
+            print(f"\n\nSuggestion context: {suggestion_context}")
+            # if question_docs and len(question_docs) > 0:
 
         
-        # yield suggestion_text + suggested_question
+            # Stream orqali tavsiya qilingan savollarni olish
+            async for token in model_llm.get_stream_suggestion_question(suggestion_context, question, response_current, language):
+                suggested_question += token
+                # yield f"{token}\n\n"  # Un-commenting this line to yield tokens
+
+            suggestion_result = suggestion_text + suggested_question
+
+            for token in suggestion_result:
+                time.sleep(0.009)  # Tokenlarni chiqarish uchun kutish
+                yield f"{token}\n\n"
         
         # MongoDB ga saqlash
         chat_message = ChatMessage(
@@ -487,7 +490,7 @@ async def stream_chat(request: Request, req: ChatRequest):
             chat_id=chat_id,
             message=req.content,
             response=response_current,
-            # suggestion_question=suggested_question,
+            suggestion_question=clean_html_tags(suggested_question),
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow()
         )

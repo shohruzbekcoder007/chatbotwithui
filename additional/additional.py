@@ -7,6 +7,29 @@ import unicodedata
 from translate.translate import translator
 
 
+def clean_html_tags(text: str) -> str:
+    """
+    Matn ichidagi HTML teglarni tozalab beradi
+    
+    Args:
+        text (str): Tozalanishi kerak bo'lgan matn
+        
+    Returns:
+        str: HTML teglardan tozalangan matn
+    """
+    if not text:
+        return ""
+        
+    # HTML teglarni tozalash (<b>, </b>, <i>, </i>, <p>, </p> va boshqalar)
+    cleaned_text = re.sub(r'<[^>]+>', '', text)
+    
+    # Ko'p bo'sh joylarni bitta bo'sh joy bilan almashtirish
+    cleaned_text = ' '.join(cleaned_text.split())
+    
+    # Boshidagi va oxiridagi bo'sh joylarni tozalash
+    return cleaned_text.strip()
+
+
 # Eng mos javoblarni topish db dan olish
 def get_docs_from_db(request: str):
     try:

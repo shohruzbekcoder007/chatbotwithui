@@ -124,132 +124,73 @@ questions = [
         "content": "Davlat dasturining ustuvor yo‘nalishlari qanday belgilangan?"
     },
     {
-        "content": "Aholiga davlat xizmatlarini ko‘rsatishda qanday qulayliklar va imtiyozlar yaratiladi?"
+        "content": "Salom, sen kimsan?"
     },
     {
-        "content": "Ijtimoiy himoya sohasida (pensiya ta’minoti va nogironlik) qanday asosiy vazifalar belgilangan?"
+        "content": "Assalomu alaykum."
     },
     {
-        "content": "Aholini uy-joy bilan ta’minlash borasida qanday maqsad va chora-tadbirlar belgilangan?"
+        "content": "1-kb qanday hisobot?"
     },
     {
-        "content": "Tashabbusli byudjet va mahallalarning moliyaviy mustaqilligini kengaytirish bo‘yicha qanday choralar ko‘zda tutilgan?"
+        "content": "1-kb shakli hisobotining davriyligi qanday"
     },
     {
-        "content": "Ta’lim sifatini oshirish va sohani isloh qilish borasida dasturda qanday vazifalar belgilangan?"
+        "content": "Statistika to'g'risidagi qonun qanday bo'limlardan tashkil topgan?"
     },
     {
-        "content": "Aholini sifatli tibbiy xizmatlar bilan ta’minlash va kasalliklarning oldini olish borasida qanday tadbirlar belgilangan?"
+        "content": "1-kb (tib) ning davriyligi qanday"
     },
     {
-        "content": "Sog‘lom turmush tarzini shakllantirish bo‘yicha dasturda qanday tashabbuslar nazarda tutilgan?"
+        "content": "Statistika to'g'risidagi qonun qachon qabul qilingan?"
     },
     {
-        "content": "Tadbirkorlik subyektlarini qo‘llab-quvvatlash va ularning huquqiy himoyasini kuchaytirish bo‘yicha qanday choralar ko‘zda tutilgan?"
+        "content": "Davlat dasturining ustuvor yo‘nalishlari qanday belgilangan?"
     },
-    {
-        "content": "Qishloq xo‘jaligini suv resurslari bilan barqaror ta’minlash uchun qanday choralar belgilangan?"
-    },
-    {
-        "content": "Sud-huquq tizimini isloh qilish va qonun ustuvorligini ta’minlash bo‘yicha qanday o‘zgarishlar nazarda tutilgan?"
-    },
-    {
-        "content": "Yo‘l harakati xavfsizligini oshirish maqsadida qanday yangi qoidalar joriy etiladi?"
-    },
-    {
-        "content": "Davlat dasturi ijrosini monitoring qilish va tahlil etish bo‘yicha qanday mexanizmlar nazarda tutilgan?"
-    },
-    {
-        "content": "Statistika organlari xodimlari malaka oshirish kurslarida qachon va qay tartibda o‘qitilishi belgilangan?"
-    },
-    {
-        "content": "Respublika va mahalliy ijro hokimiyati organlarining statistika uchun mas’ul xodimlari malaka oshirish kurslarida qanday tartibda ishtirok etadi?"
-    },
-    {
-        "content": "Statistika hisobotlarini topshiruvchi tadbirkorlik subyektlari xodimlarining statistik savodxonligini oshirish uchun malaka oshirish kurslari qanday shaklda tashkil etiladi?"
-    },
-    {
-        "content": "Statistika sohasida kadrlarning uzluksiz kasbiy rivojlanishini ta’minlash uchun qaysi ekspertlar kengashi tuzilishi nazarda tutilgan?"
-    },
-    {
-        "content": "Statistika agentligi tizimidagi barcha xodimlarni qayta tayyorlash qanday tartibda amalga oshirilishi belgilangan?"
-    },
-    {
-        "content": "Kadrlarni qayta tayyorlash va malaka oshirish jarayonlarida masofaviy va boshqa zamonaviy ta’lim shakllarini joriy etish qanday nazarda tutilgan?"
-    },
-    {
-        "content": "Malaka oshirish jarayonlarini raqamli texnologiyalar asosida tashkil etish va ularni monitoring qilish orqali ta’lim sifati qanday oshiriladi?"
-    },
-    {
-        "content": "Statistika xodimlarining bilim va malakasini mustaqil baholash uchun qanday mexanizm joriy qilinadi?"
-    },
-    {
-        "content": "Xodimlarning kasbiy malakasini oshirish natijalarini baholash va ularni rag‘batlantirish tizimi qanday joriy etilishi belgilangan?"
-    },
-    {
-        "content": "Istiqbolli yosh statistika mutaxassislarini qo‘llab-quvvatlash maqsadida kadrlar zaxirasini shakllantirish va ularni stajirovkaga yuborish qanday amalga oshiriladi?"
-    },
-    {
-        "content": "Statistika tizimi xodimlari uchun vebinar tarzidagi amaliy trening va mahorat darslari qanday davriylikda o‘tkazib turilishi rejalashtirilgan?"
-    },
-    {
-        "content": "Mahalliy va xorijiy ekspertlar ishtirokida milliy va xalqaro statistika uslubiyoti bo‘yicha seminarlar hamda davra suhbatlari qanday davriylikda tashkil etib boriladi?"
-    },
-    {
-        "content": "Statistika sohasi bo‘yicha elektron o‘quv platformasi qachondan ishga tushiriladi va u xodimlar malakasini oshirish uchun qanday imkoniyatlarni taqdim etadi?"
-    },
-    {
-        "content": "Malaka oshirish kurslari dasturlarini xalqaro standartlar hamda “Davlat fuqarolik xizmati to‘g‘risida”gi Qonun talablariga muvofiqlashtirish bo‘yicha qanday vazifalar belgilangan?"
-    },
-    {
-        "content": "Kadrlar malakasini oshirish institutining yangi tuzilmasini tasdiqlash va shtat birliklari sonini belgilash qanday tartibda amalga oshiriladi?"
-    },
-    {
-        "content": "Kadrlar malakasini oshirish instituti direktori va uning o‘rinbosarlarini tayinlash hamda institut professor-o‘qituvchilariga mehnatga haq to‘lash masalalari qanday hal etiladi?"
-    },
-    {
-        "content": "Institutdagi xodimlarni attestatsiyadan o‘tkazish uchun qanday tartibda komissiya tuzilishi belgilangan?"
-    },
-    {
-        "content": "Malaka oshirish va qayta tayyorlash kurslarini tamomlagan tinglovchilarga beriladigan hujjatlar qanday tartibda tayyorlanadi va elektron tarzda rasmiylashtiriladi?"
-    },
-    {
-        "content": "Kadrlar malakasini oshirish institutining majlislar zali va yotoqxona binolarini rekonstruksiya qilish hamda jihozlash bo‘yicha qanday ishlar rejalashtirilgan va bu jarayonda qaysi tashkilotlar mas’ul etib belgilangan?"
-    },
-    {
-        "content": "Mazkur kadrlar malakasini oshirish bo'yicha qaror ijrosini nazorat qilish vazifasi kimga yuklatilgan?"
-    },
-    {
-        "content": "Milliy statistika qo‘mitasining davlat statistika sohasidagi asosiy funksiyalari nimalardan iborat va qo‘mitaga qanday vakolatlar berilgan?"
-    },
-    {
-        "content": "statistika qo‘mitasining tashkiliy tuzilmasi va undagi lavozimlar tizimi qanday shakllantirilgan hamda milliy statistika tizimini transformatsiya qilish bosqichlari qanday amalga oshiriladi?"
-    },
-    {
-        "content": "Milliy statistika qo‘mitasi tizimida asosiy samaradorlik ko‘rsatkichlari (KPI) tizimi qanday joriy etilmoqda va xodimlar samaradorligini baholash mezonlari nimalardan iborat?"
-    },
-    {
-        "content": "Rasmiy statistika ma’lumotlarining ochiqligi va sifati hamda ularning xalqaro standartlarga muvofiqligini ta’minlash uchun qanday chora-tadbirlar belgilangan?"
-    },
-    {
-        "content": "Statistika faoliyatini raqamlashtirish hamda sohada zamonaviy axborot tizimlari va monitoring mexanizmlarini joriy etish jarayonlari qanday tashkil etilgan?"
-    },
-    {
-        "content": "Milliy statistika qo‘mitasida kadrlar siyosati qanday amalga oshiriladi, ichki nazorat tizimi qanday yo‘lga qo‘yilgan va korrupsiyaga qarshi kurashish bo‘yicha qanday choralar ko‘riladi?"
-    },
-    {
-        "content": "Milliy statistika qo‘mitasining xalqaro hamkorlik faoliyati va donor tashkilotlar bilan o‘zaro aloqalari qanday yo‘lga qo‘yilgan?"
-    },
-    {
-        "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 4-moddasida keltirilgan “identifikator” tushunchasi nimani anglatadi va statistik birlikni identifikatsiyalashda qanday ro‘l o‘ynaydi?"
-    },
-    {
-        "content": "Rasmiy statistika qonuni bo‘yicha Qonunning 4-moddasiga binoan “individual ma’lumotlar” deb nimani tushunish kerak va u rasmiy statistika maqsadlari uchun qanday ishlatiladi?"
-    },
-    {
-        "content": "Rasmiy statistika qonuni bo‘yicha “Ma’muriy ma’lumotlar” termini qonunning 4-moddasiga muvofiq qanday ma’lumotlarni ifodalaydi va bu ma’lumotlar rasmiy statistika tayyorlash jarayonida qanday foydalaniladi?"
-    }
+    
 ]
+
+
+second_questions = [
+#     "4-fx shakli hisobotini kimlar qachon topshirishi belgilangan?",
+#     "1-kb shaklini kimlar topshiradi?",
+#     "1-kb ning qanday turlari bor?",
+#     "1-kb shakli hisobotining davriyligi qanday",
+#     "1-kb shakli hisobotini kimlar topshiradi?",
+#     "4-miz qanday hisobot?",
+#     "4-miz shakli hisobotining davriyligi qanday?",
+#     "4-miz shakli hisobotini kimlar topshiradi?",
+#     "qanday turdagi hisobotlar mavjud?",
+#     "men fermerman qaysi hisobotlarni topshiraman?",
+#    "Tayyor hisobotni tizimga qanday jo‘natish mumkin?",
+
+   ################## 2-qism ##################
+   "Hisobotni to‘ldirib bo‘ldim. Endi uni qanday jo‘nataman?",
+   "Qoralama bo‘limida qanday hisobotlar saqlanadi?",
+   "Hisobotni hali yakunlamagan bo‘lsam, uni qayerdan topaman?",
+   "Jo‘natilgan hisobotlar bo‘limida nimani ko‘rish mumkin?",
+   "Yuborgan hisobotimni qayta ko‘rmoqchiman. Qayerdan topsam bo‘ladi?",
+   "Qaytarilgan hisobotlar bo‘limi nimani anglatadi?",
+   "Agar hisobotim qaytarilgan bo‘lsa, bu holatni qayerda ko‘raman?",
+   "Xabarnomalar bo‘limi nima vazifani bajaradi?",
+   "Hisobotlar holati bo‘yicha bildirishnomalarni qayerdan olsam bo‘ladi?",
+   "Mas’ul vakillar bo‘limida qanday ma’lumotlar ko‘rsatiladi?",
+   "Hisobot topshirish vakolatini boshqa shaxsga qanday berish mumkin?",
+   "Gender tenglik bo‘yicha Maslahat-kengash tarkibida kimlar bor va unga kim rahbarlik qiladi?",
+   "Bu gender maslahat-kengashi nima ish qiladi o‘zi?",
+   "milliy statistika ma’lumotlarining xalqaro qiyosiyligini ta’minlash uchun qanday chora-tadbirlar amalga oshirilishi belgilangan?",
+    "Statistika agentligi loyihaning ijro etuvchi organi sifatida qanday vazifalarni bajarishi belgilangan?",
+
+
+
+]
+
+
+
+
+def get_question(question: str = None):
+    # return random.choice(questions).get("content")
+    return question
 
 import time
 # 🔹 Javoblar yoziladigan faylni bloklash uchun lock
@@ -276,9 +217,9 @@ def save_to_json(thread_id, query, answer):
             json.dump(existing_data, f, ensure_ascii=False, indent=4)
 
 # 🔹 Har bir thread bajarayotgan funksiya
-def send_request(thread_id):
+def send_request(thread_id, question=None):
     url = "http://127.0.0.1:8000/chat/"  # kerakli endpoint
-    query = random.choice(questions).get("content")
+    query = get_question(question)
     # print(f"[Thread-{thread_id}] Query: {query}")
 
     try:
@@ -287,11 +228,11 @@ def send_request(thread_id):
         answer = result.get("response", "No answer key")
     except Exception as e:
         answer = f"Error: {str(e)}"
-        print(f"[Thread-{thread_id}] Error: {answer}")
+        print(f"[ Thread-{thread_id} ] Error: {answer}")
         return
 
     with write_lock:
-        print(f"[Thread-{thread_id}] Query: {query}")
+        print(f"[ Thread-{thread_id} ] Query: {query}")
         # with open("answers.txt", "a", encoding="utf-8") as f:
         #     f.write(f"[Thread-{thread_id}] Query: {query}\n")
         #     f.write(f"[Thread-{thread_id}] Answer: {answer}\n\n")
@@ -299,20 +240,28 @@ def send_request(thread_id):
         # JSON faylga saqlash
         save_to_json(thread_id, query, answer)
 
+
+
+for id, question in enumerate(second_questions, start=1):
+    send_request(id, question)
+    time.sleep(1)  # Har bir so'rov orasida 0.5 soniya kutish
+
+
 # 🔹 Nechta parallel so'rov yuborilsin
 NUM_THREADS = 5
 
-threads = []
-for i in range(NUM_THREADS):
-    # send_request(i+1)
-    # time.sleep(1)  # Har bir so'rov orasida 0.5 soniya kutish
-    t = threading.Thread(target=send_request, args=(i+1,))
-    threads.append(t)
-    t.start()
 
-# 🔹 Barcha thread tugaguncha kutamiz
-for t in threads:
-    time.sleep(1)  # Har bir so'rov orasida 0.5 soniya kutish
-    t.join()
+# threads = []
+# for i in range(NUM_THREADS):
+#     send_request(i+1)
+#     time.sleep(1)  # Har bir so'rov orasida 0.5 soniya kutish
+#     t = threading.Thread(target=send_request, args=(i+1,))
+#     threads.append(t)
+#     t.start()
 
-print("✅ Barcha so'rovlar yakunlandi. Natijalar: answers.txt faylida.")
+# # 🔹 Barcha thread tugaguncha kutamiz
+# for t in threads:
+#     time.sleep(1)  # Har bir so'rov orasida 0.5 soniya kutish
+#     t.join()
+
+print("✅ Barcha so'rovlar yakunlandi. Natijalar: fine_tuning_data.json faylida.")
