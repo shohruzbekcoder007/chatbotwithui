@@ -434,36 +434,36 @@ async def stream_chat(request: Request, req: ChatRequest):
         async for token in model_llm.get_stream_suggestion_question(context, question, response_current, language):
             yield f"{token}\n\n"
 
-        # if user_id != "anonymous":
-        chat_message = ChatMessage(
-            user_id=user_id,
-            chat_id=chat_id,
-            message=req.content,
-            response=response_current,
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow()
-        )
-        await chat_message.insert()
-        print(f"Saved message to MongoDB with ID: {chat_message.id}")
-
-        existing_chat = await UserChatList.find_one(
-            UserChatList.user_id == user_id,
-            UserChatList.chat_id == chat_id
-        )
-
-        if not existing_chat:
-            user_chat = UserChatList(
+        if user_id != "anonymous":
+            chat_message = ChatMessage(
                 user_id=user_id,
                 chat_id=chat_id,
-                name=f"Suhbat: {req.content[:30]}...",
+                message=req.content,
+                response=response_current,
                 created_at=datetime.utcnow(),
                 updated_at=datetime.utcnow()
             )
-            await user_chat.insert()
-            print(f"Added chat to user's chat list: {chat_id}")
-        else:
-            await existing_chat.set({"updated_at": datetime.utcnow()})
-            print(f"Updated timestamp for existing chat: {chat_id}")
+            await chat_message.insert()
+            print(f"Saved message to MongoDB with ID: {chat_message.id}")
+
+            existing_chat = await UserChatList.find_one(
+                UserChatList.user_id == user_id,
+                UserChatList.chat_id == chat_id
+            )
+
+            if not existing_chat:
+                user_chat = UserChatList(
+                    user_id=user_id,
+                    chat_id=chat_id,
+                    name=f"Suhbat: {req.content[:30]}...",
+                    created_at=datetime.utcnow(),
+                    updated_at=datetime.utcnow()
+                )
+                await user_chat.insert()
+                print(f"Added chat to user's chat list: {chat_id}")
+            else:
+                await existing_chat.set({"updated_at": datetime.utcnow()})
+                print(f"Updated timestamp for existing chat: {chat_id}")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
