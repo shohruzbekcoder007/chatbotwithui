@@ -50,7 +50,7 @@ class LangChainOllamaModel:
                 session_id: Optional[str] = None,
                 model_name: str = "mistral-small:24b",
                 base_url: str = "http://localhost:11434",
-                temperature: float = 0.3,
+                temperature: float = 0.5,
                 num_ctx: int = 2048,
                 num_gpu: int = 1,
                 gpu_layers: int = 100,
@@ -96,7 +96,9 @@ class LangChainOllamaModel:
             "Write the information as if you knew it in advance, don't imply that it was gathered from context.",
             "If the answer is not clear or not answer, please clarify from the user. For Example: \"Savolingizni tushunmadim, Iltimos savolga aniqlik kiriting\".",
             # "If the answer is long, add a summary at the end of the answer using the format: '<br><p><i>    </i></p>'."
-            "Only use the parts of the context that are directly relevant to the user's question. Ignore all other context, even if it is statistically related. Use only what directly answers the question."
+            "Only use the parts of the context that are directly relevant to the user's question. Ignore all other context, even if it is statistically related. Use only what directly answers the question.",
+            "/nothink"
+            "Savolga javob berishda faqat kontekstga asoslaning. Agar kontekstda javob bo'lmasa, \"Savolingizni tushunmadim, aniqroq qilib savol bering\" deb yozing.",
         ]
 
     
@@ -411,7 +413,7 @@ class LangChainOllamaModel:
         system_prompt = (
             "Siz tavsiya beruvchi yordamchisiz. Foydalanuvchining sorovi va unga berilgan javobga asoslanib, "
             "quyida berilgan kontekst savollari ichidan mantiqan eng yaqin bitta savolni tanlashingiz kerak.\n\n"
-            "Faqat **bitta** savolni tanlang. Yangi savol o‘ylab topmang, faqat taqdim etilgan savollar ichidan 1 tasini tanlang.\n"
+            "Faqat **bitta** savolni tanlang. Yangi savol o‘ylab topmang, faqat taqdim etilgan savollar ichidan 1 tasini tanlang va o'zgartirmagan holatda taqdim eting.\n"
             "Sizga berilgan kontekstda mavjud bo‘lgan savollardan faqat 1 tasini tanlang. Faqat bitta savolni tanlang. Faqatgina savolning o'zini yozing, boshqa hech qanday ma'lumot qo'shib yozmang.\n\n"
             "Each response must be formatted in HTML (answer only <i> tag). Every response should maintain semantic and visual clarity\n"
             "Yangi Savol {language} tilida bo'lishi kerak.\n"
@@ -424,6 +426,7 @@ class LangChainOllamaModel:
             f"Foydalanuvchi sorovi:\n{query}\n\n"
             f"Yordamchi javobi:\n{answer}\n\n"
             f"Tavsiya qilinadigan keyingi savol: <i></i>\n\n"
+            "/nothink"
         )
         messages = [
             {"role": "system", "content": system_prompt.format(language=detect_lang[language])},

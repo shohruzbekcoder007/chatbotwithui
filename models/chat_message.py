@@ -9,6 +9,7 @@ class ChatMessage(Document):
     chat_id: str  # Chat ID (UUID)
     message: str  # Foydalanuvchi savoli
     response: str  # AI javobi
+    suggestion_question: Optional[str] = None  # Taklif qilingan savol
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     

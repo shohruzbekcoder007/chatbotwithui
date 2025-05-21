@@ -1,4 +1,5 @@
 import os
+import time
 from fastapi import FastAPI, WebSocket, Request, Depends, Response
 from fastapi.responses import FileResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -15,7 +16,7 @@ from models.chat_message import ChatMessage
 from models.user_chat_list import UserChatList
 from auth.router import router as auth_router
 from auth.admin_auth import router as admin_router, get_current_admin
-from additional.additional import change_translate, combine_text_arrays, get_docs_from_db, change_redis, is_russian, old_context
+from additional.additional import change_translate, combine_text_arrays, get_docs_from_db, change_redis, is_russian, old_context, clean_html_tags
 from retriever.langchain_chroma import questions_manager
 from auth.utils import SECRET_KEY, ALGORITHM, jwt
 from typing import Optional
@@ -25,6 +26,7 @@ import psutil
 import GPUtil
 import asyncio
 import json
+from redis_obj.redis import redis_session
 
 # from llm_models.google_gemma27b import GemmaModel
 
@@ -411,46 +413,110 @@ async def stream_chat(request: Request, req: ChatRequest):
     language = 'uz'
 
     user_id = request.state.user_id
-    print(f"Using user_id from request.state: {user_id}")
+    # print(f"Using user_id from request.state: {user_id}")
+
+    suggestion_text = "\n <br><br><b> Tavsiya qilingan savol: </b> " 
 
     if(is_russian(question)):
         question = await change_translate(question, "uz")
         language = 'ru'
+        suggestion_text = "\n <br><br><b> Предложенный вопрос: </b> "
 
+    # Kontekstni tayyorlash
     relevant_docs = get_docs_from_db(question)
     docs = relevant_docs.get("documents", []) if isinstance(relevant_docs, dict) else []
+
+
     context = "\n- ".join(docs[0]) if docs else ""
     print(f"Context: {context}")
 
     async def event_generator():
-        global response_current
         response_current = ""
+        
+        # # MongoDB-dan oldingi xabarlarni olish
+        previous_messages = await ChatMessage.find(
+            ChatMessage.user_id == user_id,
+            ChatMessage.chat_id == chat_id
+        ).sort("+created_at").to_list()
+        
+        # # Oldingi mavjud savollarni yig'ish (tavsiya qilingan savollarni filtrlash uchun)
+        previous_questions = set()
+        for msg in previous_messages:
+            # Asosiy savollarni qo'shish
+            if msg.suggestion_question:
+                previous_questions.add(msg.suggestion_question.strip().lower())
+    
+        # print(f"Oldingi savollar: {previous_questions}")
+    
+        # Modeldan chat javobi olish
         async for token in model_llm.chat_stream(context=context, query=question, language=language):
             response_current += token
             yield f"{token}\n\n"
+        
 
-        yield "\n <b> Tavsiya qilingan savol: </b>: " 
+        # yield suggestion_text
+        
+        questions_manager_questions = questions_manager.search_documents(response_current, 10)
+        suggested_question = ""
+        if questions_manager_questions:
+            sq_docs = questions_manager_questions.get("documents", []) if isinstance(questions_manager_questions, dict) else []
+            print(sq_docs, "<<- sq_docs")
+            question_docs = []
+            print(f"\n\nOldingi savollar: {list(previous_questions)}")
+            for doc in sq_docs[0]:
+                # Tavsiya qilingan savollarni oldingi savollar bilan solishtirish
+                if doc.lower() not in list(previous_questions):
+                    question_docs.append(doc)
+                    
+            suggestion_context = "\n- ".join(question_docs) if question_docs else ""
+            print(f"\n\nSuggestion context: {suggestion_context}")
+            # if question_docs and len(question_docs) > 0:
 
-        async for token in model_llm.get_stream_suggestion_question(context, question, response_current, language):
-            yield f"{token}\n\n"
+        
+            # Stream orqali tavsiya qilingan savollarni olish
+            async for token in model_llm.get_stream_suggestion_question(suggestion_context, question, response_current, language):
+                suggested_question += token
+                # yield f"{token}\n\n"  # Un-commenting this line to yield tokens
 
+            suggestion_result = suggestion_text + suggested_question
+
+            for token in suggestion_result:
+                time.sleep(0.009)  # Tokenlarni chiqarish uchun kutish
+                yield f"{token}\n\n"
+        
+        # MongoDB ga saqlash
+        chat_message = ChatMessage(
+            user_id=user_id,
+            chat_id=chat_id,
+            message=req.content,
+            response=response_current,
+            suggestion_question=clean_html_tags(suggested_question),
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
+        )
+        await chat_message.insert()
+        print(f"Saved message to MongoDB with ID: {chat_message.id}")
+
+        # Faqat login qilgan foydalanuvchilar uchun chat ro'yxatiga qo'shish
         if user_id != "anonymous":
-            chat_message = ChatMessage(
-                user_id=user_id,
-                chat_id=chat_id,
-                message=req.content,
-                response=response_current,
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
-            await chat_message.insert()
-            print(f"Saved message to MongoDB with ID: {chat_message.id}")
-
             existing_chat = await UserChatList.find_one(
                 UserChatList.user_id == user_id,
                 UserChatList.chat_id == chat_id
             )
 
+            if not existing_chat:
+                user_chat = UserChatList(
+                    user_id=user_id,
+                    chat_id=chat_id,
+                    name=f"Suhbat: {req.content[:30]}...",
+                    created_at=datetime.utcnow(),
+                    updated_at=datetime.utcnow()
+                )
+                await user_chat.insert()
+                print(f"Added chat to user's chat list: {chat_id}")
+            else:
+                await existing_chat.set({"updated_at": datetime.utcnow()})
+                print(f"Updated timestamp for existing chat: {chat_id}")
             if not existing_chat:
                 user_chat = UserChatList(
                     user_id=user_id,
