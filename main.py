@@ -443,8 +443,8 @@ async def stream_chat(request: Request, req: ChatRequest):
         previous_questions = set()
         for msg in previous_messages:
             # Asosiy savollarni qo'shish
-            if msg.suggestion_question:
-                previous_questions.add(msg.suggestion_question.strip().lower())
+            if msg.message:
+                previous_questions.add(msg.message.strip().lower())
     
         # print(f"Oldingi savollar: {previous_questions}")
     
@@ -462,14 +462,16 @@ async def stream_chat(request: Request, req: ChatRequest):
             sq_docs = questions_manager_questions.get("documents", []) if isinstance(questions_manager_questions, dict) else []
             print(sq_docs, "<<- sq_docs")
             question_docs = []
+            previous_questions.add(question.strip().lower())
             print(f"\n\nOldingi savollar: {list(previous_questions)}")
             for doc in sq_docs[0]:
                 # Tavsiya qilingan savollarni oldingi savollar bilan solishtirish
+                # print(f"\n - Previous question: {doc.lower()} - {doc.lower() in list(previous_questions)}")
                 if doc.lower() not in list(previous_questions):
                     question_docs.append(doc)
                     
             suggestion_context = "\n- ".join(question_docs) if question_docs else ""
-            print(f"\n\nSuggestion context: {suggestion_context}")
+            print(f"\n\nSuggestion question context: {suggestion_context}")
             # if question_docs and len(question_docs) > 0:
 
         

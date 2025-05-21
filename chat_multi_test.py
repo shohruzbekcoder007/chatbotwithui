@@ -164,24 +164,50 @@ second_questions = [
 #     "men fermerman qaysi hisobotlarni topshiraman?",
 #    "Tayyor hisobotni tizimga qanday jo‘natish mumkin?",
 
-   ################## 2-qism ##################
-   "Hisobotni to‘ldirib bo‘ldim. Endi uni qanday jo‘nataman?",
-   "Qoralama bo‘limida qanday hisobotlar saqlanadi?",
-   "Hisobotni hali yakunlamagan bo‘lsam, uni qayerdan topaman?",
-   "Jo‘natilgan hisobotlar bo‘limida nimani ko‘rish mumkin?",
-   "Yuborgan hisobotimni qayta ko‘rmoqchiman. Qayerdan topsam bo‘ladi?",
-   "Qaytarilgan hisobotlar bo‘limi nimani anglatadi?",
-   "Agar hisobotim qaytarilgan bo‘lsa, bu holatni qayerda ko‘raman?",
-   "Xabarnomalar bo‘limi nima vazifani bajaradi?",
-   "Hisobotlar holati bo‘yicha bildirishnomalarni qayerdan olsam bo‘ladi?",
-   "Mas’ul vakillar bo‘limida qanday ma’lumotlar ko‘rsatiladi?",
-   "Hisobot topshirish vakolatini boshqa shaxsga qanday berish mumkin?",
-   "Gender tenglik bo‘yicha Maslahat-kengash tarkibida kimlar bor va unga kim rahbarlik qiladi?",
-   "Bu gender maslahat-kengashi nima ish qiladi o‘zi?",
-   "milliy statistika ma’lumotlarining xalqaro qiyosiyligini ta’minlash uchun qanday chora-tadbirlar amalga oshirilishi belgilangan?",
-    "Statistika agentligi loyihaning ijro etuvchi organi sifatida qanday vazifalarni bajarishi belgilangan?",
+#    ################## 2-qism ##################
+#    "Hisobotni to‘ldirib bo‘ldim. Endi uni qanday jo‘nataman?",
+#    "Qoralama bo‘limida qanday hisobotlar saqlanadi?",
+#    "Hisobotni hali yakunlamagan bo‘lsam, uni qayerdan topaman?",
+#    "Jo‘natilgan hisobotlar bo‘limida nimani ko‘rish mumkin?",
+#    "Yuborgan hisobotimni qayta ko‘rmoqchiman. Qayerdan topsam bo‘ladi?",
+#    "Qaytarilgan hisobotlar bo‘limi nimani anglatadi?",
+#    "Agar hisobotim qaytarilgan bo‘lsa, bu holatni qayerda ko‘raman?",
+#    "Xabarnomalar bo‘limi nima vazifani bajaradi?",
+#    "Hisobotlar holati bo‘yicha bildirishnomalarni qayerdan olsam bo‘ladi?",
+#    "Mas’ul vakillar bo‘limida qanday ma’lumotlar ko‘rsatiladi?",
+#    "Hisobot topshirish vakolatini boshqa shaxsga qanday berish mumkin?",
+#    "Gender tenglik bo‘yicha Maslahat-kengash tarkibida kimlar bor va unga kim rahbarlik qiladi?",
+#    "Bu gender maslahat-kengashi nima ish qiladi o‘zi?",
+#    "milliy statistika ma’lumotlarining xalqaro qiyosiyligini ta’minlash uchun qanday chora-tadbirlar amalga oshirilishi belgilangan?",
+#     "Statistika agentligi loyihaning ijro etuvchi organi sifatida qanday vazifalarni bajarishi belgilangan?",
 
-
+    ###########################  3-qism ###########################
+    "qanday mantiqiy nazorat talablari bor?",
+    "Qat’iy mantiqiy nazorat talabi nima?",
+    "Qat’iy va noqat’iy mantiqiy nazorat degani nima?",
+    "Noqat’iy mantiqiy nazorat talabi nimani anglatadi?",
+    "Statistika to'g'risidagi qonun qachon qabul qilingan?",
+    "Hisobotda noqat’iy nazorat bajarilmasa, nima qilish kerak?",
+    "Taqdim etilgan ma’lumotlar to‘liq bo‘lmagan, sifatsiz yoki belgilangan talablarga javob bermagan taqdirda buyurtmachi qanday choralar ko‘radi?",
+    "Statistika kuzatuvi natijalarining to‘liqligi va sifati masalasida kuzatuvchi va buyurtmachi o‘rtasida qanday metodologik talab va nazorat mexanizmlari ko‘zda tutilgan?",
+    "Estat 4.0 nima?",
+    "estat tizimidan kimlar foydalanadi?",
+    "Axborot tizimida qabul qilingan hisobotimni qanday yuklab olaman?",
+    "Axborot tizimida hisobot uchun izohni qayerga yozaman?",
+    "Hisobot bo‘limini to‘ldirgandan so‘ng ma’lumotlarni qanday saqlash kerak?",
+    "Hisobotni to‘ldirib bo‘ldim. Endi uni qanday jo‘nataman?",
+    "Tayyor hisobotni tizimga qanday jo‘natish mumkin?",
+    "Hisobotni (eStat orqali) qanday yuboraman?",
+    "Axborot tizimida hisobot uchun izohni qayerga yozaman?",
+    "Hisobot bo‘limini to‘ldirgandan so‘ng ma’lumotlarni qanday saqlash kerak?",
+    "Yuborgan hisobotimni qayta ko‘rmoqchiman. Qayerdan topsam bo‘ladi?",
+    "Hisobotlar holati bo‘yicha bildirishnomalarni qayerdan olsam bo‘ladi?",
+    "MIZ (12-korxona shakliga ilova) shakli hisobotini kimlar qachon topshirishi belgilangan?",
+    "MIZ (12-korxona shakliga ilova) shakli qanday hisobot?",
+    "Kimlar statistika hisobotini topshiradi?",
+    "Rasmiy statistika ma’lumotlarining ochiqligi va sifati hamda ularning xalqaro standartlarga muvofiqligini ta’minlash uchun qanday chora-tadbirlar belgilangan?",
+    "7-bob",
+    "Hisobotim qabul qilinganini qanday bilsam bo‘ladi?",
 
 ]
 
@@ -265,3 +291,4 @@ NUM_THREADS = 5
 #     t.join()
 
 print("✅ Barcha so'rovlar yakunlandi. Natijalar: fine_tuning_data.json faylida.")
+
