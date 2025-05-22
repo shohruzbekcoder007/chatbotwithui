@@ -1,11 +1,9 @@
 import re
 from retriever.langchain_chroma import search_documents
 from redis_obj.redis import redis_session
-from models.langchain_ollama import rewrite_query
+from models_llm.langchain_ollamaCustom import model as model_llm
 from typing import List
-import unicodedata
 from translate.translate import translator
-
 
 def clean_html_tags(text: str) -> str:
     """
@@ -133,7 +131,7 @@ async def old_context(user_id: str, request: str, chat_id: str = None):
         previous_context = "\n\n".join(filtered_history)
         
         # Savol qayta yozish funksiyasini chaqirish
-        context_query = await rewrite_query(request, previous_context)
+        context_query = await model_llm.rewrite_query(request, previous_context)
         
         if isinstance(context_query, dict):
             return context_query.get('content', request)
