@@ -94,8 +94,7 @@ async function onsubmitstream(event) {
                 if (line) {
                     const token = line;
                     fullText += token;
-                    messageTextSpan.innerHTML = fullText;
-                    console.log(token);
+                    messageTextSpan.innerHTML = `<div class="message-text">${fullText}</div>`;
                     setTimeout(() => scrollToBottom(), 0);
                 }
             });

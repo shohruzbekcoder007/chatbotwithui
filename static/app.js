@@ -27,15 +27,13 @@ let currentFeedbackButton = null;
 function giveFeedback(button, type) {
     currentFeedbackButton = button;
 
-    // Get the message text and user query
+    // Get the message text
     const messageContainer = button.closest('.message-container');
     const messageText = messageContainer.querySelector('.message-text').textContent;
-    const userQuery = messageContainer.querySelector('.user-query').textContent;
 
-    // Store the feedback type, message and user query for the modal
+    // Store the feedback type and message for the modal
     const feedbackModal = document.getElementById('feedbackModal');
     feedbackModal.dataset.messageText = messageText; // chatbot's answer
-    feedbackModal.dataset.answerText = userQuery; // user's question
     feedbackModal.dataset.feedbackType = type;
 
     // Clear previous comment
@@ -56,7 +54,6 @@ function submitFeedback() {
     const modal = document.getElementById('feedbackModal');
     const messageText = modal.dataset.messageText;
     const feedbackType = modal.dataset.feedbackType;
-    const answerText = modal.dataset.answerText;
     const comment = document.getElementById('feedbackComment').value;
 
     // Send feedback to server
@@ -67,7 +64,6 @@ function submitFeedback() {
         },
         body: JSON.stringify({
             message_text: messageText,
-            answer_text: answerText,
             feedback_type: feedbackType === 'comment' ? 'comment' : feedbackType,
             comment: comment,
             user_id: localStorage.getItem('user_id')
@@ -84,17 +80,15 @@ function submitFeedback() {
             // Clear comment field
             document.getElementById('feedbackComment').value = '';
 
-            // Show success message
-            alert('Fikringiz uchun rahmat!');
+            // Show success message using toast
+            showToast('Fikringiz uchun rahmat! 👍');
 
-            // Only close modal for comments
-            if (feedbackType === 'comment') {
-                closeModal();
-            }
+            // Close modal
+            closeModal();
         })
         .catch(error => {
             console.error('Error sending feedback:', error);
-            alert('Xatolik yuz berdi');
+            showToast('Xatolik yuz berdi', true);
         });
 
     modal.style.display = 'none';
