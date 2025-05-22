@@ -251,21 +251,18 @@ async function loadChatHistory(chatId) {
         }
     }
 
-    // Tokenni localStorage-dan olish
-    const token = localStorage.getItem('token');
+    // Cookie'dan token olish uchun so'rov yuborishda credentials: 'include' ishlatamiz
+    // Tokenni tekshirish server tomonida amalga oshiriladi
+
     const headers = {
         'Content-Type': 'application/json'
     };
 
-    // Agar token mavjud bo'lsa, headerga qo'shish
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-
     // So'rovni yuborish
     const response = await fetch(`/api/user-chats`, {
         method: 'GET',
-        headers: headers
+        headers: headers,
+        credentials: 'include' // Cookie'larni yuborish uchun
     });
 
     if (!response.ok) {

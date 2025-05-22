@@ -10,7 +10,8 @@ from models.user import User, TokenData
 # JWT settings
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-keep-it-secret")  # Change this in production
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+# Token expiration time in minutes (7 days = 10080 minutes)
+ACCESS_TOKEN_EXPIRE_MINUTES = 10080
 
 # bcrypt o'rniga pbkdf2_sha256 sxemasidan foydalanish
 # Bu Python standart kutubxonasida mavjud, qo'shimcha bog'liqliklar talab qilmaydi

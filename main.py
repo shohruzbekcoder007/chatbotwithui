@@ -603,9 +603,9 @@ async def get_user_chats(request: Request):
         # user_id ni olish
         user_id = request.state.user_id
         
-        # Anonymous foydalanuvchilar uchun bo'sh ro'yxat
-        if user_id == "anonymous":
-            return {"success": True, "chats": []}
+        # Token bo'lmasa yoki anonymous user bo'lsa, xato qaytaramiz
+        if user_id == "anonymous" or not request.headers.get('authorization'):
+            return {"success": False, "error": "Authentication required"}, 401
         
         # Foydalanuvchining barcha suhbatlarini olish
         user_chats = await UserChatList.find(
