@@ -8,7 +8,7 @@ from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 # from models.langchain_groqCustom import model as model_llm
-from models.langchain_ollamaCustom import model as model_llm
+from models_llm.langchain_ollamaCustom import model as model_llm
 from models.user import User
 from models.feedback import Feedback
 from models.admin import Admin
@@ -16,6 +16,7 @@ from models.chat_message import ChatMessage
 from models.user_chat_list import UserChatList
 from auth.router import router as auth_router
 from auth.admin_auth import router as admin_router, get_current_admin
+from routers.chat_crud import router as chat_crud_router
 from additional.additional import change_translate, combine_text_arrays, get_docs_from_db, change_redis, is_russian, old_context, clean_html_tags
 from retriever.langchain_chroma import questions_manager
 from auth.utils import SECRET_KEY, ALGORITHM, jwt
@@ -28,17 +29,8 @@ import asyncio
 import json
 from redis_obj.redis import redis_session
 
-# from llm_models.google_gemma27b import GemmaModel
-
-# # Model obyektini yaratish
-# gemma = GemmaModel()
-# gemma.start_processing()
-
 # FastAPI ilovasini yaratish
 app = FastAPI()
-
-# Templates
-# templates = Jinja2Templates(directory="static")
 
 # Request modelini yaratish
 class ChatRequest(BaseModel):
@@ -599,180 +591,10 @@ async def update_chat_message(request: Request, message_id: str, update_data: di
         print(f"Error updating chat message: {str(e)}")
         return {"success": False, "error": str(e)}
 
-@app.get("/api/user-chats")
-async def get_user_chats(request: Request):
-    try:
-        # user_id ni olish
-        user_id = request.state.user_id
-        
-        # Anonymous foydalanuvchilar uchun bo'sh ro'yxat
-        if user_id == "anonymous":
-            return {"success": True, "chats": []}
-        
-        # Foydalanuvchining barcha suhbatlarini olish
-        user_chats = await UserChatList.find(
-            UserChatList.user_id == user_id
-        ).sort("-updated_at").to_list()  # Eng so'nggi yangilangan birinchi
-        
-        # Formatlash
-        formatted_chats = []
-        for chat in user_chats:
-            formatted_chats.append({
-                "chat_id": chat.chat_id,
-                "name": chat.name,
-                "created_at": chat.created_at.isoformat(),
-                "updated_at": chat.updated_at.isoformat()
-            })
-        
-        return {"success": True, "chats": formatted_chats}
-    except Exception as e:
-        print(f"Error retrieving user chats: {str(e)}")
-        return {"success": False, "error": str(e)}
-
-@app.get("/api/chat/{chat_id}")
-async def get_chat(request: Request, chat_id: str):
-    try:
-        # user_id ni olish
-        user_id = request.state.user_id
-        
-        # Anonymous foydalanuvchilar uchun xatolik
-        if user_id == "anonymous":
-            return {"success": False, "error": "Anonymous users cannot access chat details"}
-        
-        # Chat ma'lumotini olish
-        chat = await UserChatList.find_one(
-            UserChatList.user_id == user_id,
-            UserChatList.chat_id == chat_id
-        )
-        
-        if not chat:
-            return {"success": False, "error": "Chat not found"}
-        
-        # Chat xabarlarini olish
-        messages = await ChatMessage.find(
-            ChatMessage.chat_id == chat_id,
-            ChatMessage.user_id == user_id
-        ).sort("+created_at").to_list()
-        
-        # Natijani formatlash
-        result = {
-            "chat_id": chat.chat_id,
-            "name": chat.name,
-            "created_at": chat.created_at.isoformat(),
-            "updated_at": chat.updated_at.isoformat(),
-            "messages": []
-        }
-        
-        # Xabarlarni qo'shish
-        for msg in messages:
-            result["messages"].append({
-                "id": str(msg.id),
-                "message": msg.message,
-                "response": msg.response,
-                "created_at": msg.created_at.isoformat(),
-                "updated_at": msg.updated_at.isoformat()
-            })
-        
-        return {"success": True, "data": result}
-    except Exception as e:
-        print(f"Error retrieving chat: {str(e)}")
-        return {"success": False, "error": str(e)}
-
-@app.post("/api/chat/{chat_id}/rename")
-async def rename_chat(request: Request, chat_id: str):
-    try:
-        # user_id ni olish
-        user_id = request.state.user_id
-        
-        # Anonymous foydalanuvchilar uchun xatolik
-        if user_id == "anonymous":
-            return {"success": False, "error": "Anonymous users cannot rename chats"}
-        
-        # JSON ma'lumotlarini olish
-        data = await request.json()
-        new_name = data.get("name", "Yangi suhbat")
-        
-        # UserChatList jadvalidagi chat nomini yangilash
-        chat = await UserChatList.find_one(
-            UserChatList.user_id == user_id,
-            UserChatList.chat_id == chat_id
-        )
-        
-        if chat:
-            await chat.set({
-                "name": new_name,
-                "updated_at": datetime.utcnow()
-            })
-            return {"success": True, "message": "Chat renamed successfully"}
-        else:
-            return {"success": False, "error": "Chat not found"}
-    except Exception as e:
-        print(f"Error renaming chat: {str(e)}")
-        return {"success": False, "error": str(e)}
-
-@app.delete("/api/chat/{chat_id}")
-async def delete_chat(request: Request, chat_id: str):
-    try:
-        # user_id ni olish
-        user_id = request.state.user_id
-        
-        # Anonymous foydalanuvchilar uchun xatolik
-        if user_id == "anonymous":
-            return {"success": False, "error": "Anonymous users cannot delete chats"}
-        
-        # UserChatList jadvalidan o'chirish
-        chat = await UserChatList.find_one(
-            UserChatList.user_id == user_id,
-            UserChatList.chat_id == chat_id
-        )
-        
-        if chat:
-            await chat.delete()
-            
-            # ChatMessage jadvalidagi xabarlarni ham o'chirish
-            await ChatMessage.find(
-                ChatMessage.user_id == user_id,
-                ChatMessage.chat_id == chat_id
-            ).delete_many()
-            
-            return {"success": True, "message": "Chat and all messages deleted"}
-        else:
-            return {"success": False, "error": "Chat not found"}
-    except Exception as e:
-        print(f"Error deleting chat: {str(e)}")
-        return {"success": False, "error": str(e)}
-
-@app.post("/api/chat")
-async def create_chat(request: Request):
-    try:
-        # user_id ni olish
-        user_id = request.state.user_id
-        
-        # Anonymous foydalanuvchilar uchun xatolik
-        if user_id == "anonymous":
-            return {"success": False, "error": "Anonymous users cannot create chats"}
-        
-        # Yangi chat ID yaratish
-        new_chat_id = str(uuid.uuid4())
-        
-        # UserChatList ga yangi chat qo'shish
-        chat = UserChatList(
-            user_id=user_id,
-            chat_id=new_chat_id,
-            name="Yangi suhbat",
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow()
-        )
-        await chat.insert()
-        
-        return {"success": True, "chat_id": new_chat_id}
-    except Exception as e:
-        print(f"Error creating chat: {str(e)}")
-        return {"success": False, "error": str(e)}
-
 # Auth routerlarini qo'shish
 app.include_router(auth_router)
 app.include_router(admin_router)
+app.include_router(chat_crud_router)
 
 if __name__ == "__main__":
     import uvicorn

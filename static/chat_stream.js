@@ -54,19 +54,15 @@ async function onsubmitstream(event) {
 
     try {
 
-        const token = localStorage.getItem('token');
         const headers = {
             'Content-Type': 'application/json'
         };
-
-        // Agar token mavjud bo'lsa, headerga qo'shish
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
+        // Token endi cookie'da saqlanadi va so'rov bilan avtomatik yuboriladi
 
         const response = await fetch("/chat/stream", {
             method: "POST",
             headers: headers,
+            credentials: 'include', // Cookie'larni yuborish uchun
             body: JSON.stringify({
                 content: userText,
                 chat_id: chatId,
@@ -94,8 +90,7 @@ async function onsubmitstream(event) {
                 if (line) {
                     const token = line;
                     fullText += token;
-                    messageTextSpan.innerHTML = fullText;
-                    console.log(token);
+                    messageTextSpan.innerHTML = `<div class="message-text">${fullText}</div>`;
                     setTimeout(() => scrollToBottom(), 0);
                 }
             });

@@ -96,8 +96,9 @@
                 
                 const data = await response.json();
                 
-                // localStorage-da token saqlash
-                localStorage.setItem('token', data.access_token);
+                // Token endi server tomonidan cookie sifatida saqlanadi
+                // localStorage-dan eski tokenni o'chirish
+                localStorage.removeItem('token');
                 
                 // Asosiy sahifaga yo'naltirish - server chat_id yaratadi
                 window.location.href = '/';

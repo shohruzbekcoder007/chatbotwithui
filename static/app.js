@@ -27,15 +27,13 @@ let currentFeedbackButton = null;
 function giveFeedback(button, type) {
     currentFeedbackButton = button;
 
-    // Get the message text and user query
+    // Get the message text
     const messageContainer = button.closest('.message-container');
     const messageText = messageContainer.querySelector('.message-text').textContent;
-    const userQuery = messageContainer.querySelector('.user-query').textContent;
 
-    // Store the feedback type, message and user query for the modal
+    // Store the feedback type and message for the modal
     const feedbackModal = document.getElementById('feedbackModal');
     feedbackModal.dataset.messageText = messageText; // chatbot's answer
-    feedbackModal.dataset.answerText = userQuery; // user's question
     feedbackModal.dataset.feedbackType = type;
 
     // Clear previous comment
@@ -50,59 +48,51 @@ function closeModal() {
     feedbackModal.classList.add('hidden');
 }
 
-function submitFeedback() {
+async function submitFeedback() {
     if (!currentFeedbackButton) return;
 
     const modal = document.getElementById('feedbackModal');
     const messageText = modal.dataset.messageText;
     const feedbackType = modal.dataset.feedbackType;
-    const answerText = modal.dataset.answerText;
     const comment = document.getElementById('feedbackComment').value;
 
-    // Send feedback to server
-    fetch('/api/feedback', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            message_text: messageText,
-            answer_text: answerText,
-            feedback_type: feedbackType === 'comment' ? 'comment' : feedbackType,
-            comment: comment,
-            user_id: localStorage.getItem('user_id')
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.success) {
-                console.error('Feedback error:', data.error);
-                alert('Xatolik yuz berdi');
-                return;
-            }
-
-            // Clear comment field
-            document.getElementById('feedbackComment').value = '';
-
-            // Show success message
-            alert('Fikringiz uchun rahmat!');
-
-            // Only close modal for comments
-            if (feedbackType === 'comment') {
-                closeModal();
-            }
-        })
-        .catch(error => {
-            console.error('Error sending feedback:', error);
-            alert('Xatolik yuz berdi');
+    try {
+        // Send feedback to server
+        const response = await fetch('/api/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message_text: messageText,
+                feedback_type: feedbackType === 'comment' ? 'comment' : feedbackType,
+                comment: comment,
+                user_id: localStorage.getItem('user_id')
+            })
         });
 
-    modal.style.display = 'none';
-    document.getElementById('feedbackComment').value = '';
-    modal.classList.add('hidden');
-    modal.dataset.userQuestion = '';
-    modal.dataset.messageText = '';
-    modal.dataset.feedbackType = '';
+        const data = await response.json();
+
+        if (!data.success) {
+            console.error('Feedback error:', data.error);
+            showToast('Xatolik yuz berdi', true);
+            return;
+        }
+
+        // Show success message using toast
+        showToast('Fikringiz uchun rahmat! 👍');
+
+        // Clear form and close modal
+        document.getElementById('feedbackComment').value = '';
+        modal.dataset.messageText = '';
+        modal.dataset.feedbackType = '';
+        currentFeedbackButton = null;
+        closeModal();
+
+    } catch (error) {
+        console.error('Error sending feedback:', error);
+        showToast('Xatolik yuz berdi', true);
+    }
 }
 
 async function onsubmitnew(event) {
@@ -171,6 +161,7 @@ async function onsubmitnew(event) {
     fetch('/chat', {
         method: 'POST',
         headers: headers,
+        credentials: 'include', // Cookie'larni yuborish uchun
         body: JSON.stringify(requestData)
     })
         .then(response => response.json())
@@ -200,7 +191,7 @@ async function onsubmitnew(event) {
                         </button>
                         <button class="action-btn comment-btn" onclick="giveFeedback(this, 'comment')" title="Izoh qoldirish">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
                             </svg>
                         </button>
                     </div>
@@ -261,21 +252,18 @@ async function loadChatHistory(chatId) {
         }
     }
 
-    // Tokenni localStorage-dan olish
-    const token = localStorage.getItem('token');
+    // Cookie'dan token olish uchun so'rov yuborishda credentials: 'include' ishlatamiz
+    // Tokenni tekshirish server tomonida amalga oshiriladi
+
     const headers = {
         'Content-Type': 'application/json'
     };
 
-    // Agar token mavjud bo'lsa, headerga qo'shish
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-
     // So'rovni yuborish
     const response = await fetch(`/api/user-chats`, {
         method: 'GET',
-        headers: headers
+        headers: headers,
+        credentials: 'include' // Cookie'larni yuborish uchun
     });
 
     if (!response.ok) {
@@ -336,7 +324,8 @@ async function loadChatHistory(chatId) {
         // Fetch chat history
         const response = await fetch(`/api/chat-history/${chatId}`, {
             method: 'GET',
-            headers: headers
+            headers: headers,
+            credentials: 'include' // Cookie'larni yuborish uchun
         });
 
         if (!response.ok) {
@@ -391,7 +380,7 @@ async function loadChatHistory(chatId) {
                                 </button>
                                 <button class="action-btn comment-btn" onclick="giveFeedback(this, 'comment')" title="Izoh qoldirish">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
                                 </svg>
                             </button>
                         </div>
@@ -438,10 +427,11 @@ function renameChatPrompt(chatId, currentName) {
         if (newName !== '') {
             // Chat nomini yangilash uchun so'rov yuborish
             fetch(`/api/chat/${chatId}/rename`, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include', // Cookie'larni yuborish uchun
                 body: JSON.stringify({ name: newName })
             })
                 .then(response => response.json())
@@ -492,11 +482,11 @@ function deleteChatPrompt(chatId) {
     confirmBtn.onclick = function () {
         // Chatni o'chirish uchun so'rov yuborish
         fetch(`/api/chat/${chatId}`, {
-        // fetch(`/api/delete-chat/${chatId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            credentials: 'include' // Cookie'larni yuborish uchun
         })
             .then(response => response.json())
             .then(data => {
