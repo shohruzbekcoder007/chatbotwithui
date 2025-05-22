@@ -208,6 +208,9 @@ second_questions = [
     "Rasmiy statistika ma’lumotlarining ochiqligi va sifati hamda ularning xalqaro standartlarga muvofiqligini ta’minlash uchun qanday chora-tadbirlar belgilangan?",
     "7-bob",
     "Hisobotim qabul qilinganini qanday bilsam bo‘ladi?",
+    "nima gaplar?",
+    "salom, sen kimsan?",
+    "Assalomu alaykum",
 
 ]
 
@@ -270,7 +273,7 @@ def send_request(thread_id, question=None):
 
 for id, question in enumerate(second_questions, start=1):
     send_request(id, question)
-    time.sleep(1)  # Har bir so'rov orasida 0.5 soniya kutish
+    time.sleep(2)  # Har bir so'rov orasida 0.5 soniya kutish
 
 
 # 🔹 Nechta parallel so'rov yuborilsin
