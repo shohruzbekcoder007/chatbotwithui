@@ -48,7 +48,7 @@ function closeModal() {
     feedbackModal.classList.add('hidden');
 }
 
-function submitFeedback() {
+async function submitFeedback() {
     if (!currentFeedbackButton) return;
 
     const modal = document.getElementById('feedbackModal');
@@ -56,47 +56,43 @@ function submitFeedback() {
     const feedbackType = modal.dataset.feedbackType;
     const comment = document.getElementById('feedbackComment').value;
 
-    // Send feedback to server
-    fetch('/api/feedback', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            message_text: messageText,
-            feedback_type: feedbackType === 'comment' ? 'comment' : feedbackType,
-            comment: comment,
-            user_id: localStorage.getItem('user_id')
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.success) {
-                console.error('Feedback error:', data.error);
-                alert('Xatolik yuz berdi');
-                return;
-            }
-
-            // Clear comment field
-            document.getElementById('feedbackComment').value = '';
-
-            // Show success message using toast
-            showToast('Fikringiz uchun rahmat! 👍');
-
-            // Close modal
-            closeModal();
-        })
-        .catch(error => {
-            console.error('Error sending feedback:', error);
-            showToast('Xatolik yuz berdi', true);
+    try {
+        // Send feedback to server
+        const response = await fetch('/api/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message_text: messageText,
+                feedback_type: feedbackType === 'comment' ? 'comment' : feedbackType,
+                comment: comment,
+                user_id: localStorage.getItem('user_id')
+            })
         });
 
-    modal.style.display = 'none';
-    document.getElementById('feedbackComment').value = '';
-    modal.classList.add('hidden');
-    modal.dataset.userQuestion = '';
-    modal.dataset.messageText = '';
-    modal.dataset.feedbackType = '';
+        const data = await response.json();
+
+        if (!data.success) {
+            console.error('Feedback error:', data.error);
+            showToast('Xatolik yuz berdi', true);
+            return;
+        }
+
+        // Show success message using toast
+        showToast('Fikringiz uchun rahmat! 👍');
+
+        // Clear form and close modal
+        document.getElementById('feedbackComment').value = '';
+        modal.dataset.messageText = '';
+        modal.dataset.feedbackType = '';
+        currentFeedbackButton = null;
+        closeModal();
+
+    } catch (error) {
+        console.error('Error sending feedback:', error);
+        showToast('Xatolik yuz berdi', true);
+    }
 }
 
 async function onsubmitnew(event) {
