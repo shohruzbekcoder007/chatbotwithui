@@ -161,6 +161,7 @@ async function onsubmitnew(event) {
     fetch('/chat', {
         method: 'POST',
         headers: headers,
+        credentials: 'include', // Cookie'larni yuborish uchun
         body: JSON.stringify(requestData)
     })
         .then(response => response.json())
@@ -190,7 +191,7 @@ async function onsubmitnew(event) {
                         </button>
                         <button class="action-btn comment-btn" onclick="giveFeedback(this, 'comment')" title="Izoh qoldirish">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
                             </svg>
                         </button>
                     </div>
@@ -323,7 +324,8 @@ async function loadChatHistory(chatId) {
         // Fetch chat history
         const response = await fetch(`/api/chat-history/${chatId}`, {
             method: 'GET',
-            headers: headers
+            headers: headers,
+            credentials: 'include' // Cookie'larni yuborish uchun
         });
 
         if (!response.ok) {
@@ -378,7 +380,7 @@ async function loadChatHistory(chatId) {
                                 </button>
                                 <button class="action-btn comment-btn" onclick="giveFeedback(this, 'comment')" title="Izoh qoldirish">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
                                 </svg>
                             </button>
                         </div>
@@ -425,10 +427,11 @@ function renameChatPrompt(chatId, currentName) {
         if (newName !== '') {
             // Chat nomini yangilash uchun so'rov yuborish
             fetch(`/api/chat/${chatId}/rename`, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include', // Cookie'larni yuborish uchun
                 body: JSON.stringify({ name: newName })
             })
                 .then(response => response.json())
@@ -479,11 +482,11 @@ function deleteChatPrompt(chatId) {
     confirmBtn.onclick = function () {
         // Chatni o'chirish uchun so'rov yuborish
         fetch(`/api/chat/${chatId}`, {
-        // fetch(`/api/delete-chat/${chatId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            credentials: 'include' // Cookie'larni yuborish uchun
         })
             .then(response => response.json())
             .then(data => {
