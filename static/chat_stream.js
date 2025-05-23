@@ -64,7 +64,7 @@ async function onsubmitstream(event) {
             headers: headers,
             credentials: 'include', // Cookie'larni yuborish uchun
             body: JSON.stringify({
-                content: userText,
+                query: userText,
                 chat_id: chatId,
                 language: "uz"
             })

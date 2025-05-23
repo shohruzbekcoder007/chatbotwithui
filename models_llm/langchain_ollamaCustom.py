@@ -50,7 +50,7 @@ class LangChainOllamaModel:
                 session_id: Optional[str] = None,
                 model_name: str = "mistral-small:24b",
                 base_url: str = "http://localhost:11434",
-                temperature: float = 0.5,
+                temperature: float = 0.7,
                 num_ctx: int = 2048,
                 num_gpu: int = 1,
                 gpu_layers: int = 100,
@@ -442,7 +442,7 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "mistral-small3.1:24b", base_url: str = "http://localhost:11434") -> LangChainOllamaModel:
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "devstral", base_url: str = "http://localhost:11434") -> LangChainOllamaModel:
     return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url)
 
 # Asosiy model obyekti (eski kod bilan moslik uchun)

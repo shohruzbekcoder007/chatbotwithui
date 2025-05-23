@@ -387,21 +387,17 @@ async def chat(request: Request, chat_request: ChatRequest):
 
 ########################## STREAMING START ##########################
 
-class ChatRequest(BaseModel):
-    content: str
-    chat_id: Optional[str] = None
-
 def sse_format(data: str):
     return f"data: {data}\n\n"
 
 @app.post("/chat/stream")
 async def stream_chat(request: Request, req: ChatRequest):
     chat_id = req.chat_id
-    print(f" REQ: {req}")
+    print(f"---------------- REQUEST: {req} ----------------")
     if not chat_id:
         return {"error": "Chat ID is missing. Please provide a valid chat ID."}
 
-    question = req.content
+    question = req.query
     language = 'uz'
 
     user_id = request.state.user_id
@@ -414,13 +410,21 @@ async def stream_chat(request: Request, req: ChatRequest):
         language = 'ru'
         suggestion_text = "\n <br><br><b> Предложенный вопрос: </b> "
 
+
+    context_query = await old_context(user_id, question)
+
     # Kontekstni tayyorlash
     relevant_docs = get_docs_from_db(question)
+    relevant_docs_add = get_docs_from_db(context_query)
+
     docs = relevant_docs.get("documents", []) if isinstance(relevant_docs, dict) else []
+    docs_add = relevant_docs_add.get("documents", []) if isinstance(relevant_docs_add, dict) else []
 
+    unique_results = await combine_text_arrays(docs[0], docs_add[0])
 
-    context = "\n- ".join(docs[0]) if docs else ""
-    print(f"Context: {context}")
+    context = "\n- ".join(unique_results) if unique_results else ""
+
+    print(f"Context:\n {context}")
 
     async def event_generator():
         response_current = ""
@@ -445,7 +449,6 @@ async def stream_chat(request: Request, req: ChatRequest):
             response_current += token
             yield f"{token}\n\n"
         
-
         # yield suggestion_text
         
         questions_manager_questions = questions_manager.search_documents(response_current, 10)
@@ -454,7 +457,7 @@ async def stream_chat(request: Request, req: ChatRequest):
             sq_docs = questions_manager_questions.get("documents", []) if isinstance(questions_manager_questions, dict) else []
             print(sq_docs, "<<- sq_docs")
             question_docs = []
-            previous_questions.add(question.strip().lower())
+            previous_questions.add(req.query.strip().lower())
             print(f"\n\nOldingi savollar: {list(previous_questions)}")
             for doc in sq_docs[0]:
                 # Tavsiya qilingan savollarni oldingi savollar bilan solishtirish
@@ -464,9 +467,7 @@ async def stream_chat(request: Request, req: ChatRequest):
                     
             suggestion_context = "\n- ".join(question_docs) if question_docs else ""
             print(f"\n\nSuggestion question context: {suggestion_context}")
-            # if question_docs and len(question_docs) > 0:
 
-        
             # Stream orqali tavsiya qilingan savollarni olish
             async for token in model_llm.get_stream_suggestion_question(suggestion_context, question, response_current, language):
                 suggested_question += token
@@ -475,14 +476,14 @@ async def stream_chat(request: Request, req: ChatRequest):
             suggestion_result = suggestion_text + suggested_question
 
             for token in suggestion_result:
-                time.sleep(0.009)  # Tokenlarni chiqarish uchun kutish
+                time.sleep(0.006)  # Tokenlarni chiqarish uchun kutish
                 yield f"{token}\n\n"
         
         # MongoDB ga saqlash
         chat_message = ChatMessage(
             user_id=user_id,
             chat_id=chat_id,
-            message=req.content,
+            message=req.query,
             response=response_current,
             suggestion_question=clean_html_tags(suggested_question),
             created_at=datetime.utcnow(),
@@ -502,7 +503,7 @@ async def stream_chat(request: Request, req: ChatRequest):
                 user_chat = UserChatList(
                     user_id=user_id,
                     chat_id=chat_id,
-                    name=f"Suhbat: {req.content[:30]}...",
+                    name=f"Suhbat: {req.query[:30]}...",
                     created_at=datetime.utcnow(),
                     updated_at=datetime.utcnow()
                 )
@@ -515,7 +516,7 @@ async def stream_chat(request: Request, req: ChatRequest):
                 user_chat = UserChatList(
                     user_id=user_id,
                     chat_id=chat_id,
-                    name=f"Suhbat: {req.content[:30]}...",
+                    name=f"Suhbat: {req.query[:30]}...",
                     created_at=datetime.utcnow(),
                     updated_at=datetime.utcnow()
                 )
