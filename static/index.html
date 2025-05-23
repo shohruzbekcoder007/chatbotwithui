@@ -153,11 +153,9 @@
             <div class="flex items-center space-x-4" x-data="{ 
                     userName: '', 
                     showDropdown: false,
-                    logoutAndRedirect() {
-                        localStorage.removeItem('token');
-                        userName = '';
-                        // Redirect to root, server will handle chat_id creation
-                        window.location.href = '/';
+                    async logoutAndRedirect() {
+                        // Tizimdan chiqish funksiyasini chaqirish
+                        await logout();
                     },
                     storeCurrentChatId() {
                         // Just redirect to root if needed
@@ -167,29 +165,13 @@
                         }
                     }
                 }" x-init="async () => {
-                    // Faqat yangi token tizimidan foydalanish
-                    const token = localStorage.getItem('token');
-                    
-                    if (token) {
-                        try {
-                            const response = await fetch('/auth/me', {
-                                headers: {
-                                    'Authorization': 'Bearer ' + token
-                                },
-                                credentials: 'include' // Include cookies
-                            });
-                            if (response.ok) {
-                                const data = await response.json();
-                                userName = data.name;
-                                console.log('User authenticated:', data);
-                            } else {
-                                console.log('Authentication failed with stored token');
-                            }
-                        } catch (error) {
-                            console.error('Error fetching user data:', error);
-                        }
+                    // Foydalanuvchi autentifikatsiyasini tekshirish
+                    const authResult = await checkAuthentication();
+                    if (authResult.authenticated) {
+                        userName = authResult.userName;
+                        console.log('Foydalanuvchi autentifikatsiya qilindi:', authResult);
                     } else {
-                        console.log('No token found in localStorage');
+                        console.log('Foydalanuvchi autentifikatsiya qilinmagan');
                     }
                 }">
                 <template x-if="!userName">
@@ -448,6 +430,7 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="/static/auth.js"></script>
     <script src="/static/chat_stream.js"></script>
     <script src="/static/app.js"></script>
 </body>

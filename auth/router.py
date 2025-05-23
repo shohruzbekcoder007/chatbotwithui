@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
 from models.user import User, UserCreate, Token
@@ -65,7 +65,11 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     return json_response
 
 @router.get("/me")
-async def read_users_me(current_user: User | None = Depends(utils.get_current_user)):
+async def read_users_me(request: Request, current_user: User | None = Depends(utils.get_current_user)):
+    # Agar current_user topilmagan bo'lsa, cookie-dan foydalanuvchini olishga harakat qilish
+    if not current_user:
+        current_user = await utils.get_user_from_cookie(request)
+    
     if not current_user:
         return {
             "email": None,
@@ -156,3 +160,14 @@ async def get_chat_history(request: Request, chat_id: str):
             "success": False,
             "error": f"Failed to retrieve chat history: {str(e)}"
         }
+
+@router.post("/logout")
+async def logout(response: Response):
+    """
+    Foydalanuvchini tizimdan chiqarish va access_token cookie'ni o'chirish
+    """
+    # Cookie'dan access_token ni o'chirish
+    response = JSONResponse(content={"message": "Logout successful"})
+    response.delete_cookie(key="access_token")
+    
+    return response

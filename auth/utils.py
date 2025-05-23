@@ -57,3 +57,25 @@ async def get_current_user(token: str | None = Depends(oauth2_scheme)) -> User |
         return user
     except JWTError:
         return None
+
+# Cookie orqali foydalanuvchini olish
+async def get_user_from_cookie(request) -> User | None:
+    token = request.cookies.get("access_token")
+    
+    if not token:
+        return None
+        
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            return None
+            
+        # Get user from database
+        user = await User.find_one(User.email == email)
+        if user is None:
+            return None
+            
+        return user
+    except JWTError:
+        return None
