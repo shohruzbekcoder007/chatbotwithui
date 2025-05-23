@@ -3,8 +3,6 @@ from datetime import datetime
 import uuid
 from models.user_chat_list import UserChatList
 from models.chat_message import ChatMessage
-from typing import Optional
-from pydantic import BaseModel
 
 # Router yaratish
 router = APIRouter(prefix="/api", tags=["chat"])
@@ -208,4 +206,65 @@ async def create_chat(request: Request):
         raise e
     except Exception as e:
         print(f"Error creating chat: {str(e)}")
+        return {"success": False, "error": str(e)}
+
+@router.get("/chat-history/{chat_id}")
+async def get_chat_history(request: Request, chat_id: str):
+    try:
+        # user_id ni olish
+        user_id = request.state.user_id
+        
+        # Faqat o'z suhbatlarini ko'rish imkonini berish
+        messages = await ChatMessage.find(
+            ChatMessage.chat_id == chat_id,
+            ChatMessage.user_id == user_id
+        ).sort("+created_at").to_list()
+        
+        # Xabarlarni formatlash
+        formatted_messages = []
+        for msg in messages:
+            formatted_messages.append({
+                "id": str(msg.id),
+                "message": msg.message,
+                "response": msg.response,
+                "created_at": msg.created_at.isoformat(),
+                "updated_at": msg.updated_at.isoformat()
+            })
+        
+        return {"success": True, "messages": formatted_messages}
+    except Exception as e:
+        print(f"Error retrieving chat history: {str(e)}")
+        return {"success": False, "error": str(e)}
+
+@router.put("/chat-message/{message_id}")
+async def update_chat_message(request: Request, message_id: str, update_data: dict):
+    try:
+        # user_id ni olish
+        user_id = request.state.user_id
+        
+        # Xabarni topish
+        message = await ChatMessage.get(message_id)
+        
+        # Xabar topilmasa yoki boshqa foydalanuvchiga tegishli bo'lsa, xatolik
+        if not message or message.user_id != user_id:
+            return {"success": False, "error": "Message not found or access denied"}
+        
+        # Xabarni yangilash
+        update_fields = {}
+        
+        if "message" in update_data:
+            update_fields["message"] = update_data["message"]
+            
+        if "response" in update_data:
+            update_fields["response"] = update_data["response"]
+        
+        # updated_at ni har doim yangilash
+        update_fields["updated_at"] = datetime.utcnow()
+        
+        # Yangilash
+        await message.set({**update_fields})
+        
+        return {"success": True, "message": "Message updated successfully"}
+    except Exception as e:
+        print(f"Error updating chat message: {str(e)}")
         return {"success": False, "error": str(e)}
