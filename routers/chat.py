@@ -17,6 +17,7 @@ router = APIRouter(prefix="", tags=["chat"])
 class ChatRequest(BaseModel):
     query: str
     chat_id: Optional[str] = None
+    device: Optional[str] = None  # Qo'shimcha maydon, agar kerak bo'lsa
 
 @router.post("/chat")
 async def chat(request: Request, chat_request: ChatRequest):
@@ -127,6 +128,8 @@ async def stream_chat(request: Request, req: ChatRequest):
 
     question = req.query
     language = 'uz'
+    device = req.device if req.device else "web"
+    # print(f"Using device: {device}")
 
     user_id = request.state.user_id
     # print(f"Using user_id from request.state: {user_id}")
@@ -137,7 +140,6 @@ async def stream_chat(request: Request, req: ChatRequest):
         question = await change_translate(question, "uz")
         language = 'ru'
         suggestion_text = "\n <br><br><b> Предложенный вопрос: </b> "
-
 
     context_query = await old_context(user_id, question)
 
@@ -173,7 +175,7 @@ async def stream_chat(request: Request, req: ChatRequest):
         # print(f"Oldingi savollar: {previous_questions}")
     
         # Modeldan chat javobi olish
-        async for token in model_llm.chat_stream(context=context, query=question, language=language):
+        async for token in model_llm.chat_stream(context=context, query=question, language=language, device=device):
             response_current += token
             yield f"{token}\n\n"
         
@@ -197,7 +199,7 @@ async def stream_chat(request: Request, req: ChatRequest):
             print(f"\n\nSuggestion question context: {suggestion_context}")
 
             # Stream orqali tavsiya qilingan savollarni olish
-            async for token in model_llm.get_stream_suggestion_question(suggestion_context, question, response_current, language):
+            async for token in model_llm.get_stream_suggestion_question(suggestion_context, question, response_current, language, device=device):
                 suggested_question += token
                 # yield f"{token}\n\n"  # Un-commenting this line to yield tokens
 

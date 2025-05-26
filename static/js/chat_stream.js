@@ -66,7 +66,8 @@ async function onsubmitstream(event) {
             body: JSON.stringify({
                 query: userText,
                 chat_id: chatId,
-                language: "uz"
+                language: "uz",
+                device: "web"
             })
         });
 

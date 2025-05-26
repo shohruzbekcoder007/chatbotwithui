@@ -89,7 +89,6 @@ class LangChainOllamaModel:
             "You should generate responses strictly based on the given prompt information without creating new content on your own.",
             "You are only allowed to answer questions related to the National Statistics Committee.",
             "The questions are within the scope of the estate and reports.",
-            "Each response must be formatted in HTML. Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity.",
             "Don't make up your own questions and answers, just use the information provided. O'zing savolni javobni to'qib chiqarma faqat berilgan ma'lumotlardan foydalan.",
             "Give a complete and accurate answer.", 
             "Don't add unrelated context.",
@@ -99,6 +98,13 @@ class LangChainOllamaModel:
             # "If the answer is long, add a summary at the end of the answer using the format: '<br><p><i>    </i></p>'."
             "Only use the parts of the context that are directly relevant to the user's question. Ignore all other context, even if it is statistically related. Use only what directly answers the question.",
             "Savolga javob berishda faqat kontekstga asoslaning. Agar kontekstda javob bo'lmasa, \"Savolingizni tushunmadim, aniqroq qilib savol bering\" deb yozing.",
+        ]
+
+        self.system_html_prompts = [
+            "Each response must be formatted in HTML. Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity.",
+        ]
+        self.system_markdown_prompts = [
+            "Each response must be formatted in Markdown. Follow the guidelines below: Use ` for inline code, Use ``` for code blocks, Use ** or __ for bold text, Use * or _ for italic text, Use > for blockquotes, Use - or * for bullet points, Every response should maintain semantic and visual clarity.",
         ]
 
     
@@ -175,7 +181,7 @@ class LangChainOllamaModel:
         
         return response
     
-    def _create_messages(self, system_prompts: str, user_prompt: str, language: str = "uz") -> List[BaseMessage]:
+    def _create_messages(self, system_prompts: str, user_prompt: str, language: str = "uz", device: str = "web") -> List[BaseMessage]:
         """
         System va user promptlaridan LangChain message obyektlarini yaratish
         """
@@ -184,9 +190,15 @@ class LangChainOllamaModel:
             "ru": "russian",
         }
         messages = []
-        
+
+        prompts = self.default_system_prompts.copy()
+        if device == "web":
+            prompts.extend(self.system_html_prompts)
+        else:
+            prompts.extend(self.system_markdown_prompts)
+
         # System promptlarni qo'shish
-        messages.append(SystemMessage(content="\n".join(self.default_system_prompts).format(language=detect_lang[language])))
+        messages.append(SystemMessage(content="\n".join(prompts).format(language=detect_lang[language])))
         messages.append(SystemMessage(content=system_prompts))
         
         # User promptni qo'shish
@@ -356,7 +368,7 @@ class LangChainOllamaModel:
         
         return max(1, result)
 
-    async def chat_stream(self, context: str, query: str, language: str = "uz") -> AsyncGenerator[str, None]:
+    async def chat_stream(self, context: str, query: str, language: str = "uz", device: str = "web") -> AsyncGenerator[str, None]:
         """
         Javobni SSE orqali stream ko‘rinishda yuborish
         
@@ -364,11 +376,13 @@ class LangChainOllamaModel:
             context (str): System prompt
             query (str): User savoli
             language (str): Til
-        
+            device (str): Qurilma
+            
         Yields:
             str: Modeldan kelayotgan har bir token yoki parcha
         """
-        messages = self._create_messages(context, query, language)
+        messages = self._create_messages(context, query, language, device)
+
         async for chunk in self._stream_invoke(messages):
             yield chunk
 
@@ -395,7 +409,7 @@ class LangChainOllamaModel:
                 logger.error(f"Stream xatoligi: {str(e)}")
                 yield f"data: [ERROR] {str(e)}\n\n"
 
-    async def get_stream_suggestion_question(self, suggested_context: str, query: str, answer: str, language: str) -> AsyncGenerator[str, None]:
+    async def get_stream_suggestion_question(self, suggested_context: str, query: str, answer: str, language: str, device: str = "web") -> AsyncGenerator[str, None]:
         """
         Stream tarzida tavsiya qilingan savolni real vaqtda generatsiya qilish (generate API bilan)
 
@@ -415,11 +429,19 @@ class LangChainOllamaModel:
             "quyida berilgan kontekst savollari ichidan mantiqan eng yaqin bitta savolni tanlashingiz kerak.\n\n"
             "Faqat **bitta** savolni tanlang. Yangi savol o‘ylab topmang, faqat taqdim etilgan savollar ichidan 1 tasini tanlang va o'zgartirmagan holatda taqdim eting.\n"
             "Sizga berilgan kontekstda mavjud bo‘lgan savollardan faqat 1 tasini tanlang. Faqat bitta savolni tanlang. Faqatgina savolning o'zini yozing, boshqa hech qanday ma'lumot qo'shib yozmang.\n\n"
-            "Each response must be formatted in HTML (answer only <i> tag). Every response should maintain semantic and visual clarity\n"
             "Yangi Savol {language} tilida bo'lishi kerak.\n"
             "Agar foydalanuvchining so‘rovi noaniq bo‘lsa, uni aniqlashtirishni so‘rang.\n"
             "Agar foydalanuvchi savoli salomlashish yoki tanishish to'g'risida bo'lsa, statistika nizomi to'g'risidagi savolni yozing.\n"
         )
+
+        if device == "web":
+            system_prompt += "\n".join(self.system_html_prompts)
+        else:
+            system_prompt += "\n".join(self.system_markdown_prompts)
+
+
+        if language == "ru":
+            system_prompt += "\n\nPlease provide the response in Russian."
 
         full_prompt = (
             f"Taqdim etilgan savollar:\n{suggested_context}\n\n" 
