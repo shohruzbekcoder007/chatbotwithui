@@ -427,7 +427,7 @@ function renameChatPrompt(chatId, currentName) {
         if (newName !== '') {
             // Chat nomini yangilash uchun so'rov yuborish
             fetch(`/api/chat/${chatId}/rename`, {
-                method: 'PUT',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
