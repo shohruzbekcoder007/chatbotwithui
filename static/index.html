@@ -5,93 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STAT AI Assistant</title>
-    <link href="/static/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/styles.css">
-    <script defer src="/static/alpine.min.js"></script>
-    <style>
-        .monitoring {
-            margin-top: 90px;
-            margin-left: 10px;
-
-        }
-
-        pre {
-            background: #f5f5f5;
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        .section {
-            margin-bottom: 30px;
-        }
-
-        .label {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .bar {
-            width: 100%;
-            background-color: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            height: 20px;
-            margin-bottom: 10px;
-        }
-
-        .fill {
-            height: 100%;
-            text-align: center;
-            color: white;
-            line-height: 20px;
-        }
-
-        .cpu {
-            background-color: #4CAF50;
-        }
-
-        .ram {
-            background-color: #2196F3;
-        }
-
-        .gpu {
-            background-color: #FF5722;
-        }
-
-        .vram {
-            background-color: #9C27B0;
-        }
-
-        .temp {
-            background-color: #f44336;
-        }
-
-        pre {
-            background: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 14px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .typing-cursor::after {
-            content: '|';
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0;
-            }
-        }
-
-    </style>
+    <link href="/static/css/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script defer src="/static/js/alpine.min.js"></script>
+    <link rel="stylesheet" href="/static/css/monitoring.css">
 </head>
 
 <body>
@@ -244,12 +161,10 @@
             </svg>
             Yangi chat
         </button>
+        
         <div class="chat-history">
             <!-- chatlar ro'yxati bo'ladi  -->
         </div>
-
-
-
 
         <div class="bottom-buttons">
             <button class="upgrade-btn">
@@ -429,10 +344,10 @@
     </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="/static/auth.js"></script>
-    <script src="/static/chat_stream.js"></script>
-    <script src="/static/app.js"></script>
+    <script src="/static/js/alpine.min.js" defer></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/chat_stream.js"></script>
+    <script src="/static/js/app.js"></script>
 </body>
 
 </html>
