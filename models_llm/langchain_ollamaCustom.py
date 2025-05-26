@@ -91,13 +91,13 @@ class LangChainOllamaModel:
             "The questions are within the scope of the estate and reports.",
             "Each response must be formatted in HTML. Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity.",
             "Don't make up your own questions and answers, just use the information provided. O'zing savolni javobni to'qib chiqarma faqat berilgan ma'lumotlardan foydalan.",
-            "Give a complete and accurate answer.",
+            "Give a complete and accurate answer.", 
             "Don't add unrelated context.",
             "Write the information as if you knew it in advance, don't imply that it was gathered from context.",
+            "Faqat javobni yozing. Javobdan oldin yoki keyin hech qanday boshqa ma'lumot qo'shmang. Gaplarni bir biriga ulab yozgin.",
             "If the answer is not clear or not answer, please clarify from the user. For Example: \"Savolingizni tushunmadim, Iltimos savolga aniqlik kiriting\".",
             # "If the answer is long, add a summary at the end of the answer using the format: '<br><p><i>    </i></p>'."
             "Only use the parts of the context that are directly relevant to the user's question. Ignore all other context, even if it is statistically related. Use only what directly answers the question.",
-            "/nothink"
             "Savolga javob berishda faqat kontekstga asoslaning. Agar kontekstda javob bo'lmasa, \"Savolingizni tushunmadim, aniqroq qilib savol bering\" deb yozing.",
         ]
 
