@@ -432,12 +432,13 @@ class LangChainOllamaModel:
             "Yangi Savol {language} tilida bo'lishi kerak.\n"
             "Agar foydalanuvchining so‘rovi noaniq bo‘lsa, uni aniqlashtirishni so‘rang.\n"
             "Agar foydalanuvchi savoli salomlashish yoki tanishish to'g'risida bo'lsa, statistika nizomi to'g'risidagi savolni yozing.\n"
+            "Javobni italik harflar bilan yozing.\n"
         )
 
         if device == "web":
-            system_prompt += "\n".join(self.system_html_prompts)
+            system_prompt += "Javoblarni HTML formatida yozing. Har bir javob semantik va vizual ravishda aniq bo'lishi kerak."
         else:
-            system_prompt += "\n".join(self.system_markdown_prompts)
+            system_prompt += "Javoblarni Markdown formatida yozing. Quyidagi qoidalarni bajaring:  _ kursiv matn uchun. Har bir javob semantik va vizual ravishda aniq bo'lishi kerak."
 
 
         if language == "ru":

@@ -32,6 +32,8 @@ async def chat(request: Request, chat_request: ChatRequest):
 
         question = chat_request.query
         language = 'uz'
+        device = chat_request.device if chat_request.device else "web"
+        print(f"Using device: {device}")
 
         # if len(chat_request.query.split(" ")) < 2:
             # res = "Iltimos savolingizni to'liqroq kiriting"
@@ -94,22 +96,22 @@ async def chat(request: Request, chat_request: ChatRequest):
             )
             
             if not existing_chat:
-                # Chatni foydalanuvchi ro'yxatiga qo'shish
-                user_chat = UserChatList(
+                # Yangi chat yaratish
+                new_chat = UserChatList(
                     user_id=user_id,
                     chat_id=chat_id,
-                    name=f"Suhbat: {chat_request.query[:30]}...",  # Birinchi savoldan nom yaratish
+                    name="Yangi suhbat",  # Default nom
                     created_at=datetime.utcnow(),
                     updated_at=datetime.utcnow()
                 )
-                await user_chat.insert()
-                print(f"Added chat to user's chat list: {chat_id}")
+                await new_chat.insert()
+                print(f"Yangi chat yaratildi: {chat_id}")
             else:
-                # Mavjud yozuvning updated_at vaqtini yangilash
-                await existing_chat.set({
-                    "updated_at": datetime.utcnow()
-                })
-                print(f"Updated timestamp for existing chat: {chat_id}")
+                # Mavjud chatni yangilash
+                existing_chat.updated_at = datetime.utcnow()
+                # Mavjud chat nomini saqlab qolish, faqat vaqtini yangilash
+                await existing_chat.save()
+                print(f"Mavjud chat yangilandi: {chat_id}")
         else:
             print(f"Anonymous user, message not saved to     - Chat ID: {chat_id}")
 
@@ -129,7 +131,8 @@ async def stream_chat(request: Request, req: ChatRequest):
     question = req.query
     language = 'uz'
     device = req.device if req.device else "web"
-    # print(f"Using device: {device}")
+    print(f"\nUsing device: {device}")
+    print(f"Using question: {question}\n")
 
     user_id = request.state.user_id
     # print(f"Using user_id from request.state: {user_id}")

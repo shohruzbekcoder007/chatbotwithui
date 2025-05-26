@@ -44,7 +44,7 @@ def get_docs_from_db(request: str):
         return []
 
 # Yangi javobni sessiyaga saqlash
-def change_redis(user_id: str, query: str, response: str, chat_id: str = None):
+async def change_redis(user_id: str, query: str, response: str, chat_id: str = None):
     """
     Foydalanuvchi savoli va javobini Redis-ga saqlash
     
@@ -59,14 +59,14 @@ def change_redis(user_id: str, query: str, response: str, chat_id: str = None):
         if not chat_id:
             chat_id = "default"
             
-        # Redis set_question_session funksiyasini chaqirish
-        redis_session.set_question_session(user_id, chat_id, query, response)
+        # Redis set_question_session funksiyasini chaqirish - await is needed
+        await redis_session.set_question_session(user_id, chat_id, query, response)
         return True
     except Exception as e:
         print(f"Redis-ga saqlashda xatolik: {str(e)}")
         return False
 
-def change_redis_question(user_id: str, question: str, chat_id: str):
+async def change_redis_question(user_id: str, question: str, chat_id: str):
     """
     Foydalanuvchi savolini Redis-ga saqlash
     
@@ -77,7 +77,7 @@ def change_redis_question(user_id: str, question: str, chat_id: str):
     """
     try:
         # Oldingi sessiyani olish
-        current_session = redis_session.get_user_session(f"{user_id}_{chat_id}") or {}
+        current_session = await redis_session.get_user_session(f"{user_id}_{chat_id}") or {}
         
         # Savollar ro'yxatini olish
         questions = current_session.get("questions", [])
@@ -91,7 +91,7 @@ def change_redis_question(user_id: str, question: str, chat_id: str):
         
         # Yangilangan ma'lumotlarni saqlash
         current_session["questions"] = questions
-        redis_session.set_user_session(f"{user_id}_{chat_id}", current_session)
+        await redis_session.set_user_session(f"{user_id}_{chat_id}", current_session)
         
         return True
     except Exception as e:
@@ -112,8 +112,8 @@ async def old_context(user_id: str, request: str, chat_id: str = None):
         str: Kontekst bilan to'ldirilgan savol
     """
     try:
-        # Redis-dan savol-javoblar tarixini olish
-        chat_history = redis_session.get_question_session(user_id, chat_id)
+        # Redis-dan savol-javoblar tarixini olish - async method should be awaited
+        chat_history = await redis_session.get_question_session(user_id, chat_id)
         
         if not chat_history:
             return request
@@ -130,7 +130,7 @@ async def old_context(user_id: str, request: str, chat_id: str = None):
         # Tarixni matn formatiga o'girish
         previous_context = "\n\n".join(filtered_history)
         
-        # Savol qayta yozish funksiyasini chaqirish
+        # Savol qayta yozish funksiyasini chaqirish va natijani kutish
         context_query = await model_llm.rewrite_query(request, previous_context)
         
         if isinstance(context_query, dict):
