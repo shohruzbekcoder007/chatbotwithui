@@ -180,7 +180,7 @@ async def stream_chat(request: Request, req: ChatRequest):
         # Modeldan chat javobi olish
         async for token in model_llm.chat_stream(context=context, query=question, language=language, device=device):
             response_current += token
-            yield f"{token}\n\n"
+            yield f"{token}"
         
         # yield suggestion_text
         
@@ -210,7 +210,7 @@ async def stream_chat(request: Request, req: ChatRequest):
 
             for token in suggestion_result:
                 time.sleep(0.006)  # Tokenlarni chiqarish uchun kutish
-                yield f"{token}\n\n"
+                yield f"{token}"
         
         # MongoDB ga saqlash
         chat_message = ChatMessage(
