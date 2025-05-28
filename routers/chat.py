@@ -150,8 +150,8 @@ async def stream_chat(request: Request, req: ChatRequest):
     if(is_russian(question)):
         question = await change_translate(question, "uz")
         language = 'ru'
-        
-    suggestion_text = suggestion_dict.get(device, {}).get(language, suggestion_text)
+
+    suggestion_text = suggestion_dict.get(device, {}).get(language, "")
     context_query = await old_context(user_id, question)
 
     # Kontekstni tayyorlash
