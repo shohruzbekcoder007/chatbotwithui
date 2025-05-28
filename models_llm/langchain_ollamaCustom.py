@@ -436,9 +436,9 @@ class LangChainOllamaModel:
         )
 
         if device == "web":
-            system_prompt += "Javoblarni HTML formatida yozing. Har bir javob semantik va vizual ravishda aniq bo'lishi kerak."
+            system_prompt += "Javoblarni HTML formatida yozing. <i> </i> tegidan foydalanib. Har bir javob semantik va vizual ravishda aniq bo'lishi kerak."
         else:
-            system_prompt += "Javoblarni Markdown formatida yozing. Quyidagi qoidalarni bajaring:  _ kursiv matn uchun. Har bir javob semantik va vizual ravishda aniq bo'lishi kerak."
+            system_prompt += "Javoblarni Markdown formatida yozing.  _ kursiv matn uchun. Har bir javob semantik va vizual ravishda aniq bo'lishi kerak."
 
 
         if language == "ru":
