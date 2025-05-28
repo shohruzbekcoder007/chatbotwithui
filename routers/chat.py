@@ -136,14 +136,22 @@ async def stream_chat(request: Request, req: ChatRequest):
 
     user_id = request.state.user_id
     # print(f"Using user_id from request.state: {user_id}")
-
-    suggestion_text = "\n <br><br><b> Tavsiya qilingan savol: </b> " 
+    suggestion_dict = {
+        "web": {
+            "uz": "\n <br><br><b> Tavsiya qilingan savol: </b> ",
+            "ru": "\n <br><br><b> Предложенный вопрос: </b> "
+        },
+        "mobile": {
+            "uz": "\n ** Tavsiya qilingan savol: ** ",
+            "ru": "\n ** Предложенный вопрос: ** "
+        },
+    }
 
     if(is_russian(question)):
         question = await change_translate(question, "uz")
         language = 'ru'
-        suggestion_text = "\n <br><br><b> Предложенный вопрос: </b> "
-
+        
+    suggestion_text = suggestion_dict.get(device, {}).get(language, suggestion_text)
     context_query = await old_context(user_id, question)
 
     # Kontekstni tayyorlash
