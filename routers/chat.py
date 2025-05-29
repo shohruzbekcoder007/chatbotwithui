@@ -124,15 +124,15 @@ async def chat(request: Request, chat_request: ChatRequest):
 @router.post("/chat/stream")
 async def stream_chat(request: Request, req: ChatRequest):
     chat_id = req.chat_id
-    print(f"---------------- REQUEST: {req} ----------------")
+    # print(f"---------------- REQUEST: {req} ----------------")
     if not chat_id:
         return {"error": "Chat ID is missing. Please provide a valid chat ID."}
 
     question = req.query
     language = 'uz'
     device = req.device if req.device else "web"
-    print(f"\nUsing device: {device}")
-    print(f"Using question: {question}\n")
+    # print(f"\nUsing device: {device}")
+    # print(f"Using question: {question}\n")
 
     user_id = request.state.user_id
     # print(f"Using user_id from request.state: {user_id}")
@@ -154,6 +154,10 @@ async def stream_chat(request: Request, req: ChatRequest):
     suggestion_text = suggestion_dict.get(device, {}).get(language, "")
     context_query = await old_context(user_id, question)
 
+    # print(suggestion_text, "<< suggestion_text")
+    # print(device, "<< device")
+    # print(language, "<< language")
+
     # Kontekstni tayyorlash
     relevant_docs = get_docs_from_db(question)
     relevant_docs_add = get_docs_from_db(context_query)
@@ -165,7 +169,7 @@ async def stream_chat(request: Request, req: ChatRequest):
 
     context = "\n- ".join(unique_results) if unique_results else ""
 
-    print(f"Context:\n {context}")
+    # print(f"Context:\n {context}")
 
     async def event_generator():
         response_current = ""
@@ -194,12 +198,12 @@ async def stream_chat(request: Request, req: ChatRequest):
         
         questions_manager_questions = questions_manager.search_documents(response_current, 10)
         suggested_question = ""
-        if questions_manager_questions:
+        if False: # questions_manager_questions:
             sq_docs = questions_manager_questions.get("documents", []) if isinstance(questions_manager_questions, dict) else []
-            print(sq_docs, "<<- sq_docs")
+            # print(sq_docs, "<<- sq_docs")
             question_docs = []
             previous_questions.add(req.query.strip().lower())
-            print(f"\n\nOldingi savollar: {list(previous_questions)}")
+            # print(f"\n\nOldingi savollar: {list(previous_questions)}")
             for doc in sq_docs[0]:
                 # Tavsiya qilingan savollarni oldingi savollar bilan solishtirish
                 # print(f"\n - Previous question: {doc.lower()} - {doc.lower() in list(previous_questions)}")
@@ -207,7 +211,7 @@ async def stream_chat(request: Request, req: ChatRequest):
                     question_docs.append(doc)
                     
             suggestion_context = "\n- ".join(question_docs) if question_docs else ""
-            print(f"\n\nSuggestion question context: {suggestion_context}")
+            # print(f"\n\nSuggestion question context: {suggestion_context}")
 
             # Stream orqali tavsiya qilingan savollarni olish
             async for token in model_llm.get_stream_suggestion_question(suggestion_context, question, response_current, language, device=device):

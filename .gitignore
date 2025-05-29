@@ -43,3 +43,4 @@ local_models/
 answers.txt
 fine_tuning_qa_data.json
 fine_tuning_data.json
+visualization/local_models

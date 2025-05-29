@@ -13,7 +13,11 @@ from langchain_core.messages import (
 )
 from langchain_community.chat_models import ChatOllama
 from datetime import datetime
+from langchain.agents import initialize_agent, AgentType, AgentExecutor, create_openai_tools_agent
+from models_llm.datetime_tool import datetime_tools
+from models_llm.custom_tools import custom_tools
 
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 # Joriy sanani olish funksiyasi
 def get_current_date(format: str = "%Y-%m-%d") -> str:
     """
@@ -83,7 +87,7 @@ class LangChainOllamaModel:
             "You are an AI assistant agent of the National Statistics Committee of the Republic of Uzbekistan.",
             "You are a chatbot answering questions for the National Statistics Committee. Your name is STAT AI.",
             "Let the information be based primarily on context and relegate additional answers to a secondary level.",
-            "Do NOT integrate information that is not available in context. Kontextda mavjud bo'lmagan ma'lumotlarni qo‘shmaslik kerak.",
+            "Do NOT integrate information that is not available in context. Kontextda mavjud bo'lmagan ma'lumotlarni qo'shmaslik kerak.",
             "You must respond only in {language}. Ensure there are no spelling mistakes.",
             "Translate the answers into {language}.",
             "You should generate responses strictly based on the given prompt information without creating new content on your own.",
@@ -98,6 +102,7 @@ class LangChainOllamaModel:
             # "If the answer is long, add a summary at the end of the answer using the format: '<br><p><i>    </i></p>'."
             "Only use the parts of the context that are directly relevant to the user's question. Ignore all other context, even if it is statistically related. Use only what directly answers the question.",
             "Savolga javob berishda faqat kontekstga asoslaning. Agar kontekstda javob bo'lmasa, \"Savolingizni tushunmadim, aniqroq qilib savol bering\" deb yozing.",
+            "If the question is about date, time, day of week, or month name, use the appropriate tool to get the current information."
         ]
 
         self.system_html_prompts = [
@@ -107,10 +112,66 @@ class LangChainOllamaModel:
             "Each response must be formatted in Markdown. Follow the guidelines below: Use ` for inline code, Use ``` for code blocks, Use ** or __ for bold text, Use * or _ for italic text, Use > for blockquotes, Use - or * for bullet points, Every response should maintain semantic and visual clarity.",
         ]
 
-    
+        # Datetime toollarni o'rnatish
+        self.tools = custom_tools
+
         # Model yaratish yoki cache dan olish
         self.model = self._get_model()
         
+        # Agent yaratish
+        self.setup_agent()
+    
+    def setup_agent(self):
+        """Tool-enabled agent yaratish"""
+        
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", """You are an AI assistant with various tools at your disposal.
+                When a user asks a question, analyze it and use the appropriate tool to help answer it.
+                
+                For authentication requests (username and password checking):
+                - Use the authenticate_user tool when users ask about login credentials
+                - Extract the username and password from the query
+                - Return True if credentials are correct, False if incorrect
+                
+                For name lookup requests:
+                - Use the get_lastname tool when users ask about a person's last name
+                - Extract the first name from the query
+                
+                For fruit questions:
+                - Use the fruit_to_vegetable_info tool when users ask about fruits
+                - Extract the fruit name from the query
+                
+                Answer only in Uzbek language.
+                
+                Examples:
+                - When asked "admin paroli admin123 to'g'rimi?", use authenticate_user tool with username="admin" and password="admin123"
+                - When asked "Alisher kim?", use get_lastname tool with firstname="Alisher"
+                - When asked "olma haqida ma'lumot ber", use fruit_to_vegetable_info tool with fruit="olma"
+                
+                Return only the answers without any additional text.
+                """),
+                ("human", "{input}"),
+                MessagesPlaceholder("agent_scratchpad"),
+            ]
+        )
+
+        agent = create_openai_tools_agent(self.model, self.tools, prompt)
+        self.agent_executor = AgentExecutor(agent=agent, tools=self.tools, verbose=True)
+        # try:
+        #     # Agent yaratish
+        #     self.agent_executor = initialize_agent(
+        #         self.tools,
+        #         self.model,
+        #         agent=AgentType.OPENAI_FUNCTIONS,
+        #         verbose=True,
+        #         handle_parsing_errors=True,
+        #     )
+        #     logger.info(f"Agent successfully created for session {self.session_id}")
+        # except Exception as e:
+        #     logger.error(f"Error creating agent: {str(e)}")
+        #     self.agent_executor = None
+    
     def _get_model(self):
         """Model olish (cache dan yoki yangi yaratish)"""
         global _MODEL_CACHE
@@ -370,7 +431,7 @@ class LangChainOllamaModel:
 
     async def chat_stream(self, context: str, query: str, language: str = "uz", device: str = "web") -> AsyncGenerator[str, None]:
         """
-        Javobni SSE orqali stream ko‘rinishda yuborish
+        Javobni SSE orqali stream ko'rinishda yuborish
         
         Args:
             context (str): System prompt
@@ -381,10 +442,63 @@ class LangChainOllamaModel:
         Yields:
             str: Modeldan kelayotgan har bir token yoki parcha
         """
-        messages = self._create_messages(context, query, language, device)
-
-        async for chunk in self._stream_invoke(messages):
-            yield chunk
+        # Sana haqidagi so'rovlarni tekshirish
+        date_keywords_uz = ["bugun", "sana", "kun", "hozirgi sana", "bugungi sana", "joriy sana", "vaqt", "soat", "hafta kuni", "oy nomi", "parol", "olma"]
+        date_keywords_ru = ["сегодня", "дата", "день", "текущая дата", "сегодняшняя дата", "время", "час", "день недели", "название месяца", "пароль"]
+        
+        # So'rovni kichik harflarga o'tkazish
+        query_lower = query.lower()
+        
+        # Sana haqidagi so'rovni aniqlash
+        is_date_query = any(keyword in query_lower for keyword in date_keywords_uz) or \
+                       any(keyword in query_lower for keyword in date_keywords_ru)
+        
+        if is_date_query and self.agent_executor:
+            try:
+                # Til bo'yicha system promptni tayyorlash
+                if language == "uz":
+                    system_prompt = (
+                        "get_current_date toolini chaqirishni unutmang. "
+                        "Siz O'zbekiston Statistika qo'mitasining AI yordamchisisiz. "
+                        "Foydalanuvchi sana va vaqt haqida so'ragan. "
+                        "Tegishli toolni chaqirib, aniq ma'lumot bering. "
+                        "Javobni o'zbek tilida bering."
+                    )
+                else:
+                    system_prompt = (
+                        "Вы AI-помощник Комитета статистики Узбекистана. "
+                        "Пользователь спросил о дате и времени. "
+                        "Вызовите соответствующий инструмент и предоставьте точную информацию. "
+                        "Дайте ответ на русском языке."
+                    )
+                
+                # Agent executor orqali javob olish
+                response = await self.agent_executor.ainvoke({
+                    "input": query
+                })
+                
+                # Javobni tokenlar bo'yicha yuborish
+                result = response["output"]
+                print("####################+++++++++++++++++++++##", result)
+                for char in result:
+                    yield char
+                    await asyncio.sleep(0.006)  # Tokenlar orasida kichik pauza
+                
+                return
+                
+            except Exception as e:
+                print("######################", e)
+                logger.error(f"Tool-enabled chat xatoligi: {str(e)}")
+                # Xatolik bo'lsa, oddiy modelga o'tish
+                messages = self._create_messages(context, query, language, device)
+                async for chunk in self._stream_invoke(messages):
+                    yield chunk
+        else:
+            print("############  executor yo'q #################")
+            # Oddiy modeldan javob olish
+            messages = self._create_messages(context, query, language, device)
+            async for chunk in self._stream_invoke(messages):
+                yield chunk
 
     async def _stream_invoke(self, messages: List[BaseMessage]) -> AsyncGenerator[str, None]:
         """
