@@ -453,7 +453,7 @@ class LangChainOllamaModel:
         is_date_query = any(keyword in query_lower for keyword in date_keywords_uz) or \
                        any(keyword in query_lower for keyword in date_keywords_ru)
         
-        if is_date_query and self.agent_executor:
+        if is_date_query and self.agent_executor and False: 
             try:
                 # Til bo'yicha system promptni tayyorlash
                 if language == "uz":

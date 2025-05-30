@@ -203,49 +203,146 @@ class ChromaManager:
         Hybrid qidiruv - semantic va keyword qidiruvlarni birlashtirib ishlatish
         """
         try:
-            # Semantic search
+            # 1. Semantic search (asosiy qidiruv)
             semantic_results = self.collection.query(
                 query_texts=[query],
-                n_results=n_results * 2,  # Ko'proq natija olish
-                include=['documents', 'distances', 'metadatas']
+                n_results=min(n_results * 3, 50),  # Ko'proq natija olish, lekin cheklangan
+                include=['documents', 'distances', 'metadatas']  # ids ni olib tashlash
             )
 
-            # Keyword search
-            keyword_results = self.collection.query(
-                query_texts=[query],
-                n_results=n_results * 2,
-                where_document={"$contains": query},  # Exact match qidirish
-                include=['documents', 'distances', 'metadatas']
-            )
+            # 2. Keyword search (qo'shimcha qidiruv)
+            keyword_results = None
+            try:
+                # Simple keyword search using where_document
+                query_words = query.lower().split()
+                if len(query_words) > 0:
+                    # Birinchi so'z bo'yicha qidirish (ChromaDB cheklovi tufayli)
+                    keyword_results = self.collection.query(
+                        query_texts=[query],
+                        n_results=min(n_results * 2, 30),
+                        where_document={"$contains": query_words[0]},  # Birinchi so'z bo'yicha qidirish
+                        include=['documents', 'distances', 'metadatas']
+                    )
+            except Exception as keyword_error:
+                print(f"Keyword search xatoligi: {keyword_error}")
+                # Agar keyword search ishlamasa, faqat semantic search ishlatamiz
 
-            # Natijalarni birlashtirish
-            all_docs = []
-            seen_docs = set()
+            # 3. Natijalarni birlashtirish va scoring
+            combined_results = []
+            seen_docs = set()  # IDs o'rniga dokumentlarni tekshirish
 
-            # Semantic natijalarni qo'shish
-            if semantic_results and 'documents' in semantic_results:
-                for doc in semantic_results['documents'][0]:
-                    if doc not in seen_docs:
-                        all_docs.append(doc)
-                        seen_docs.add(doc)
+            # Semantic natijalarni qo'shish (yuqori priority)
+            if semantic_results and semantic_results.get('documents') and semantic_results['documents'][0]:
+                for i, doc in enumerate(semantic_results['documents'][0]):
+                    # Hujjat mazmuni asosida dublikatlarni tekshirish
+                    doc_hash = hash(doc[:100])  # Hujjatning birinchi 100 belgisi bo'yicha hash
+                    if doc_hash not in seen_docs:
+                        distance = semantic_results['distances'][0][i]
+                        metadata = semantic_results['metadatas'][0][i] if semantic_results.get('metadatas') else {}
+                        
+                        # Semantic score (distance ni score ga aylantirish)
+                        semantic_score = max(0, 1 - distance)  # Distance qancha kam bo'lsa, score shuncha yuqori
+                        
+                        combined_results.append({
+                            'document': doc,
+                            'metadata': metadata,
+                            'distance': distance,
+                            'semantic_score': semantic_score,
+                            'keyword_score': 0,
+                            'final_score': semantic_score * 0.7,  # Semantic score ga 70% og'irlik
+                            'doc_hash': doc_hash
+                        })
+                        seen_docs.add(doc_hash)
 
-            # Keyword natijalarni qo'shish
-            if keyword_results and 'documents' in keyword_results:
-                for doc in keyword_results['documents'][0]:
-                    if doc not in seen_docs:
-                        all_docs.append(doc)
-                        seen_docs.add(doc)
+            # Keyword natijalarni qo'shish (qo'shimcha score)
+            if keyword_results and keyword_results.get('documents') and keyword_results['documents'][0]:
+                for i, doc in enumerate(keyword_results['documents'][0]):
+                    doc_hash = hash(doc[:100])
+                    
+                    if doc_hash in seen_docs:
+                        # Agar hujjat allaqon mavjud bo'lsa, keyword score qo'shamiz
+                        for result in combined_results:
+                            if result['doc_hash'] == doc_hash:
+                                keyword_distance = keyword_results['distances'][0][i]
+                                keyword_score = max(0, 1 - keyword_distance)
+                                result['keyword_score'] = keyword_score
+                                # Final score ni yangilaymiz
+                                result['final_score'] = (result['semantic_score'] * 0.7) + (keyword_score * 0.3)
+                                break
+                    else:
+                        # Yangi hujjat bo'lsa qo'shamiz
+                        distance = keyword_results['distances'][0][i]
+                        metadata = keyword_results['metadatas'][0][i] if keyword_results.get('metadatas') else {}
+                        keyword_score = max(0, 1 - distance)
+                        
+                        combined_results.append({
+                            'document': doc,
+                            'metadata': metadata,
+                            'distance': distance,
+                            'semantic_score': 0,
+                            'keyword_score': keyword_score,
+                            'final_score': keyword_score * 0.5,  # Faqat keyword bo'lsa 50% score
+                            'doc_hash': doc_hash
+                        })
+                        seen_docs.add(doc_hash)
 
-            # n_results gacha cheklash
-            # all_docs = all_docs[:n_results]
+            # 4. Query bilan exact match bonus
+            for result in combined_results:
+                doc_lower = result['document'].lower()
+                query_lower = query.lower()
+                
+                # Exact phrase match
+                if query_lower in doc_lower:
+                    result['final_score'] += 0.2
+                
+                # Query so'zlarining nechta foizi mavjud
+                query_words = query_lower.split()
+                doc_words = doc_lower.split()
+                matching_words = sum(1 for word in query_words if word in doc_words)
+                if query_words:
+                    word_match_ratio = matching_words / len(query_words)
+                    result['final_score'] += word_match_ratio * 0.1
 
-            all_docs = cross_encode_sort(query, all_docs, n_results)
+            # 5. Final score bo'yicha tartiblash
+            combined_results.sort(key=lambda x: x['final_score'], reverse=True)
 
-            return {"documents": [all_docs], "distances": []}
+            # 6. n_results gacha cheklash
+            top_results = combined_results[:n_results]
+
+            # 7. Cross-encoder bilan qayta tartiblash (agar mavjud bo'lsa)
+            documents = [result['document'] for result in top_results]
+            if documents:
+                try:
+                    reranked_docs = cross_encode_sort(query, documents, n_results)
+                    # Cross-encoder natijasiga mos ravishda metadata va distance ni tartiblash
+                    reranked_results = []
+                    for reranked_doc in reranked_docs:
+                        for result in top_results:
+                            if result['document'] == reranked_doc:
+                                reranked_results.append(result)
+                                break
+                    top_results = reranked_results
+                except Exception as cross_error:
+                    print(f"Cross-encoder xatoligi: {cross_error}")
+                    # Cross-encoder ishlamasa, asl natijalarni qaytaramiz
+
+            # 8. Natijalarni formatlab qaytarish
+            final_documents = [result['document'] for result in top_results]
+            final_distances = [result['distance'] for result in top_results]
+            final_metadatas = [result['metadata'] for result in top_results]
+
+            return {
+                "documents": [final_documents],
+                "distances": [final_distances],
+                "metadatas": [final_metadatas],
+                "scores": [result['final_score'] for result in top_results]  # Qo'shimcha score ma'lumoti
+            }
 
         except Exception as e:
             print(f"Qidirishda xatolik: {str(e)}")
-            return {"documents": [[]], "distances": []}
+            import traceback
+            traceback.print_exc()
+            return {"documents": [[]], "distances": [[]], "metadatas": [[]], "scores": []}
 
     def delete_all_documents(self):
         """Barcha hujjatlarni o'chirish"""
