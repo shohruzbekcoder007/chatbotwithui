@@ -101,11 +101,150 @@ class CustomEmbeddingFunction:
         """
         return len(self.model.tokenize(text))
 
+class RegionNER:
+    """O'zbekiston hududlari uchun Named Entity Recognition"""
+    
+    def __init__(self):
+        # MHOBT kodlari pattern
+        self.mhobt_pattern = r'\b(17|1703|1703\d{3,6})\b'
+        
+        # SOATO kodlari pattern  
+        self.soato_pattern = r'\b\d{8,10}\b'
+        
+        # Viloyat nomlari
+        self.regions = {
+            # Viloyatlar
+            'andijon': ['andijon', 'андижон', 'andijan'],
+            'buxoro': ['buxoro', 'бухара', 'bukhara'],
+            'fargona': ['fargona', 'фергана', 'fergana', 'farghona'],
+            'jizzax': ['jizzax', 'жиззах', 'jizzakh'],
+            'xorazm': ['xorazm', 'хорезм', 'khorezm'],
+            'namangan': ['namangan', 'наманган'],
+            'navoiy': ['navoiy', 'навои', 'navoi'],
+            'qashqadaryo': ['qashqadaryo', 'кашкадарья', 'kashkadarya'],
+            'qoraqalpogiston': ['qoraqalpogiston', 'каракалпакстан', 'karakalpakstan'],
+            'samarqand': ['samarqand', 'самарканд', 'samarkand'],
+            'sirdaryo': ['sirdaryo', 'сырдарья', 'syrdarya'],
+            'surxondaryo': ['surxondaryo', 'сурхандарья', 'surkhandarya'],
+            'toshkent': ['toshkent', 'ташкент', 'tashkent'],
+            'toshkent_shahri': ['toshkent shahri', 'ташкент шахри', 'tashkent city']
+        }
+        
+        # Tuman/shahar nomlari (asosiy tumanlar)
+        self.districts = {
+            # Andijon viloyati
+            'oltinko\'l': ['oltinko\'l', 'oltinkol', 'олтинкол'],
+            'andijon_shahri': ['andijon shahri', 'andijon city'],
+            'asaka': ['asaka', 'асака'],
+            'baliqchi': ['baliqchi', 'баликчи'],
+            'bo\'z': ['bo\'z', 'boз', 'боз'],
+            'buloqboshi': ['buloqboshi', 'булокбоши'],
+            'izboskan': ['izboskan', 'избоскан'],
+            'jalaquduq': ['jalaquduq', 'жалакудук'],
+            'marhamat': ['marhamat', 'мархамат'],
+            'pakhtaobod': ['pakhtaobod', 'пахтаобод'],
+            'qo\'rg\'ontepa': ['qo\'rg\'ontepa', 'kurgontepa', 'кургонтепа'],
+            'shahrixon': ['shahrixon', 'шахрихон'],
+            'ulug\'nor': ['ulug\'nor', 'ulugnar', 'улугнор'],
+            'xo\'jaobod': ['xo\'jaobod', 'khojaobod', 'хожаобод'],
+            'xonobod': ['xonobod', 'khonobod', 'хонобод']
+        }
+        
+        # Barcha nom variantlarini birlashtirish
+        self.all_entities = {}
+        self.all_entities.update(self.regions)
+        self.all_entities.update(self.districts)
+    
+    def extract_entities(self, query: str) -> Dict[str, List[str]]:
+        """
+        User querydan hududiy entitylarni ajratib olish
+        
+        Args:
+            query: Foydalanuvchi so'rovi
+            
+        Returns:
+            Dict: Ajratib olingan entitylar
+        """
+        entities = {
+            'mhobt_codes': [],
+            'soato_codes': [],
+            'region_names': [],
+            'district_names': [],
+            'extracted_text': []
+        }
+        
+        query_lower = query.lower().strip()
+        
+        # MHOBT kodlarini ajratib olish
+        mhobt_matches = re.findall(self.mhobt_pattern, query)
+        entities['mhobt_codes'] = list(set(mhobt_matches))
+        
+        # SOATO kodlarini ajratib olish
+        soato_matches = re.findall(self.soato_pattern, query)
+        # MHOBT kodlari bilan bir xil bo'lmaganlarini filtrlash
+        soato_codes = [code for code in soato_matches if code not in mhobt_matches]
+        entities['soato_codes'] = list(set(soato_codes))
+        
+        # Hudud va tuman nomlarini ajratib olish
+        for entity_key, variants in self.all_entities.items():
+            for variant in variants:
+                if variant.lower() in query_lower:
+                    if entity_key in self.regions:
+                        if entity_key not in entities['region_names']:
+                            entities['region_names'].append(entity_key)
+                            entities['extracted_text'].append(variant)
+                    elif entity_key in self.districts:
+                        if entity_key not in entities['district_names']:
+                            entities['district_names'].append(entity_key)
+                            entities['extracted_text'].append(variant)
+                    break
+        
+        return entities
+    
+    def create_enhanced_query(self, original_query: str, entities: Dict[str, List[str]]) -> str:
+        """
+        Ajratib olingan entitylar asosida kengaytirilgan qidiruv so'rovini yaratish
+        
+        Args:
+            original_query: Asl so'rov
+            entities: Ajratib olingan entitylar
+            
+        Returns:
+            str: Kengaytirilgan qidiruv so'rovi
+        """
+        enhanced_parts = [original_query]
+        
+        # MHOBT kodlarini qo'shish
+        for code in entities['mhobt_codes']:
+            enhanced_parts.append(f"MHOBT: {code}")
+            enhanced_parts.append(f"mhobt {code}")
+        
+        # SOATO kodlarini qo'shish  
+        for code in entities['soato_codes']:
+            enhanced_parts.append(f"SOATO: {code}")
+            enhanced_parts.append(f"soato {code}")
+        
+        # Hudud nomlarini qo'shish
+        for region in entities['region_names']:
+            enhanced_parts.append(region)
+            # Barcha variantlarni qo'shish
+            if region in self.regions:
+                enhanced_parts.extend(self.regions[region])
+        
+        # Tuman nomlarini qo'shish
+        for district in entities['district_names']:
+            enhanced_parts.append(district)
+            if district in self.districts:
+                enhanced_parts.extend(self.districts[district])
+        
+        return " ".join(enhanced_parts)
+
 class ChromaManager:
     """ChromaDB wrapper"""
     def __init__(self, collection_name: str = "documents"):
         self.collection_name = collection_name
         self.embeddings = CustomEmbeddingFunction()
+        self.ner = RegionNER()  # NER instansiyasini qo'shish
         
         # ChromaDB klientini yaratish - persistent_directory bilan
         persistent_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'chroma_db')
@@ -157,7 +296,7 @@ class ChromaManager:
             
     def add_documents(self, texts: List[str], metadatas: Optional[List[Dict[str, Any]]] = None, ids: Optional[List[str]] = None):
         """
-        Kolleksiyaga yangi hujjatlar qo'shish
+        Kolleksiyaga yangi hujjatlar qo'shish - hudud kodlari uchun soddalashtirilgan
         
         Args:
             texts: Matnlar ro'yxati
@@ -200,48 +339,116 @@ class ChromaManager:
 
     def hybrid_search(self, query: str, n_results: int = 5):
         """
-        Hybrid qidiruv - semantic va keyword qidiruvlarni birlashtirib ishlatish
+        Hybrid qidiruv - NER bilan kengaytirilgan semantic va keyword qidiruvlarni birlashtirib ishlatish
         """
         try:
-            # 1. Semantic search (asosiy qidiruv)
+            # 1. NER orqali entitylarni ajratib olish
+            entities = self.ner.extract_entities(query)
+            print(f"NER natijasi: {entities}")
+            
+            # 2. Kengaytirilgan qidiruv so'rovini yaratish
+            enhanced_query = self.ner.create_enhanced_query(query, entities)
+            print(f"Kengaytirilgan so'rov: {enhanced_query}")
+            
+            # 3. Agar aniq kodlar topilgan bo'lsa, ularni alohida qidirish
+            specific_searches = []
+            
+            # MHOBT kodlari bo'yicha aniq qidiruv
+            for mhobt_code in entities['mhobt_codes']:
+                try:
+                    mhobt_results = self.collection.query(
+                        query_texts=[f"MHOBT: {mhobt_code}"],
+                        n_results=10,
+                        include=['documents', 'distances', 'metadatas']
+                    )
+                    if mhobt_results and mhobt_results.get('documents') and mhobt_results['documents'][0]:
+                        specific_searches.extend([
+                            {
+                                'document': doc,
+                                'metadata': mhobt_results['metadatas'][0][i] if mhobt_results.get('metadatas') else {},
+                                'distance': mhobt_results['distances'][0][i],
+                                'score': 0.95,  # Yuqori priority
+                                'search_type': 'mhobt_exact'
+                            }
+                            for i, doc in enumerate(mhobt_results['documents'][0])
+                        ])
+                except Exception as e:
+                    print(f"MHOBT qidiruv xatoligi: {e}")
+            
+            # SOATO kodlari bo'yicha aniq qidiruv
+            for soato_code in entities['soato_codes']:
+                try:
+                    soato_results = self.collection.query(
+                        query_texts=[f"SOATO: {soato_code}"],
+                        n_results=10,
+                        include=['documents', 'distances', 'metadatas']
+                    )
+                    if soato_results and soato_results.get('documents') and soato_results['documents'][0]:
+                        specific_searches.extend([
+                            {
+                                'document': doc,
+                                'metadata': soato_results['metadatas'][0][i] if soato_results.get('metadatas') else {},
+                                'distance': soato_results['distances'][0][i],
+                                'score': 0.9,  # Yuqori priority
+                                'search_type': 'soato_exact'
+                            }
+                            for i, doc in enumerate(soato_results['documents'][0])
+                        ])
+                except Exception as e:
+                    print(f"SOATO qidiruv xatoligi: {e}")
+            
+            # 4. Semantic search (kengaytirilgan so'rov bilan)
             semantic_results = self.collection.query(
-                query_texts=[query],
-                n_results=min(n_results * 3, 50),  # Ko'proq natija olish, lekin cheklangan
-                include=['documents', 'distances', 'metadatas']  # ids ni olib tashlash
+                query_texts=[enhanced_query],
+                n_results=min(n_results * 3, 50),
+                include=['documents', 'distances', 'metadatas']
             )
 
-            # 2. Keyword search (qo'shimcha qidiruv)
+            # 5. Keyword search
             keyword_results = None
             try:
-                # Simple keyword search using where_document
-                query_words = query.lower().split()
+                # Enhanced query so'zlari bo'yicha qidirish
+                query_words = enhanced_query.lower().split()
                 if len(query_words) > 0:
-                    # Birinchi so'z bo'yicha qidirish (ChromaDB cheklovi tufayli)
                     keyword_results = self.collection.query(
-                        query_texts=[query],
+                        query_texts=[enhanced_query],
                         n_results=min(n_results * 2, 30),
-                        where_document={"$contains": query_words[0]},  # Birinchi so'z bo'yicha qidirish
+                        where_document={"$contains": query_words[0]},
                         include=['documents', 'distances', 'metadatas']
                     )
             except Exception as keyword_error:
                 print(f"Keyword search xatoligi: {keyword_error}")
-                # Agar keyword search ishlamasa, faqat semantic search ishlatamiz
 
-            # 3. Natijalarni birlashtirish va scoring
+            # 6. Natijalarni birlashtirish va scoring
             combined_results = []
-            seen_docs = set()  # IDs o'rniga dokumentlarni tekshirish
+            seen_docs = set()
 
-            # Semantic natijalarni qo'shish (yuqori priority)
+            # Aniq qidiruvlar (MHOBT/SOATO) - eng yuqori priority
+            for result in specific_searches:
+                doc_hash = hash(result['document'][:100])
+                if doc_hash not in seen_docs:
+                    combined_results.append({
+                        'document': result['document'],
+                        'metadata': result['metadata'],
+                        'distance': result['distance'],
+                        'semantic_score': 0,
+                        'keyword_score': 0,
+                        'exact_match_score': result['score'],
+                        'final_score': result['score'],
+                        'doc_hash': doc_hash,
+                        'search_type': result['search_type']
+                    })
+                    seen_docs.add(doc_hash)
+
+            # Semantic natijalarni qo'shish
             if semantic_results and semantic_results.get('documents') and semantic_results['documents'][0]:
                 for i, doc in enumerate(semantic_results['documents'][0]):
-                    # Hujjat mazmuni asosida dublikatlarni tekshirish
-                    doc_hash = hash(doc[:100])  # Hujjatning birinchi 100 belgisi bo'yicha hash
+                    doc_hash = hash(doc[:100])
                     if doc_hash not in seen_docs:
                         distance = semantic_results['distances'][0][i]
                         metadata = semantic_results['metadatas'][0][i] if semantic_results.get('metadatas') else {}
                         
-                        # Semantic score (distance ni score ga aylantirish)
-                        semantic_score = max(0, 1 - distance)  # Distance qancha kam bo'lsa, score shuncha yuqori
+                        semantic_score = max(0, 1 - distance)
                         
                         combined_results.append({
                             'document': doc,
@@ -249,28 +456,29 @@ class ChromaManager:
                             'distance': distance,
                             'semantic_score': semantic_score,
                             'keyword_score': 0,
-                            'final_score': semantic_score * 0.7,  # Semantic score ga 70% og'irlik
-                            'doc_hash': doc_hash
+                            'exact_match_score': 0,
+                            'final_score': semantic_score * 0.7,
+                            'doc_hash': doc_hash,
+                            'search_type': 'semantic'
                         })
                         seen_docs.add(doc_hash)
 
-            # Keyword natijalarni qo'shish (qo'shimcha score)
+            # Keyword natijalarni qo'shish
             if keyword_results and keyword_results.get('documents') and keyword_results['documents'][0]:
                 for i, doc in enumerate(keyword_results['documents'][0]):
                     doc_hash = hash(doc[:100])
                     
                     if doc_hash in seen_docs:
-                        # Agar hujjat allaqon mavjud bo'lsa, keyword score qo'shamiz
+                        # Mavjud hujjatga keyword score qo'shish
                         for result in combined_results:
-                            if result['doc_hash'] == doc_hash:
+                            if result['doc_hash'] == doc_hash and result.get('search_type') != 'mhobt_exact' and result.get('search_type') != 'soato_exact':
                                 keyword_distance = keyword_results['distances'][0][i]
                                 keyword_score = max(0, 1 - keyword_distance)
                                 result['keyword_score'] = keyword_score
-                                # Final score ni yangilaymiz
                                 result['final_score'] = (result['semantic_score'] * 0.7) + (keyword_score * 0.3)
                                 break
                     else:
-                        # Yangi hujjat bo'lsa qo'shamiz
+                        # Yangi hujjat qo'shish
                         distance = keyword_results['distances'][0][i]
                         metadata = keyword_results['metadatas'][0][i] if keyword_results.get('metadatas') else {}
                         keyword_score = max(0, 1 - distance)
@@ -281,40 +489,63 @@ class ChromaManager:
                             'distance': distance,
                             'semantic_score': 0,
                             'keyword_score': keyword_score,
-                            'final_score': keyword_score * 0.5,  # Faqat keyword bo'lsa 50% score
-                            'doc_hash': doc_hash
+                            'exact_match_score': 0,
+                            'final_score': keyword_score * 0.5,
+                            'doc_hash': doc_hash,
+                            'search_type': 'keyword'
                         })
                         seen_docs.add(doc_hash)
 
-            # 4. Query bilan exact match bonus
+            # 7. Entity matching bonus
+            for result in combined_results:
+                doc_lower = result['document'].lower()
+                
+                # MHOBT/SOATO kodlari uchun bonus
+                for code in entities['mhobt_codes']:
+                    if code in doc_lower:
+                        result['final_score'] += 0.3
+                
+                for code in entities['soato_codes']:
+                    if code in doc_lower:
+                        result['final_score'] += 0.25
+                
+                # Hudud nomlari uchun bonus
+                for region in entities['region_names']:
+                    if region in doc_lower:
+                        result['final_score'] += 0.2
+                
+                # Tuman nomlari uchun bonus
+                for district in entities['district_names']:
+                    if district in doc_lower:
+                        result['final_score'] += 0.15
+
+            # 8. Query bilan exact match bonus
             for result in combined_results:
                 doc_lower = result['document'].lower()
                 query_lower = query.lower()
                 
-                # Exact phrase match
                 if query_lower in doc_lower:
-                    result['final_score'] += 0.2
+                    result['final_score'] += 0.1
                 
-                # Query so'zlarining nechta foizi mavjud
-                query_words = query_lower.split()
+                # Enhanced query so'zlari
+                enhanced_words = enhanced_query.lower().split()
                 doc_words = doc_lower.split()
-                matching_words = sum(1 for word in query_words if word in doc_words)
-                if query_words:
-                    word_match_ratio = matching_words / len(query_words)
-                    result['final_score'] += word_match_ratio * 0.1
+                matching_words = sum(1 for word in enhanced_words if word in doc_words)
+                if enhanced_words:
+                    word_match_ratio = matching_words / len(enhanced_words)
+                    result['final_score'] += word_match_ratio * 0.05
 
-            # 5. Final score bo'yicha tartiblash
+            # 9. Final score bo'yicha tartiblash
             combined_results.sort(key=lambda x: x['final_score'], reverse=True)
 
-            # 6. n_results gacha cheklash
+            # 10. n_results gacha cheklash
             top_results = combined_results[:n_results]
 
-            # 7. Cross-encoder bilan qayta tartiblash (agar mavjud bo'lsa)
+            # 11. Cross-encoder bilan qayta tartiblash
             documents = [result['document'] for result in top_results]
             if documents:
                 try:
-                    reranked_docs = cross_encode_sort(query, documents, n_results)
-                    # Cross-encoder natijasiga mos ravishda metadata va distance ni tartiblash
+                    reranked_docs = cross_encode_sort(enhanced_query, documents, n_results)
                     reranked_results = []
                     for reranked_doc in reranked_docs:
                         for result in top_results:
@@ -324,25 +555,32 @@ class ChromaManager:
                     top_results = reranked_results
                 except Exception as cross_error:
                     print(f"Cross-encoder xatoligi: {cross_error}")
-                    # Cross-encoder ishlamasa, asl natijalarni qaytaramiz
 
-            # 8. Natijalarni formatlab qaytarish
+            # 12. Natijalarni formatlab qaytarish
             final_documents = [result['document'] for result in top_results]
             final_distances = [result['distance'] for result in top_results]
             final_metadatas = [result['metadata'] for result in top_results]
+
+            # NER ma'lumotlarini qaytarish uchun qo'shimcha
+            search_info = {
+                "entities_found": entities,
+                "enhanced_query": enhanced_query,
+                "search_types": [result.get('search_type', 'unknown') for result in top_results]
+            }
 
             return {
                 "documents": [final_documents],
                 "distances": [final_distances],
                 "metadatas": [final_metadatas],
-                "scores": [result['final_score'] for result in top_results]  # Qo'shimcha score ma'lumoti
+                "scores": [result['final_score'] for result in top_results],
+                "search_info": search_info  # NER ma'lumotlari
             }
 
         except Exception as e:
             print(f"Qidirishda xatolik: {str(e)}")
             import traceback
             traceback.print_exc()
-            return {"documents": [[]], "distances": [[]], "metadatas": [[]], "scores": []}
+            return {"documents": [[]], "distances": [[]], "metadatas": [[]], "scores": [], "search_info": {}}
 
     def delete_all_documents(self):
         """Barcha hujjatlarni o'chirish"""

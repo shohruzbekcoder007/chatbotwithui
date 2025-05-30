@@ -169,7 +169,7 @@ async def stream_chat(request: Request, req: ChatRequest):
 
     context = "\n- ".join(unique_results) if unique_results else ""
 
-    # print(f"Context:\n {context}")
+    print(f"Context: ============================ \n {context}")
 
     async def event_generator():
         response_current = ""
