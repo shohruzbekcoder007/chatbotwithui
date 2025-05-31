@@ -239,7 +239,9 @@ class ChromaManager:
             # n_results gacha cheklash
             # all_docs = all_docs[:n_results]
 
-            all_docs = cross_encode_sort(query, all_docs, n_results)
+            # Only call cross_encode_sort if we have documents
+            if all_docs:
+                all_docs = cross_encode_sort(query, all_docs, n_results)
 
             return {"documents": [all_docs], "distances": []}
 
