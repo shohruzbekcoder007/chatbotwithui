@@ -135,8 +135,8 @@ class SoatoTool(BaseTool):
             return json.load(f)
     
     def _run(self, query: str) -> str:
-        """Execute the tool with the given query."""
-        # Process the query to find relevant information in SOATO data
+        """So'rovni bajarish va natijani qaytarish"""
+        # So'rovni qayta ishlash va SOATO ma'lumotlaridan tegishli ma'lumotni topish
         result = self._search_soato_data(query)
         if not result:
             return "Ma'lumot topilmadi. Iltimos, boshqacha so'rovni kiriting."
@@ -212,65 +212,65 @@ class SoatoTool(BaseTool):
         return self._search_by_name(query)
     
     def _get_country_info(self) -> str:
-        """Get information about the country."""
+        """Mamlakat haqida ma'lumot olish"""
         country = self.soato_data.get("country", {})
         if not country:
-            return "Ma'lumot topilmadi."
+            return "Mamlakat haqida ma'lumot topilmadi."
         
-        info = f"SOATO kodi: {country.get('code', 'N/A')}\n"
-        info += f"Nomi (lotin): {country.get('name_latin', 'N/A')}\n"
-        info += f"Nomi (kirill): {country.get('name_cyrillic', 'N/A')}\n"
-        info += f"Nomi (rus): {country.get('name_russian', 'N/A')}\n"
+        info = f"SOATO kodi: {country.get('code', 'Mavjud emas')}\n"
+        info += f"Nomi (lotin): {country.get('name_latin', 'Mavjud emas')}\n"
+        info += f"Nomi (kirill): {country.get('name_cyrillic', 'Mavjud emas')}\n"
+        info += f"Nomi (rus): {country.get('name_russian', 'Mavjud emas')}\n"
         info += f"Viloyatlar soni: {len(country.get('regions', []))}\n"
         
         return info
     
     def _get_regions_list(self) -> str:
-        """Get a list of all regions."""
+        """Barcha viloyatlar ro'yxatini olish"""
         regions = self.soato_data.get("country", {}).get("regions", [])
         if not regions:
             return "Viloyatlar ro'yxati topilmadi."
         
         result = "O'zbekiston Respublikasi viloyatlari ro'yxati:\n\n"
         for i, region in enumerate(regions, 1):
-            result += f"{i}. {region.get('name_latin', 'N/A')} (SOATO: {region.get('code', 'N/A')})\n"
-            result += f"   Markaz: {region.get('center_latin', 'N/A')}\n"
+            result += f"{i}. {region.get('name_latin', 'Mavjud emas')} (SOATO: {region.get('code', 'Mavjud emas')})\n"
+            result += f"   Markaz: {region.get('center_latin', 'Mavjud emas')}\n"
         
         return result
     
     def _search_by_code(self, code: str) -> str:
-        """Search for an administrative division by its SOATO code."""
-        # Search in country
+        """SOATO kodi bo'yicha ma'muriy hududiy birlikni qidirish"""
+        # Mamlakat bo'yicha qidirish
         country = self.soato_data.get("country", {})
         if country.get("code") == code:
             return self._get_country_info()
         
-        # Search in regions
+        # Viloyatlar bo'yicha qidirish
         for region in country.get("regions", []):
             if region.get("code") == code:
                 return self._format_region_info(region)
             
-            # Search in districts
+            # Tumanlar bo'yicha qidirish
             for district in region.get("districts", []):
                 if district.get("code") == code:
                     return self._format_district_info(district, region)
                 
-                # Search in cities
+                # Shaharlar bo'yicha qidirish
                 for city in district.get("cities", []):
                     if city.get("code") == code:
                         return self._format_city_info(city, district, region)
                 
-                # Search in urban settlements
+                # Shaharchalar bo'yicha qidirish
                 for settlement in district.get("urban_settlements", []):
                     if settlement.get("code") == code:
                         return self._format_settlement_info(settlement, district, region)
                 
-                # Search in rural assemblies
+                # Qishloq fuqarolar yig'inlari bo'yicha qidirish
                 for assembly in district.get("rural_assemblies", []):
                     if assembly.get("code") == code:
                         return self._format_assembly_info(assembly, district, region)
         
-        return f"SOATO kodi {code} bo'yicha ma'lumot topilmadi."
+        return f"SOATO kodi {code} bo'yicha ma'lumot topilmadi. Iltimos, boshqa kod bilan qayta urinib ko'ring."
     
     def _semantic_search(self, query: str) -> str:
         """Hybrid qidiruv - semantik va kalit so'zlar bo'yicha qidiruv kombinatsiyasi"""
@@ -348,7 +348,7 @@ class SoatoTool(BaseTool):
             return f"Qidirishda xatolik yuz berdi: {str(e)}. Iltimos, boshqacha so'rovni kiriting."
     
     def _search_by_name(self, query: str) -> str:
-        """Search for an administrative division by its name."""
+        """Nomi bo'yicha ma'muriy hududiy birlikni qidirish"""
         results = []
         country = self.soato_data.get("country", {})
         
@@ -412,7 +412,7 @@ class SoatoTool(BaseTool):
                         results.append(("rural_assembly", assembly, district, region))
         
         if not results:
-            return f"\"{query}\" so'rovi bo'yicha ma'lumot topilmadi."
+            return f"\"{query}\" so'rovi bo'yicha ma'lumot topilmadi. Iltimos, boshqacha so'rovni kiriting."
         
         if len(results) == 1:
             entity_type, entity, parent, grandparent = results[0]
@@ -427,7 +427,7 @@ class SoatoTool(BaseTool):
             elif entity_type == "rural_assembly":
                 return self._format_assembly_info(entity, parent, grandparent)
         
-        # Multiple results
+        # Bir nechta natijalar
         result_text = f"\"{query}\" so'rovi bo'yicha {len(results)} ta natija topildi:\n\n"
         for i, (entity_type, entity, parent, _) in enumerate(results, 1):
             name = entity.get("name_latin", "N/A")
