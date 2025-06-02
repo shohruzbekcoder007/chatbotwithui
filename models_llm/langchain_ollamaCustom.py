@@ -1,7 +1,9 @@
 import os
 import asyncio
 import logging
-from typing import List, Dict, Any, Optional, ClassVar
+import re
+import torch
+from typing import List, Dict, Any, Optional, ClassVar, AsyncGenerator
 from dotenv import load_dotenv
 from functools import lru_cache
 from typing import AsyncGenerator
@@ -12,24 +14,7 @@ from langchain_core.messages import (
     BaseMessage
 )
 from langchain_community.chat_models import ChatOllama
-from datetime import datetime
-from langchain.agents import initialize_agent, AgentType, AgentExecutor, create_openai_tools_agent
-from models_llm.datetime_tool import datetime_tools
-from models_llm.custom_tools import custom_tools
-
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-# Joriy sanani olish funksiyasi
-def get_current_date(format: str = "%Y-%m-%d") -> str:
-    """
-    Joriy sanani ko'rsatilgan formatda olish.
-    
-    Args:
-        format (str): Sana uchun format (masalan, YYYY-MM-DD)
-        
-    Returns:
-        str: Formatlangan joriy sana
-    """
-    return datetime.now().strftime(format)
+from tools_llm.soato.soato_tool import SoatoTool
 
 # .env faylidan konfiguratsiyani o'qish
 load_dotenv()
@@ -59,7 +44,29 @@ class LangChainOllamaModel:
                 num_gpu: int = 1,
                 gpu_layers: int = 100,
                 kv_cache: bool = True, # buni xalaqit berishi mumkin
-                num_thread: int = 32):
+                num_thread: int = 32,
+                use_soato_tool: bool = True):
+        # SOATO tool ni ishlatish yoki ishlatmaslik
+        self.use_soato_tool = use_soato_tool
+        
+        # SOATO tool ni ishlatish uchun
+        if self.use_soato_tool:
+            try:
+                soato_file_path = os.path.join(
+                    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                    "tools_llm", "soato", "soato.json"
+                )
+                # GPU mavjudligini tekshirish
+                use_gpu = torch.cuda.is_available()
+                logger.info(f"SOATO Tool uchun GPU mavjud: {use_gpu}")
+                
+                # SOATO tool ni yaratish
+                logger.info("SOATO Tool yuklanmoqda...")
+                self.soato_tool = SoatoTool(soato_file_path, use_embeddings=True)
+                logger.info("SOATO Tool muvaffaqiyatli yuklandi")
+            except Exception as e:
+                logger.error(f"SOATO Tool yuklanishida xatolik: {str(e)}")
+                self.use_soato_tool = False
         """
         Ollama modelini LangChain bilan ishlatish uchun klass.
         
@@ -112,65 +119,12 @@ class LangChainOllamaModel:
             "Each response must be formatted in Markdown. Follow the guidelines below: Use ` for inline code, Use ``` for code blocks, Use ** or __ for bold text, Use * or _ for italic text, Use > for blockquotes, Use - or * for bullet points, Every response should maintain semantic and visual clarity.",
         ]
 
-        # Datetime toollarni o'rnatish
-        self.tools = custom_tools
-
         # Model yaratish yoki cache dan olish
         self.model = self._get_model()
         
-        # Agent yaratish
-        self.setup_agent()
+        # Agent functionality removed
     
-    def setup_agent(self):
-        """Tool-enabled agent yaratish"""
-        
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                ("system", """You are an AI assistant with various tools at your disposal.
-                When a user asks a question, analyze it and use the appropriate tool to help answer it.
-                
-                For authentication requests (username and password checking):
-                - Use the authenticate_user tool when users ask about login credentials
-                - Extract the username and password from the query
-                - Return True if credentials are correct, False if incorrect
-                
-                For name lookup requests:
-                - Use the get_lastname tool when users ask about a person's last name
-                - Extract the first name from the query
-                
-                For fruit questions:
-                - Use the fruit_to_vegetable_info tool when users ask about fruits
-                - Extract the fruit name from the query
-                
-                Answer only in Uzbek language.
-                
-                Examples:
-                - When asked "admin paroli admin123 to'g'rimi?", use authenticate_user tool with username="admin" and password="admin123"
-                - When asked "Alisher kim?", use get_lastname tool with firstname="Alisher"
-                - When asked "olma haqida ma'lumot ber", use fruit_to_vegetable_info tool with fruit="olma"
-                
-                Return only the answers without any additional text.
-                """),
-                ("human", "{input}"),
-                MessagesPlaceholder("agent_scratchpad"),
-            ]
-        )
-
-        agent = create_openai_tools_agent(self.model, self.tools, prompt)
-        self.agent_executor = AgentExecutor(agent=agent, tools=self.tools, verbose=True)
-        # try:
-        #     # Agent yaratish
-        #     self.agent_executor = initialize_agent(
-        #         self.tools,
-        #         self.model,
-        #         agent=AgentType.OPENAI_FUNCTIONS,
-        #         verbose=True,
-        #         handle_parsing_errors=True,
-        #     )
-        #     logger.info(f"Agent successfully created for session {self.session_id}")
-        # except Exception as e:
-        #     logger.error(f"Error creating agent: {str(e)}")
-        #     self.agent_executor = None
+    # Agent functionality removed
     
     def _get_model(self):
         """Model olish (cache dan yoki yangi yaratish)"""
@@ -210,20 +164,91 @@ class LangChainOllamaModel:
     
     def _create_message_from_dict(self, message_dict: Dict[str, Any]) -> BaseMessage:
         """Dictionary ma'lumotlaridan message obyekti yaratish"""
-        message_type = message_dict.get("type", "")
+        role = message_dict.get("role", "")
         content = message_dict.get("content", "")
         
-        if message_type == "system":
+        if role == "system":
             return SystemMessage(content=content)
-        elif message_type == "human":
+        elif role == "user":
             return HumanMessage(content=content)
-        elif message_type == "ai":
+        elif role == "assistant":
             return AIMessage(content=content)
         else:
             # Noma'lum turlar uchun default HumanMessage
             return HumanMessage(content=content)
+            
+    def _is_soato_query(self, query: str) -> bool:
+        """
+        So'rovni tekshirib, u SOATO yoki MHOBIT bilan bog'liq ekanligini aniqlash
+        
+        Args:
+            query (str): Foydalanuvchi so'rovi
+            
+        Returns:
+            bool: So'rov SOATO/MHOBIT bilan bog'liq bo'lsa True, aks holda False
+        """
+        # So'rovni kichik harflarga o'tkazish
+        query_lower = query.lower()
+        
+        # SOATO va MHOBIT so'zlarini tekshirish
+        soato_keywords = [
+            "soato", "mhobit", "мхобт", "махобт", "мҳобт",
+            "kod", "kodi", "raqami", "номер", "номери",
+            "viloyat", "tuman", "shahar", "qishloq", "mahalla",
+            "вилоят", "туман", "шаҳар", "қишлоқ", "маҳалла",
+            "ma'muriy", "hudud", "hududiy", "маъмурий", "ҳудуд", "ҳудудий"
+        ]
+        
+        # So'rovda SOATO kalit so'zlari bor-yo'qligini tekshirish
+        for keyword in soato_keywords:
+            if keyword in query_lower:
+                return True
+        
+        # Raqamli SOATO kodi bo'lishi mumkin
+        if re.search(r'\b\d{5,10}\b', query_lower):
+            return True
+            
+        return False
     
-    async def chat(self, context: str, query: str, language: str = "uz") -> str:
+    async def stream_chat(self, context: str, query: str, language: str = "uz") -> AsyncGenerator[str, None]:
+        """
+        Modelga savol yuborish va javobni stream qilish
+        
+        Args:
+            prompt (str): Savol matni
+        
+        Yields:
+            str: Model javobining qismlari
+        """
+        # SOATO/MHOBIT so'rovlarini aniqlash
+        if self.use_soato_tool and self._is_soato_query(query):
+            try:
+                logger.info(f"SOATO so'rovi aniqlandi (stream): '{query}'")
+                soato_result = self.soato_tool.run(query)
+                
+                # Agar SOATO tool natija qaytarmasa yoki xatolik bo'lsa, oddiy LLM ga o'tish
+                if not soato_result or "topilmadi" in soato_result.lower() or "xatolik" in soato_result.lower():
+                    logger.info(f"SOATO tool natija qaytarmadi, LLM stream ga o'tilmoqda")
+                    messages = self._create_messages(context, query, language)
+                    async for chunk in self._stream(messages):
+                        yield chunk
+                else:
+                    # SOATO tool natijasini bir marta to'liq qaytarish
+                    # Chunki SOATO tool stream qilmaydi
+                    yield soato_result
+            except Exception as e:
+                logger.error(f"SOATO tool ishlatishda xatolik (stream): {str(e)}")
+                # Xatolik bo'lsa, oddiy LLM ga o'tish
+                messages = self._create_messages(context, query, language)
+                async for chunk in self._stream(messages):
+                    yield chunk
+        else:
+            # Oddiy LLM so'rovi
+            messages = self._create_messages(context, query, language)
+            async for chunk in self._stream(messages):
+                yield chunk
+    
+    async def chat(self, context: str, query: str, language: str = "uz"):
         """
         Modelga savol yuborish va javob olish
         
@@ -233,14 +258,30 @@ class LangChainOllamaModel:
         Returns:
             str: Model javobi
         """
-
-        # System va user promptlaridan xabarlar yaratish
-        messages = self._create_messages(context, query, language)
+        # SOATO/MHOBIT so'rovlarini aniqlash
+        if self.use_soato_tool and self._is_soato_query(query):
+            try:
+                logger.info(f"SOATO so'rovi aniqlandi: '{query}'")
+                soato_result = self.soato_tool.run(query)
+                
+                # Agar SOATO tool natija qaytarmasa yoki xatolik bo'lsa, oddiy LLM ga o'tish
+                if not soato_result or "topilmadi" in soato_result.lower() or "xatolik" in soato_result.lower():
+                    logger.info(f"SOATO tool natija qaytarmadi, LLM ga o'tilmoqda")
+                    messages = self._create_messages(context, query, language)
+                    return await self._invoke(messages)
+                
+                # SOATO tool natijasini formatlash va qaytarish
+                return soato_result
+            except Exception as e:
+                logger.error(f"SOATO tool ishlatishda xatolik: {str(e)}")
+                # Xatolik bo'lsa, oddiy LLM ga o'tish
+                messages = self._create_messages(context, query, language)
+                return await self._invoke(messages)
+        else:
+            # Oddiy LLM so'rovi
+            messages = self._create_messages(context, query, language)
+            return await self._invoke(messages)
         
-        # Modelni chaqirish
-        response = await self._invoke(messages)
-        
-        return response
     
     def _create_messages(self, system_prompts: str, user_prompt: str, language: str = "uz", device: str = "web") -> List[BaseMessage]:
         """
@@ -428,7 +469,7 @@ class LangChainOllamaModel:
         result = int((estimate1 + estimate2) / 2)
         
         return max(1, result)
-
+    
     async def chat_stream(self, context: str, query: str, language: str = "uz", device: str = "web") -> AsyncGenerator[str, None]:
         """
         Javobni SSE orqali stream ko'rinishda yuborish
@@ -442,60 +483,32 @@ class LangChainOllamaModel:
         Yields:
             str: Modeldan kelayotgan har bir token yoki parcha
         """
-        # Sana haqidagi so'rovlarni tekshirish
-        date_keywords_uz = ["bugun", "sana", "kun", "hozirgi sana", "bugungi sana", "joriy sana", "vaqt", "soat", "hafta kuni", "oy nomi", "parol", "olma"]
-        date_keywords_ru = ["сегодня", "дата", "день", "текущая дата", "сегодняшняя дата", "время", "час", "день недели", "название месяца", "пароль"]
-        
-        # So'rovni kichik harflarga o'tkazish
-        query_lower = query.lower()
-        
-        # Sana haqidagi so'rovni aniqlash
-        is_date_query = any(keyword in query_lower for keyword in date_keywords_uz) or \
-                       any(keyword in query_lower for keyword in date_keywords_ru)
-        
-        if is_date_query and self.agent_executor and False: 
+        # SOATO/MHOBIT so'rovlarini aniqlash
+        if self.use_soato_tool and self._is_soato_query(query):
             try:
-                # Til bo'yicha system promptni tayyorlash
-                if language == "uz":
-                    system_prompt = (
-                        "get_current_date toolini chaqirishni unutmang. "
-                        "Siz O'zbekiston Statistika qo'mitasining AI yordamchisisiz. "
-                        "Foydalanuvchi sana va vaqt haqida so'ragan. "
-                        "Tegishli toolni chaqirib, aniq ma'lumot bering. "
-                        "Javobni o'zbek tilida bering."
-                    )
+                logger.info(f"SOATO so'rovi aniqlandi (chat_stream): '{query}'")
+                soato_result = self.soato_tool.run(query)
+                
+                # Agar SOATO tool natija qaytarmasa yoki xatolik bo'lsa, oddiy LLM ga o'tish
+                if not soato_result or "topilmadi" in soato_result.lower() or "xatolik" in soato_result.lower():
+                    logger.info(f"SOATO tool natija qaytarmadi, LLM stream ga o'tilmoqda")
+                    messages = self._create_messages(context, query, language, device)
+                    async for chunk in self._stream_invoke(messages):
+                        yield chunk
                 else:
-                    system_prompt = (
-                        "Вы AI-помощник Комитета статистики Узбекистана. "
-                        "Пользователь спросил о дате и времени. "
-                        "Вызовите соответствующий инструмент и предоставьте точную информацию. "
-                        "Дайте ответ на русском языке."
-                    )
-                
-                # Agent executor orqali javob olish
-                response = await self.agent_executor.ainvoke({
-                    "input": query
-                })
-                
-                # Javobni tokenlar bo'yicha yuborish
-                result = response["output"]
-                print("####################+++++++++++++++++++++##", result)
-                for char in result:
-                    yield char
-                    await asyncio.sleep(0.006)  # Tokenlar orasida kichik pauza
-                
-                return
-                
+                    # SOATO tool natijasini bir marta to'liq qaytarish
+                    # Chunki SOATO tool stream qilmaydi
+                    for char in soato_result:
+                        yield char
+                        await asyncio.sleep(0.001)  # Har bir harfni stream qilish uchun
             except Exception as e:
-                print("######################", e)
-                logger.error(f"Tool-enabled chat xatoligi: {str(e)}")
-                # Xatolik bo'lsa, oddiy modelga o'tish
+                logger.error(f"SOATO tool ishlatishda xatolik (chat_stream): {str(e)}")
+                # Xatolik bo'lsa, oddiy LLM ga o'tish
                 messages = self._create_messages(context, query, language, device)
                 async for chunk in self._stream_invoke(messages):
                     yield chunk
         else:
-            print("############  executor yo'q #################")
-            # Oddiy modeldan javob olish
+            # Oddiy LLM so'rovi
             messages = self._create_messages(context, query, language, device)
             async for chunk in self._stream_invoke(messages):
                 yield chunk
@@ -560,15 +573,10 @@ class LangChainOllamaModel:
 
         full_prompt = (
             f"Taqdim etilgan savollar:\n{suggested_context}\n\n" 
-            f"Foydalanuvchi sorovi:\n{query}\n\n"
-            f"Yordamchi javobi:\n{answer}\n\n"
-            f"Tavsiya qilinadigan keyingi savol: <i></i>\n\n"
-            "/nothink"
+            f"Foydalanuvchi savoli: {query}\n\n"
+            f"Javob: {answer}\n\n"
+            f"Yangi savol: "
         )
-        messages = [
-            {"role": "system", "content": system_prompt.format(language=detect_lang[language])},
-            {"role": "user", "content": full_prompt}
-        ]
         if language == "ru":
             messages.append( {"role": "user", "content":"Answer translate the result into Russian for me."})
         
@@ -579,8 +587,9 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "devstral", base_url: str = "http://localhost:11434") -> LangChainOllamaModel:
-    return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url)
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "devstral", base_url: str = "http://localhost:11434", use_soato_tool: bool = False) -> LangChainOllamaModel:
+    return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url, use_soato_tool=use_soato_tool)
 
 # Asosiy model obyekti (eski kod bilan moslik uchun)
-model = get_model_instance()
+# SOATO toolni ishlatish uchun use_soato_tool=True parametrini beramiz
+model = get_model_instance(use_soato_tool=True)
