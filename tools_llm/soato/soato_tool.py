@@ -56,8 +56,12 @@ class SoatoTool(BaseTool):
             if not result:
                 return "Ma'lumot topilmadi. Iltimos, boshqacha so'rovni kiriting."
             
+            # Agar natijada "SOATO ma'lumotlari" yoki "MHOBIT ma'lumotlari" qismi bo'lmasa, qo'shish
+            if not result.startswith("SOATO ma'lumotlari") and not result.startswith("MHOBIT ma'lumotlari"):
+                result = f"SOATO ma'lumotlari:\n\n{result}"
+            
             # Natijani aniq formatda qaytarish
-            return f"SOATO ma'lumotlari:\n\n{result}"
+            return result
         except Exception as e:
             logging.error(f"SOATO qidirishda xatolik: {str(e)}")
             return f"Ma'lumotlarni qayta ishlashda xatolik yuz berdi: {str(e)}"
@@ -192,17 +196,26 @@ class SoatoTool(BaseTool):
             
             logging.info(f"Qidirilayotgan so'rov: '{original_query}', tozalangan so'rov: '{query}'")
             
-            
-            # Agar so'rov juda qisqa bo'lib qolsa (masalan, faqat "kodi" so'zi bo'lsa), original so'rovni qaytaramiz
-            if len(query) < 3 and len(original_query) > 3:
-                query = original_query
-            
-            # SOATO kodi bo'yicha qidirish
+            # Original so'rovda raqamli kod qidirish
+            code_match = re.search(r'\b(\d{5,10})\b', original_query)
+            if code_match:
+                code = code_match.group(1)
+                logging.info(f"Original so'rovdan SOATO kodi topildi: {code}")
+                code_result = self._search_by_code(code)
+                if code_result and "topilmadi" not in code_result:
+                    logging.info(f"SOATO kodi bo'yicha natija topildi: {code}")
+                    return code_result
+        
+            # Tozalangan so'rovda raqamli kod qidirish
             if re.match(r'^\d+$', query):
                 code_result = self._search_by_code(query)
                 if code_result and "topilmadi" not in code_result:
                     logging.info(f"SOATO kodi bo'yicha natija topildi: {query}")
-                    return f"SOATO ma'lumotlari:\n{code_result}"
+                    return code_result
+            
+            # Agar so'rov juda qisqa bo'lib qolsa (masalan, faqat "kodi" so'zi bo'lsa), original so'rovni qaytaramiz
+            if len(query) < 3 and len(original_query) > 3:
+                query = original_query
             
             # Gibrid qidiruv strategiyasi
             text_results = None
@@ -269,6 +282,14 @@ class SoatoTool(BaseTool):
     
     def _search_by_code(self, code: str) -> str:
         """SOATO kodi bo'yicha ma'muriy hududiy birlikni qidirish"""
+        # Raqamli kod ekanligini tekshirish va formatni to'g'rilash
+        code = code.strip()
+        # Raqamli kod bo'lmasa, xato qaytarish
+        if not code.isdigit():
+            return f"Noto'g'ri SOATO kodi formati: {code}. SOATO kodi faqat raqamlardan iborat bo'lishi kerak."
+        
+        logging.info(f"SOATO kodi bo'yicha qidirilmoqda: {code}")
+        
         # Mamlakat bo'yicha qidirish
         country = self.soato_data.get("country", {})
         if country.get("code") == code:
@@ -276,28 +297,58 @@ class SoatoTool(BaseTool):
         
         # Viloyatlar bo'yicha qidirish
         for region in country.get("regions", []):
-            if region.get("code") == code:
+            if str(region.get("code")) == code:
                 return self._format_region_info(region)
             
             # Tumanlar bo'yicha qidirish
             for district in region.get("districts", []):
-                if district.get("code") == code:
+                if str(district.get("code")) == code:
                     return self._format_district_info(district, region)
                 
                 # Shaharlar bo'yicha qidirish
                 for city in district.get("cities", []):
-                    if city.get("code") == code:
+                    if str(city.get("code")) == code:
                         return self._format_city_info(city, district, region)
                 
                 # Shaharchalar bo'yicha qidirish
                 for settlement in district.get("urban_settlements", []):
-                    if settlement.get("code") == code:
+                    if str(settlement.get("code")) == code:
                         return self._format_settlement_info(settlement, district, region)
                 
                 # Qishloq fuqarolar yig'inlari bo'yicha qidirish
                 for assembly in district.get("rural_assemblies", []):
-                    if assembly.get("code") == code:
+                    if str(assembly.get("code")) == code:
                         return self._format_assembly_info(assembly, district, region)
+        
+        # Agar kod topilmasa, qo'shimcha tekshirish - ba'zan kodlar raqam sifatida saqlangan bo'lishi mumkin
+        try:
+            int_code = int(code)
+            # Viloyatlar bo'yicha qidirish
+            for region in country.get("regions", []):
+                if region.get("code") == int_code:
+                    return self._format_region_info(region)
+                
+                # Tumanlar bo'yicha qidirish
+                for district in region.get("districts", []):
+                    if district.get("code") == int_code:
+                        return self._format_district_info(district, region)
+                    
+                    # Shaharlar bo'yicha qidirish
+                    for city in district.get("cities", []):
+                        if city.get("code") == int_code:
+                            return self._format_city_info(city, district, region)
+                    
+                    # Shaharchalar bo'yicha qidirish
+                    for settlement in district.get("urban_settlements", []):
+                        if settlement.get("code") == int_code:
+                            return self._format_settlement_info(settlement, district, region)
+                    
+                    # Qishloq fuqarolar yig'inlari bo'yicha qidirish
+                    for assembly in district.get("rural_assemblies", []):
+                        if assembly.get("code") == int_code:
+                            return self._format_assembly_info(assembly, district, region)
+        except ValueError:
+            pass  # Raqamga o'tkazishda xatolik bo'lsa, o'tkazib yuborish
         
         return f"SOATO kodi {code} bo'yicha ma'lumot topilmadi. Iltimos, boshqa kod bilan qayta urinib ko'ring."
     
@@ -318,7 +369,7 @@ class SoatoTool(BaseTool):
                 similarities.append((similarity, i))
             
             similarities.sort(reverse=True)
-            top_k = min(3, len(similarities))  # Eng yaxshi 3 ta natijani olish
+            top_k = min(5, len(similarities))  # Eng yaxshi 5 ta natijani olish
             top_entities = []
             
             for i in range(top_k):
@@ -333,9 +384,11 @@ class SoatoTool(BaseTool):
             # Eng yuqori o'xshashlikka ega natijani olish
             top_entity = max(top_entities, key=lambda x: x[4])
             entity_type, entity, parent, grandparent, similarity = top_entity
+            top_similarity = similarity
             
             # Eng mos keladigan natijani formatlash
             try:
+                # Asosiy natija formati
                 if entity_type == "country":
                     result = self._get_country_info()
                 elif entity_type == "region":
@@ -348,10 +401,17 @@ class SoatoTool(BaseTool):
                     result = self._format_settlement_info(entity, parent, grandparent)
                 elif entity_type == "rural_assembly":
                     result = self._format_assembly_info(entity, parent, grandparent)
+                else:
+                    # Agar asosiy natija formati aniqlanmasa, boshqa natijalarni ko'rsatish
+                    return "Aniq ma'lumot topilmadi."
                 
-                # Qolgan natijalarni ham qo'shish
+                # Agar asosiy natija o'xshashligi yuqori bo'lsa (>0.6), faqat asosiy natijani qaytarish
+                if top_similarity > 0.6:
+                    return result
+                
+                # Agar asosiy natija o'xshashligi past bo'lsa (<=0.6), boshqa natijalarni ham ko'rsatish
                 if len(top_entities) > 1:
-                    result += "\nBoshqa mos natijalar:\n"
+                    result += "\n\nBoshqa mos natijalar:\n"
                     for i, (e_type, e, p, gp, sim) in enumerate(top_entities[1:], 1):
                         entity_name = ""
                         if e_type == "country":
