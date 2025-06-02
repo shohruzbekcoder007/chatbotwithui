@@ -3,7 +3,7 @@ import json
 from typing import List, Dict, Any, Optional
 import chromadb
 import torch
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer, util
 import re
 import uuid
 import logging
@@ -100,6 +100,66 @@ class CustomEmbeddingFunction:
             int: Tokenlar soni
         """
         return len(self.model.tokenize(text))
+    
+    def encode(self, texts: List[str], normalize=True) -> List[List[float]]:
+        """
+        Matnlarni embedding vektorlariga o'zgartirish
+        
+        Args:
+            texts: Matnlar ro'yxati
+            normalize: Vektorlarni normallash kerakmi
+            
+        Returns:
+            List[List[float]]: Embedding vektorlari ro'yxati
+        """
+        # Matnlarni tozalash
+        processed_texts = [self._preprocess_text(text) for text in texts]
+        
+        # Embedding yaratish
+        embeddings = self.model.encode(
+            processed_texts,
+            batch_size=self.batch_size,
+            normalize_embeddings=normalize,
+            max_length=self.max_length,
+            truncation=True,
+            show_progress_bar=False
+        )
+        
+        return embeddings.tolist() if isinstance(embeddings, torch.Tensor) else embeddings
+    
+    def similarity_search(self, query: str, texts: List[str], top_k: int = 5) -> List[Dict[str, Any]]:
+        """
+        Semantik o'xshashlik asosida qidirish
+        
+        Args:
+            query: Qidiruv so'rovi
+            texts: Matnlar ro'yxati
+            top_k: Qaytariladigan natijalar soni
+            
+        Returns:
+            List[Dict[str, Any]]: O'xshashlik bo'yicha tartiblangan natijalar
+        """
+        # Query va matnlarni embedding vektorlariga o'zgartirish
+        query_embedding = self.encode([query], normalize=True)[0]
+        text_embeddings = self.encode(texts, normalize=True)
+        
+        # Cosine o'xshashlikni hisoblash
+        similarities = [util.cos_sim(query_embedding, text_embedding)[0][0].item() for text_embedding in text_embeddings]
+        
+        # Natijalarni o'xshashlik bo'yicha tartiblash
+        results = []
+        for i, similarity in enumerate(similarities):
+            results.append({
+                "index": i,
+                "text": texts[i],
+                "similarity": similarity
+            })
+        
+        # O'xshashlik bo'yicha kamayish tartibida saralash
+        results = sorted(results, key=lambda x: x["similarity"], reverse=True)
+        
+        # Top-K natijalarni qaytarish
+        return results[:top_k]
 
 class ChromaManager:
     """ChromaDB wrapper"""

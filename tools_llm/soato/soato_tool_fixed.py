@@ -112,52 +112,29 @@ class SoatoTool(BaseTool):
             if not query or query.strip() == "":
                 return self._get_country_info()
             
-            # So'rovni tayyorlash
-            query = query.strip()
-            logging.info(f"Qidirilayotgan so'rov: '{query}'")
-            
             # SOATO kodi bo'yicha qidirish
             if re.match(r'^\d+$', query):
-                code_result = self._search_by_code(query)
-                if code_result and "topilmadi" not in code_result:
-                    logging.info(f"SOATO kodi bo'yicha natija topildi: {query}")
-                    return f"SOATO ma'lumotlari:\n{code_result}"
+                return self._search_by_code(query)
             
-            # Gibrid qidiruv strategiyasi
-            text_results = None
-            semantic_results = None
-            
-            # 1. Avval oddiy matn qidiruvini sinab ko'ramiz
+            # Gibrid qidiruv - ham oddiy, ham semantik qidiruv
+            # 1. Avval oddiy qidiruv bilan tekshiramiz
             text_results = self._search_by_name(query)
             
-            # Agar oddiy qidiruv aniq natija bersa, uni qaytaramiz
+            # 2. Agar oddiy qidiruv natija bermasa va embedding model mavjud bo'lsa, semantik qidiruvni ishlatamiz
             if text_results and "topilmadi" not in text_results:
-                logging.info(f"Oddiy qidiruv muvaffaqiyatli natija berdi: {query}")
-                return f"SOATO ma'lumotlari:\n{text_results}"
-            
-            # 2. Agar embedding model mavjud bo'lsa, semantik qidiruvni ham sinab ko'ramiz
-            if self.use_embeddings and self.embedding_model is not None:
+                logging.info(f"Oddiy qidiruv natija berdi: {query}")
+                return text_results
+            elif self.use_embeddings and self.embedding_model is not None:
                 logging.info(f"Semantik qidiruv ishlatilmoqda: {query}")
                 semantic_results = self._semantic_search(query)
-                
-                # Agar semantik qidiruv natija bersa, uni qaytaramiz
-                if semantic_results and "topilmadi" not in semantic_results:
-                    logging.info(f"Semantik qidiruv muvaffaqiyatli natija berdi: {query}")
-                    return f"SOATO ma'lumotlari:\n{semantic_results}"
+                if semantic_results:
+                    return semantic_results
             
-            # 3. Agar hech qanday qidiruv natija bermasa, eng yaxshi mavjud natijani qaytaramiz
-            if text_results and "topilmadi" not in text_results:
-                return f"SOATO ma'lumotlari:\n{text_results}"
-            elif semantic_results and "topilmadi" not in semantic_results:
-                return f"SOATO ma'lumotlari:\n{semantic_results}"
-            elif text_results:
-                return f"SOATO ma'lumotlari:\n{text_results}"
-            else:
-                return f"SOATO ma'lumotlari:\n'{query}' so'rovi bo'yicha ma'lumot topilmadi. Iltimos, boshqacha so'rovni kiriting."
-                
+            # 3. Agar semantik qidiruv ham natija bermasa, oddiy qidiruv natijasini qaytaramiz
+            return text_results
         except Exception as e:
             logging.error(f"SOATO qidirishda xatolik: {str(e)}")
-            return f"SOATO ma'lumotlari:\nQidirishda xatolik yuz berdi: {str(e)}"
+            return f"Qidirishda xatolik yuz berdi: {str(e)}"
     
     def _get_country_info(self) -> str:
         """Mamlakat haqida ma'lumot olish"""
@@ -227,7 +204,6 @@ class SoatoTool(BaseTool):
         
         try:
             # Query embedding olish
-            logging.info(f"Semantik qidiruv ishlatilmoqda: {query}")
             query_embedding = self.embedding_model.encode([query], normalize=True)[0]
             entity_embeddings = self.embedding_model.encode(self.entity_texts, normalize=True)
             
@@ -237,124 +213,87 @@ class SoatoTool(BaseTool):
                 similarities.append((similarity, i))
             
             similarities.sort(reverse=True)
-            top_k = min(3, len(similarities))  # Eng yaxshi 3 ta natijani olish
+            top_k = min(5, len(similarities))
             top_entities = []
             
             for i in range(top_k):
                 similarity, idx = similarities[i]
-                if similarity > 0.3:  # O'xshashlik 30% dan yuqori bo'lishi kerak
+                if similarity > 0.3:
                     entity_type, entity, parent, grandparent = self.entity_infos[idx]
                     top_entities.append((entity_type, entity, parent, grandparent, similarity))
             
             if not top_entities:
-                return "Semantik qidiruv bo'yicha natija topilmadi."
+                return ""
             
-            # Eng yuqori o'xshashlikka ega natijani olish
-            top_entity = max(top_entities, key=lambda x: x[4])
-            entity_type, entity, parent, grandparent, similarity = top_entity
+            result = f"Semantik qidiruv natijalari:\n\n"
             
-            # Eng mos keladigan natijani formatlash
-            try:
-                if entity_type == "country":
-                    result = self._get_country_info()
-                elif entity_type == "region":
-                    result = self._format_region_info(entity)
-                elif entity_type == "district":
-                    result = self._format_district_info(entity, parent)
-                elif entity_type == "city":
-                    result = self._format_city_info(entity, parent, grandparent)
-                elif entity_type == "urban_settlement":
-                    result = self._format_settlement_info(entity, parent, grandparent)
-                elif entity_type == "rural_assembly":
-                    result = self._format_assembly_info(entity, parent, grandparent)
-                
-                # Qolgan natijalarni ham qo'shish
-                if len(top_entities) > 1:
-                    result += "\nBoshqa mos natijalar:\n"
-                    for i, (e_type, e, p, gp, sim) in enumerate(top_entities[1:], 1):
-                        entity_name = ""
-                        if e_type == "country":
-                            entity_name = "O'zbekiston Respublikasi"
-                        elif e_type == "region":
-                            entity_name = f"{e.get('name_latin', 'N/A')} viloyati"
-                        elif e_type == "district":
-                            entity_name = f"{e.get('name_latin', 'N/A')} tumani"
-                        elif e_type == "city":
-                            entity_name = f"{e.get('name_latin', 'N/A')} shahri"
-                        elif e_type == "urban_settlement":
-                            entity_name = f"{e.get('name_latin', 'N/A')} shaharchasi"
-                        elif e_type == "rural_assembly":
-                            entity_name = f"{e.get('name_latin', 'N/A')} qishlog'i"
-                        
-                        if entity_name:
-                            result += f"\n{i}. {entity_name} (o'xshashlik: {sim:.2f})"
-                
-                return result
-            except Exception as format_error:
-                logging.error(f"Ma'lumotni formatlashda xatolik: {str(format_error)}")
-                return f"Ma'lumot formati xatoligi: {entity_type} - {entity.get('name_latin', 'N/A')}\n\n"
+            for entity_type, entity, parent, grandparent, similarity in top_entities:
+                try:
+                    if entity_type == "country":
+                        result += self._get_country_info()
+                    elif entity_type == "region":
+                        result += self._format_region_info(entity)
+                    elif entity_type == "district":
+                        result += self._format_district_info(entity, parent)
+                    elif entity_type == "city":
+                        result += self._format_city_info(entity, parent, grandparent)
+                    elif entity_type == "urban_settlement":
+                        result += self._format_settlement_info(entity, parent, grandparent)
+                    elif entity_type == "rural_assembly":
+                        result += self._format_assembly_info(entity, parent, grandparent)
+                    result += f"O'xshashlik: {similarity:.2f}\n\n"
+                except Exception as format_error:
+                    logging.error(f"Ma'lumotni formatlashda xatolik: {str(format_error)}")
+                    result += f"Ma'lumot formati xatoligi: {entity_type} - {entity.get('name_latin', 'N/A')}\n\n"
+            
+            return result
         except Exception as e:
             logging.error(f"Semantik qidirishda xatolik: {str(e)}")
-            return "Semantik qidiruv jarayonida xatolik yuz berdi."
+            return ""
     
     def _search_by_name(self, query: str) -> str:
         """Nomi bo'yicha ma'muriy hududiy birlikni qidirish"""
+        results = []
+        country = self.soato_data.get("country", {})
         query = query.lower().strip()
-        exact_matches = []
-        partial_matches = []
         
-        # "tumani", "shahri", "qishlog'i" kabi qo'shimchalar bilan qidirish
-        search_type = None
-        search_name = query
-        
-        if "tumani" in query:
-            search_type = "district"
-            search_name = query.replace("tumani", "").strip()
-        elif "shahri" in query:
-            search_type = "city"
-            search_name = query.replace("shahri", "").strip()
-        elif "shaharchasi" in query:
-            search_type = "urban_settlement"
-            search_name = query.replace("shaharchasi", "").strip()
-        elif "qishlog'i" in query or "qishlogi" in query:
-            search_type = "rural_assembly"
-            search_name = query.replace("qishlog'i", "").replace("qishlogi", "").strip()
+        # Qidiruv so'zlarini ajratib olish
+        query_words = query.split()
         
         logging.info(f"Qidirilayotgan so'rov: '{query}'")
         
-        # Davlat ma'lumotlarini qidirish
-        country = self.soato_data.get("country", {})
+        # Check country name
         country_names = [
             country.get("name_latin", "").lower(),
             country.get("name_cyrillic", "").lower(),
             country.get("name_russian", "").lower()
         ]
         
-        if search_type is None or search_type == "country":
-            # To'liq mos kelish tekshirish
-            if any(search_name == name for name in country_names if name):
-                exact_matches.append(("country", self._get_country_info(), 1.0))
-            # Qismiy mos kelish tekshirish
-            elif any(search_name in name for name in country_names if name):
-                partial_matches.append(("country", self._get_country_info(), 0.7))
+        # To'liq mos kelish tekshirish
+        if any(query == name for name in country_names if name):
+            return self._get_country_info()
+        # Qismiy mos kelish tekshirish
+        elif any(all(word in name for word in query_words) for name in country_names if name):
+            return self._get_country_info()
         
-        # Viloyatlarni qidirish
-        for region in self.soato_data.get("regions", []):
+        # Search in regions
+        for region in country.get("regions", []):
             region_names = [
                 region.get("name_latin", "").lower(),
                 region.get("name_cyrillic", "").lower(),
                 region.get("name_russian", "").lower()
             ]
             
-            if search_type is None or search_type == "region":
-                # To'liq mos kelish tekshirish
-                if any(search_name == name for name in region_names if name):
-                    exact_matches.append(("region", self._format_region_info(region), 1.0))
-                # Qismiy mos kelish tekshirish
-                elif any(search_name in name for name in region_names if name):
-                    partial_matches.append(("region", self._format_region_info(region), 0.8))
+            # To'liq mos kelish tekshirish
+            if any(query == name for name in region_names if name):
+                results.append(("region", region, None, None))
+                continue
             
-            # Tumanlarni qidirish
+            # Qismiy mos kelish tekshirish
+            if any(all(word in name for word in query_words) for name in region_names if name):
+                results.append(("region", region, None, None))
+            
+            # Search in districts
             for district in region.get("districts", []):
                 district_names = [
                     district.get("name_latin", "").lower(),
@@ -362,77 +301,102 @@ class SoatoTool(BaseTool):
                     district.get("name_russian", "").lower()
                 ]
                 
-                # "tumani" qo'shimchasi bilan qidiruv uchun
-                district_names_without_suffix = [name.replace("tumani", "").strip() for name in district_names if name]
+                # "tumani" so'zi bilan qidirish uchun maxsus holat
+                district_with_suffix = [f"{name} tumani" for name in district_names if name]
+                district_names.extend(district_with_suffix)
                 
-                if search_type is None or search_type == "district":
-                    # To'liq mos kelish tekshirish
-                    if any(search_name == name for name in district_names if name) or \
-                       any(search_name == name for name in district_names_without_suffix if name):
-                        exact_matches.append(("district", self._format_district_info(district, region), 1.0))
-                    # Qismiy mos kelish tekshirish
-                    elif any(search_name in name for name in city_names if name):
-                        partial_matches.append(("city", self._format_city_info(city, district, region), 0.8))
-            
-            # Shaharchalarni qidirish
-            for settlement in district.get("urban_settlements", []):
-                settlement_names = [
-                    settlement.get("name_latin", "").lower(),
-                    settlement.get("name_cyrillic", "").lower(),
-                    settlement.get("name_russian", "").lower()
-                ]
+                # Tuman nomini "tumani" so'zisiz olish
+                if "tumani" in query:
+                    query_without_suffix = query.replace("tumani", "").strip()
+                    
+                    # Agar "tumani" so'zi olib tashlangandan keyin tuman nomi to'g'ri kelsa
+                    if any(query_without_suffix == name for name in district_names if name):
+                        results.append(("district", district, region, None))
+                        continue
                 
-                if search_type is None or search_type == "urban_settlement":
-                    # To'liq mos kelish tekshirish
-                    if any(search_name == name for name in settlement_names if name):
-                        exact_matches.append(("urban_settlement", self._format_settlement_info(settlement, district, region), 1.0))
-                    # Qismiy mos kelish tekshirish
-                    elif any(search_name in name for name in settlement_names if name):
-                        partial_matches.append(("urban_settlement", self._format_settlement_info(settlement, district, region), 0.7))
-            
-            # Qishloq fuqarolar yig'inlarini qidirish
-            for assembly in district.get("rural_assemblies", []):
-                assembly_names = [
-                    assembly.get("name_latin", "").lower(),
-                    assembly.get("name_cyrillic", "").lower(),
-                    assembly.get("name_russian", "").lower()
-                ]
+                # To'liq mos kelish tekshirish
+                if any(query == name for name in district_names if name):
+                    results.append(("district", district, region, None))
+                    continue
                 
-                if search_type is None or search_type == "rural_assembly":
+                # Qismiy mos kelish tekshirish
+                if any(all(word in name for word in query_words) for name in district_names if name):
+                    results.append(("district", district, region, None))
+                
+                # Search in cities
+                for city in district.get("cities", []):
+                    city_names = [
+                        city.get("name_latin", "").lower(),
+                        city.get("name_cyrillic", "").lower(),
+                        city.get("name_russian", "").lower()
+                    ]
+                    
                     # To'liq mos kelish tekshirish
-                    if any(search_name == name for name in assembly_names if name):
-                        exact_matches.append(("rural_assembly", self._format_assembly_info(assembly, district, region), 1.0))
+                    if any(query == name for name in city_names if name):
+                        results.append(("city", city, district, region))
+                        continue
+                    
                     # Qismiy mos kelish tekshirish
-                    elif any(search_name in name for name in assembly_names if name):
-                        partial_matches.append(("rural_assembly", self._format_assembly_info(assembly, district, region), 0.7))
-    
-        # Natijalarni birlashtirish - avval aniq mosliklar, keyin qisman mosliklar
-        all_results = exact_matches + partial_matches
+                    if any(all(word in name for word in query_words) for name in city_names if name):
+                        results.append(("city", city, district, region))
+                
+                # Search in urban settlements
+                for settlement in district.get("urban_settlements", []):
+                    settlement_names = [
+                        settlement.get("name_latin", "").lower(),
+                        settlement.get("name_cyrillic", "").lower(),
+                        settlement.get("name_russian", "").lower()
+                    ]
+                    
+                    # To'liq mos kelish tekshirish
+                    if any(query == name for name in settlement_names if name):
+                        results.append(("urban_settlement", settlement, district, region))
+                        continue
+                    
+                    # Qismiy mos kelish tekshirish
+                    if any(all(word in name for word in query_words) for name in settlement_names if name):
+                        results.append(("urban_settlement", settlement, district, region))
+                
+                # Search in rural assemblies
+                for assembly in district.get("rural_assemblies", []):
+                    assembly_names = [
+                        assembly.get("name_latin", "").lower(),
+                        assembly.get("name_cyrillic", "").lower(),
+                        assembly.get("name_russian", "").lower()
+                    ]
+                    
+                    # To'liq mos kelish tekshirish
+                    if any(query == name for name in assembly_names if name):
+                        results.append(("rural_assembly", assembly, district, region))
+                        continue
+                    
+                    # Qismiy mos kelish tekshirish
+                    if any(all(word in name for word in query_words) for name in assembly_names if name):
+                        results.append(("rural_assembly", assembly, district, region))
         
-        if not all_results:
+        # Natijalarni formatlash
+        if not results:
             return f"'{query}' so'rovi bo'yicha ma'lumot topilmadi. Iltimos, boshqacha so'rovni kiriting."
         
-        # Natijalarni o'xshashlik bo'yicha tartiblash
-        all_results.sort(key=lambda x: x[2], reverse=True)
+        result_text = ""
+        for entity_type, entity, parent, grandparent in results:
+            try:
+                if entity_type == "region":
+                    result_text += self._format_region_info(entity)
+                elif entity_type == "district":
+                    result_text += self._format_district_info(entity, parent)
+                elif entity_type == "city":
+                    result_text += self._format_city_info(entity, parent, grandparent)
+                elif entity_type == "urban_settlement":
+                    result_text += self._format_settlement_info(entity, parent, grandparent)
+                elif entity_type == "rural_assembly":
+                    result_text += self._format_assembly_info(entity, parent, grandparent)
+                result_text += "\n"
+            except Exception as e:
+                logging.error(f"Ma'lumotni formatlashda xatolik: {str(e)}")
+                result_text += f"Ma'lumot formati xatoligi: {entity_type} - {entity.get('name_latin', 'N/A')}\n\n"
         
-        # Eng yuqori natijani olish
-        top_result = all_results[0][1]
-        
-        # Qolgan natijalarni qo'shish
-        if len(all_results) > 1:
-            top_result += "\n\nBoshqa mos natijalar:\n"
-            for i, (entity_type, info, similarity) in enumerate(all_results[1:4], 1):  # Faqat keyingi 3 ta natija
-                entity_name = ""
-                if "SOATO kodi:" in info:
-                    # Info dan nom qismini ajratib olish
-                    name_line = [line for line in info.split("\n") if "Nomi (lotin):" in line]
-                    if name_line:
-                        entity_name = name_line[0].replace("Nomi (lotin):", "").strip()
-                
-                if entity_name:
-                    top_result += f"\n{i}. {entity_name} - {similarity:.2f}"
-        
-        return top_result
+        return result_text
     
     def _format_region_info(self, region: Dict) -> str:
         """Viloyat haqida ma'lumotni formatlash"""
