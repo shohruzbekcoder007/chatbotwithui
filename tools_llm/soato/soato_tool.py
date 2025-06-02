@@ -119,16 +119,61 @@ class SoatoTool(BaseTool):
             # SOATO va MHOBIT so'zlarini bir xil narsa sifatida qabul qilish
             query = query.lower()
             
-            # Qarshi shahri uchun maxsus qidiruv
-            if "qarshi" in query.lower() and ("shahri" in query.lower() or "shahar" in query.lower()):
-                logging.info(f"Qarshi shahri uchun maxsus qidiruv: '{query}'")
+            # Bir xil nomli shahar va tumanlarni qidirish
+            clean_query = query.lower().replace("shahri", "").replace("tumani", "").replace("shahar", "").replace("tuman", "").strip()
+            
+            if len(clean_query) >= 3:  # Qidiruv so'zi kamida 3 ta belgidan iborat bo'lishi kerak
+                logging.info(f"Bir xil nomli shahar va tumanlarni qidirish: '{clean_query}'")
+                
+                matching_cities = []
+                matching_districts = []
+                
+                # Barcha viloyatlarni tekshirish
                 for region in self.soato_data.get("regions", []):
                     for district in region.get("districts", []):
+                        # Tumanni tekshirish
+                        district_name = district.get("name_latin", "").lower()
+                        if clean_query in district_name:
+                            matching_districts.append((district, region))
+                        
+                        # Shaharlarni tekshirish
                         for city in district.get("cities", []):
-                            if "qarshi" in city.get("name_latin", "").lower() or \
-                               "qarshi" in city.get("name_cyrillic", "").lower() or \
-                               "qarshi" in city.get("name_russian", "").lower():
-                                return f"SOATO ma'lumotlari:\n{self._format_city_info(city, district, region)}"
+                            city_name = city.get("name_latin", "").lower()
+                            if clean_query in city_name:
+                                matching_cities.append((city, district, region))
+                
+                # Agar ham shahar, ham tuman topilgan bo'lsa
+                if matching_cities and matching_districts:
+                    result = "SOATO ma'lumotlari:\n\n"
+                    result += "SHAHARLAR:\n"
+                    for city, district, region in matching_cities:
+                        result += self._format_city_info(city, district, region) + "\n\n"
+                    
+                    result += "TUMANLAR:\n"
+                    for district, region in matching_districts:
+                        result += self._format_district_info(district, region) + "\n\n"
+                    
+                    return result
+                # Faqat shaharlar topilgan bo'lsa
+                elif matching_cities:
+                    if len(matching_cities) == 1:
+                        city, district, region = matching_cities[0]
+                        return f"SOATO ma'lumotlari:\n{self._format_city_info(city, district, region)}"
+                    else:
+                        result = "SOATO ma'lumotlari:\n\nSHAHARLAR:\n"
+                        for city, district, region in matching_cities:
+                            result += self._format_city_info(city, district, region) + "\n\n"
+                        return result
+                # Faqat tumanlar topilgan bo'lsa
+                elif matching_districts:
+                    if len(matching_districts) == 1:
+                        district, region = matching_districts[0]
+                        return f"SOATO ma'lumotlari:\n{self._format_district_info(district, region)}"
+                    else:
+                        result = "SOATO ma'lumotlari:\n\nTUMANLAR:\n"
+                        for district, region in matching_districts:
+                            result += self._format_district_info(district, region) + "\n\n"
+                        return result
             
             # MHOBIT va SOATO so'zlarini bir xil narsa sifatida qabul qilish va qidiruv so'rovidan olib tashlash
             query = query.replace("mhobit", "")
@@ -136,7 +181,10 @@ class SoatoTool(BaseTool):
             query = query.replace("soato", "")
             query = query.replace("kodi", "").strip()
             
+            # Qarshi shahri va boshqa shaharlar/tumanlar yuqoridagi mexanizm orqali qidiriladi
+            
             logging.info(f"Qidirilayotgan so'rov: '{original_query}', tozalangan so'rov: '{query}'")
+            
             
             # Agar so'rov juda qisqa bo'lib qolsa (masalan, faqat "kodi" so'zi bo'lsa), original so'rovni qaytaramiz
             if len(query) < 3 and len(original_query) > 3:
