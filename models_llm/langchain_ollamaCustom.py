@@ -209,45 +209,7 @@ class LangChainOllamaModel:
             return True
             
         return False
-    
-    async def stream_chat(self, context: str, query: str, language: str = "uz") -> AsyncGenerator[str, None]:
-        """
-        Modelga savol yuborish va javobni stream qilish
-        
-        Args:
-            prompt (str): Savol matni
-        
-        Yields:
-            str: Model javobining qismlari
-        """
-        # SOATO/MHOBIT so'rovlarini aniqlash
-        if self.use_soato_tool and self._is_soato_query(query):
-            try:
-                logger.info(f"SOATO so'rovi aniqlandi (stream): '{query}'")
-                soato_result = self.soato_tool.run(query)
-                
-                # Agar SOATO tool natija qaytarmasa yoki xatolik bo'lsa, oddiy LLM ga o'tish
-                if not soato_result or "topilmadi" in soato_result.lower() or "xatolik" in soato_result.lower():
-                    logger.info(f"SOATO tool natija qaytarmadi, LLM stream ga o'tilmoqda")
-                    messages = self._create_messages(context, query, language)
-                    async for chunk in self._stream(messages):
-                        yield chunk
-                else:
-                    # SOATO tool natijasini bir marta to'liq qaytarish
-                    # Chunki SOATO tool stream qilmaydi
-                    yield soato_result
-            except Exception as e:
-                logger.error(f"SOATO tool ishlatishda xatolik (stream): {str(e)}")
-                # Xatolik bo'lsa, oddiy LLM ga o'tish
-                messages = self._create_messages(context, query, language)
-                async for chunk in self._stream(messages):
-                    yield chunk
-        else:
-            # Oddiy LLM so'rovi
-            messages = self._create_messages(context, query, language)
-            async for chunk in self._stream(messages):
-                yield chunk
-    
+      
     async def chat(self, context: str, query: str, language: str = "uz"):
         """
         Modelga savol yuborish va javob olish
@@ -499,6 +461,7 @@ class LangChainOllamaModel:
                     # SOATO tool natijasini bir marta to'liq qaytarish
                     # Chunki SOATO tool stream qilmaydi
                     for char in soato_result:
+                        print(char, end='', flush=True)  # Konsolga chiqarish
                         yield char
                         await asyncio.sleep(0.001)  # Har bir harfni stream qilish uchun
             except Exception as e:
