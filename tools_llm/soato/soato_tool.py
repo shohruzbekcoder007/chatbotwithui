@@ -311,7 +311,7 @@ class SoatoTool(BaseTool):
                 similarities.append((similarity, i))
             
             similarities.sort(reverse=True)
-            top_k = min(3, len(similarities))  # Eng yaxshi 3 ta natijani olish
+            top_k = min(5, len(similarities))  # Eng yaxshi 5 ta natijani olish
             top_entities = []
             
             for i in range(top_k):
@@ -326,9 +326,11 @@ class SoatoTool(BaseTool):
             # Eng yuqori o'xshashlikka ega natijani olish
             top_entity = max(top_entities, key=lambda x: x[4])
             entity_type, entity, parent, grandparent, similarity = top_entity
+            top_similarity = similarity
             
             # Eng mos keladigan natijani formatlash
             try:
+                # Asosiy natija formati
                 if entity_type == "country":
                     result = self._get_country_info()
                 elif entity_type == "region":
@@ -341,10 +343,17 @@ class SoatoTool(BaseTool):
                     result = self._format_settlement_info(entity, parent, grandparent)
                 elif entity_type == "rural_assembly":
                     result = self._format_assembly_info(entity, parent, grandparent)
+                else:
+                    # Agar asosiy natija formati aniqlanmasa, boshqa natijalarni ko'rsatish
+                    return "Aniq ma'lumot topilmadi."
                 
-                # Qolgan natijalarni ham qo'shish
+                # Agar asosiy natija o'xshashligi yuqori bo'lsa (>0.6), faqat asosiy natijani qaytarish
+                if top_similarity > 0.6:
+                    return result
+                
+                # Agar asosiy natija o'xshashligi past bo'lsa (<=0.6), boshqa natijalarni ham ko'rsatish
                 if len(top_entities) > 1:
-                    result += "\nBoshqa mos natijalar:\n"
+                    result += "\n\nBoshqa mos natijalar:\n"
                     for i, (e_type, e, p, gp, sim) in enumerate(top_entities[1:], 1):
                         entity_name = ""
                         if e_type == "country":
