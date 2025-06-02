@@ -114,7 +114,33 @@ class SoatoTool(BaseTool):
             
             # So'rovni tayyorlash
             query = query.strip()
-            logging.info(f"Qidirilayotgan so'rov: '{query}'")
+            original_query = query
+            
+            # SOATO va MHOBIT so'zlarini bir xil narsa sifatida qabul qilish
+            query = query.lower()
+            
+            # Qarshi shahri uchun maxsus qidiruv
+            if "qarshi" in query.lower() and ("shahri" in query.lower() or "shahar" in query.lower()):
+                logging.info(f"Qarshi shahri uchun maxsus qidiruv: '{query}'")
+                for region in self.soato_data.get("regions", []):
+                    for district in region.get("districts", []):
+                        for city in district.get("cities", []):
+                            if "qarshi" in city.get("name_latin", "").lower() or \
+                               "qarshi" in city.get("name_cyrillic", "").lower() or \
+                               "qarshi" in city.get("name_russian", "").lower():
+                                return f"SOATO ma'lumotlari:\n{self._format_city_info(city, district, region)}"
+            
+            # MHOBIT va SOATO so'zlarini bir xil narsa sifatida qabul qilish va qidiruv so'rovidan olib tashlash
+            query = query.replace("mhobit", "")
+            query = query.replace("мхобт", "")
+            query = query.replace("soato", "")
+            query = query.replace("kodi", "").strip()
+            
+            logging.info(f"Qidirilayotgan so'rov: '{original_query}', tozalangan so'rov: '{query}'")
+            
+            # Agar so'rov juda qisqa bo'lib qolsa (masalan, faqat "kodi" so'zi bo'lsa), original so'rovni qaytaramiz
+            if len(query) < 3 and len(original_query) > 3:
+                query = original_query
             
             # SOATO kodi bo'yicha qidirish
             if re.match(r'^\d+$', query):
@@ -165,7 +191,7 @@ class SoatoTool(BaseTool):
         if not country:
             return "Mamlakat haqida ma'lumot topilmadi."
         
-        info = f"SOATO kodi: {country.get('code', 'Mavjud emas')}\n"
+        info = f"SOATO/MHOBIT kodi: {country.get('code', 'Mavjud emas')}\n"
         info += f"Nomi (lotin): {country.get('name_latin', 'Mavjud emas')}\n"
         info += f"Nomi (kirill): {country.get('name_cyrillic', 'Mavjud emas')}\n"
         info += f"Nomi (rus): {country.get('name_russian', 'Mavjud emas')}\n"
@@ -307,20 +333,26 @@ class SoatoTool(BaseTool):
         search_type = None
         search_name = query
         
-        if "tumani" in query:
-            search_type = "district"
-            search_name = query.replace("tumani", "").strip()
-        elif "shahri" in query:
-            search_type = "city"
-            search_name = query.replace("shahri", "").strip()
-        elif "shaharchasi" in query:
-            search_type = "urban_settlement"
-            search_name = query.replace("shaharchasi", "").strip()
-        elif "qishlog'i" in query or "qishlogi" in query:
-            search_type = "rural_assembly"
-            search_name = query.replace("qishlog'i", "").replace("qishlogi", "").strip()
+        # MHOBIT va SOATO so'zlarini bir xil ko'rish va qidiruv so'rovidan olib tashlash
+        search_name = search_name.replace("mhobit", "")
+        search_name = search_name.replace("мхобт", "")
+        search_name = search_name.replace("soato", "")
+        search_name = search_name.replace("kodi", "").strip()
         
-        logging.info(f"Qidirilayotgan so'rov: '{query}'")
+        if "tumani" in search_name:
+            search_type = "district"
+            search_name = search_name.replace("tumani", "").strip()
+        elif "shahri" in search_name:
+            search_type = "city"
+            search_name = search_name.replace("shahri", "").strip()
+        elif "shaharchasi" in search_name:
+            search_type = "urban_settlement"
+            search_name = search_name.replace("shaharchasi", "").strip()
+        elif "qishlog'i" in search_name or "qishlogi" in search_name:
+            search_type = "rural_assembly"
+            search_name = search_name.replace("qishlog'i", "").replace("qishlogi", "").strip()
+        
+        logging.info(f"Qidirilayotgan so'rov: '{query}', qidiruv nomi: '{search_name}'")
         
         # Davlat ma'lumotlarini qidirish
         country = self.soato_data.get("country", {})
@@ -371,8 +403,28 @@ class SoatoTool(BaseTool):
                        any(search_name == name for name in district_names_without_suffix if name):
                         exact_matches.append(("district", self._format_district_info(district, region), 1.0))
                     # Qismiy mos kelish tekshirish
-                    elif any(search_name in name for name in city_names if name):
-                        partial_matches.append(("city", self._format_city_info(city, district, region), 0.8))
+                    elif any(search_name in name for name in district_names if name):
+                        partial_matches.append(("district", self._format_district_info(district, region), 0.7))
+                
+                # Shaharlarni qidirish
+                for city in district.get("cities", []):
+                    city_names = [
+                        city.get("name_latin", "").lower(),
+                        city.get("name_cyrillic", "").lower(),
+                        city.get("name_russian", "").lower()
+                    ]
+                    
+                    # "shahri" qo'shimchasi bilan qidiruv uchun
+                    city_names_without_suffix = [name.replace("shahri", "").strip() for name in city_names if name]
+                    
+                    if search_type is None or search_type == "city":
+                        # To'liq mos kelish tekshirish
+                        if any(search_name == name for name in city_names if name) or \
+                           any(search_name == name for name in city_names_without_suffix if name):
+                            exact_matches.append(("city", self._format_city_info(city, district, region), 1.0))
+                        # Qismiy mos kelish tekshirish
+                        elif any(search_name in name for name in city_names if name):
+                            partial_matches.append(("city", self._format_city_info(city, district, region), 0.8))
             
             # Shaharchalarni qidirish
             for settlement in district.get("urban_settlements", []):
@@ -437,7 +489,7 @@ class SoatoTool(BaseTool):
     def _format_region_info(self, region: Dict) -> str:
         """Viloyat haqida ma'lumotni formatlash"""
         info = f"VILOYAT MA'LUMOTLARI:\n"
-        info += f"SOATO kodi: {region.get('code', 'Mavjud emas')}\n"
+        info += f"SOATO/MHOBIT kodi: {region.get('code', 'Mavjud emas')}\n"
         info += f"Nomi (lotin): {region.get('name_latin', 'Mavjud emas')}\n"
         info += f"Nomi (kirill): {region.get('name_cyrillic', 'Mavjud emas')}\n"
         info += f"Nomi (rus): {region.get('name_russian', 'Mavjud emas')}\n"
@@ -449,7 +501,7 @@ class SoatoTool(BaseTool):
     def _format_district_info(self, district: Dict, region: Dict) -> str:
         """Tuman haqida ma'lumotni formatlash"""
         info = f"TUMAN MA'LUMOTLARI:\n"
-        info += f"SOATO kodi: {district.get('code', 'Mavjud emas')}\n"
+        info += f"SOATO/MHOBIT kodi: {district.get('code', 'Mavjud emas')}\n"
         info += f"Nomi (lotin): {district.get('name_latin', 'Mavjud emas')}\n"
         info += f"Nomi (kirill): {district.get('name_cyrillic', 'Mavjud emas')}\n"
         info += f"Nomi (rus): {district.get('name_russian', 'Mavjud emas')}\n"
@@ -464,7 +516,7 @@ class SoatoTool(BaseTool):
     def _format_city_info(self, city: Dict, district: Dict, region: Dict) -> str:
         """Shahar haqida ma'lumotni formatlash"""
         info = f"SHAHAR MA'LUMOTLARI:\n"
-        info += f"SOATO kodi: {city.get('code', 'Mavjud emas')}\n"
+        info += f"SOATO/MHOBIT kodi: {city.get('code', 'Mavjud emas')}\n"
         info += f"Nomi (lotin): {city.get('name_latin', 'Mavjud emas')}\n"
         info += f"Nomi (kirill): {city.get('name_cyrillic', 'Mavjud emas')}\n"
         info += f"Nomi (rus): {city.get('name_russian', 'Mavjud emas')}\n"
@@ -476,7 +528,7 @@ class SoatoTool(BaseTool):
     def _format_settlement_info(self, settlement: Dict, district: Dict, region: Dict) -> str:
         """Shaharcha haqida ma'lumotni formatlash"""
         info = f"SHAHARCHA MA'LUMOTLARI:\n"
-        info += f"SOATO kodi: {settlement.get('code', 'Mavjud emas')}\n"
+        info += f"SOATO/MHOBIT kodi: {settlement.get('code', 'Mavjud emas')}\n"
         info += f"Nomi (lotin): {settlement.get('name_latin', 'Mavjud emas')}\n"
         info += f"Nomi (kirill): {settlement.get('name_cyrillic', 'Mavjud emas')}\n"
         info += f"Nomi (rus): {settlement.get('name_russian', 'Mavjud emas')}\n"
@@ -488,7 +540,7 @@ class SoatoTool(BaseTool):
     def _format_assembly_info(self, assembly: Dict, district: Dict, region: Dict) -> str:
         """Qishloq fuqarolar yig'ini haqida ma'lumotni formatlash"""
         info = f"QISHLOQ FUQAROLAR YIG'INI MA'LUMOTLARI:\n"
-        info += f"SOATO kodi: {assembly.get('code', 'Mavjud emas')}\n"
+        info += f"SOATO/MHOBIT kodi: {assembly.get('code', 'Mavjud emas')}\n"
         info += f"Nomi (lotin): {assembly.get('name_latin', 'Mavjud emas')}\n"
         info += f"Nomi (kirill): {assembly.get('name_cyrillic', 'Mavjud emas')}\n"
         info += f"Nomi (rus): {assembly.get('name_russian', 'Mavjud emas')}\n"
