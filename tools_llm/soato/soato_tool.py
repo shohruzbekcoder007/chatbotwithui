@@ -123,6 +123,13 @@ class SoatoTool(BaseTool):
             # SOATO va MHOBIT so'zlarini bir xil narsa sifatida qabul qilish
             query = query.lower()
             
+            # Viloyat tumanlarini qidirish so'rovini tekshirish
+            if ("tumanlari" in query.lower() or "tumanlar" in query.lower()) and ("viloyat" in query.lower() or "viloyati" in query.lower()):
+                districts_result = self._get_region_districts(query)
+                if districts_result:
+                    logging.info(f"Viloyat tumanlari bo'yicha natija topildi: {query}")
+                    return districts_result
+            
             # Bir xil nomli shahar va tumanlarni qidirish
             clean_query = query.lower().replace("shahri", "").replace("tumani", "").replace("shahar", "").replace("tuman", "").strip()
             
@@ -656,3 +663,73 @@ class SoatoTool(BaseTool):
         info += f"Viloyat: {region.get('name_latin', 'Mavjud emas')}\n"
         
         return info
+        
+    def _get_region_districts(self, query: str) -> str:
+        """Viloyat tumanlarini va ularning SOATO kodlarini qaytarish"""
+        try:
+            # So'rovni tozalash va viloyat nomini ajratib olish
+            query_lower = query.lower().strip()
+            matching_region = None
+            
+            # Viloyat nomini topish
+            for region in self.soato_data.get("country", {}).get("regions", []):
+                region_latin = region.get("name_latin", "").lower()
+                region_cyrillic = region.get("name_cyrillic", "").lower()
+                region_russian = region.get("name_russian", "").lower()
+                
+                # Viloyat nomini so'rovda qidirish - to'liq so'z sifatida ham, qism sifatida ham
+                if (region_latin in query_lower or 
+                    region_cyrillic in query_lower or 
+                    region_russian in query_lower or
+                    region_latin.split()[0] in query_lower):  # Viloyat nomining birinchi qismi (masalan "Qashqadaryo")
+                    matching_region = region
+                    break
+            
+            if not matching_region:
+                logging.info(f"Viloyat nomi topilmadi: '{query}'")
+                return None
+            
+            region_name = matching_region.get("name_latin")
+            logging.info(f"Viloyat topildi: {region_name}")
+                
+            # Topilgan viloyat uchun tumanlar ro'yxatini tayyorlash
+            result = f"SOATO ma'lumotlari:\n\n"
+            result += f"{region_name}ning tumanlari va ularning SOATO/MHOBIT kodlari:\n\n"
+            
+            # Viloyat ahamiyatiga ega shaharlarni qo'shish
+            cities = []
+            districts = []
+            
+            for district in matching_region.get("districts", []):
+                district_name = district.get("name_latin")
+                district_code = district.get("code")
+                
+                # Viloyat ahamiyatiga ega shaharlar tumanini alohida ko'rib chiqish
+                if "viloyat ahamiyatiga ega shaharlar" in district_name.lower():
+                    for city in district.get("cities", []):
+                        city_name = city.get("name_latin")
+                        city_code = city.get("code")
+                        cities.append((city_name, city_code))
+                else:
+                    # Oddiy tumanlarni ro'yxatga qo'shish
+                    districts.append((district_name, district_code))
+            
+            # Tumanlarni alifbo tartibida saralash
+            districts.sort(key=lambda x: x[0])
+            
+            # Tumanlar ro'yxatini formatlash
+            for i, (name, code) in enumerate(districts, 1):
+                result += f"{i}. {name} - {code}\n"
+            
+            # Shaharlarni qo'shish
+            if cities:
+                result += "\nViloyat ahamiyatiga ega shaharlar:\n"
+                cities.sort(key=lambda x: x[0])  # Shaharlarni ham saralash
+                for city_name, city_code in cities:
+                    result += f"{city_name} - {city_code}\n"
+            
+            logging.info(f"Viloyat tumanlari ro'yxati tayyorlandi: {region_name}")
+            return result
+        except Exception as e:
+            logging.error(f"Viloyat tumanlarini olishda xatolik: {str(e)}")
+            return None
