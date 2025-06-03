@@ -2,24 +2,35 @@ import json
 import os
 import re
 import logging
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional, Union, Type
 from sentence_transformers import SentenceTransformer, util
 from retriever.langchain_chroma import CustomEmbeddingFunction
+from langchain.tools import BaseTool
+from pydantic import BaseModel, Field
 
 # Logging sozlamalari
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
-class CkpTool:
+class CkpToolInput(BaseModel):
+    query: str = Field(description="MST (Mahsulotlarning statistik tasniflagichi) ma'lumotlarini qidirish uchun so'rov")
+
+
+class CkpTool(BaseTool):
     """MST (Mahsulotlarning statistik tasniflagichi) ma'lumotlarini qidirish uchun tool"""
     
+    name: str = "ckp_tool"
+    description: str = "MST (Mahsulotlarning statistik tasniflagichi) ma'lumotlarini qidirish uchun tool"
+    args_schema: Type[BaseModel] = CkpToolInput
+    
+    # Pydantic v2 uchun barcha maydonlarni oldindan e'lon qilish
+    ckp_data: List[Dict] = Field(default_factory=list)
+    entity_texts: List[str] = Field(default_factory=list)
+    entity_infos: List[Dict] = Field(default_factory=list)
+    embedding_model: Optional[Any] = Field(default=None)
+    
     def __init__(self):
-        self.name = "ckp_tool"
-        self.description = "MST (Mahsulotlarning statistik tasniflagichi) ma'lumotlarini qidirish uchun tool"
-        self.ckp_data = []
-        self.entity_texts = []
-        self.entity_infos = []
-        self.embedding_model = None
+        super().__init__()
         
         # Ma'lumotlarni yuklash
         self._load_data()
@@ -85,7 +96,7 @@ class CkpTool:
             self.entity_texts.append(content)
             self.entity_infos.append(item)
     
-    def run(self, query: str) -> str:
+    def _run(self, query: str) -> str:
         """Tool ishga tushirilganda bajariladigan asosiy metod
         
         Args:
