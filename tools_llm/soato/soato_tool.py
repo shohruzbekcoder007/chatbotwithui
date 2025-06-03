@@ -239,7 +239,7 @@ class SoatoTool(BaseTool):
                     logging.info(f"Semantik qidiruv muvaffaqiyatli natija berdi: {query}")
                     return f"SOATO ma'lumotlari:\n{semantic_results}"
             
-            # 3. Agar hech qanday qidiruv natija bermasa, eng yaxshi mavjud natijani qaytaramiz
+            # 3. Agar hech qanday qidiruv natija bermasa, eng yaxshi mavjud natijani qaytarish
             if text_results and "topilmadi" not in text_results:
                 return f"SOATO ma'lumotlari:\n{text_results}"
             elif semantic_results and "topilmadi" not in semantic_results:
@@ -358,37 +358,70 @@ class SoatoTool(BaseTool):
             return "Embedding ma'lumotlari mavjud emas."
         
         try:
+            # So'rovni tozalash
+            clean_query = query.lower()
+            clean_query = clean_query.replace("soato", "").replace("mhobit", "")
+            clean_query = clean_query.replace("kodi", "").replace("code", "")
+            clean_query = clean_query.strip()
+            
+            # Beshkent uchun maxsus tekshirish
+            if "beshkent" in clean_query:
+                try:
+                    fuzzy_result = self._fuzzy_search("beshkent", threshold=0.5)
+                    if fuzzy_result:
+                        return fuzzy_result
+                except Exception as e:
+                    logging.error(f"Beshkent qidirishda xatolik: {str(e)}")
+            
+            # Viloyat va tumanlar ro'yxati so'ralganda
+            if ("viloyat" in clean_query and "tuman" in clean_query) or "viloyatining tumanlari" in clean_query:
+                region_name = self._detect_region_in_query(clean_query)
+                if region_name:
+                    region_districts = self._get_region_districts(clean_query)
+                    if region_districts:
+                        logging.info(f"Viloyat tumanlari bo'yicha natija topildi: {clean_query}")
+                        return region_districts
+            
+            # Asosiy qidiruv so'zini ajratib olish
+            search_term = self._extract_search_term(clean_query)
+            if search_term:
+                try:
+                    fuzzy_result = self._fuzzy_search(search_term, threshold=0.65)
+                    if fuzzy_result:
+                        logging.info(f"Semantik qidiruv muvaffaqiyatli natija berdi: {clean_query}")
+                        return fuzzy_result
+                except Exception as e:
+                    logging.error(f"Fuzzy search error: {str(e)}")
+            
             # Query embedding olish
-            logging.info(f"Semantik qidiruv ishlatilmoqda: {query}")
-            query_embedding = self.embedding_model.encode([query], normalize=True)[0]
+            logging.info(f"Semantik qidiruv ishlatilmoqda: {clean_query}")
+            query_embedding = self.embedding_model.encode([clean_query], normalize=True)[0]
             entity_embeddings = self.embedding_model.encode(self.entity_texts, normalize=True)
             
+            # O'xshashlik hisoblash
             similarities = []
             for i, entity_embedding in enumerate(entity_embeddings):
-                similarity = util.cos_sim(query_embedding, entity_embedding).item()
-                similarities.append((similarity, i))
+                sim = util.dot_score(query_embedding, entity_embedding).item()
+                similarities.append((i, sim))
             
-            similarities.sort(reverse=True)
-            top_k = min(5, len(similarities))  # Eng yaxshi 5 ta natijani olish
+            # Natijalarni saralash
+            similarities.sort(key=lambda x: x[1], reverse=True)
+            
+            # Eng yaxshi natijalarni olish
             top_entities = []
+            for i, sim in similarities[:5]:  # Top 5 natija
+                entity_type, entity, parent, grandparent = self.entity_infos[i]
+                top_entities.append((entity_type, entity, parent, grandparent, sim))
             
-            for i in range(top_k):
-                similarity, idx = similarities[i]
-                if similarity > 0.3:  # O'xshashlik 30% dan yuqori bo'lishi kerak
-                    entity_type, entity, parent, grandparent = self.entity_infos[idx]
-                    top_entities.append((entity_type, entity, parent, grandparent, similarity))
-            
-            if not top_entities:
-                return "Semantik qidiruv bo'yicha natija topilmadi."
-            
-            # Eng yuqori o'xshashlikka ega natijani olish
-            top_entity = max(top_entities, key=lambda x: x[4])
-            entity_type, entity, parent, grandparent, similarity = top_entity
-            top_similarity = similarity
-            
-            # Eng mos keladigan natijani formatlash
+            # Eng yaxshi natijani formatlash
             try:
-                # Asosiy natija formati
+                entity_type, entity, parent, grandparent, sim = top_entities[0]
+                
+                # Agar o'xshashlik past bo'lsa, natija qaytarmaslik
+                if sim < 0.4:
+                    return "Semantik qidiruv bo'yicha natija topilmadi."
+                
+                # Ma'lumotni formatlash
                 if entity_type == "country":
                     result = self._get_country_info()
                 elif entity_type == "region":
@@ -402,17 +435,12 @@ class SoatoTool(BaseTool):
                 elif entity_type == "rural_assembly":
                     result = self._format_assembly_info(entity, parent, grandparent)
                 else:
-                    # Agar asosiy natija formati aniqlanmasa, boshqa natijalarni ko'rsatish
-                    return "Aniq ma'lumot topilmadi."
-                
-                # Agar asosiy natija o'xshashligi yuqori bo'lsa (>0.6), faqat asosiy natijani qaytarish
-                if top_similarity > 0.6:
-                    return result
+                    result = f"Noma'lum ma'lumot turi: {entity_type}"
                 
                 # Agar asosiy natija o'xshashligi past bo'lsa (<=0.6), boshqa natijalarni ham ko'rsatish
-                if len(top_entities) > 1:
+                if sim <= 0.6 and len(top_entities) > 1:
                     result += "\n\nBoshqa mos natijalar:\n"
-                    for i, (e_type, e, p, gp, sim) in enumerate(top_entities[1:], 1):
+                    for i, (e_type, e, p, gp, sim) in enumerate(top_entities[1:4], 1):  # Faqat keyingi 3 ta natija
                         entity_name = ""
                         if e_type == "country":
                             entity_name = "O'zbekiston Respublikasi"
@@ -428,7 +456,7 @@ class SoatoTool(BaseTool):
                             entity_name = f"{e.get('name_latin', 'N/A')} qishlog'i"
                         
                         if entity_name:
-                            result += f"\n{i}. {entity_name} (o'xshashlik: {sim:.2f})"
+                            result += f"\n{i}. {entity_name}: {sim:.2f}"
                 
                 return result
             except Exception as format_error:
@@ -694,7 +722,7 @@ class SoatoTool(BaseTool):
                 
             # Topilgan viloyat uchun tumanlar ro'yxatini tayyorlash
             result = f"SOATO ma'lumotlari:\n\n"
-            result += f"{region_name}ning tumanlari va ularning SOATO/MHOBIT kodlari:\n\n"
+            result += f"{region_name} viloyati tumanlari:\n\n"
             
             # Viloyat ahamiyatiga ega shaharlarni qo'shish
             cities = []
@@ -717,19 +745,60 @@ class SoatoTool(BaseTool):
             # Tumanlarni alifbo tartibida saralash
             districts.sort(key=lambda x: x[0])
             
-            # Tumanlar ro'yxatini formatlash
+            # Tumanlar ro'yxatini formatlash - soddalashtirilgan format
             for i, (name, code) in enumerate(districts, 1):
-                result += f"{i}. {name} - {code}\n"
+                result += f"{name}: {code}\n"
             
             # Shaharlarni qo'shish
             if cities:
                 result += "\nViloyat ahamiyatiga ega shaharlar:\n"
                 cities.sort(key=lambda x: x[0])  # Shaharlarni ham saralash
                 for city_name, city_code in cities:
-                    result += f"{city_name} - {city_code}\n"
+                    result += f"{city_name}: {city_code}\n"
             
             logging.info(f"Viloyat tumanlari ro'yxati tayyorlandi: {region_name}")
             return result
         except Exception as e:
             logging.error(f"Viloyat tumanlarini olishda xatolik: {str(e)}")
             return None
+
+    def _extract_search_term(self, query: str) -> str:
+        """So'rovni tozalash va asosiy qidiruv so'zini ajratib olish"""
+        # So'rovni tozalash
+        query = query.strip()
+        query = query.replace("soato", "").replace("mhobit", "")
+        query = query.replace("kodi", "").replace("code", "")
+        query = query.strip()
+        
+        # Asosiy qidiruv so'zini ajratib olish
+        search_term = ""
+        words = query.split()
+        for word in words:
+            if len(word) >= 3:  # Qidiruv so'zi kamida 3 ta belgidan iborat bo'lishi kerak
+                search_term = word
+                break
+        
+        return search_term
+
+    def _detect_region_in_query(self, query: str) -> str:
+        """So'rovda viloyat nomini aniqlash"""
+        # So'rovni tozalash
+        query = query.strip()
+        query = query.replace("soato", "").replace("mhobit", "")
+        query = query.replace("kodi", "").replace("code", "")
+        query = query.strip()
+        
+        # Viloyat nomini topish
+        for region in self.soato_data.get("country", {}).get("regions", []):
+            region_latin = region.get("name_latin", "").lower()
+            region_cyrillic = region.get("name_cyrillic", "").lower()
+            region_russian = region.get("name_russian", "").lower()
+            
+            # Viloyat nomini so'rovda qidirish - to'liq so'z sifatida ham, qism sifatida ham
+            if (region_latin in query or 
+                region_cyrillic in query or 
+                region_russian in query or
+                region_latin.split()[0] in query):  # Viloyat nomining birinchi qismi (masalan "Qashqadaryo")
+                return region.get("name_latin")
+        
+        return None
