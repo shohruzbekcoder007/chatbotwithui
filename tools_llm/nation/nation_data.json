@@ -1,0 +1,1226 @@
+[
+    {
+        "CODE": "1",
+        "NAME": "Rus"
+    },
+    {
+        "CODE": "3",
+        "NAME": "Pomor"
+    },
+    {
+        "CODE": "4",
+        "NAME": "Abazin"
+    },
+    {
+        "CODE": "5",
+        "NAME": "Abxaz"
+    },
+    {
+        "CODE": "6",
+        "NAME": "Avar"
+    },
+    {
+        "CODE": "7",
+        "NAME": "Andiy"
+    },
+    {
+        "CODE": "8",
+        "NAME": "Archin"
+    },
+    {
+        "CODE": "9",
+        "NAME": "Axvax"
+    },
+    {
+        "CODE": "10",
+        "NAME": "Bagulal"
+    },
+    {
+        "CODE": "11",
+        "NAME": "Bejtin"
+    },
+    {
+        "CODE": "12",
+        "NAME": "Botlix"
+    },
+    {
+        "CODE": "13",
+        "NAME": "Ginuh"
+    },
+    {
+        "CODE": "14",
+        "NAME": "Godoberin"
+    },
+    {
+        "CODE": "15",
+        "NAME": "Gunzib"
+    },
+    {
+        "CODE": "16",
+        "NAME": "Didoy"
+    },
+    {
+        "CODE": "17",
+        "NAME": "Karatin"
+    },
+    {
+        "CODE": "18",
+        "NAME": "Tindal"
+    },
+    {
+        "CODE": "19",
+        "NAME": "Xvarshin"
+    },
+    {
+        "CODE": "20",
+        "NAME": "Chamalal"
+    },
+    {
+        "CODE": "21",
+        "NAME": "Agul"
+    },
+    {
+        "CODE": "22",
+        "NAME": "Adigey"
+    },
+    {
+        "CODE": "23",
+        "NAME": "Ozarbayjon"
+    },
+    {
+        "CODE": "24",
+        "NAME": "Aleut"
+    },
+    {
+        "CODE": "25",
+        "NAME": "Altay"
+    },
+    {
+        "CODE": "26",
+        "NAME": "Telengit"
+    },
+    {
+        "CODE": "27",
+        "NAME": "Tubalar"
+    },
+    {
+        "CODE": "28",
+        "NAME": "Chelkan"
+    },
+    {
+        "CODE": "29",
+        "NAME": "Amerikalik"
+    },
+    {
+        "CODE": "30",
+        "NAME": "Arab"
+    },
+    {
+        "CODE": "31",
+        "NAME": "O'rta Osiyo arablari"
+    },
+    {
+        "CODE": "32",
+        "NAME": "Arman"
+    },
+    {
+        "CODE": "33",
+        "NAME": "Cherkesogay"
+    },
+    {
+        "CODE": "34",
+        "NAME": "Assuriyalik"
+    },
+    {
+        "CODE": "35",
+        "NAME": "Afg‘on"
+    },
+    {
+        "CODE": "36",
+        "NAME": "Balkar"
+    },
+    {
+        "CODE": "37",
+        "NAME": "Bashqird"
+    },
+    {
+        "CODE": "38",
+        "NAME": "Belarus"
+    },
+    {
+        "CODE": "39",
+        "NAME": "Besermyan"
+    },
+    {
+        "CODE": "40",
+        "NAME": "Bolg‘ar"
+    },
+    {
+        "CODE": "41",
+        "NAME": "Bosniyalik"
+    },
+    {
+        "CODE": "42",
+        "NAME": "Britaniyalik"
+    },
+    {
+        "CODE": "43",
+        "NAME": "Buryat"
+    },
+    {
+        "CODE": "44",
+        "NAME": "Venger"
+    },
+    {
+        "CODE": "45",
+        "NAME": "Veps"
+    },
+    {
+        "CODE": "46",
+        "NAME": "Vod"
+    },
+    {
+        "CODE": "47",
+        "NAME": "Vetnamlik"
+    },
+    {
+        "CODE": "48",
+        "NAME": "Gagauz"
+    },
+    {
+        "CODE": "49",
+        "NAME": "Tog‘ yahudiylari"
+    },
+    {
+        "CODE": "50",
+        "NAME": "Yunon"
+    },
+    {
+        "CODE": "51",
+        "NAME": "Urum yunonlari"
+    },
+    {
+        "CODE": "52",
+        "NAME": "Gruzin yahudiylari"
+    },
+    {
+        "CODE": "53",
+        "NAME": "Gruzin"
+    },
+    {
+        "CODE": "54",
+        "NAME": "Ajar"
+    },
+    {
+        "CODE": "55",
+        "NAME": "Ingiloy"
+    },
+    {
+        "CODE": "56",
+        "NAME": "Laz"
+    },
+    {
+        "CODE": "57",
+        "NAME": "Megrel"
+    },
+    {
+        "CODE": "58",
+        "NAME": "Svan"
+    },
+    {
+        "CODE": "59",
+        "NAME": "Darg‘in"
+    },
+    {
+        "CODE": "60",
+        "NAME": "Kaytag"
+    },
+    {
+        "CODE": "61",
+        "NAME": "Kubachin"
+    },
+    {
+        "CODE": "62",
+        "NAME": "Dolgan"
+    },
+    {
+        "CODE": "63",
+        "NAME": "Dungan"
+    },
+    {
+        "CODE": "64",
+        "NAME": "Yahudiy"
+    },
+    {
+        "CODE": "65",
+        "NAME": "Yezidiy"
+    },
+    {
+        "CODE": "66",
+        "NAME": "Ijor"
+    },
+    {
+        "CODE": "67",
+        "NAME": "Ingush"
+    },
+    {
+        "CODE": "68",
+        "NAME": "Hindu"
+    },
+    {
+        "CODE": "69",
+        "NAME": "Ispan"
+    },
+    {
+        "CODE": "70",
+        "NAME": "Italiyalik"
+    },
+    {
+        "CODE": "71",
+        "NAME": "Itelmen"
+    },
+    {
+        "CODE": "72",
+        "NAME": "Kabardin"
+    },
+    {
+        "CODE": "73",
+        "NAME": "Qozoq"
+    },
+    {
+        "CODE": "74",
+        "NAME": "Kalmik"
+    },
+    {
+        "CODE": "75",
+        "NAME": "Kamchadal"
+    },
+    {
+        "CODE": "76",
+        "NAME": "Karaim"
+    },
+    {
+        "CODE": "77",
+        "NAME": "Karakalpak"
+    },
+    {
+        "CODE": "78",
+        "NAME": "Karachay"
+    },
+    {
+        "CODE": "79",
+        "NAME": "Karel"
+    },
+    {
+        "CODE": "80",
+        "NAME": "Kerek"
+    },
+    {
+        "CODE": "81",
+        "NAME": "Ket"
+    },
+    {
+        "CODE": "82",
+        "NAME": "Yugi"
+    },
+    {
+        "CODE": "83",
+        "NAME": "Qirg‘iz"
+    },
+    {
+        "CODE": "84",
+        "NAME": "Xitoylik"
+    },
+    {
+        "CODE": "85",
+        "NAME": "Komi"
+    },
+    {
+        "CODE": "86",
+        "NAME": "Komi-ijem"
+    },
+    {
+        "CODE": "87",
+        "NAME": "Komi-permyak"
+    },
+    {
+        "CODE": "88",
+        "NAME": "Koreys"
+    },
+    {
+        "CODE": "89",
+        "NAME": "Koryak"
+    },
+    {
+        "CODE": "90",
+        "NAME": "Alyutor"
+    },
+    {
+        "CODE": "91",
+        "NAME": "Qrim tatarlari"
+    },
+    {
+        "CODE": "92",
+        "NAME": "Qrimchak"
+    },
+    {
+        "CODE": "93",
+        "NAME": "Kubalik"
+    },
+    {
+        "CODE": "94",
+        "NAME": "Kumandin"
+    },
+    {
+        "CODE": "95",
+        "NAME": "Kumik"
+    },
+    {
+        "CODE": "96",
+        "NAME": "Kurd"
+    },
+    {
+        "CODE": "97",
+        "NAME": "Kurmanch"
+    },
+    {
+        "CODE": "98",
+        "NAME": "Lak"
+    },
+    {
+        "CODE": "99",
+        "NAME": "Latish"
+    },
+    {
+        "CODE": "100",
+        "NAME": "Latgal"
+    },
+    {
+        "CODE": "101",
+        "NAME": "Lezgin"
+    },
+    {
+        "CODE": "102",
+        "NAME": "Litvalik"
+    },
+    {
+        "CODE": "103",
+        "NAME": "Makedoniyalik"
+    },
+    {
+        "CODE": "104",
+        "NAME": "Mansiy"
+    },
+    {
+        "CODE": "105",
+        "NAME": "Mariy"
+    },
+    {
+        "CODE": "106",
+        "NAME": "Tog‘ mariylari"
+    },
+    {
+        "CODE": "107",
+        "NAME": "Yaylov-sharq mariylari"
+    },
+    {
+        "CODE": "108",
+        "NAME": "Moldavan"
+    },
+    {
+        "CODE": "109",
+        "NAME": "Mo‘g‘ul"
+    },
+    {
+        "CODE": "110",
+        "NAME": "Mordva"
+    },
+    {
+        "CODE": "111",
+        "NAME": "Mordva-moksha"
+    },
+    {
+        "CODE": "112",
+        "NAME": "Mordva-erzya"
+    },
+    {
+        "CODE": "113",
+        "NAME": "Nagaybak"
+    },
+    {
+        "CODE": "114",
+        "NAME": "Nanay"
+    },
+    {
+        "CODE": "115",
+        "NAME": "Nganasan"
+    },
+    {
+        "CODE": "116",
+        "NAME": "Negidalm"
+    },
+    {
+        "CODE": "117",
+        "NAME": "Nemis"
+    },
+    {
+        "CODE": "118",
+        "NAME": "Mennonit"
+    },
+    {
+        "CODE": "119",
+        "NAME": "Nents"
+    },
+    {
+        "CODE": "120",
+        "NAME": "Nivx"
+    },
+    {
+        "CODE": "121",
+        "NAME": "Nog‘ay"
+    },
+    {
+        "CODE": "122",
+        "NAME": "Karagash"
+    },
+    {
+        "CODE": "123",
+        "NAME": "Orochi"
+    },
+    {
+        "CODE": "124",
+        "NAME": "Osetin"
+    },
+    {
+        "CODE": "125",
+        "NAME": "Osetin-digor"
+    },
+    {
+        "CODE": "126",
+        "NAME": "Osetin-iron"
+    },
+    {
+        "CODE": "127",
+        "NAME": "Pokistonlik"
+    },
+    {
+        "CODE": "128",
+        "NAME": "Pomir"
+    },
+    {
+        "CODE": "129",
+        "NAME": "Fors"
+    },
+    {
+        "CODE": "130",
+        "NAME": "Polyak"
+    },
+    {
+        "CODE": "131",
+        "NAME": "Rumin"
+    },
+    {
+        "CODE": "132",
+        "NAME": "Rusin"
+    },
+    {
+        "CODE": "133",
+        "NAME": "Rutul"
+    },
+    {
+        "CODE": "134",
+        "NAME": "Saam"
+    },
+    {
+        "CODE": "135",
+        "NAME": "Selkup"
+    },
+    {
+        "CODE": "136",
+        "NAME": "Serb"
+    },
+    {
+        "CODE": "137",
+        "NAME": "Slovak"
+    },
+    {
+        "CODE": "138",
+        "NAME": "Sloven"
+    },
+    {
+        "CODE": "139",
+        "NAME": "Soyot"
+    },
+    {
+        "CODE": "140",
+        "NAME": "O‘rta Osiyo yahudiylari"
+    },
+    {
+        "CODE": "141",
+        "NAME": "Tabasaran"
+    },
+    {
+        "CODE": "142",
+        "NAME": "Tojik"
+    },
+    {
+        "CODE": "143",
+        "NAME": "Taz"
+    },
+    {
+        "CODE": "144",
+        "NAME": "Talish"
+    },
+    {
+        "CODE": "145",
+        "NAME": "Tatar"
+    },
+    {
+        "CODE": "146",
+        "NAME": "Astraxan tatarlari"
+    },
+    {
+        "CODE": "147",
+        "NAME": "Kryashen"
+    },
+    {
+        "CODE": "148",
+        "NAME": "Mishar"
+    },
+    {
+        "CODE": "149",
+        "NAME": "Sibir tatarlari"
+    },
+    {
+        "CODE": "150",
+        "NAME": "Tat"
+    },
+    {
+        "CODE": "151",
+        "NAME": "Teleut"
+    },
+    {
+        "CODE": "152",
+        "NAME": "Tofa"
+    },
+    {
+        "CODE": "153",
+        "NAME": "Tuvin"
+    },
+    {
+        "CODE": "154",
+        "NAME": "Tuvin-tojin"
+    },
+    {
+        "CODE": "155",
+        "NAME": "Turk"
+    },
+    {
+        "CODE": "156",
+        "NAME": "Mesxetin turklari"
+    },
+    {
+        "CODE": "157",
+        "NAME": "Turkman"
+    },
+    {
+        "CODE": "158",
+        "NAME": "Udin"
+    },
+    {
+        "CODE": "159",
+        "NAME": "Udmurt"
+    },
+    {
+        "CODE": "160",
+        "NAME": "Udegey"
+    },
+    {
+        "CODE": "161",
+        "NAME": "O‘zbek"
+    },
+    {
+        "CODE": "162",
+        "NAME": "Uyg‘ur"
+    },
+    {
+        "CODE": "163",
+        "NAME": "Uyltalar (oroklar)"
+    },
+    {
+        "CODE": "164",
+        "NAME": "Ukrain"
+    },
+    {
+        "CODE": "165",
+        "NAME": "Ulchi"
+    },
+    {
+        "CODE": "166",
+        "NAME": "Fin"
+    },
+    {
+        "CODE": "167",
+        "NAME": "Ingermanland finlari"
+    },
+    {
+        "CODE": "168",
+        "NAME": "Fransuz"
+    },
+    {
+        "CODE": "169",
+        "NAME": "Xakas"
+    },
+    {
+        "CODE": "170",
+        "NAME": "Xantiy"
+    },
+    {
+        "CODE": "171",
+        "NAME": "Xamshil"
+    },
+    {
+        "CODE": "172",
+        "NAME": "Xorvat"
+    },
+    {
+        "CODE": "173",
+        "NAME": "Tsaxur"
+    },
+    {
+        "CODE": "174",
+        "NAME": "Lo‘li"
+    },
+    {
+        "CODE": "175",
+        "NAME": "O‘rta Osiyo lo‘lilari"
+    },
+    {
+        "CODE": "176",
+        "NAME": "Cherkes"
+    },
+    {
+        "CODE": "177",
+        "NAME": "Chernogor"
+    },
+    {
+        "CODE": "178",
+        "NAME": "Chex"
+    },
+    {
+        "CODE": "179",
+        "NAME": "Chechen"
+    },
+    {
+        "CODE": "180",
+        "NAME": "Akkin chechenlari"
+    },
+    {
+        "CODE": "181",
+        "NAME": "Chuvantsi"
+    },
+    {
+        "CODE": "182",
+        "NAME": "Chuvash"
+    },
+    {
+        "CODE": "183",
+        "NAME": "Chukchi"
+    },
+    {
+        "CODE": "184",
+        "NAME": "Chulim"
+    },
+    {
+        "CODE": "185",
+        "NAME": "Shapsug"
+    },
+    {
+        "CODE": "186",
+        "NAME": "Shor"
+    },
+    {
+        "CODE": "187",
+        "NAME": "Evenk"
+    },
+    {
+        "CODE": "188",
+        "NAME": "Evenlar (lamutlar)"
+    },
+    {
+        "CODE": "189",
+        "NAME": "Ents"
+    },
+    {
+        "CODE": "190",
+        "NAME": "Eskimos"
+    },
+    {
+        "CODE": "191",
+        "NAME": "Eston"
+    },
+    {
+        "CODE": "192",
+        "NAME": "Setu (setolar)"
+    },
+    {
+        "CODE": "193",
+        "NAME": "Yukagir"
+    },
+    {
+        "CODE": "194",
+        "NAME": "Yakutlar (saxalar)"
+    },
+    {
+        "CODE": "195",
+        "NAME": "Yapon"
+    },
+    {
+        "CODE": "196",
+        "NAME": "Avstraliyalik"
+    },
+    {
+        "CODE": "197",
+        "NAME": "Avstriyalik"
+    },
+    {
+        "CODE": "198",
+        "NAME": "Ayn"
+    },
+    {
+        "CODE": "199",
+        "NAME": "Alban"
+    },
+    {
+        "CODE": "200",
+        "NAME": "Angolalik"
+    },
+    {
+        "CODE": "201",
+        "NAME": "Argentinalik"
+    },
+    {
+        "CODE": "202",
+        "NAME": "Bangladeshlik"
+    },
+    {
+        "CODE": "203",
+        "NAME": "Bask"
+    },
+    {
+        "CODE": "204",
+        "NAME": "Belgiyalik"
+    },
+    {
+        "CODE": "205",
+        "NAME": "Beninlik"
+    },
+    {
+        "CODE": "206",
+        "NAME": "Berber"
+    },
+    {
+        "CODE": "207",
+        "NAME": "Birmalik"
+    },
+    {
+        "CODE": "208",
+        "NAME": "Bisau-Gvineyalik"
+    },
+    {
+        "CODE": "209",
+        "NAME": "Boliviyalik"
+    },
+    {
+        "CODE": "210",
+        "NAME": "Botsvanalik"
+    },
+    {
+        "CODE": "211",
+        "NAME": "Braziliyalik"
+    },
+    {
+        "CODE": "212",
+        "NAME": "Bulgar"
+    },
+    {
+        "CODE": "213",
+        "NAME": "Burkinabes"
+    },
+    {
+        "CODE": "214",
+        "NAME": "Burundilik"
+    },
+    {
+        "CODE": "215",
+        "NAME": "Venesuelalik"
+    },
+    {
+        "CODE": "216",
+        "NAME": "Gabonlik"
+    },
+    {
+        "CODE": "217",
+        "NAME": "Gaitilik"
+    },
+    {
+        "CODE": "218",
+        "NAME": "Gambiyalik"
+    },
+    {
+        "CODE": "219",
+        "NAME": "Ganalik"
+    },
+    {
+        "CODE": "220",
+        "NAME": "Gvatemalali"
+    },
+    {
+        "CODE": "221",
+        "NAME": "Gvineyalik"
+    },
+    {
+        "CODE": "222",
+        "NAME": "Golland"
+    },
+    {
+        "CODE": "223",
+        "NAME": "Gonduraslik"
+    },
+    {
+        "CODE": "224",
+        "NAME": "Dag‘istonlik"
+    },
+    {
+        "CODE": "225",
+        "NAME": "Daniyalik"
+    },
+    {
+        "CODE": "226",
+        "NAME": "Daur"
+    },
+    {
+        "CODE": "227",
+        "NAME": "Jek"
+    },
+    {
+        "CODE": "228",
+        "NAME": "Jibutlik"
+    },
+    {
+        "CODE": "229",
+        "NAME": "Dominikanlik"
+    },
+    {
+        "CODE": "230",
+        "NAME": "Zambiylik"
+    },
+    {
+        "CODE": "231",
+        "NAME": "Zimbabvelik"
+    },
+    {
+        "CODE": "232",
+        "NAME": "Isroillik"
+    },
+    {
+        "CODE": "233",
+        "NAME": "Indoneziyalik"
+    },
+    {
+        "CODE": "234",
+        "NAME": "Irlandiyalik"
+    },
+    {
+        "CODE": "235",
+        "NAME": "Islandiyalik"
+    },
+    {
+        "CODE": "236",
+        "NAME": "Kabo-Verde lik"
+    },
+    {
+        "CODE": "237",
+        "NAME": "Kamasin"
+    },
+    {
+        "CODE": "238",
+        "NAME": "Kambodjalik"
+    },
+    {
+        "CODE": "239",
+        "NAME": "Kamerunlik"
+    },
+    {
+        "CODE": "240",
+        "NAME": "Kanadalik"
+    },
+    {
+        "CODE": "241",
+        "NAME": "Keniyalik"
+    },
+    {
+        "CODE": "242",
+        "NAME": "Kiprlik"
+    },
+    {
+        "CODE": "243",
+        "NAME": "Kistin"
+    },
+    {
+        "CODE": "244",
+        "NAME": "Kolumbiyalik"
+    },
+    {
+        "CODE": "245",
+        "NAME": "Komorlik"
+    },
+    {
+        "CODE": "246",
+        "NAME": "Kongolik"
+    },
+    {
+        "CODE": "247",
+        "NAME": "Kostarikalik"
+    },
+    {
+        "CODE": "248",
+        "NAME": "Kot-d’Ivuarlik"
+    },
+    {
+        "CODE": "249",
+        "NAME": "Shri-Lankalik"
+    },
+    {
+        "CODE": "250",
+        "NAME": "Laoslik"
+    },
+    {
+        "CODE": "251",
+        "NAME": "Lesotolik"
+    },
+    {
+        "CODE": "252",
+        "NAME": "Liberiyalik"
+    },
+    {
+        "CODE": "253",
+        "NAME": "Lixtenshtaynlik"
+    },
+    {
+        "CODE": "254",
+        "NAME": "Lyuksemburglik"
+    },
+    {
+        "CODE": "255",
+        "NAME": "Mavrikiylik"
+    },
+    {
+        "CODE": "256",
+        "NAME": "Malavilik"
+    },
+    {
+        "CODE": "257",
+        "NAME": "Malagasilik"
+    },
+    {
+        "CODE": "258",
+        "NAME": "Malayziyalik"
+    },
+    {
+        "CODE": "259",
+        "NAME": "Malilik"
+    },
+    {
+        "CODE": "260",
+        "NAME": "Maldivlik"
+    },
+    {
+        "CODE": "261",
+        "NAME": "Manjur"
+    },
+    {
+        "CODE": "262",
+        "NAME": "Meksikalik"
+    },
+    {
+        "CODE": "263",
+        "NAME": "Mozambiklik"
+    },
+    {
+        "CODE": "264",
+        "NAME": "Monegask"
+    },
+    {
+        "CODE": "265",
+        "NAME": "Namibiyalik"
+    },
+    {
+        "CODE": "266",
+        "NAME": "Nepallik"
+    },
+    {
+        "CODE": "267",
+        "NAME": "Nigeriyalik"
+    },
+    {
+        "CODE": "268",
+        "NAME": "Nigerlik"
+    },
+    {
+        "CODE": "269",
+        "NAME": "Nikaragualik"
+    },
+    {
+        "CODE": "270",
+        "NAME": "Yangi Gvineyalik"
+    },
+    {
+        "CODE": "271",
+        "NAME": "Yangi Zelandiyalik"
+    },
+    {
+        "CODE": "272",
+        "NAME": "Norveglik"
+    },
+    {
+        "CODE": "273",
+        "NAME": "Panamalik"
+    },
+    {
+        "CODE": "274",
+        "NAME": "Paragvaylik"
+    },
+    {
+        "CODE": "275",
+        "NAME": "Perulik"
+    },
+    {
+        "CODE": "276",
+        "NAME": "Polineziyalik"
+    },
+    {
+        "CODE": "277",
+        "NAME": "Portugalik"
+    },
+    {
+        "CODE": "278",
+        "NAME": "Puerto-Rikolik"
+    },
+    {
+        "CODE": "279",
+        "NAME": "Rossiyalik"
+    },
+    {
+        "CODE": "280",
+        "NAME": "Ruandalik"
+    },
+    {
+        "CODE": "281",
+        "NAME": "Salvadorlik"
+    },
+    {
+        "CODE": "282",
+        "NAME": "Santomelik"
+    },
+    {
+        "CODE": "283",
+        "NAME": "Senegallik"
+    },
+    {
+        "CODE": "284",
+        "NAME": "Sibo"
+    },
+    {
+        "CODE": "285",
+        "NAME": "Somalilik"
+    },
+    {
+        "CODE": "286",
+        "NAME": "Sudanlik"
+    },
+    {
+        "CODE": "287",
+        "NAME": "Syerra-Leonelik"
+    },
+    {
+        "CODE": "288",
+        "NAME": "Tailandlik"
+    },
+    {
+        "CODE": "289",
+        "NAME": "Tanzaniyalik"
+    },
+    {
+        "CODE": "290",
+        "NAME": "Togolik"
+    },
+    {
+        "CODE": "291",
+        "NAME": "Tongalik"
+    },
+    {
+        "CODE": "292",
+        "NAME": "Turk"
+    },
+    {
+        "CODE": "293",
+        "NAME": "Ugandalik"
+    },
+    {
+        "CODE": "294",
+        "NAME": "Urugvaylik"
+    },
+    {
+        "CODE": "295",
+        "NAME": "Filippinlik"
+    },
+    {
+        "CODE": "296",
+        "NAME": "Chadlik"
+    },
+    {
+        "CODE": "297",
+        "NAME": "Chililik"
+    },
+    {
+        "CODE": "298",
+        "NAME": "Shved"
+    },
+    {
+        "CODE": "299",
+        "NAME": "Shveysariyalik"
+    },
+    {
+        "CODE": "300",
+        "NAME": "Ekvadorlik"
+    },
+    {
+        "CODE": "301",
+        "NAME": "Ekvatorial Gvineyalik"
+    },
+    {
+        "CODE": "302",
+        "NAME": "Eritreyalik"
+    },
+    {
+        "CODE": "303",
+        "NAME": "Efiopiyalik"
+    },
+    {
+        "CODE": "304",
+        "NAME": "Yugoslav"
+    },
+    {
+        "CODE": "305",
+        "NAME": "Janubiy Afrikalik"
+    },
+    {
+        "CODE": "306",
+        "NAME": "Yamaykalik"
+    },
+    {
+        "CODE": "307",
+        "NAME": "Boshqa millat"
+    }
+]

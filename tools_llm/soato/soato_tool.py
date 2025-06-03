@@ -15,7 +15,6 @@ from retriever.langchain_chroma import CustomEmbeddingFunction
 # Logging sozlamalari
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-
 class SoatoTool(BaseTool):
     """SOATO ma'lumotlarini qidirish uchun tool."""
     name: str = "soato_tool"
@@ -39,7 +38,7 @@ class SoatoTool(BaseTool):
             self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
             print("Embedding ma'lumotlari tayyorlanmoqda...")
             self._prepare_embedding_data()
-        
+    
     def _load_soato_data(self, file_path: str) -> Dict[str, Any]:
         """Load SOATO data from JSON file."""
         if not os.path.exists(file_path):
@@ -682,7 +681,7 @@ class SoatoTool(BaseTool):
         info += f"Viloyat: {region.get('name_latin', 'Mavjud emas')}\n"
         
         return info
-        
+    
     def _get_region_districts(self, query: str) -> str:
         """Viloyat tumanlarini va ularning SOATO kodlarini qaytarish"""
         try:
@@ -752,7 +751,7 @@ class SoatoTool(BaseTool):
         except Exception as e:
             logging.error(f"Viloyat tumanlarini olishda xatolik: {str(e)}")
             return None
-
+    
     def _extract_search_term(self, query: str) -> str:
         """So'rovni tozalash va asosiy qidiruv so'zini ajratib olish"""
         # So'rovni tozalash
