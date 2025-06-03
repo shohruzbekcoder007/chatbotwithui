@@ -364,15 +364,6 @@ class SoatoTool(BaseTool):
             clean_query = clean_query.replace("kodi", "").replace("code", "")
             clean_query = clean_query.strip()
             
-            # Beshkent uchun maxsus tekshirish
-            if "beshkent" in clean_query:
-                try:
-                    fuzzy_result = self._fuzzy_search("beshkent", threshold=0.5)
-                    if fuzzy_result:
-                        return fuzzy_result
-                except Exception as e:
-                    logging.error(f"Beshkent qidirishda xatolik: {str(e)}")
-            
             # Viloyat va tumanlar ro'yxati so'ralganda
             if ("viloyat" in clean_query and "tuman" in clean_query) or "viloyatining tumanlari" in clean_query:
                 region_name = self._detect_region_in_query(clean_query)
