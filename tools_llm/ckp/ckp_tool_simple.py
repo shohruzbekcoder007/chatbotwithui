@@ -130,7 +130,24 @@ class CkpTool:
                     return code_result
                 else:
                     # Kod topildi, lekin natija yo'q
-                    logging.info(f"Kod {code} uchun natija topilmadi. Matn va semantik qidiruvga o'tilmoqda.")
+                    logging.info(f"Kod {code} uchun natija topilmadi. Prefiks qidiruv va semantik qidiruvga o'tilmoqda.")
+                    
+                    # Kod prefiksini olish (masalan 01.11.31.9 dan 01.11.31 ni olish)
+                    code_parts = code.split('.')
+                    if len(code_parts) > 1:
+                        # Oxirgi qismni olib tashlash
+                        prefix_code = '.'.join(code_parts[:-1])
+                        logging.info(f"Prefiks kod bo'yicha qidirilmoqda: {prefix_code}")
+                        prefix_result = self._search_by_code(prefix_code)
+                        
+                        if prefix_result:
+                            # Prefiks kod bo'yicha natija topildi
+                            if "qaysi mahsulot" in original_query.lower():
+                                # Prefiks natijasidan MST ma'lumotlari: qismini olib tashlash
+                                clean_result = prefix_result.replace("MST ma'lumotlari:", "")
+                                return f"MST ma'lumotlari:\n\n{code} kodi uchun aniq ma'lumot topilmadi, lekin {prefix_code} kodi quyidagi mahsulotga tegishli:\n\n{clean_result}"
+                            return prefix_result
+                    
                     # Agar kod aniq ko'rsatilgan bo'lsa, lekin natija topilmasa
                     if "qaysi mahsulot" in original_query.lower() or "qaysi kod" in original_query.lower():
                         return f"MST ma'lumotlari:\n\n{code} kodi bo'yicha ma'lumot topilmadi. Iltimos, kodni tekshiring yoki boshqa so'rov bilan qayta urinib ko'ring."
@@ -286,18 +303,24 @@ class CkpTool:
         
         # Matn bo'yicha qidirish - to'g'ridan-to'g'ri ma'lumotlar ro'yxatidan
         for item in self.ckp_data:
-            item_code = item.get("CODE", "")
-            name = item.get("NAME", "").lower()
+            content = item.get("content", "").lower()
+            
+            # Kod va nomni ajratib olish
+            code_match = re.search(r'kod:\s*([^\n]+)', content, re.IGNORECASE)
+            name_match = re.search(r'nomi:\s*([^\n]+)', content, re.IGNORECASE)
+            
+            item_code = code_match.group(1) if code_match else ""
+            name = name_match.group(1).lower() if name_match else ""
             
             # Har bir muhim so'z uchun tekshirish
             match_count = 0
             for word in important_words:
-                if word.lower() in name:
+                if word.lower() in content:
                     match_count += 1
             
-            # Kamida 2 ta so'z mos kelsa, natijaga qo'shish
-            if match_count >= 2 or (len(important_words) == 1 and match_count == 1):
-                results.append(f"Kod: {item_code}\nNomi: {item.get('NAME', '')}")
+            # Kamida bir so'z mos kelsa, natijaga qo'shish
+            if match_count >= 1:
+                results.append(content)
         
         # Natijalarni qaytarish
         if return_raw:
@@ -338,7 +361,7 @@ class CkpTool:
             clean_query = query.lower()
             
             # Muhim so'zlarni ajratib olish
-            important_words = [word for word in clean_query.split() if len(word) > 3]
+            important_words = [word for word in clean_query.split() if len(word) > 2]
             
             # Query embedding olish
             logging.info(f"Semantik qidiruv ishlatilmoqda: {clean_query}")
@@ -357,7 +380,7 @@ class CkpTool:
                 word_match_bonus = 0
                 for word in important_words:
                     if word in content.lower():
-                        word_match_bonus += 0.05  # Har bir muhim so'z uchun bonus
+                        word_match_bonus += 0.1
                 
                 # Umumiy o'xshashlik
                 total_sim = sim + word_match_bonus
@@ -366,10 +389,10 @@ class CkpTool:
             # Natijalarni saralash
             similarities.sort(key=lambda x: x[1], reverse=True)
             
-            # Eng yuqori o'xshashlikdagi natijalarni olish (0.5 dan yuqori)
+            # Eng yuqori o'xshashlikdagi natijalarni olish (0.3 dan yuqori)
             results = []
-            for i, total_sim, sim in similarities[:15]:
-                if total_sim > 0.5:  # O'xshashlik chegarasi
+            for i, total_sim, sim in similarities[:20]:
+                if total_sim > 0.3:
                     results.append(self.entity_texts[i])
             
             logging.info(f"Semantik qidiruv natijalar soni: {len(results)}")
