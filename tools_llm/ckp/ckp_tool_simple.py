@@ -28,12 +28,14 @@ class CkpTool(BaseTool):
     entity_texts: List[str] = Field(default_factory=list)
     entity_infos: List[Dict] = Field(default_factory=list)
     embedding_model: Optional[Any] = Field(default=None)
+    use_embeddings: bool = Field(default=True)
     
-    def __init__(self):
+    def __init__(self, ckp_file_path: str, use_embeddings: bool = True):
         super().__init__()
+        self.use_embeddings = use_embeddings
         
         # Ma'lumotlarni yuklash
-        self._load_data()
+        self._load_data(ckp_file_path)
         
         # Embedding modelini yuklash
         self._load_embedding_model()
@@ -41,11 +43,33 @@ class CkpTool(BaseTool):
         # Embedding ma'lumotlarini tayyorlash
         self._prepare_embedding_data()
     
-    def _load_data(self):
+    def _load_data(self, ckp_file_path: str):
         """CKP ma'lumotlarini yuklash"""
         try:
             # Ma'lumotlar fayli
-            data_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ckp.json")
+            if not ckp_file_path:
+                raise ValueError("CKP ma'lumotlari fayli ko'rsatilmagan")
+                
+            # Absolute path bo'lmasa, relative path sifatida ko'rib chiqish
+            if os.path.isabs(ckp_file_path):
+                data_file = ckp_file_path
+            else:
+                # Relative path bo'lsa, current working directory dan olish
+                # Agar path tools_llm/ bilan boshlansa, uni olib tashlash kerak
+                if ckp_file_path.startswith('tools_llm/'):
+                    # tools_llm/ prefixini olib tashlash
+                    relative_path = ckp_file_path[len('tools_llm/'):]
+                    data_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', relative_path)
+                else:
+                    data_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), ckp_file_path)
+                
+                # Path ni normalize qilish
+                data_file = os.path.normpath(data_file)
+            
+            logging.info(f"CKP ma'lumotlari fayli: {data_file}")
+            
+            if not os.path.exists(data_file):
+                raise FileNotFoundError(f"CKP ma'lumotlari fayli topilmadi: {data_file}")
             
             # Ma'lumotlarni yuklash
             with open(data_file, 'r', encoding='utf-8') as f:
@@ -64,10 +88,14 @@ class CkpTool(BaseTool):
         except Exception as e:
             logging.error(f"CKP ma'lumotlarini yuklashda xatolik: {str(e)}")
             self.ckp_data = []
+            raise RuntimeError(f"CKP ma'lumotlarini yuklashda xatolik: {str(e)}")
     
     def _load_embedding_model(self):
         """Embedding modelini yuklash"""
         try:
+            if not self.use_embeddings:
+                return
+            
             logging.info("Embedding modeli yuklanmoqda...")
             
             # Custom embedding function orqali modelni yuklash
@@ -105,6 +133,14 @@ class CkpTool(BaseTool):
         Returns:
             Formatlangan natija matni
         """
+        # Ma'lumotlar yuklanganligini tekshirish
+        if not self.ckp_data:
+            return "CKP ma'lumotlari yuklanmagan. Iltimos, ma'lumotlar faylini tekshiring."
+            
+        # So'rovni tozalash
+        query = query.strip()
+        
+        # Agar so'rov bo'sh bo'lsa
         if not query:
             return self._get_general_info()
         

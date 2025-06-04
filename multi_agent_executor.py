@@ -2,6 +2,7 @@ from langchain.agents import initialize_agent, AgentType
 from langchain.memory import ConversationBufferMemory
 from langchain_core.messages import SystemMessage
 from langchain_community.chat_models import ChatOllama
+import time
 
 # Toollarni import qilish
 from tools_llm.soato.soato_tool import SoatoTool
@@ -10,7 +11,7 @@ from tools_llm.ckp.ckp_tool_simple import CkpTool
 
 # LLM modelini yaratish
 llm = ChatOllama(
-    model="llama3.3",
+    model="devstral",
     base_url="http://localhost:11434",
     temperature=0.7
 )
@@ -18,7 +19,8 @@ llm = ChatOllama(
 # Toollarni yaratish
 soato_tool = SoatoTool("tools_llm/soato/soato.json", use_embeddings=True)
 nation_tool = NationTool("tools_llm/nation/nation_data.json", use_embeddings=True)
-ckp_tool = CkpTool()
+ckp_tool = CkpTool("tools_llm/ckp/ckp.json", use_embeddings=True)
+# dbibt_tool = DBIBTTool("tools_llm/dbibt/dbibt_tool.json", use_embeddings=True)
 
 # Barcha toollarni bir agent ichida birlashtirish
 combined_agent = initialize_agent(
@@ -61,9 +63,19 @@ if __name__ == "__main__":
                 continue
             
             print("\nJavob tayyorlanmoqda...")
+            
+            # Vaqtni o'lchash boshlash
+            start_time = time.time()
+            
             # Agentni chaqirish
             result = combined_agent.invoke({"input": user_input})
+            
+            # Vaqtni o'lchash yakunlash
+            end_time = time.time()
+            execution_time = end_time - start_time
+            
             print("\nNatija:", result["output"])
+            print(f"Ishlash vaqti: {execution_time:.2f} soniya")
             
         except KeyboardInterrupt:
             print("\nChatbot ishini tugatdi. Xayr!")
@@ -71,4 +83,3 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"\nXatolik yuz berdi: {str(e)}")
             print("Xatolik tafsilotlari:", e.__class__.__name__)
-
