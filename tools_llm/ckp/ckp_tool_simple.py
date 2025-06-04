@@ -18,9 +18,8 @@ class CkpToolInput(BaseModel):
 
 class CkpTool(BaseTool):
     """MST (Mahsulotlarning statistik tasniflagichi) ma'lumotlarini qidirish uchun tool"""
-    
     name: str = "ckp_tool"
-    description: str = "MST (Mahsulotlarning statistik tasniflagichi) ma'lumotlarini qidirish uchun tool"
+    description: str = "MST (Mahsulotlarning statistik tasniflagichi) ma\"lumotlarini qidirish va tahlil qilish uchun mo\"ljallangan vosita. Bu tool orqali mahsulotlar kodlari, nomlari va tasniflarini izlash, ularning ma\"lumotlarini ko\"rish va tahlil qilish mumkin. Qidiruv so\"z, kod yoki tasnif bo\"yicha amalga oshirilishi mumkin."
     args_schema: Type[BaseModel] = CkpToolInput
     
     # Pydantic v2 uchun barcha maydonlarni oldindan e'lon qilish

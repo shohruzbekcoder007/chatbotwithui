@@ -5,6 +5,7 @@ from langchain_community.chat_models import ChatOllama
 import time
 
 # Toollarni import qilish
+from tools_llm.dbibt.dbibt_tool import DBIBTTool
 from tools_llm.soato.soato_tool import SoatoTool
 from tools_llm.nation.nation_tool import NationTool
 from tools_llm.ckp.ckp_tool_simple import CkpTool
@@ -20,11 +21,11 @@ llm = ChatOllama(
 soato_tool = SoatoTool("tools_llm/soato/soato.json", use_embeddings=True)
 nation_tool = NationTool("tools_llm/nation/nation_data.json", use_embeddings=True)
 ckp_tool = CkpTool("tools_llm/ckp/ckp.json", use_embeddings=True)
-# dbibt_tool = DBIBTTool("tools_llm/dbibt/dbibt_tool.json", use_embeddings=True)
+dbibt_tool = DBIBTTool("tools_llm/dbibt/dbibt.json", use_embeddings=True)
 
 # Barcha toollarni bir agent ichida birlashtirish
 combined_agent = initialize_agent(
-    tools=[soato_tool, nation_tool, ckp_tool],
+    tools=[soato_tool, nation_tool, ckp_tool, dbibt_tool],
     llm=llm,
     agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
     handle_parsing_errors=True,
@@ -32,12 +33,16 @@ combined_agent = initialize_agent(
     memory=ConversationBufferMemory(memory_key="chat_history", return_messages=True),
     system_message=SystemMessage(content="""Siz O'zbekiston Respublikasi Davlat statistika qo'mitasi ma'lumotlari bilan ishlash uchun maxsus agentsiz. 
         Sizda quyidagi toollar mavjud:
-        1. soato_tool - SOATO (ma'muriy-hududiy birliklar) ma'lumotlarini qidirish uchun
-        2. nation_tool - millat klassifikatori ma'lumotlarini qidirish uchun
-        3. ckp_tool - MST (mahsulotlarning statistik tasniflagichi) ma'lumotlarini qidirish uchun
+        1. soato_tool - O"zbekiston Respublikasining ma"muriy-hududiy birliklari (SOATO/MHOBIT) ma"lumotlarini qidirish uchun mo"ljallangan vosita. Bu tool orqali viloyatlar, tumanlar, shaharlar va boshqa ma"muriy birliklarning kodlari, nomlari va joylashuvlarini topish mumkin. Misol uchun: "Toshkent shahar", "Samarqand viloyati", "1703" (Namangan viloyati kodi), "Buxoro tumani" kabi so"rovlar orqali ma"lumotlarni izlash mumkin.
+        
+        2. nation_tool - O"zbekiston Respublikasi millat klassifikatori ma"lumotlarini qidirish uchun tool. Bu tool orqali millat kodi yoki millat nomi bo"yicha qidiruv qilish mumkin. Masalan: "01" (o"zbek), "05" (rus), yoki "tojik" kabi so"rovlar bilan qidiruv qilish mumkin. Tool millat kodi, nomi va boshqa tegishli ma"lumotlarni qaytaradi.
+        
+        3. ckp_tool - MST/CKP (Mahsulotlarning statistik tasniflagichi) ma"lumotlarini qidirish va tahlil qilish uchun mo"ljallangan vosita. Bu tool orqali mahsulotlar kodlari, nomlari va tasniflarini izlash, ularning ma"lumotlarini ko"rish va tahlil qilish mumkin. Qidiruv so"z, kod yoki tasnif bo"yicha amalga oshirilishi mumkin.
+        
+        4. dbibt_tool - O"zbekiston Respublikasi Davlat va xo"jalik boshqaruvi idoralarini belgilash tizimi (DBIBT) ma"lumotlarini qidirish uchun tool. Bu tool orqali DBIBT kodi, tashkilot nomi, OKPO yoki INN raqami bo"yicha qidiruv qilish mumkin. Masalan: "08824", "Vazirlar Mahkamasi", yoki "07474" kabi so"rovlar bilan qidiruv qilish mumkin.
 
         Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning. 
-        Agar foydalanuvchi SOATO, millat yoki MST ma'lumotlari haqida so'rasa, tegishli toolni chaqiring.
+        Agar foydalanuvchi SOATO/MHOBIT, millat yoki MST ma'lumotlari haqida so'rasa, tegishli toolni chaqiring.
         Toollarni chaqirish uchun Action formatidan foydalaning.""")
     )
 

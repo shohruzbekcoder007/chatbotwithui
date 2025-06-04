@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 class SoatoTool(BaseTool):
     """SOATO ma'lumotlarini qidirish uchun tool."""
     name: str = "soato_tool"
-    description: str = "O'zbekiston Respublikasining ma'muriy-hududiy birliklari (SOATO) ma'lumotlarini qidirish."
+    description: str = "O'zbekiston Respublikasining ma'muriy-hududiy birliklari (SOATO) ma'lumotlarini qidirish uchun mo'ljallangan vosita. Bu tool orqali viloyatlar, tumanlar, shaharlar va boshqa ma'muriy birliklarning kodlari, nomlari va joylashuvlarini topish mumkin. Misol uchun: \"Toshkent shahar\", \"Samarqand viloyati\", \"1703\" (Namangan viloyati kodi), \"Buxoro tumani\" kabi so'rovlar orqali ma'lumotlarni izlash mumkin. Natijalar SOATO kodi, nomi va to'liq ma'muriy yo'li bilan qaytariladi."
     
     soato_data: Dict = Field(default_factory=dict)
     use_embeddings: bool = Field(default=False)
@@ -539,7 +539,7 @@ class SoatoTool(BaseTool):
                     elif any(search_name in name for name in district_names if name):
                         partial_matches.append(("district", self._format_district_info(district, region), 0.7))
                 
-                # Shaharlarni qidirish
+                # Shaharlar bo'yicha qidirish
                 for city in district.get("cities", []):
                     city_names = [
                         city.get("name_latin", "").lower(),
@@ -615,7 +615,7 @@ class SoatoTool(BaseTool):
                         entity_name = name_line[0].replace("Nomi (lotin):", "").strip()
                 
                 if entity_name:
-                    top_result += f"\n{i}. {entity_name} - {similarity:.2f}"
+                    top_result += f"\n{i}. {entity_name}: {similarity:.2f}"
         
         return top_result
     

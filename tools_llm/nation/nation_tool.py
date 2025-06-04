@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 class NationTool(BaseTool):
     """Nation ma'lumotlarini qidirish uchun tool."""
     name: str = "nation_tool"
-    description: str = "Millat klassifikatori ma'lumotlari"
+    description: str = "O'zbekiston Respublikasi millat klassifikatori ma'lumotlarini qidirish uchun tool. Bu tool orqali millat kodi yoki millat nomi bo'yicha qidiruv qilish mumkin. Masalan: '01' (o'zbek), '05' (rus), yoki 'tojik' kabi so'rovlar bilan qidiruv qilish mumkin. Tool millat kodi, nomi va boshqa tegishli ma'lumotlarni qaytaradi."
 
     embedding_model: Optional[CustomEmbeddingFunction] = Field(default=None)
     nation_data: Dict = Field(default_factory=dict)
