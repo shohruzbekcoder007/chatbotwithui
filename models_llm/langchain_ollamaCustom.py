@@ -14,6 +14,9 @@ from langchain_core.messages import (
     BaseMessage
 )
 from langchain_community.chat_models import ChatOllama
+from langchain_ollama import OllamaLLM
+from langchain.agents import initialize_agent, AgentType
+from langchain.chains.conversation.memory import ConversationBufferMemory
 from tools_llm.soato.soato_tool import SoatoTool
 from langchain.agents import AgentType
 from langchain.memory import ConversationBufferMemory
@@ -34,13 +37,13 @@ _MODEL_SEMAPHORE = asyncio.Semaphore(10)  # Bir vaqtda 5 ta so'rovga ruxsat
 
 class LangChainOllamaModel:
     """Ollama bilan LangChain integratsiyasi - ko'p foydalanuvchilar uchun optimallashtirilgan"""
-    
-    # Sinf darajasidagi o'zgaruvchilar
-    _instances: ClassVar[Dict[str, 'LangChainOllamaModel']] = {}
-    
+
+    # Class-level shared resources
+    _shared_semaphore: ClassVar[Optional[asyncio.Semaphore]] = None
+
     def __init__(self, 
                 session_id: Optional[str] = None,
-                model_name: str = "mistral-small:24b",
+                model_name: str = "devstral",
                 base_url: str = "http://localhost:11434",
                 temperature: float = 0.7,
                 num_ctx: int = 2048,
@@ -67,7 +70,30 @@ class LangChainOllamaModel:
                 # SOATO tool ni yaratish
                 logger.info("SOATO Tool yuklanmoqda...")
                 self.soato_tool = SoatoTool(soato_file_path, use_embeddings=True)
-                logger.info("SOATO Tool muvaffaqiyatli yuklandi")
+                
+                # Agent uchun LLM yaratish - asosiy model bilan bir xil
+                self.agent_llm = OllamaLLM(
+                    base_url=base_url,
+                    model=model_name,  # Asosiy model bilan bir xil model ishlatish
+                    temperature=0.7
+                )
+                
+                # Conversation memory
+                self.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+                
+                # Agent yaratish
+                self.agent = initialize_agent(
+                    tools=[self.soato_tool],
+                    llm=self.agent_llm,
+                    agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
+                    memory=self.memory,
+                    verbose=False,  # Debug uchun True qilish mumkin
+                    handle_parsing_errors=True,
+                    max_iterations=10,
+                    early_stopping_method="generate"
+                )
+                
+                logger.info(f"SOATO Tool va Agent muvaffaqiyatli yuklandi. Model: {model_name}")
             except Exception as e:
                 logger.error(f"SOATO Tool yuklanishida xatolik: {str(e)}")
                 self.use_soato_tool = False
@@ -263,13 +289,15 @@ class LangChainOllamaModel:
         Modelga savol yuborish va javob olish
         
         Args:
-            prompt (str): Savol matni
+            context (str): System prompt
+            query (str): Savol matni
+            language (str): Til
         
         Returns:
             str: Model javobi
         """
         # SOATO/MHOBIT so'rovlarini aniqlash
-        if self.use_soato_tool and self._is_soato_query(query):
+        if self.use_soato_tool and self._is_soato_query(query) and self.agent:
             try:
                 logger.info(f"SOATO so'rovi aniqlandi: '{query}'")
                 soato_result = self.soato_tool.run(query)
@@ -503,7 +531,7 @@ class LangChainOllamaModel:
             str: Modeldan kelayotgan har bir token yoki parcha
         """
         # SOATO/MHOBIT so'rovlarini aniqlash
-        if self.use_soato_tool and self._is_soato_query(query):
+        if self.use_soato_tool and self._is_soato_query(query) and self.agent:
             try:
                 logger.info(f"SOATO so'rovi aniqlandi (chat_stream): '{query}'")
                 soato_result = self.soato_tool.run(query)
@@ -542,6 +570,80 @@ class LangChainOllamaModel:
             messages = self._create_messages(context, query, language, device)
             async for chunk in self._stream_invoke(messages):
                 yield chunk
+
+    async def _format_soato_with_llm(self, soato_result: str, language: str = "uz", query: str = "", device: str = "web") -> AsyncGenerator[str, None]:
+        """
+        SOATO tool natijasini LLM ga yuborib chiroyliroq formatda stream qilish
+        
+        Args:
+            soato_result (str): SOATO tool dan kelgan xom natija
+            language (str): Til
+            device (str): Qurilma
+            
+        Yields:
+            str: Formatlangan natija
+        """
+        detect_lang = {
+            "uz": "O'zbek",
+            "ru": "Rus",
+        }
+        
+        # ====== YANGILANGAN system_prompt BOSHI ======
+        system_prompt = (
+            f"""
+Sizga quyida SOATO / MHOBIT ga oid xom ma’lumot beriladi (soato_result). Foydalanuvchi esa query ko‘rinishida biror so‘rov beradi. Sizning vazifangiz: 
+
+❗️Faqatgina query’da so‘ralgan ma’lumotni aniqlash va unga mos, qisqa, aniq va chiroyli HTML formatda javob qaytarish.
+
+🧠 Har doim quyidagi tartibda ishlang:
+
+1. Avval query ni tahlil qiling: foydalanuvchi nimani so‘ramoqda?
+2. soato_result ichidan aynan shuni toping.
+3. Qoidalarga asoslangan holda HTML ko‘rinishda javob bering.
+4. Hech qanday ortiqcha izoh, qo‘shimcha, kontekst, izoh, boshqa maydon, yoki foydalanuvchi so‘ramagan ma’lumotni qo‘shmang.
+5. language="ru" bo‘lsa, javobni rus tiliga tarjima qiling.
+6. Faqat quyidagi andozalarga 100% mos ravishda yozing:
+
+---
+
+📌 **Agar query quyidagicha bo‘lsa**:  
+“Ellikkala tumanining hudud kodi qanday?” yoki  
+“Ellikkala tumani hududiy kodi nechchi?” kabi savollar:
+
+**Javob:**
+
+<p><strong>Ellikkala</strong> tumanining hududiy kodi – <strong>1735250</strong>.</p>
+
+    """
+        )
+        # ====== YANGILANGAN system_prompt O‘RTASI ======
+
+        # user_prompt oddiy: so‘rov va xom ma’lumotni birlashtirib beradi
+        user_prompt = (
+            f"Quyidagi SOATO/MHOBIT ma'lumotlar bazasidan kerakli javobni chiqaring:\n\n"
+            f"soato_result:\n{soato_result}\n\n"
+            f"Query: {query}\n\n"
+        )
+
+        if language == "ru":
+            # oxirida ruscha tarjima uchun alohida so‘rov qo‘shamiz
+            user_prompt += "\n\nJavobni rus tiliga ham tarjima qiling."
+
+        print(f"+++++++++++++++++++++++++++\n{system_prompt}\n+++++++++++++++++++++++++++\n")
+
+        # LLM orqali formatlangan natijani stream qilish
+        messages = [
+            SystemMessage(content=system_prompt),
+            HumanMessage(content=user_prompt)
+        ]
+        if language == "ru":
+            messages.append(HumanMessage(content="Javobni rus tiliga tarjima qiling."))
+
+        async for chunk in self._stream_invoke(messages):
+            yield chunk
+
+
+
 
     async def _stream_invoke(self, messages: List[BaseMessage]) -> AsyncGenerator[str, None]:
         """
@@ -607,10 +709,15 @@ class LangChainOllamaModel:
             f"Javob: {answer}\n\n"
             f"Yangi savol: "
         )
-        if language == "ru":
-            messages.append( {"role": "user", "content":"Answer translate the result into Russian for me."})
-        
 
+        messages = [
+            SystemMessage(content=system_prompt.format(language=detect_lang[language])),
+            HumanMessage(content=full_prompt)
+        ]
+
+        if language == "ru":
+            messages.append(HumanMessage(content="Answer translate the result into Russian for me."))
+        
         async for chunk in self._stream_invoke(messages):
             yield chunk
 

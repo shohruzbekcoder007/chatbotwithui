@@ -38,7 +38,7 @@ class SoatoTool(BaseTool):
         elif self.use_embeddings and self.embedding_model is None:
             print("Embedding modeli yuklanmoqda...")
             self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
-            print("Embedding ma'lumotlari tayyorlanmoqda...")
+            # print("Embedding ma'lumotlari tayyorlanmoqda...")
             self._prepare_embedding_data()
     
     def _load_soato_data(self, file_path: str) -> Dict[str, Any]:
@@ -141,7 +141,7 @@ class SoatoTool(BaseTool):
                 matching_districts = []
                 
                 # Barcha viloyatlarni tekshirish
-                for region in self.soato_data.get("regions", []):
+                for region in self.soato_data.get("country", {}).get("regions", []):
                     for district in region.get("districts", []):
                         # Tumanni tekshirish
                         district_name = district.get("name_latin", "").lower()
@@ -485,7 +485,7 @@ class SoatoTool(BaseTool):
             search_name = search_name.replace("shaharchasi", "").strip()
         elif "qishlog'i" in search_name or "qishlogi" in search_name:
             search_type = "rural_assembly"
-            search_name = search_name.replace("qishlog'i", "").replace("qishlogi", "").strip()
+            search_name = search_name.replace("qishloq'i", "").replace("qishlogi", "").strip()
         
         logging.info(f"Qidirilayotgan so'rov: '{query}', qidiruv nomi: '{search_name}'")
         
@@ -506,7 +506,7 @@ class SoatoTool(BaseTool):
                 partial_matches.append(("country", self._get_country_info(), 0.7))
         
         # Viloyatlarni qidirish
-        for region in self.soato_data.get("regions", []):
+        for region in country.get("regions", []):
             region_names = [
                 region.get("name_latin", "").lower(),
                 region.get("name_cyrillic", "").lower(),
@@ -626,8 +626,8 @@ class SoatoTool(BaseTool):
         info = f"VILOYAT MA'LUMOTLARI:\n"
         info += f"SOATO/MHOBIT kodi: {region.get('code', 'Mavjud emas')}\n"
         info += f"Nomi (lotin): {region.get('name_latin', 'Mavjud emas')}\n"
-        info += f"Nomi (kirill): {region.get('name_cyrillic', 'Mavjud emas')}\n"
-        info += f"Nomi (rus): {region.get('name_russian', 'Mavjud emas')}\n"
+        # info += f"Nomi (kirill): {region.get('name_cyrillic', 'Mavjud emas')}\n"
+        # info += f"Nomi (rus): {region.get('name_russian', 'Mavjud emas')}\n"
         info += f"Markaz: {region.get('center_latin', 'Mavjud emas')}\n"
         info += f"Tumanlar soni: {len(region.get('districts', []))}\n"
         
@@ -638,8 +638,8 @@ class SoatoTool(BaseTool):
         info = f"TUMAN MA'LUMOTLARI:\n"
         info += f"SOATO/MHOBIT kodi: {district.get('code', 'Mavjud emas')}\n"
         info += f"Nomi (lotin): {district.get('name_latin', 'Mavjud emas')}\n"
-        info += f"Nomi (kirill): {district.get('name_cyrillic', 'Mavjud emas')}\n"
-        info += f"Nomi (rus): {district.get('name_russian', 'Mavjud emas')}\n"
+        # info += f"Nomi (kirill): {district.get('name_cyrillic', 'Mavjud emas')}\n"
+        # info += f"Nomi (rus): {district.get('name_russian', 'Mavjud emas')}\n"
         info += f"Markaz: {district.get('center_latin', 'Mavjud emas')}\n"
         info += f"Viloyat: {region.get('name_latin', 'Mavjud emas')}\n"
         info += f"Shaharlar soni: {len(district.get('cities', []))}\n"
@@ -653,8 +653,8 @@ class SoatoTool(BaseTool):
         info = f"SHAHAR MA'LUMOTLARI:\n"
         info += f"SOATO/MHOBIT kodi: {city.get('code', 'Mavjud emas')}\n"
         info += f"Nomi (lotin): {city.get('name_latin', 'Mavjud emas')}\n"
-        info += f"Nomi (kirill): {city.get('name_cyrillic', 'Mavjud emas')}\n"
-        info += f"Nomi (rus): {city.get('name_russian', 'Mavjud emas')}\n"
+        # info += f"Nomi (kirill): {city.get('name_cyrillic', 'Mavjud emas')}\n"
+        # info += f"Nomi (rus): {city.get('name_russian', 'Mavjud emas')}\n"
         info += f"Tuman: {district.get('name_latin', 'Mavjud emas')}\n"
         info += f"Viloyat: {region.get('name_latin', 'Mavjud emas')}\n"
         
@@ -665,8 +665,8 @@ class SoatoTool(BaseTool):
         info = f"SHAHARCHA MA'LUMOTLARI:\n"
         info += f"SOATO/MHOBIT kodi: {settlement.get('code', 'Mavjud emas')}\n"
         info += f"Nomi (lotin): {settlement.get('name_latin', 'Mavjud emas')}\n"
-        info += f"Nomi (kirill): {settlement.get('name_cyrillic', 'Mavjud emas')}\n"
-        info += f"Nomi (rus): {settlement.get('name_russian', 'Mavjud emas')}\n"
+        # info += f"Nomi (kirill): {settlement.get('name_cyrillic', 'Mavjud emas')}\n"
+        # info += f"Nomi (rus): {settlement.get('name_russian', 'Mavjud emas')}\n"
         info += f"Tuman: {district.get('name_latin', 'Mavjud emas')}\n"
         info += f"Viloyat: {region.get('name_latin', 'Mavjud emas')}\n"
         
@@ -677,8 +677,8 @@ class SoatoTool(BaseTool):
         info = f"QISHLOQ FUQAROLAR YIG'INI MA'LUMOTLARI:\n"
         info += f"SOATO/MHOBIT kodi: {assembly.get('code', 'Mavjud emas')}\n"
         info += f"Nomi (lotin): {assembly.get('name_latin', 'Mavjud emas')}\n"
-        info += f"Nomi (kirill): {assembly.get('name_cyrillic', 'Mavjud emas')}\n"
-        info += f"Nomi (rus): {assembly.get('name_russian', 'Mavjud emas')}\n"
+        # info += f"Nomi (kirill): {assembly.get('name_cyrillic', 'Mavjud emas')}\n"
+        # info += f"Nomi (rus): {assembly.get('name_russian', 'Mavjud emas')}\n"
         info += f"Tuman: {district.get('name_latin', 'Mavjud emas')}\n"
         info += f"Viloyat: {region.get('name_latin', 'Mavjud emas')}\n"
         

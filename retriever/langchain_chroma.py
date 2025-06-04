@@ -266,14 +266,14 @@ class ChromaManager:
             # Semantic search
             semantic_results = self.collection.query(
                 query_texts=[query],
-                n_results=n_results * 2,  # Ko'proq natija olish
+                n_results=min(n_results * 2, 50),  # Ko'proq natija olish
                 include=['documents', 'distances', 'metadatas']
             )
 
             # Keyword search
             keyword_results = self.collection.query(
                 query_texts=[query],
-                n_results=n_results * 2,
+                n_results=min(n_results * 2, 50),
                 where_document={"$contains": query},  # Exact match qidirish
                 include=['documents', 'distances', 'metadatas']
             )
