@@ -9,6 +9,7 @@ from tools_llm.dbibt.dbibt_tool import DBIBTTool
 from tools_llm.soato.soato_tool import SoatoTool
 from tools_llm.nation.nation_tool import NationTool
 from tools_llm.ckp.ckp_tool_simple import CkpTool
+from retriever.langchain_chroma import CustomEmbeddingFunction
 
 # LLM modelini yaratish
 llm = ChatOllama(
@@ -17,11 +18,21 @@ llm = ChatOllama(
     temperature=0.7
 )
 
+# Bitta embedding modelini yaratish, barcha toollar uchun
+shared_embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
+
 # Toollarni yaratish
-soato_tool = SoatoTool("tools_llm/soato/soato.json", use_embeddings=True)
-nation_tool = NationTool("tools_llm/nation/nation_data.json", use_embeddings=True)
-ckp_tool = CkpTool("tools_llm/ckp/ckp.json", use_embeddings=True)
-dbibt_tool = DBIBTTool("tools_llm/dbibt/dbibt.json", use_embeddings=True)
+soato_tool = SoatoTool("tools_llm/soato/soato.json", use_embeddings=True, embedding_model=shared_embedding_model)
+nation_tool = NationTool("tools_llm/nation/nation_data.json", use_embeddings=True, embedding_model=shared_embedding_model)
+ckp_tool = CkpTool("tools_llm/ckp/ckp.json", use_embeddings=True, embedding_model=shared_embedding_model)
+dbibt_tool = DBIBTTool("tools_llm/dbibt/dbibt.json", use_embeddings=True, embedding_model=shared_embedding_model)
+
+# Embedding ma'lumotlarini tayyorlash
+print("Barcha toollar uchun embedding ma'lumotlari tayyorlanmoqda...")
+soato_tool._prepare_embedding_data()
+nation_tool._prepare_embedding_data()
+ckp_tool._prepare_embedding_data()
+dbibt_tool._prepare_embedding_data()
 
 # Barcha toollarni bir agent ichida birlashtirish
 combined_agent = initialize_agent(
@@ -39,7 +50,7 @@ combined_agent = initialize_agent(
         
         3. ckp_tool - MST/CKP (Mahsulotlarning statistik tasniflagichi) ma"lumotlarini qidirish va tahlil qilish uchun mo"ljallangan vosita. Bu tool orqali mahsulotlar kodlari, nomlari va tasniflarini izlash, ularning ma"lumotlarini ko"rish va tahlil qilish mumkin. Qidiruv so"z, kod yoki tasnif bo"yicha amalga oshirilishi mumkin.
         
-        4. dbibt_tool - O"zbekiston Respublikasi Davlat va xo"jalik boshqaruvi idoralarini belgilash tizimi (DBIBT) ma"lumotlarini qidirish uchun tool. Bu tool orqali DBIBT kodi, tashkilot nomi, OKPO yoki INN raqami bo"yicha qidiruv qilish mumkin. Masalan: "08824", "Vazirlar Mahkamasi", yoki "07474" kabi so"rovlar bilan qidiruv qilish mumkin.
+        4. dbibt_tool - O"zbekiston Respublikasi Davlat va xo"jalik boshqaruvi idoralarini belgilash tizimi (DBIBT) ma"lumotlarini qidirish uchun tool. Bu tool orqali DBIBT kodi, tashkilot nomi, OKPO/KTUT yoki STIR/INN raqami bo"yicha qidiruv qilish mumkin. Masalan: "08824", "Vazirlar Mahkamasi", yoki "07474" kabi so"rovlar bilan qidiruv qilish mumkin.
 
         Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning. 
         Agar foydalanuvchi SOATO/MHOBIT, millat yoki MST ma'lumotlari haqida so'rasa, tegishli toolni chaqiring.

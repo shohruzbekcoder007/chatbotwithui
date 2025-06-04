@@ -26,14 +26,16 @@ class SoatoTool(BaseTool):
     entity_texts: List[str] = Field(default_factory=list)
     entity_infos: List[Dict] = Field(default_factory=list)
     
-    def __init__(self, soato_file_path: str, use_embeddings: bool = True):
+    def __init__(self, soato_file_path: str, use_embeddings: bool = True, embedding_model=None):
         """Initialize the SOATO tool with the path to the SOATO JSON file."""
         super().__init__()
         self.soato_data = self._load_soato_data(soato_file_path)
         self.use_embeddings = use_embeddings
         
-        # Embedding modelini yaratish
-        if self.use_embeddings and self.embedding_model is None:
+        # Embedding modelini tashqaridan olish yoki yaratish
+        if embedding_model is not None:
+            self.embedding_model = embedding_model
+        elif self.use_embeddings and self.embedding_model is None:
             print("Embedding modeli yuklanmoqda...")
             self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
             print("Embedding ma'lumotlari tayyorlanmoqda...")
