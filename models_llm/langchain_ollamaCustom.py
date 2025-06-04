@@ -15,6 +15,9 @@ from langchain_core.messages import (
 )
 from langchain_community.chat_models import ChatOllama
 from tools_llm.soato.soato_tool import SoatoTool
+from langchain.agents import AgentType
+from langchain.memory import ConversationBufferMemory
+from multi_agent_executor import combined_agent
 
 # .env faylidan konfiguratsiyani o'qish
 load_dotenv()
@@ -45,7 +48,8 @@ class LangChainOllamaModel:
                 gpu_layers: int = 100,
                 kv_cache: bool = True, # buni xalaqit berishi mumkin
                 num_thread: int = 32,
-                use_soato_tool: bool = True):
+                use_soato_tool: bool = True,
+                combined_agent = None):
         # SOATO tool ni ishlatish yoki ishlatmaslik
         self.use_soato_tool = use_soato_tool
         
@@ -67,18 +71,13 @@ class LangChainOllamaModel:
             except Exception as e:
                 logger.error(f"SOATO Tool yuklanishida xatolik: {str(e)}")
                 self.use_soato_tool = False
-        """
-        Ollama modelini LangChain bilan ishlatish uchun klass.
         
-        Args:
-            session_id: Foydalanuvchi sessiyasi ID si
-            model_name: Ollama model nomi
-            base_url: Ollama server URL
-            temperature: Generatsiya uchun temperature
-            num_ctx: Kontekst uzunligi
-            num_gpu: Ishlatilishi kerak bo'lgan GPU soni
-            num_thread: Ishlatilishi kerak bo'lgan CPU thread soni
-        """
+        # Combined agent ni saqlash
+        self.combined_agent = combined_agent
+        self.use_combined_agent = combined_agent is not None
+        if self.use_combined_agent:
+            logger.info("Combined agent muvaffaqiyatli yuklandi")
+        
         self.session_id = session_id or "default"
         self.model_name = model_name
         self.base_url = base_url
@@ -242,6 +241,17 @@ class LangChainOllamaModel:
                 messages = self._create_messages(context, query, language)
                 async for chunk in self._stream(messages):
                     yield chunk
+        elif self.use_combined_agent:
+            try:
+                logger.info(f"Combined agent ishlatilmoqda (stream): '{query}'")
+                result = self.combined_agent.run(query)
+                yield result
+            except Exception as e:
+                logger.error(f"Combined agent ishlatishda xatolik (stream): {str(e)}")
+                # Xatolik bo'lsa, oddiy LLM ga o'tish
+                messages = self._create_messages(context, query, language)
+                async for chunk in self._stream(messages):
+                    yield chunk
         else:
             # Oddiy LLM so'rovi
             messages = self._create_messages(context, query, language)
@@ -274,6 +284,15 @@ class LangChainOllamaModel:
                 return soato_result
             except Exception as e:
                 logger.error(f"SOATO tool ishlatishda xatolik: {str(e)}")
+                # Xatolik bo'lsa, oddiy LLM ga o'tish
+                messages = self._create_messages(context, query, language)
+                return await self._invoke(messages)
+        elif self.use_combined_agent:
+            try:
+                logger.info(f"Combined agent ishlatilmoqda: '{query}'")
+                return self.combined_agent.run(query)
+            except Exception as e:
+                logger.error(f"Combined agent ishlatishda xatolik: {str(e)}")
                 # Xatolik bo'lsa, oddiy LLM ga o'tish
                 messages = self._create_messages(context, query, language)
                 return await self._invoke(messages)
@@ -418,7 +437,7 @@ class LangChainOllamaModel:
             str: Qayta yozilgan so'rov
         """
         system_prompt = """
-        Sen so'rovlarni qayta yozish uchun yordamchisan. Berilgan chat tarixini hisobga olib, 
+        Sen so'rovlarni qayta yozish uchun yordamchisiz. Berilgan chat tarixini hisobga olib, 
         foydalanuvchi so'rovini kontekstga mos ravishda qayta yozishing kerak.
         """
         
@@ -470,7 +489,7 @@ class LangChainOllamaModel:
         
         return max(1, result)
     
-    async def chat_stream(self, context: str, query: str, language: str = "uz", device: str = "web") -> AsyncGenerator[str, None]:
+    async def chat_stream(self, query: str, context: str = "", language: str = "uz", device: str = "web") -> AsyncGenerator[str, None]:
         """
         Javobni SSE orqali stream ko'rinishda yuborish
         
@@ -503,6 +522,17 @@ class LangChainOllamaModel:
                         await asyncio.sleep(0.001)  # Har bir harfni stream qilish uchun
             except Exception as e:
                 logger.error(f"SOATO tool ishlatishda xatolik (chat_stream): {str(e)}")
+                # Xatolik bo'lsa, oddiy LLM ga o'tish
+                messages = self._create_messages(context, query, language, device)
+                async for chunk in self._stream_invoke(messages):
+                    yield chunk
+        elif self.use_combined_agent:
+            try:
+                logger.info(f"Combined agent ishlatilmoqda (chat_stream): '{query}'")
+                result = self.combined_agent.run(query)
+                yield result
+            except Exception as e:
+                logger.error(f"Combined agent ishlatishda xatolik (chat_stream): {str(e)}")
                 # Xatolik bo'lsa, oddiy LLM ga o'tish
                 messages = self._create_messages(context, query, language, device)
                 async for chunk in self._stream_invoke(messages):
@@ -587,9 +617,17 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "devstral", base_url: str = "http://localhost:11434", use_soato_tool: bool = False) -> LangChainOllamaModel:
-    return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url, use_soato_tool=use_soato_tool)
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "devstral", 
+                      base_url: str = "http://localhost:11434", use_soato_tool: bool = False) -> LangChainOllamaModel:
+    return LangChainOllamaModel(session_id=session_id, model_name=model_name, 
+                               base_url=base_url, use_soato_tool=use_soato_tool)
 
-# Asosiy model obyekti (eski kod bilan moslik uchun)
-# SOATO toolni ishlatish uchun use_soato_tool=True parametrini beramiz
+# Alohida funksiya combined_agent uchun
+def get_model_instance_with_agent(combined_agent, session_id: Optional[str] = None, 
+                                 model_name: str = "devstral", base_url: str = "http://localhost:11434", 
+                                 use_soato_tool: bool = False) -> LangChainOllamaModel:
+    return LangChainOllamaModel(session_id=session_id, model_name=model_name, 
+                               base_url=base_url, use_soato_tool=use_soato_tool, 
+                               combined_agent=combined_agent)
+
 model = get_model_instance(use_soato_tool=True)

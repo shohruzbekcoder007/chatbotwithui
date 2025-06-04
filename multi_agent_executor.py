@@ -58,44 +58,47 @@ combined_agent = initialize_agent(
     )
 
 
-if __name__ == "__main__":
-    print("O'zbekiston Respublikasi Davlat statistika qo'mitasi ma'lumotlari bilan ishlash uchun chatbot")
-    print("Chiqish uchun 'exit', 'quit' yoki 'chiqish' deb yozing")
-    print("-" * 50)
+# from models_llm.langchain_ollamaCustom import get_model_instance
+# model = get_model_instance(combined_agent=combined_agent)
+
+# if __name__ == "__main__":
+#     print("O'zbekiston Respublikasi Davlat statistika qo'mitasi ma'lumotlari bilan ishlash uchun chatbot")
+#     print("Chiqish uchun 'exit', 'quit' yoki 'chiqish' deb yozing")
+#     print("-" * 50)
     
-    while True:
-        try:
-            # Foydalanuvchidan savolni qabul qilish
-            user_input = input("\nSavolingizni kiriting: ")
+#     while True:
+#         try:
+#             # Foydalanuvchidan savolni qabul qilish
+#             user_input = input("\nSavolingizni kiriting: ")
             
-            # Chiqish uchun tekshirish
-            if user_input.lower() in ["exit", "quit", "chiqish"]:
-                print("Chatbot ishini tugatdi. Xayr!")
-                break
+#             # Chiqish uchun tekshirish
+#             if user_input.lower() in ["exit", "quit", "chiqish"]:
+#                 print("Chatbot ishini tugatdi. Xayr!")
+#                 break
             
-            # Bo'sh kiritishni tekshirish
-            if not user_input.strip():
-                print("Iltimos, savol kiriting.")
-                continue
+#             # Bo'sh kiritishni tekshirish
+#             if not user_input.strip():
+#                 print("Iltimos, savol kiriting.")
+#                 continue
             
-            print("\nJavob tayyorlanmoqda...")
+#             print("\nJavob tayyorlanmoqda...")
             
-            # Vaqtni o'lchash boshlash
-            start_time = time.time()
+#             # Vaqtni o'lchash boshlash
+#             start_time = time.time()
             
-            # Agentni chaqirish
-            result = combined_agent.invoke({"input": user_input})
+#             # Agentni chaqirish
+#             result = combined_agent.invoke({"input": user_input})
             
-            # Vaqtni o'lchash yakunlash
-            end_time = time.time()
-            execution_time = end_time - start_time
+#             # Vaqtni o'lchash yakunlash
+#             end_time = time.time()
+#             execution_time = end_time - start_time
             
-            print("\nNatija:", result["output"])
-            print(f"Ishlash vaqti: {execution_time:.2f} soniya")
+#             print("\nNatija:", result["output"])
+#             print(f"Ishlash vaqti: {execution_time:.2f} soniya")
             
-        except KeyboardInterrupt:
-            print("\nChatbot ishini tugatdi. Xayr!")
-            break
-        except Exception as e:
-            print(f"\nXatolik yuz berdi: {str(e)}")
-            print("Xatolik tafsilotlari:", e.__class__.__name__)
+#         except KeyboardInterrupt:
+#             print("\nChatbot ishini tugatdi. Xayr!")
+#             break
+#         except Exception as e:
+#             print(f"\nXatolik yuz berdi: {str(e)}")
+#             print("Xatolik tafsilotlari:", e.__class__.__name__)
