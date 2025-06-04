@@ -4,13 +4,18 @@ import re
 import torch
 import uuid
 import logging
-from typing import Dict, List, Any, Optional, Union, Tuple
+from typing import Dict, List, Optional, Union, Type
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
 from sentence_transformers import util
 from retriever.langchain_chroma import CustomEmbeddingFunction
 
+# 5614 6887 1366 8035
+
 # CustomEmbeddingFunction klassi retriever.langchain_chroma modulidan import qilingan
+
+class DBIBTToolInput(BaseModel):
+    query: str = Field(description="DBIBT ma'lumotlarini qidirish uchun so'rov. Bu yerga DBIBT kodi (masalan, '08824'), tashkilot nomi (masalan, 'O'zbekiston Respublikasi Vazirlar Mahkamasi'), OKPO/KTUT yoki STIR/INN raqami kiritilishi mumkin. STIR va INN bir xil ma'noda, OKPO va KTUT ham bir xil ma'noda ishlatiladi. Agar aniq DBIBT kodi ma'lum bo'lsa, faqat raqamni kiriting (masalan, '07474').")
 
 # Logging sozlamalari
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -18,8 +23,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 class DBIBTTool(BaseTool):
     """DBIBT ma'lumotlarini qidirish uchun tool."""
     name: str = "dbibt_tool"
-    description: str = "DBIBT ma'lumotlari"
-
+    description: str = "O'zbekiston Respublikasi Davlat va xo'jalik boshqaruvi idoralarini belgilash tizimi (DBIBT) ma'lumotlarini qidirish uchun tool. Bu tool orqali DBIBT kodi, tashkilot nomi, OKPO yoki INN raqami bo'yicha qidiruv qilish mumkin. Masalan: '08824', 'Vazirlar Mahkamasi', yoki '07474' kabi so'rovlar bilan qidiruv qilish mumkin."
+    args_schema: Type[BaseModel] = DBIBTToolInput
+    
     embedding_model: Optional[CustomEmbeddingFunction] = Field(default=None)
     dbibt_data: Dict = Field(default_factory=dict)
     entity_DBIBT: List[str] = Field(default_factory=list)
@@ -29,14 +35,16 @@ class DBIBTTool(BaseTool):
     use_embeddings: bool = Field(default=True)
     uembedding_model: Optional[CustomEmbeddingFunction] = Field(default=None)
     
-    def __init__(self, dbibt_file_path: str, use_embeddings: bool = True):
+    def __init__(self, dbibt_file_path: str, use_embeddings: bool = True, embedding_model=None):
         """Initialize the SOATO tool with the path to the SOATO JSON file."""
         super().__init__()
         self.dbibt_data = self._load_dbibt_data(dbibt_file_path)
         self.use_embeddings = use_embeddings
         
-        # Embedding modelini yaratish
-        if self.use_embeddings and self.embedding_model is None:
+        # Embedding modelini tashqaridan olish yoki yaratish
+        if embedding_model is not None:
+            self.embedding_model = embedding_model
+        elif self.use_embeddings and self.embedding_model is None:
             print("Embedding modeli yuklanmoqda...")
             self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
             self._prepare_embedding_data()
@@ -74,56 +82,115 @@ class DBIBTTool(BaseTool):
         
         return important_words
 
-    def _search_by_text(self, query: str, return_raw: bool = False) -> Optional[Dict]:
+    def _search_by_text(self, query: str, return_raw: bool = False) -> Union[List[Dict], str]:
         """Search for a specific text in the DBIBT data."""
-
-        # Muhim so'zlarni ajratib olish
-        important_words = self._extract_important_words(query)
-        logging.info(f"Matn qidiruv uchun muhim so'zlar: {important_words}")
-        
-        # Natijalarni saqlash uchun ro'yxat
-        results = []
-
-        for entity in self.dbibt_data:
-            if entity['NAME'].lower() == query.lower() or entity['DBIBT'] == query or entity['OKPO'] == query or entity['INN'] == query:
-                results.append(entity)
-
-        for entity in self.entity_DBIBT:
-            if entity.lower() == query.lower():
-                results.append(entity)
-
-        for entity in self.entity_OKPO:
-            if entity.lower() == query.lower():
-                results.append(entity)
-
-        for entity in self.entity_INN:
-            if entity.lower() == query.lower():
-                results.append(entity)
-
-        for entity in self.entity_NAME:
-            if entity.lower() == query.lower():
-                results.append(entity)
-
-        # Natijalarni qaytarish
-        if return_raw:
-            return results
-        
-        if results:
-            if len(results) > 5:
-                result_text = "\n\n".join(results[:5])
-                result_text += f"\n\nJami {len(results)} ta natija topildi."
-            else:
-                result_text = "\n\n".join(results)
+        try:
+            # Muhim so'zlarni ajratib olish
+            important_words = self._extract_important_words(query)
+            logging.info(f"Matn qidiruv uchun muhim so'zlar: {important_words}")
             
-            return result_text
-        
-        return "Natija topilmadi."
+            # STIR va INN bir xil ma'noda ekanligini tekshirish
+            query_lower = query.lower()
+            if "stir" in query_lower:
+                query = query_lower.replace("stir", "").strip()
+                logging.info(f"STIR so'rovi INN sifatida qidirilmoqda: {query}")
+            
+            # OKPO va KTUT bir xil ma'noda ekanligini tekshirish
+            if "ktut" in query_lower:
+                query = query_lower.replace("ktut", "").strip()
+                logging.info(f"KTUT so'rovi OKPO sifatida qidirilmoqda: {query}")
+            
+            # Natijalarni saqlash uchun ro'yxat
+            results = []
+
+            # Exact match qidirish
+            for entity in self.dbibt_data:
+                try:
+                    # DBIBT kodi bo'yicha qidirish (eng muhim)
+                    if 'DBIBT' in entity and entity['DBIBT'] == query:
+                        results.append(entity)
+                        logging.info(f"DBIBT kodi bo'yicha topildi: {entity['DBIBT']}")
+                        
+                    # Boshqa maydonlar bo'yicha qidirish
+                    elif ('NAME' in entity and entity['NAME'].lower() == query.lower() or
+                          'OKPO' in entity and entity['OKPO'] == query or
+                          'INN' in entity and entity['INN'] == query):
+                        results.append(entity)
+                except (TypeError, AttributeError, KeyError) as e:
+                    logging.warning(f"Entity processing error: {str(e)}, Entity: {type(entity)}")
+                    continue
+
+            # Agar exact match topilmasa, partial match qidirish
+            if not results:
+                for entity in self.dbibt_data:
+                    try:
+                        if isinstance(entity, dict) and 'NAME' in entity:
+                            entity_name = entity['NAME'].lower()
+                            # Muhim so'zlar bo'yicha qidirish
+                            for word in important_words:
+                                if word.lower() in entity_name:
+                                    if entity not in results:
+                                        results.append(entity)
+                                    break
+                    except (TypeError, AttributeError, KeyError) as e:
+                        logging.warning(f"Entity name processing error: {str(e)}")
+                        continue
+
+            # Debug uchun natijalarni ko'rsatish
+            if results:
+                logging.info(f"Topilgan natijalar soni: {len(results)}")
+                if len(results) > 0:
+                    logging.info(f"Birinchi natija: {results[0]}")
+            else:
+                logging.info("Natijalar topilmadi")
+
+            # Natijalarni qaytarish
+            if return_raw:
+                return results
+            
+            if results:
+                formatted_results = []
+                for i, result in enumerate(results[:5]):  # Top 5 natijalarni ko'rsatish
+                    try:
+                        if isinstance(result, dict):
+                            formatted_results.append(
+                                f"{i+1}. Kod: {result.get('DBIBT', 'N/A')}, "
+                                f"OKPO/KTUT: {result.get('OKPO', 'N/A')}, "  # OKPO ni OKPO/KTUT sifatida ko'rsatish
+                                f"STIR/INN: {result.get('INN', 'N/A')}, "
+                                f"Nomi: {result.get('NAME', 'N/A')}"
+                            )
+                    except Exception as e:
+                        logging.error(f"Result formatting error: {str(e)}")
+                
+                formatted_text = "\n".join(formatted_results)
+                
+                if len(results) > 5:
+                    formatted_text += f"\n\nJami {len(results)} ta natija topildi."
+                
+                return formatted_text
+            
+            return "Ma'lumot topilmadi."
+            
+        except Exception as e:
+            logging.error(f"Text search error: {str(e)}")
+            return f"Qidirishda xatolik: {str(e)}"
 
     def _semantic_search(self, query: str, return_raw: bool = False) -> Union[List[Dict], str]:
         """Semantik qidiruv."""
         try: 
             if not self.entity_DBIBT or not self.entity_OKPO or not self.entity_INN or not self.entity_NAME:
                 return [] if return_raw else "Ma'lumotlar mavjud emas."
+
+            # STIR va INN bir xil ma'noda ekanligini tekshirish
+            query_lower = query.lower()
+            if "stir" in query_lower:
+                query = query_lower.replace("stir", "").strip()
+                logging.info(f"Semantik qidiruvda STIR so'rovi INN sifatida qidirilmoqda: {query}")
+            
+            # OKPO va KTUT bir xil ma'noda ekanligini tekshirish
+            if "ktut" in query_lower:
+                query = query_lower.replace("ktut", "").strip()
+                logging.info(f"Semantik qidiruvda KTUT so'rovi OKPO sifatida qidirilmoqda: {query}")
 
             if self.embedding_model is None:
                 self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
@@ -154,7 +221,7 @@ class DBIBTTool(BaseTool):
             # Natijalarni formatlash
             formatted_results = []
             for i, result in enumerate(results[:5]):  # Top 5 natijalarni ko'rsatish
-                formatted_results.append(f"{i+1}. Kod: {result['DBIBT']}, OKPO: {result['OKPO']}, INN: {result['INN']}, Nomi: {result['NAME']}")
+                formatted_results.append(f"{i+1}. Kod: {result['DBIBT']}, DBIBT: {result['DBIBT']}, OKPO/KTUT: {result['OKPO']}, STIR/INN: {result['INN']}, Nomi: {result['NAME']}")
             
             formatted_text = "\n".join(formatted_results)
             
@@ -166,7 +233,7 @@ class DBIBTTool(BaseTool):
         except Exception as e:
             logging.error(f"Semantik qidiruvda xatolik: {str(e)}")
             return [] if return_raw else f"Semantik qidiruvda xatolik: {str(e)}"
-
+    
     def _search_dbibt_data(self, query: str) -> Union[List[Dict], str]:
         """Search for a specific query in the DBIBT data."""
         try:
@@ -176,6 +243,16 @@ class DBIBTTool(BaseTool):
             # So'rovni tozalash
             original_query = query
             query = query.lower()
+
+            # STIR va INN bir xil ma'noda ekanligini tekshirish
+            if "stir" in query:
+                query = query.replace("stir", "").strip()
+                logging.info(f"STIR so'rovi INN sifatida qidirilmoqda: {query}")
+            
+            # OKPO va KTUT bir xil ma'noda ekanligini tekshirish
+            if "ktut" in query:
+                query = query.replace("ktut", "").strip()
+                logging.info(f"KTUT so'rovi OKPO sifatida qidirilmoqda: {query}")
 
             # Nuqtalarni saqlab qolish, chunki ular nation kodlari uchun muhim
             query = re.sub(r'[\.,]', '', query)
@@ -215,7 +292,7 @@ class DBIBTTool(BaseTool):
             # Natijalarni formatlash
             formatted_results = []
             for i, result in enumerate(all_results[:5]):  # Top 5 natijalarni ko'rsatish
-                formatted_results.append(f"{i+1}. Kod: {result['DBIBT']}, OKPO: {result['OKPO']}, INN: {result['INN']}, Nomi: {result['NAME']}")
+                formatted_results.append(f"{i+1}. Kod: {result['DBIBT']}, OKPO/KTUT: {result['OKPO']}, STIR/INN: {result['INN']}, Nomi: {result['NAME']}")
             
             formatted_text = "\n".join(formatted_results)
             
@@ -254,10 +331,28 @@ class DBIBTTool(BaseTool):
         
         return formatted_text
     
-    def run(self, query: str) -> str:
+    def _run(self, query: str) -> str:
         """So'rovni bajarish va natijani qaytarish"""
         try:
-            # So'rovni qayta ishlash va Nation ma'lumotlaridan tegishli ma'lumotni topish
+            # STIR va INN bir xil ma'noda ekanligini tekshirish
+            query_lower = query.lower()
+            if "stir" in query_lower:
+                query = query_lower.replace("stir", "").strip()
+                logging.info(f"STIR so'rovi INN sifatida qidirilmoqda: {query}")
+            
+            # OKPO va KTUT bir xil ma'noda ekanligini tekshirish
+            if "ktut" in query_lower:
+                query = query_lower.replace("ktut", "").strip()
+                logging.info(f"KTUT so'rovi OKPO sifatida qidirilmoqda: {query}")
+            
+            # DBIBT kodi bo'yicha to'g'ridan-to'g'ri qidirish
+            if query.isdigit() or (len(query) == 5 and query[:5].isdigit()):
+                # Agar so'rov faqat raqamlardan iborat bo'lsa, DBIBT kodi sifatida qabul qilamiz
+                for entity in self.dbibt_data:
+                    if 'DBIBT' in entity and entity['DBIBT'] == query:
+                        return f"DBIBT ma'lumotlari:\n\n1. Kod: {entity['DBIBT']}, OKPO/KTUT: {entity['OKPO']}, STIR/INN: {entity['INN']}, Nomi: {entity['NAME']}"
+            
+            # Agar to'g'ridan-to'g'ri topilmasa, oddiy qidiruv
             result = self._search_dbibt_data(query)
             
             # Agar natija bo'sh bo'lsa yoki xatolik haqida xabar bo'lsa
@@ -270,8 +365,26 @@ class DBIBTTool(BaseTool):
             
             # Agar natija ro'yxat bo'lsa (lug'atlar ro'yxati)
             if isinstance(result, list):
-                formatted_results = self._format_results(result)
-                return f"DBIBT ma'lumotlari:\n\n{formatted_results}"
+                formatted_results = []
+                for i, item in enumerate(result[:5]):  # Top 5 natijalarni ko'rsatish
+                    try:
+                        if isinstance(item, dict):
+                            formatted_results.append(
+                                f"{i+1}. Kod: {item.get('DBIBT', 'N/A')}, "
+                                f"OKPO/KTUT: {item.get('OKPO', 'N/A')}, "
+                                f"STIR/INN: {item.get('INN', 'N/A')}, "
+                                f"Nomi: {item.get('NAME', 'N/A')}"
+                            )
+                    except Exception as e:
+                        logging.error(f"Result formatting error: {str(e)}")
+                
+                formatted_text = "\n".join(formatted_results)
+                
+                # Agar natijalar ko'p bo'lsa, qo'shimcha ma'lumot
+                if len(result) > 5:
+                    formatted_text += f"\n\nJami {len(result)} ta natija topildi."
+                
+                return f"DBIBT ma'lumotlari:\n\n{formatted_text}"
             
             # Boshqa holatlar uchun
             return f"DBIBT ma'lumotlari:\n\n{str(result)}"
@@ -279,5 +392,3 @@ class DBIBTTool(BaseTool):
         except Exception as e:
             logging.error(f"DBIBT qidirishda xatolik: {str(e)}")
             return f"Ma'lumotlarni qayta ishlashda xatolik yuz berdi: {str(e)}"
-    
-    

@@ -18,9 +18,8 @@ class CkpToolInput(BaseModel):
 
 class CkpTool(BaseTool):
     """MST (Mahsulotlarning statistik tasniflagichi) ma'lumotlarini qidirish uchun tool"""
-    
     name: str = "ckp_tool"
-    description: str = "MST (Mahsulotlarning statistik tasniflagichi) ma'lumotlarini qidirish uchun tool"
+    description: str = "MST (Mahsulotlarning statistik tasniflagichi) ma\"lumotlarini qidirish va tahlil qilish uchun mo\"ljallangan vosita. Bu tool orqali mahsulotlar kodlari, nomlari va tasniflarini izlash, ularning ma\"lumotlarini ko\"rish va tahlil qilish mumkin. Qidiruv so\"z, kod yoki tasnif bo\"yicha amalga oshirilishi mumkin."
     args_schema: Type[BaseModel] = CkpToolInput
     
     # Pydantic v2 uchun barcha maydonlarni oldindan e'lon qilish
@@ -29,10 +28,12 @@ class CkpTool(BaseTool):
     entity_infos: List[Dict] = Field(default_factory=list)
     embedding_model: Optional[Any] = Field(default=None)
     use_embeddings: bool = Field(default=True)
+    external_embedding_model: Optional[Any] = Field(default=None)
     
-    def __init__(self, ckp_file_path: str, use_embeddings: bool = True):
+    def __init__(self, ckp_file_path: str, use_embeddings: bool = True, embedding_model=None):
         super().__init__()
         self.use_embeddings = use_embeddings
+        self.external_embedding_model = embedding_model
         
         # Ma'lumotlarni yuklash
         self._load_data(ckp_file_path)
@@ -94,6 +95,12 @@ class CkpTool(BaseTool):
         """Embedding modelini yuklash"""
         try:
             if not self.use_embeddings:
+                return
+            
+            # Agar tashqaridan embedding model berilgan bo'lsa, uni ishlatish
+            if self.external_embedding_model is not None:
+                self.embedding_model = self.external_embedding_model
+                logging.info("Tashqaridan berilgan embedding modeli muvaffaqiyatli o'rnatildi.")
                 return
             
             logging.info("Embedding modeli yuklanmoqda...")

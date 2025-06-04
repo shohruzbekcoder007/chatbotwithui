@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 class NationTool(BaseTool):
     """Nation ma'lumotlarini qidirish uchun tool."""
     name: str = "nation_tool"
-    description: str = "Millat klassifikatori ma'lumotlari"
+    description: str = "O'zbekiston Respublikasi millat klassifikatori ma'lumotlarini qidirish uchun tool. Bu tool orqali millat kodi yoki millat nomi bo'yicha qidiruv qilish mumkin. Masalan: '01' (o'zbek), '05' (rus), yoki 'tojik' kabi so'rovlar bilan qidiruv qilish mumkin. Tool millat kodi, nomi va boshqa tegishli ma'lumotlarni qaytaradi."
 
     embedding_model: Optional[CustomEmbeddingFunction] = Field(default=None)
     nation_data: Dict = Field(default_factory=dict)
@@ -27,14 +27,16 @@ class NationTool(BaseTool):
     use_embeddings: bool = Field(default=True)
     uembedding_model: Optional[CustomEmbeddingFunction] = Field(default=None)
     
-    def __init__(self, nation_file_path: str, use_embeddings: bool = True):
+    def __init__(self, nation_file_path: str, use_embeddings: bool = True, embedding_model=None):
         """Initialize the SOATO tool with the path to the SOATO JSON file."""
         super().__init__()
         self.nation_data = self._load_nation_data(nation_file_path)
         self.use_embeddings = use_embeddings
         
-        # Embedding modelini yaratish
-        if self.use_embeddings and self.embedding_model is None:
+        # Embedding modelini tashqaridan olish yoki yaratish
+        if embedding_model is not None:
+            self.embedding_model = embedding_model
+        elif self.use_embeddings and self.embedding_model is None:
             print("Embedding modeli yuklanmoqda...")
             self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
             print("Embedding ma'lumotlari tayyorlanmoqda...")
