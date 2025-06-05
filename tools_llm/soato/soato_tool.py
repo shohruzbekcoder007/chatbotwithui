@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 class SoatoTool(BaseTool):
     """SOATO ma'lumotlarini qidirish uchun tool."""
     name: str = "soato_tool"
-    description: str = "O'zbekiston Respublikasining ma'muriy-hududiy birliklari (SOATO) ma'lumotlarini qidirish uchun mo'ljallangan vosita. Bu tool orqali viloyatlar, tumanlar, shaharlar va boshqa ma'muriy birliklarning kodlari, nomlari va joylashuvlarini topish mumkin. Misol uchun: \"Toshkent shahar\", \"Samarqand viloyati\", \"1703\" (Namangan viloyati kodi), \"Buxoro tumani\" kabi so'rovlar orqali ma'lumotlarni izlash mumkin. Natijalar SOATO kodi, nomi va to'liq ma'muriy yo'li bilan qaytariladi."
+    description: str = "O'zbekiston Respublikasining ma'muriy-hududiy birliklari (SOATO) ma'lumotlarini qidirish uchun mo'ljallangan vosita. Bu tool orqali viloyatlar, tumanlar, shaharlar va boshqa ma'muriy birliklarning kodlari, nomlari va joylashuvlarini topish mumkin.  Yoki saoto/mhobt kodi berilsa, unga mos hudud nomini topish mumkin.  Misol uchun: \"Toshkent shahar\", \"Samarqand viloyati\", \"1703\" (Namangan viloyati kodi), \"Buxoro tumani\" kabi so'rovlar orqali ma'lumotlarni izlash mumkin. Natijalar SOATO kodi, nomi va to'liq ma'muriy yo'li bilan qaytariladi."
     
     soato_data: Dict = Field(default_factory=dict)
     use_embeddings: bool = Field(default=False)

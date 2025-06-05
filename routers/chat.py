@@ -190,7 +190,7 @@ async def stream_chat(request: Request, req: ChatRequest):
         # print(f"Oldingi savollar: {previous_questions}")
     
         # Modeldan chat javobi olish
-        async for token in model_llm.chat_stream(context=context, query=question, language=language, device=device):
+        async for token in model_llm.chat_stream(context=context, query=context_query+"\n"+question, language=language, device=device):
             response_current += token
             yield f"{token}"
         
