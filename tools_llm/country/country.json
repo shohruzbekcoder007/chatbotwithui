@@ -1,0 +1,1759 @@
+[
+    {
+        "Id": "2",
+        "shortName": "AVSTRIYA",
+        "FullName": "AVSTRIYA RESPUBLIKASI",
+        "LetterCode": "AT",
+        "DigitalCode": "40"
+    },
+    {
+        "Id": "3",
+        "shortName": "OZARBAYJON",
+        "FullName": "OZARBAYJON RESPUBLIKASI",
+        "LetterCode": "AZ",
+        "DigitalCode": "31"
+    },
+    {
+        "Id": "4",
+        "shortName": "ALAND OROLLARI",
+        "FullName": "ALAND OROLLARI",
+        "LetterCode": "AX",
+        "DigitalCode": "248"
+    },
+    {
+        "Id": "5",
+        "shortName": "ALBANIYA",
+        "FullName": "ALBANIYA RESPUBLIKASI",
+        "LetterCode": "AL",
+        "DigitalCode": "8"
+    },
+    {
+        "Id": "6",
+        "shortName": "JAZOIR",
+        "FullName": "JAZOIR XALQ DEMOKRATIK RESPUBLIKASI",
+        "LetterCode": "DZ",
+        "DigitalCode": "12"
+    },
+    {
+        "Id": "7",
+        "shortName": "AMERIKA SAMOASI",
+        "FullName": "AMERIKA (SHARQIY) SAMOASI (AQSH)",
+        "LetterCode": "AS",
+        "DigitalCode": "16"
+    },
+    {
+        "Id": "8",
+        "shortName": "ANGILYA",
+        "FullName": "ANGILYA",
+        "LetterCode": "AI",
+        "DigitalCode": "660"
+    },
+    {
+        "Id": "9",
+        "shortName": "ANGOLA",
+        "FullName": "ANGOLA RESPUBLIKASI",
+        "LetterCode": "AO",
+        "DigitalCode": "24"
+    },
+    {
+        "Id": "10",
+        "shortName": "ANDORRA",
+        "FullName": "ANDORRA KNYAZLIGI",
+        "LetterCode": "AD",
+        "DigitalCode": "20"
+    },
+    {
+        "Id": "11",
+        "shortName": "ANTARKTIDA",
+        "FullName": "ANTARKTIDA",
+        "LetterCode": "AQ",
+        "DigitalCode": "10"
+    },
+    {
+        "Id": "12",
+        "shortName": "ANTIGUA VA BARBUDA",
+        "FullName": "ANTIGUA VA BARBUDA",
+        "LetterCode": "AG",
+        "DigitalCode": "28"
+    },
+    {
+        "Id": "13",
+        "shortName": "ARGENTINA",
+        "FullName": "ARGENTINA RESPUBLIKASI",
+        "LetterCode": "AR",
+        "DigitalCode": "32"
+    },
+    {
+        "Id": "14",
+        "shortName": "ARMANISTON",
+        "FullName": "ARMANISTON RESPUBLIKASI",
+        "LetterCode": "AM",
+        "DigitalCode": "51"
+    },
+    {
+        "Id": "15",
+        "shortName": "ARUBA",
+        "FullName": "ARUBA OROLI",
+        "LetterCode": "AW",
+        "DigitalCode": "533"
+    },
+    {
+        "Id": "16",
+        "shortName": "AFG‘ONISTON",
+        "FullName": "AFG‘ONISTON ISLOM O‘TISH DAVLATI",
+        "LetterCode": "AF",
+        "DigitalCode": "4"
+    },
+    {
+        "Id": "17",
+        "shortName": "BAGAMA OROLLARI",
+        "FullName": "BAGAMA OROLLARI",
+        "LetterCode": "BS",
+        "DigitalCode": "44"
+    },
+    {
+        "Id": "18",
+        "shortName": "BANGLADESH",
+        "FullName": "BANGLADESH XALQ RESPUBLIKASI",
+        "LetterCode": "BD",
+        "DigitalCode": "50"
+    },
+    {
+        "Id": "19",
+        "shortName": "BARBADOS",
+        "FullName": "BARBADOS",
+        "LetterCode": "BB",
+        "DigitalCode": "52"
+    },
+    {
+        "Id": "20",
+        "shortName": "BAHRAYN",
+        "FullName": "BAHRAYN QIROLLIGI",
+        "LetterCode": "BН",
+        "DigitalCode": "48"
+    },
+    {
+        "Id": "21",
+        "shortName": "BELARUS",
+        "FullName": "BELARUS RESPUBLIKASI",
+        "LetterCode": "BY",
+        "DigitalCode": "112"
+    },
+    {
+        "Id": "22",
+        "shortName": "BELIZ",
+        "FullName": "BELIZ",
+        "LetterCode": "BZ",
+        "DigitalCode": "84"
+    },
+    {
+        "Id": "23",
+        "shortName": "BELGIYA",
+        "FullName": "BELGIYA QIROLLIGI",
+        "LetterCode": "BE",
+        "DigitalCode": "56"
+    },
+    {
+        "Id": "24",
+        "shortName": "BENIN",
+        "FullName": "BENIN RESPUBLIKASI",
+        "LetterCode": "BJ",
+        "DigitalCode": "204"
+    },
+    {
+        "Id": "25",
+        "shortName": "BERMUD OROLLARI",
+        "FullName": "BERMUD OROLLARI",
+        "LetterCode": "BM",
+        "DigitalCode": "60"
+    },
+    {
+        "Id": "26",
+        "shortName": "BOLGARIYA",
+        "FullName": "BOLGARIYA RESPUBLIKASI",
+        "LetterCode": "BG",
+        "DigitalCode": "100"
+    },
+    {
+        "Id": "27",
+        "shortName": "BOLIVIYA",
+        "FullName": "BOLIVIYA KO‘PMILLATLI DAVLATI",
+        "LetterCode": "BO",
+        "DigitalCode": "68"
+    },
+    {
+        "Id": "28",
+        "shortName": "BONEYR, SINT-ESTATIUS VA SABA",
+        "FullName": "BONEYR, SINT-ESTATIUS VA SABA",
+        "LetterCode": "BQ",
+        "DigitalCode": "535"
+    },
+    {
+        "Id": "29",
+        "shortName": "BOSNIYA VA GERTSEGOVINA",
+        "FullName": "BOSNIYA VA GERTSEGOVINA",
+        "LetterCode": "BA",
+        "DigitalCode": "70"
+    },
+    {
+        "Id": "30",
+        "shortName": "BOTSVANA",
+        "FullName": "BOTSVANA RESPUBLIKASI",
+        "LetterCode": "BW",
+        "DigitalCode": "72"
+    },
+    {
+        "Id": "31",
+        "shortName": "BRAZILIYA",
+        "FullName": "BRAZILIYA FEDERATIV RESPUBLIKASI",
+        "LetterCode": "BR",
+        "DigitalCode": "76"
+    },
+    {
+        "Id": "32",
+        "shortName": "BRITANIYA HUDUDLARI",
+        "FullName": "HIND OKEANIDAGI BRITANIYA HUDUDI",
+        "LetterCode": "IO",
+        "DigitalCode": "86"
+    },
+    {
+        "Id": "33",
+        "shortName": "BRUNEY-DARUSSALOM",
+        "FullName": "BRUNEY-DARUSSALOM",
+        "LetterCode": "BN",
+        "DigitalCode": "96"
+    },
+    {
+        "Id": "34",
+        "shortName": "BUVE",
+        "FullName": "BUVE OROLI",
+        "LetterCode": "BV",
+        "DigitalCode": "74"
+    },
+    {
+        "Id": "35",
+        "shortName": "BURKINA-FASO",
+        "FullName": "BURKINA-FASO",
+        "LetterCode": "BF",
+        "DigitalCode": "854"
+    },
+    {
+        "Id": "36",
+        "shortName": "BURUNDI",
+        "FullName": "BURUNDI RESPUBLIKASI",
+        "LetterCode": "BI",
+        "DigitalCode": "108"
+    },
+    {
+        "Id": "37",
+        "shortName": "BUTAN",
+        "FullName": "BUTAN QIROLLIGI",
+        "LetterCode": "BT",
+        "DigitalCode": "64"
+    },
+    {
+        "Id": "38",
+        "shortName": "VANUATU",
+        "FullName": "VANUATU RESPUBLIKASI",
+        "LetterCode": "VU",
+        "DigitalCode": "548"
+    },
+    {
+        "Id": "39",
+        "shortName": "VATIKAN",
+        "FullName": "VATIKAN SHAHAR-DAVATI",
+        "LetterCode": "VA",
+        "DigitalCode": "336"
+    },
+    {
+        "Id": "40",
+        "shortName": "VENGERIYA",
+        "FullName": "VENGERIYA RESPUBLIKASI",
+        "LetterCode": "НU",
+        "DigitalCode": "348"
+    },
+    {
+        "Id": "41",
+        "shortName": "VENESUELA",
+        "FullName": "VENESUELA BOLIVAR RESPUBLIKASI",
+        "LetterCode": "VE",
+        "DigitalCode": "862"
+    },
+    {
+        "Id": "42",
+        "shortName": "VIRGIN OROLLARI (AQSH)",
+        "FullName": "VIRGIN OROLLARI (AQSH)",
+        "LetterCode": "VI",
+        "DigitalCode": "850"
+    },
+    {
+        "Id": "43",
+        "shortName": "VIRGIN OROLLARI (BRITANIYA)",
+        "FullName": "BRITANIYA VIRGIN OROLLARI",
+        "LetterCode": "VG",
+        "DigitalCode": "92"
+    },
+    {
+        "Id": "44",
+        "shortName": "VYETNAM",
+        "FullName": "VYETNAM SOTSIALISTIK RESPUBLIKASI",
+        "LetterCode": "VN",
+        "DigitalCode": "704"
+    },
+    {
+        "Id": "45",
+        "shortName": "GABON",
+        "FullName": "GABON RESPUBLIKASI",
+        "LetterCode": "GA",
+        "DigitalCode": "266"
+    },
+    {
+        "Id": "46",
+        "shortName": "GAITI",
+        "FullName": "GAITI RESPUBLIKASI",
+        "LetterCode": "НT",
+        "DigitalCode": "332"
+    },
+    {
+        "Id": "47",
+        "shortName": "GAYANA",
+        "FullName": "GAYANA RESPUBLIKASI",
+        "LetterCode": "GY",
+        "DigitalCode": "328"
+    },
+    {
+        "Id": "48",
+        "shortName": "GAMBIYA",
+        "FullName": "GAMBIYA RESPUBLIKASI",
+        "LetterCode": "GM",
+        "DigitalCode": "270"
+    },
+    {
+        "Id": "49",
+        "shortName": "GANA",
+        "FullName": "GANA RESPUBLIKASI",
+        "LetterCode": "GН",
+        "DigitalCode": "288"
+    },
+    {
+        "Id": "50",
+        "shortName": "GVADELUPA",
+        "FullName": "GVADELUPA (FRANSIYA)",
+        "LetterCode": "GP",
+        "DigitalCode": "312"
+    },
+    {
+        "Id": "51",
+        "shortName": "GVATEMALA",
+        "FullName": "GVATEMALA RESPUBLIKASI",
+        "LetterCode": "GT",
+        "DigitalCode": "320"
+    },
+    {
+        "Id": "52",
+        "shortName": "GVINEYA",
+        "FullName": "GVINEYA RESPUBLIKASI",
+        "LetterCode": "GN",
+        "DigitalCode": "324"
+    },
+    {
+        "Id": "53",
+        "shortName": "GVINEYA-BISAU",
+        "FullName": "GVINEYA-BISAU RESPUBLIKASI",
+        "LetterCode": "GW",
+        "DigitalCode": "624"
+    },
+    {
+        "Id": "54",
+        "shortName": "GERMANIYA",
+        "FullName": "GERMANIYA FEDERATIV RESPUBLIKASI",
+        "LetterCode": "DE",
+        "DigitalCode": "276"
+    },
+    {
+        "Id": "55",
+        "shortName": "GERNSI",
+        "FullName": "GERNSI",
+        "LetterCode": "GG",
+        "DigitalCode": "831"
+    },
+    {
+        "Id": "56",
+        "shortName": "GIBRALTAR",
+        "FullName": "GIBRALTAR (BRITANIYA)",
+        "LetterCode": "GI",
+        "DigitalCode": "292"
+    },
+    {
+        "Id": "57",
+        "shortName": "GONDURAS",
+        "FullName": "GONDURAS RESPUBLIKASI",
+        "LetterCode": "НN",
+        "DigitalCode": "340"
+    },
+    {
+        "Id": "58",
+        "shortName": "GONKONG",
+        "FullName": "XITOYNING MAXSUS MA’MURIY HUDUDI GONKONG",
+        "LetterCode": "НK",
+        "DigitalCode": "344"
+    },
+    {
+        "Id": "59",
+        "shortName": "GRENADA",
+        "FullName": "GRENADA",
+        "LetterCode": "GD",
+        "DigitalCode": "308"
+    },
+    {
+        "Id": "60",
+        "shortName": "GRENLANDIYA",
+        "FullName": "GRENLANDIYA",
+        "LetterCode": "GL",
+        "DigitalCode": "304"
+    },
+    {
+        "Id": "61",
+        "shortName": "GRETSIYA",
+        "FullName": "GRETSIYA RESPUBLIKASI",
+        "LetterCode": "GR",
+        "DigitalCode": "300"
+    },
+    {
+        "Id": "62",
+        "shortName": "GRUZIYA",
+        "FullName": "GRUZIYA RESPUBLIKASI",
+        "LetterCode": "GE",
+        "DigitalCode": "268"
+    },
+    {
+        "Id": "63",
+        "shortName": "GUAM",
+        "FullName": "GUAM (AQSH)",
+        "LetterCode": "GU",
+        "DigitalCode": "316"
+    },
+    {
+        "Id": "64",
+        "shortName": "DANIYA",
+        "FullName": "DANIYA QIROLLIGI",
+        "LetterCode": "DK",
+        "DigitalCode": "208"
+    },
+    {
+        "Id": "65",
+        "shortName": "JERSI",
+        "FullName": "JERSI",
+        "LetterCode": "JE",
+        "DigitalCode": "832"
+    },
+    {
+        "Id": "66",
+        "shortName": "JIBUTI",
+        "FullName": "JIBUTI RESPUBLIKASI",
+        "LetterCode": "DJ",
+        "DigitalCode": "262"
+    },
+    {
+        "Id": "67",
+        "shortName": "DOMINIKA",
+        "FullName": "DOMINIKA HAMDO‘STLIKI",
+        "LetterCode": "DM",
+        "DigitalCode": "212"
+    },
+    {
+        "Id": "68",
+        "shortName": "DOMINIKAN RESPUBLIKASI",
+        "FullName": "DOMINIKAN RESPUBLIKASI",
+        "LetterCode": "DO",
+        "DigitalCode": "214"
+    },
+    {
+        "Id": "69",
+        "shortName": "MISR",
+        "FullName": "MISR ARAB RESPUBLIKASI",
+        "LetterCode": "EG",
+        "DigitalCode": "818"
+    },
+    {
+        "Id": "70",
+        "shortName": "ZAMBIYA",
+        "FullName": "ZAMBIYA RESPUBLIKASI",
+        "LetterCode": "ZM",
+        "DigitalCode": "894"
+    },
+    {
+        "Id": "71",
+        "shortName": "G‘ARBIY SAXARA",
+        "FullName": "G‘ARBIY SAXARA",
+        "LetterCode": "EН",
+        "DigitalCode": "732"
+    },
+    {
+        "Id": "72",
+        "shortName": "ZIMBABVE",
+        "FullName": "ZIMBABVE RESPUBLIKASI",
+        "LetterCode": "ZW",
+        "DigitalCode": "716"
+    },
+    {
+        "Id": "73",
+        "shortName": "ISROIL",
+        "FullName": "ISROIL DAVLATI",
+        "LetterCode": "IL",
+        "DigitalCode": "376"
+    },
+    {
+        "Id": "74",
+        "shortName": "HINDISTON",
+        "FullName": "HINDISTON RESPUBLIKASI",
+        "LetterCode": "IN",
+        "DigitalCode": "356"
+    },
+    {
+        "Id": "75",
+        "shortName": "INDONEZIYA",
+        "FullName": "INDONEZIYA RESPUBLIKASI",
+        "LetterCode": "ID",
+        "DigitalCode": "360"
+    },
+    {
+        "Id": "76",
+        "shortName": "IORDANIYA",
+        "FullName": "IORDANIYA HASHIMI QIROLLIGI",
+        "LetterCode": "JO",
+        "DigitalCode": "400"
+    },
+    {
+        "Id": "77",
+        "shortName": "IROQ",
+        "FullName": "IROQ RESPUBLIKASI",
+        "LetterCode": "IQ",
+        "DigitalCode": "368"
+    },
+    {
+        "Id": "78",
+        "shortName": "ERON",
+        "FullName": "ERON ISLOM RESPUBLIKASI",
+        "LetterCode": "IR",
+        "DigitalCode": "364"
+    },
+    {
+        "Id": "79",
+        "shortName": "IRLANDIYA",
+        "FullName": "IRLANDIYA",
+        "LetterCode": "IE",
+        "DigitalCode": "372"
+    },
+    {
+        "Id": "80",
+        "shortName": "ISLANDIYA",
+        "FullName": "ISLANDIYA RESPUBLIKASI",
+        "LetterCode": "IS",
+        "DigitalCode": "352"
+    },
+    {
+        "Id": "81",
+        "shortName": "ISPANIYA",
+        "FullName": "ISPANIYA QIROLLIGI",
+        "LetterCode": "ES",
+        "DigitalCode": "724"
+    },
+    {
+        "Id": "82",
+        "shortName": "ITALIYA",
+        "FullName": "ITALIYA RESPUBLIKASI",
+        "LetterCode": "IT",
+        "DigitalCode": "380"
+    },
+    {
+        "Id": "83",
+        "shortName": "YAMAN",
+        "FullName": "YAMAN RESPUBLIKASI",
+        "LetterCode": "YE",
+        "DigitalCode": "887"
+    },
+    {
+        "Id": "84",
+        "shortName": "KABO-VERDE",
+        "FullName": "KABO-VERDE RESPUBLIKASI",
+        "LetterCode": "CV",
+        "DigitalCode": "132"
+    },
+    {
+        "Id": "85",
+        "shortName": "QOZOQISTON",
+        "FullName": "QOZOQISTON RESPUBLIKASI",
+        "LetterCode": "KZ",
+        "DigitalCode": "398"
+    },
+    {
+        "Id": "86",
+        "shortName": "KAYMAN",
+        "FullName": "KAYMAN OROLLARI",
+        "LetterCode": "KY",
+        "DigitalCode": "136"
+    },
+    {
+        "Id": "87",
+        "shortName": "KAMBODJA",
+        "FullName": "KAMBODJA QIROLLIGI",
+        "LetterCode": "KН",
+        "DigitalCode": "116"
+    },
+    {
+        "Id": "88",
+        "shortName": "KAMERUN",
+        "FullName": "KAMERUN RESPUBLIKASI",
+        "LetterCode": "CM",
+        "DigitalCode": "120"
+    },
+    {
+        "Id": "89",
+        "shortName": "KANADA",
+        "FullName": "KANADA",
+        "LetterCode": "CA",
+        "DigitalCode": "124"
+    },
+    {
+        "Id": "90",
+        "shortName": "QATAR",
+        "FullName": "QATAR DAVLATI",
+        "LetterCode": "QA",
+        "DigitalCode": "634"
+    },
+    {
+        "Id": "91",
+        "shortName": "KENIYA",
+        "FullName": "KENIYA RESPUBLIKASI",
+        "LetterCode": "KE",
+        "DigitalCode": "404"
+    },
+    {
+        "Id": "92",
+        "shortName": "QIBRIS",
+        "FullName": "QIBRIS RESPUBLIKASI",
+        "LetterCode": "CY",
+        "DigitalCode": "196"
+    },
+    {
+        "Id": "93",
+        "shortName": "KIRIBATI",
+        "FullName": "KIRIBATI RESPUBLIKASI",
+        "LetterCode": "KI",
+        "DigitalCode": "296"
+    },
+    {
+        "Id": "94",
+        "shortName": "XITOY",
+        "FullName": "XITOY XALQ RESPUBLIKASI",
+        "LetterCode": "CN",
+        "DigitalCode": "156"
+    },
+    {
+        "Id": "95",
+        "shortName": "KOKOS OROLLARI",
+        "FullName": "KOKOS (KILING) OROLLARI",
+        "LetterCode": "CC",
+        "DigitalCode": "166"
+    },
+    {
+        "Id": "96",
+        "shortName": "KOLUMBIYA",
+        "FullName": "KOLUMBIYA RESPUBLIKASI",
+        "LetterCode": "CO",
+        "DigitalCode": "170"
+    },
+    {
+        "Id": "97",
+        "shortName": "KOMOR OROLLARI",
+        "FullName": "KOMORLAR ITTIFOQI",
+        "LetterCode": "KM",
+        "DigitalCode": "174"
+    },
+    {
+        "Id": "98",
+        "shortName": "KONGO",
+        "FullName": "KONGO RESPUBLIKASI",
+        "LetterCode": "CG",
+        "DigitalCode": "178"
+    },
+    {
+        "Id": "99",
+        "shortName": "KONGO (DRK)",
+        "FullName": "KONGO DEMOKRATIK RESPUBLIKASI",
+        "LetterCode": "CD",
+        "DigitalCode": "180"
+    },
+    {
+        "Id": "100",
+        "shortName": "KOREYA",
+        "FullName": "KOREYA RESPUBLIKASI",
+        "LetterCode": "KR",
+        "DigitalCode": "410"
+    },
+    {
+        "Id": "101",
+        "shortName": "KOREYA (KXDR)",
+        "FullName": "KOREYA XALQ DEMOKRATIK RESPUBLIKASI",
+        "LetterCode": "KP",
+        "DigitalCode": "408"
+    },
+    {
+        "Id": "102",
+        "shortName": "KOSTA-RIKA",
+        "FullName": "KOSTA-RIKA RESPUBLIKASI",
+        "LetterCode": "CR",
+        "DigitalCode": "188"
+    },
+    {
+        "Id": "103",
+        "shortName": "KOT-D’IVUAR",
+        "FullName": "KOT-D’IVUAR RESPUBLIKASI",
+        "LetterCode": "CI",
+        "DigitalCode": "384"
+    },
+    {
+        "Id": "104",
+        "shortName": "KUBA",
+        "FullName": "KUBA RESPUBLIKASI",
+        "LetterCode": "CU",
+        "DigitalCode": "192"
+    },
+    {
+        "Id": "105",
+        "shortName": "QUVAYT",
+        "FullName": "QUVAYT DAVLATI",
+        "LetterCode": "KW",
+        "DigitalCode": "414"
+    },
+    {
+        "Id": "106",
+        "shortName": "QIRG‘IZISTON",
+        "FullName": "QIRG‘IZISTON RESPUBLIKASI",
+        "LetterCode": "KG",
+        "DigitalCode": "417"
+    },
+    {
+        "Id": "107",
+        "shortName": "KYURASAO",
+        "FullName": "KYURASAO",
+        "LetterCode": "CW",
+        "DigitalCode": "531"
+    },
+    {
+        "Id": "108",
+        "shortName": "LAOS",
+        "FullName": "LAOS XALQ DEMOKRATIK RESPUBLIKASI",
+        "LetterCode": "LA",
+        "DigitalCode": "418"
+    },
+    {
+        "Id": "109",
+        "shortName": "LATVIYA",
+        "FullName": "LATVIYA RESPUBLIKASI",
+        "LetterCode": "LV",
+        "DigitalCode": "428"
+    },
+    {
+        "Id": "110",
+        "shortName": "LESOTO",
+        "FullName": "LESOTO QIROLLIGI",
+        "LetterCode": "LS",
+        "DigitalCode": "426"
+    },
+    {
+        "Id": "111",
+        "shortName": "LIBERIYA",
+        "FullName": "LIBERIYA RESPUBLIKASI",
+        "LetterCode": "LR",
+        "DigitalCode": "430"
+    },
+    {
+        "Id": "112",
+        "shortName": "LIVAN",
+        "FullName": "LIVAN RESPUBLIKASI",
+        "LetterCode": "LB",
+        "DigitalCode": "422"
+    },
+    {
+        "Id": "113",
+        "shortName": "LIVIYA",
+        "FullName": "LIVIYA",
+        "LetterCode": "LY",
+        "DigitalCode": "434"
+    },
+    {
+        "Id": "114",
+        "shortName": "LITVA",
+        "FullName": "LITVA RESPUBLIKASI",
+        "LetterCode": "LT",
+        "DigitalCode": "440"
+    },
+    {
+        "Id": "115",
+        "shortName": "LIXTENSHTEYN",
+        "FullName": "LIXTENSHTEYN KNYAZLIGI",
+        "LetterCode": "LI",
+        "DigitalCode": "438"
+    },
+    {
+        "Id": "116",
+        "shortName": "LYUKSEMBURG",
+        "FullName": "LYUKSEMBURG BUYUK GERTSOGLIGI",
+        "LetterCode": "LU",
+        "DigitalCode": "442"
+    },
+    {
+        "Id": "117",
+        "shortName": "MAVRIKIY",
+        "FullName": "MAVRIKIY RESPUBLIKASI",
+        "LetterCode": "MU",
+        "DigitalCode": "480"
+    },
+    {
+        "Id": "118",
+        "shortName": "MAVRITANIYA",
+        "FullName": "MAVRITANIYA ISLOM RESPUBLIKASI",
+        "LetterCode": "MR",
+        "DigitalCode": "478"
+    },
+    {
+        "Id": "119",
+        "shortName": "MADAGASKAR",
+        "FullName": "MADAGASKAR DEMOKRATIK RESPUBLIKASI",
+        "LetterCode": "MG",
+        "DigitalCode": "450"
+    },
+    {
+        "Id": "120",
+        "shortName": "MAYOTTA",
+        "FullName": "MAYOTTA",
+        "LetterCode": "YT",
+        "DigitalCode": "175"
+    },
+    {
+        "Id": "121",
+        "shortName": "MAKAO",
+        "FullName": "XITOYNING MAXSUS MA’MURIY HUDUDI MAKAO",
+        "LetterCode": "MO",
+        "DigitalCode": "446"
+    },
+    {
+        "Id": "122",
+        "shortName": "MAKEDONIYA",
+        "FullName": "MAKEDONIYA RESPUBLIKASI",
+        "LetterCode": "MK",
+        "DigitalCode": "807"
+    },
+    {
+        "Id": "123",
+        "shortName": "MALAVI",
+        "FullName": "MALAVI RESPUBLIKASI",
+        "LetterCode": "MW",
+        "DigitalCode": "454"
+    },
+    {
+        "Id": "124",
+        "shortName": "MALAYZIYA",
+        "FullName": "MALAYZIYA",
+        "LetterCode": "MY",
+        "DigitalCode": "458"
+    },
+    {
+        "Id": "125",
+        "shortName": "MALI",
+        "FullName": "MALI RESPUBLIKASI",
+        "LetterCode": "ML",
+        "DigitalCode": "466"
+    },
+    {
+        "Id": "126",
+        "shortName": "AQSHNING KICHIK TIXOOKEAN OROLLARI",
+        "FullName": "AQSHNING KICHIK TIXOOKEAN UZOQ OROLLARI",
+        "LetterCode": "UM",
+        "DigitalCode": "581"
+    },
+    {
+        "Id": "127",
+        "shortName": "MALDIV OROLLARI",
+        "FullName": "MALDIV RESPUBLIKASI",
+        "LetterCode": "MV",
+        "DigitalCode": "462"
+    },
+    {
+        "Id": "128",
+        "shortName": "MALTA",
+        "FullName": "MALTA RESPUBLIKASI",
+        "LetterCode": "MT",
+        "DigitalCode": "470"
+    },
+    {
+        "Id": "129",
+        "shortName": "MARIAN OROLLARI",
+        "FullName": "SHIMOLIY MARIAN OROLLARI HAMDO‘STLIKI",
+        "LetterCode": "MP",
+        "DigitalCode": "580"
+    },
+    {
+        "Id": "130",
+        "shortName": "MAROKASH",
+        "FullName": "MAROKASH QIROLLIGI",
+        "LetterCode": "MA",
+        "DigitalCode": "504"
+    },
+    {
+        "Id": "131",
+        "shortName": "MARTINIKA",
+        "FullName": "MARTINIKA (FRANSIYA)",
+        "LetterCode": "MQ",
+        "DigitalCode": "474"
+    },
+    {
+        "Id": "132",
+        "shortName": "MARSHALL OROLLARI",
+        "FullName": "MARSHALL OROLLARI RESPUBLIKASI",
+        "LetterCode": "MН",
+        "DigitalCode": "584"
+    },
+    {
+        "Id": "133",
+        "shortName": "MEKSIKA",
+        "FullName": "MEKSIKA QO‘SHMA SHTATLARI",
+        "LetterCode": "MX",
+        "DigitalCode": "484"
+    },
+    {
+        "Id": "134",
+        "shortName": "MIKRONEZIYA",
+        "FullName": "MIKRONEZIYA FEDERATIV SHTATLARI",
+        "LetterCode": "FM",
+        "DigitalCode": "583"
+    },
+    {
+        "Id": "135",
+        "shortName": "MOZAMBIK",
+        "FullName": "MOZAMBIK RESPUBLIKASI",
+        "LetterCode": "MZ",
+        "DigitalCode": "508"
+    },
+    {
+        "Id": "136",
+        "shortName": "MOLDOVA",
+        "FullName": "MOLDOVA RESPUBLIKASI",
+        "LetterCode": "MD",
+        "DigitalCode": "498"
+    },
+    {
+        "Id": "137",
+        "shortName": "MONAKO",
+        "FullName": "MONAKO KNYAZLIGI",
+        "LetterCode": "MC",
+        "DigitalCode": "492"
+    },
+    {
+        "Id": "138",
+        "shortName": "MONGOLIYA",
+        "FullName": "MONGOLIYA",
+        "LetterCode": "MN",
+        "DigitalCode": "496"
+    },
+    {
+        "Id": "139",
+        "shortName": "MONTSERRAT",
+        "FullName": "MONTSERRAT (BRITANIYA)",
+        "LetterCode": "MS",
+        "DigitalCode": "500"
+    },
+    {
+        "Id": "140",
+        "shortName": "MYANMA",
+        "FullName": "MYANMA ITTIFOQI",
+        "LetterCode": "MM",
+        "DigitalCode": "104"
+    },
+    {
+        "Id": "141",
+        "shortName": "NAMIBIYA",
+        "FullName": "NAMIBIYA RESPUBLIKASI",
+        "LetterCode": "NA",
+        "DigitalCode": "516"
+    },
+    {
+        "Id": "142",
+        "shortName": "NAURU",
+        "FullName": "NAURU RESPUBLIKASI",
+        "LetterCode": "NR",
+        "DigitalCode": "520"
+    },
+    {
+        "Id": "143",
+        "shortName": "NEPAL",
+        "FullName": "NEPAL RESPUBLIKASI",
+        "LetterCode": "NP",
+        "DigitalCode": "524"
+    },
+    {
+        "Id": "144",
+        "shortName": "NIGER",
+        "FullName": "NIGER RESPUBLIKASI",
+        "LetterCode": "NE",
+        "DigitalCode": "562"
+    },
+    {
+        "Id": "145",
+        "shortName": "NIGERIYA",
+        "FullName": "NIGERIYA FEDERATIV RESPUBLIKASI",
+        "LetterCode": "NG",
+        "DigitalCode": "566"
+    },
+    {
+        "Id": "146",
+        "shortName": "NIDERLAND ANTILLARI",
+        "FullName": "NIDERLAND ANTILLARI",
+        "LetterCode": "AN",
+        "DigitalCode": "530"
+    },
+    {
+        "Id": "147",
+        "shortName": "NIDERLANDLAR",
+        "FullName": "NIDERLANDLAR QIROLLIGI",
+        "LetterCode": "NL",
+        "DigitalCode": "528"
+    },
+    {
+        "Id": "148",
+        "shortName": "NIKARAGUA",
+        "FullName": "NIKARAGUA RESPUBLIKASI",
+        "LetterCode": "NI",
+        "DigitalCode": "558"
+    },
+    {
+        "Id": "149",
+        "shortName": "NIUE",
+        "FullName": "NIUE RESPUBLIKASI",
+        "LetterCode": "NU",
+        "DigitalCode": "570"
+    },
+    {
+        "Id": "150",
+        "shortName": "YANGI ZELANDIYA",
+        "FullName": "YANGI ZELANDIYA",
+        "LetterCode": "NZ",
+        "DigitalCode": "554"
+    },
+    {
+        "Id": "151",
+        "shortName": "YANGI KALEDONIYA",
+        "FullName": "YANGI KALEDONIYA (FRANSIYA)",
+        "LetterCode": "NC",
+        "DigitalCode": "540"
+    },
+    {
+        "Id": "152",
+        "shortName": "NORVEGIYA",
+        "FullName": "NORVEGIYA QIROLLIGI",
+        "LetterCode": "NO",
+        "DigitalCode": "578"
+    },
+    {
+        "Id": "153",
+        "shortName": "NORMAND OROLLARI",
+        "FullName": "NORMAND OROLLARI, GERNSI VA JERSIDAN TASHQARI",
+        "LetterCode": "-",
+        "DigitalCode": "830"
+    },
+    {
+        "Id": "154",
+        "shortName": "NORFOLK",
+        "FullName": "NORFOLK OROLI",
+        "LetterCode": "NF",
+        "DigitalCode": "574"
+    },
+    {
+        "Id": "155",
+        "shortName": "BIRLASHGAN ARAB AMIRLIKLARI",
+        "FullName": "BIRLASHGAN ARAB AMIRLIKLARI",
+        "LetterCode": "AE",
+        "DigitalCode": "784"
+    },
+    {
+        "Id": "156",
+        "shortName": "MEN OROLI",
+        "FullName": "MEN OROLI",
+        "LetterCode": "IM",
+        "DigitalCode": "833"
+    },
+    {
+        "Id": "157",
+        "shortName": "ROJDESTVO OROLI",
+        "FullName": "ROJDESTVO OROLI (AVSTRALIYA)",
+        "LetterCode": "CX",
+        "DigitalCode": "162"
+    },
+    {
+        "Id": "158",
+        "shortName": "KUK OROLLARI",
+        "FullName": "KUK OROLLARI (YANGI ZELANDIYA)",
+        "LetterCode": "СК",
+        "DigitalCode": "184"
+    },
+    {
+        "Id": "159",
+        "shortName": "UMMON",
+        "FullName": "UMMON SULTONLIGI",
+        "LetterCode": "OM",
+        "DigitalCode": "512"
+    },
+    {
+        "Id": "160",
+        "shortName": "POKISTON",
+        "FullName": "POKISTON ISLOM RESPUBLIKASI",
+        "LetterCode": "PK",
+        "DigitalCode": "586"
+    },
+    {
+        "Id": "161",
+        "shortName": "PALAU",
+        "FullName": "PALAU RESPUBLIKASI",
+        "LetterCode": "PW",
+        "DigitalCode": "585"
+    },
+    {
+        "Id": "162",
+        "shortName": "FALASTIN",
+        "FullName": "FALASTIN DAVLATI",
+        "LetterCode": "PS",
+        "DigitalCode": "275"
+    },
+    {
+        "Id": "163",
+        "shortName": "PANAMA",
+        "FullName": "PANAMA RESPUBLIKASI",
+        "LetterCode": "PA",
+        "DigitalCode": "591"
+    },
+    {
+        "Id": "164",
+        "shortName": "PAPUA — YANGI GVINEYA",
+        "FullName": "PAPUA — YANGI GVINEYA",
+        "LetterCode": "PG",
+        "DigitalCode": "598"
+    },
+    {
+        "Id": "165",
+        "shortName": "PARAGVAY",
+        "FullName": "PARAGVAY RESPUBLIKASI",
+        "LetterCode": "PY",
+        "DigitalCode": "600"
+    },
+    {
+        "Id": "166",
+        "shortName": "PERU",
+        "FullName": "PERU RESPUBLIKASI",
+        "LetterCode": "PE",
+        "DigitalCode": "604"
+    },
+    {
+        "Id": "167",
+        "shortName": "PITKERN",
+        "FullName": "PITKERN (BRITANIYA)",
+        "LetterCode": "PN",
+        "DigitalCode": "612"
+    },
+    {
+        "Id": "168",
+        "shortName": "POLSHA",
+        "FullName": "POLSHA RESPUBLIKASI",
+        "LetterCode": "PL",
+        "DigitalCode": "616"
+    },
+    {
+        "Id": "169",
+        "shortName": "PORTUGALIYA",
+        "FullName": "PORTUGALIYA RESPUBLIKASI",
+        "LetterCode": "PT",
+        "DigitalCode": "620"
+    },
+    {
+        "Id": "170",
+        "shortName": "PUERTO-RIKO",
+        "FullName": "PUERTO-RIKO",
+        "LetterCode": "PR",
+        "DigitalCode": "630"
+    },
+    {
+        "Id": "171",
+        "shortName": "REYUNYON",
+        "FullName": "REYUNYON",
+        "LetterCode": "RE",
+        "DigitalCode": "638"
+    },
+    {
+        "Id": "172",
+        "shortName": "ROSSIYA",
+        "FullName": "ROSSIYA FEDERATSIYASI",
+        "LetterCode": "RU",
+        "DigitalCode": "643"
+    },
+    {
+        "Id": "173",
+        "shortName": "RUANDA",
+        "FullName": "RUANDA RESPUBLIKASI",
+        "LetterCode": "RW",
+        "DigitalCode": "646"
+    },
+    {
+        "Id": "174",
+        "shortName": "RUMINIYA",
+        "FullName": "RUMINIYA",
+        "LetterCode": "RO",
+        "DigitalCode": "642"
+    },
+    {
+        "Id": "175",
+        "shortName": "SALVADOR",
+        "FullName": "SALVADOR RESPUBLIKASI",
+        "LetterCode": "SV",
+        "DigitalCode": "222"
+    },
+    {
+        "Id": "176",
+        "shortName": "SAMOA",
+        "FullName": "SAMOA MUSTAQIL DAVLATI",
+        "LetterCode": "WS",
+        "DigitalCode": "882"
+    },
+    {
+        "Id": "177",
+        "shortName": "SAN-TOME VA PRINSIPI",
+        "FullName": "SAN-TOME VA PRINSIPI DEMOKRATIK RESPUBLIKASI",
+        "LetterCode": "ST",
+        "DigitalCode": "678"
+    },
+    {
+        "Id": "178",
+        "shortName": "SAN-MARINO",
+        "FullName": "SAN-MARINO RESPUBLIKASI",
+        "LetterCode": "SM",
+        "DigitalCode": "674"
+    },
+    {
+        "Id": "179",
+        "shortName": "SAUDIYA ARABISTONI",
+        "FullName": "SAUDIYA ARABISTONI QIROLLIGI",
+        "LetterCode": "SA",
+        "DigitalCode": "682"
+    },
+    {
+        "Id": "180",
+        "shortName": "SVAZILEND",
+        "FullName": "SVAZILEND QIROLLIGI",
+        "LetterCode": "SZ",
+        "DigitalCode": "748"
+    },
+    {
+        "Id": "181",
+        "shortName": "MUQADDAS YELENA",
+        "FullName": "MUQADDAS YELENA OROLI (BRITANIYA)",
+        "LetterCode": "SН",
+        "DigitalCode": "654"
+    },
+    {
+        "Id": "182",
+        "shortName": "SEYSHAL OROLLARI",
+        "FullName": "SEYSHAL OROLLARI RESPUBLIKASI",
+        "LetterCode": "SC",
+        "DigitalCode": "690"
+    },
+    {
+        "Id": "183",
+        "shortName": "SEN-BARTELEMI",
+        "FullName": "SEN-BARTELEMI",
+        "LetterCode": "BL",
+        "DigitalCode": "652"
+    },
+    {
+        "Id": "184",
+        "shortName": "SEN-MARTEN (NIDERLAND)",
+        "FullName": "SEN-MARTEN (NIDERLAND)",
+        "LetterCode": "MF",
+        "DigitalCode": "534"
+    },
+    {
+        "Id": "185",
+        "shortName": "SEN-MARTEN (FRANSIYA)",
+        "FullName": "SEN-MARTEN (FRANSIYA)",
+        "LetterCode": "MF",
+        "DigitalCode": "663"
+    },
+    {
+        "Id": "186",
+        "shortName": "SEN-PYER VA MIKELON",
+        "FullName": "SEN-PYER VA MIKELON (FRANSIYA)",
+        "LetterCode": "PM",
+        "DigitalCode": "666"
+    },
+    {
+        "Id": "187",
+        "shortName": "SENEGAL",
+        "FullName": "SENEGAL RESPUBLIKASI",
+        "LetterCode": "SN",
+        "DigitalCode": "686"
+    },
+    {
+        "Id": "188",
+        "shortName": "SENT-VINSENT VA GRENADINLAR",
+        "FullName": "SENT-VINSENT VA GRENADINLAR",
+        "LetterCode": "VC",
+        "DigitalCode": "670"
+    },
+    {
+        "Id": "189",
+        "shortName": "SENT-KITS VA NEVIS",
+        "FullName": "SENT-KITS (SENT-KRISTOFER) VA NEVIS FEDERATSIYASI",
+        "LetterCode": "KN",
+        "DigitalCode": "659"
+    },
+    {
+        "Id": "190",
+        "shortName": "SENT-LYUSIYA",
+        "FullName": "SENT-LYUSIYA",
+        "LetterCode": "LC",
+        "DigitalCode": "662"
+    },
+    {
+        "Id": "191",
+        "shortName": "SERBIYA",
+        "FullName": "SERBIYA RESPUBLIKASI",
+        "LetterCode": "RS",
+        "DigitalCode": "688"
+    },
+    {
+        "Id": "192",
+        "shortName": "SINGAPUR",
+        "FullName": "SINGAPUR RESPUBLIKASI",
+        "LetterCode": "SG",
+        "DigitalCode": "702"
+    },
+    {
+        "Id": "193",
+        "shortName": "SURIYA",
+        "FullName": "SURIYA ARAB RESPUBLIKASI",
+        "LetterCode": "SY",
+        "DigitalCode": "760"
+    },
+    {
+        "Id": "194",
+        "shortName": "SLOVAKIYA",
+        "FullName": "SLOVAKIYA RESPUBLIKASI",
+        "LetterCode": "SK",
+        "DigitalCode": "703"
+    },
+    {
+        "Id": "195",
+        "shortName": "SLOVENIYA",
+        "FullName": "SLOVENIYA RESPUBLIKASI",
+        "LetterCode": "SI",
+        "DigitalCode": "705"
+    },
+    {
+        "Id": "196",
+        "shortName": "BIRLASHGAN QIROLLIK",
+        "FullName": "BUYUK BRITANIYA VA SHIMOLIY IRLANDIYA BIRLASHGAN QIROLLIGI",
+        "LetterCode": "GB",
+        "DigitalCode": "826"
+    },
+    {
+        "Id": "197",
+        "shortName": "SOLOMON OROLLARI",
+        "FullName": "SOLOMON OROLLARI",
+        "LetterCode": "SB",
+        "DigitalCode": "90"
+    },
+    {
+        "Id": "198",
+        "shortName": "SOMALI",
+        "FullName": "SOMALI RESPUBLIKASI",
+        "LetterCode": "SO",
+        "DigitalCode": "706"
+    },
+    {
+        "Id": "199",
+        "shortName": "SUDAN",
+        "FullName": "SUDAN RESPUBLIKASI",
+        "LetterCode": "SD",
+        "DigitalCode": "736"
+    },
+    {
+        "Id": "200",
+        "shortName": "SURINAM",
+        "FullName": "SURINAM RESPUBLIKASI",
+        "LetterCode": "SR",
+        "DigitalCode": "740"
+    },
+    {
+        "Id": "201",
+        "shortName": "AQSH",
+        "FullName": "AMERIKA QO‘SHMA SHTATLARI",
+        "LetterCode": "US",
+        "DigitalCode": "840"
+    },
+    {
+        "Id": "202",
+        "shortName": "SYERRA-LEONE",
+        "FullName": "SYERRA-LEONE RESPUBLIKASI",
+        "LetterCode": "SL",
+        "DigitalCode": "694"
+    },
+    {
+        "Id": "203",
+        "shortName": "TOJIKISTON",
+        "FullName": "TOJIKISTON RESPUBLIKASI",
+        "LetterCode": "TJ",
+        "DigitalCode": "762"
+    },
+    {
+        "Id": "204",
+        "shortName": "TAYLAND",
+        "FullName": "TAYLAND QIROLLIGI",
+        "LetterCode": "TН",
+        "DigitalCode": "764"
+    },
+    {
+        "Id": "205",
+        "shortName": "TAYVAN",
+        "FullName": "TAYVAN (XITOY VILOYATI)",
+        "LetterCode": "TW",
+        "DigitalCode": "158"
+    },
+    {
+        "Id": "206",
+        "shortName": "TANZANIYA",
+        "FullName": "TANZANIYA BIRLASHGAN RESPUBLIKASI",
+        "LetterCode": "TZ",
+        "DigitalCode": "834"
+    },
+    {
+        "Id": "207",
+        "shortName": "TERKS VA KAYKOS",
+        "FullName": "TERKS VA KAYKOS OROLLARI (BRITANIYA)",
+        "LetterCode": "TC",
+        "DigitalCode": "796"
+    },
+    {
+        "Id": "208",
+        "shortName": "TIMOR-LESTE",
+        "FullName": "TIMOR-LESTE DEMOKRATIK RESPUBLIKASI",
+        "LetterCode": "TP",
+        "DigitalCode": "626"
+    },
+    {
+        "Id": "209",
+        "shortName": "TOGO",
+        "FullName": "TOGO RESPUBLIKASI",
+        "LetterCode": "TG",
+        "DigitalCode": "768"
+    },
+    {
+        "Id": "210",
+        "shortName": "TOKELAU",
+        "FullName": "TOKELAU (YANGI ZELANDIYA)",
+        "LetterCode": "TK",
+        "DigitalCode": "772"
+    },
+    {
+        "Id": "211",
+        "shortName": "TONGA",
+        "FullName": "TONGA QIROLLIGI",
+        "LetterCode": "TO",
+        "DigitalCode": "776"
+    },
+    {
+        "Id": "212",
+        "shortName": "TRINIDAD VA TOBAGO",
+        "FullName": "TRINIDAD VA TOBAGO RESPUBLIKASI",
+        "LetterCode": "TT",
+        "DigitalCode": "780"
+    },
+    {
+        "Id": "213",
+        "shortName": "TUVALU",
+        "FullName": "TUVALU",
+        "LetterCode": "TV",
+        "DigitalCode": "798"
+    },
+    {
+        "Id": "214",
+        "shortName": "TUNIS",
+        "FullName": "TUNIS RESPUBLIKASI",
+        "LetterCode": "TN",
+        "DigitalCode": "788"
+    },
+    {
+        "Id": "215",
+        "shortName": "TURKMENISTON",
+        "FullName": "TURKMENISTON",
+        "LetterCode": "TM",
+        "DigitalCode": "795"
+    },
+    {
+        "Id": "216",
+        "shortName": "TURKIYA",
+        "FullName": "TURKIYA RESPUBLIKASI",
+        "LetterCode": "TR",
+        "DigitalCode": "792"
+    },
+    {
+        "Id": "217",
+        "shortName": "UGANDA",
+        "FullName": "UGANDA RESPUBLIKASI",
+        "LetterCode": "UG",
+        "DigitalCode": "800"
+    },
+    {
+        "Id": "218",
+        "shortName": "O‘ZBEKISTON",
+        "FullName": "O‘ZBEKISTON RESPUBLIKASI",
+        "LetterCode": "UZ",
+        "DigitalCode": "860"
+    },
+    {
+        "Id": "219",
+        "shortName": "UKRAINA",
+        "FullName": "UKRAINA",
+        "LetterCode": "UA",
+        "DigitalCode": "804"
+    },
+    {
+        "Id": "220",
+        "shortName": "UOLLIS VA FUTUNA",
+        "FullName": "UOLLIS VA FUTUNA OROLLARI",
+        "LetterCode": "WF",
+        "DigitalCode": "876"
+    },
+    {
+        "Id": "221",
+        "shortName": "URUGVAY",
+        "FullName": "URUGVAY SHARQIY RESPUBLIKASI",
+        "LetterCode": "UY",
+        "DigitalCode": "858"
+    },
+    {
+        "Id": "222",
+        "shortName": "FARER OROLLARI",
+        "FullName": "FARER OROLLARI (DANIYA TARKIBIDA)",
+        "LetterCode": "FO",
+        "DigitalCode": "234"
+    },
+    {
+        "Id": "223",
+        "shortName": "FIJI",
+        "FullName": "FIJI OROLLARI RESPUBLIKASI",
+        "LetterCode": "FJ",
+        "DigitalCode": "242"
+    },
+    {
+        "Id": "224",
+        "shortName": "FILIPPINLAR",
+        "FullName": "FILIPPINLAR RESPUBLIKASI",
+        "LetterCode": "PН",
+        "DigitalCode": "608"
+    },
+    {
+        "Id": "225",
+        "shortName": "FINLANDIYA",
+        "FullName": "FINLANDIYA RESPUBLIKASI",
+        "LetterCode": "FI",
+        "DigitalCode": "246"
+    },
+    {
+        "Id": "226",
+        "shortName": "FOLKLEND OROLLARI",
+        "FullName": "FOLKLEND OROLLARI (MALVIN OROLLARI)",
+        "LetterCode": "FK",
+        "DigitalCode": "238"
+    },
+    {
+        "Id": "227",
+        "shortName": "FRANSIYA JANUBIY HUDUDLARI",
+        "FullName": "FRANSIYA JANUBIY HUDUDLARI (FRANSIYA)",
+        "LetterCode": "TF",
+        "DigitalCode": "260"
+    },
+    {
+        "Id": "228",
+        "shortName": "FRANSIYA",
+        "FullName": "FRANSIYA RESPUBLIKASI",
+        "LetterCode": "FR",
+        "DigitalCode": "250"
+    },
+    {
+        "Id": "229",
+        "shortName": "FRANSIYA GVIANASI",
+        "FullName": "FRANSIYA GVIANASI (FRANSIYA)",
+        "LetterCode": "GF",
+        "DigitalCode": "254"
+    },
+    {
+        "Id": "230",
+        "shortName": "FRANSIYA POLINEZIYASI",
+        "FullName": "FRANSIYA POLINEZIYASI (FRANSIYA)",
+        "LetterCode": "PF",
+        "DigitalCode": "258"
+    },
+    {
+        "Id": "231",
+        "shortName": "XERD VA MAKDONALD",
+        "FullName": "XERD OROLI VA MAKDONALD OROLLARI",
+        "LetterCode": "НM",
+        "DigitalCode": "334"
+    },
+    {
+        "Id": "232",
+        "shortName": "XORVATIYA",
+        "FullName": "XORVATIYA RESPUBLIKASI",
+        "LetterCode": "НR",
+        "DigitalCode": "191"
+    },
+    {
+        "Id": "233",
+        "shortName": "MARKAZIY AFRIKA RESPUBLIKASI",
+        "FullName": "MARKAZIY AFRIKA RESPUBLIKASI",
+        "LetterCode": "CF",
+        "DigitalCode": "140"
+    },
+    {
+        "Id": "234",
+        "shortName": "CHAD",
+        "FullName": "CHAD RESPUBLIKASI",
+        "LetterCode": "TD",
+        "DigitalCode": "148"
+    },
+    {
+        "Id": "235",
+        "shortName": "CHERNO’GORIYA",
+        "FullName": "CHERNO’GORIYA RESPUBLIKASI",
+        "LetterCode": "ME",
+        "DigitalCode": "499"
+    },
+    {
+        "Id": "236",
+        "shortName": "CHEXIYA",
+        "FullName": "CHEXIYA RESPUBLIKASI",
+        "LetterCode": "CZ",
+        "DigitalCode": "203"
+    },
+    {
+        "Id": "237",
+        "shortName": "CHILI",
+        "FullName": "CHILI RESPUBLIKASI",
+        "LetterCode": "CL",
+        "DigitalCode": "152"
+    },
+    {
+        "Id": "238",
+        "shortName": "SHVEYTSARIYA",
+        "FullName": "SHVEYTSARIYA KONFEDERATSIYASI",
+        "LetterCode": "CН",
+        "DigitalCode": "756"
+    },
+    {
+        "Id": "239",
+        "shortName": "SHVESIYA",
+        "FullName": "SHVESIYA QIROLLIGI",
+        "LetterCode": "SE",
+        "DigitalCode": "752"
+    },
+    {
+        "Id": "240",
+        "shortName": "SHPIZBERGEN VA YAN-MAYEN",
+        "FullName": "SHPIZBERGEN VA YAN-MAYEN (NORVEGIYA)",
+        "LetterCode": "SJ",
+        "DigitalCode": "744"
+    },
+    {
+        "Id": "241",
+        "shortName": "SHRI-LANKA",
+        "FullName": "SHRI-LANKA DEMOKRATIK SOTSIALISTIK RESPUBLIKASI",
+        "LetterCode": "LK",
+        "DigitalCode": "144"
+    },
+    {
+        "Id": "242",
+        "shortName": "EKVADOR",
+        "FullName": "EKVADOR RESPUBLIKASI",
+        "LetterCode": "EC",
+        "DigitalCode": "218"
+    },
+    {
+        "Id": "243",
+        "shortName": "EKVATORIAL GVINEYA",
+        "FullName": "EKVATORIAL GVINEYA RESPUBLIKASI",
+        "LetterCode": "GQ",
+        "DigitalCode": "226"
+    },
+    {
+        "Id": "244",
+        "shortName": "ERITREYA",
+        "FullName": "ERITREYA",
+        "LetterCode": "ER",
+        "DigitalCode": "232"
+    },
+    {
+        "Id": "245",
+        "shortName": "ESTONIYA",
+        "FullName": "ESTONIYA RESPUBLIKASI",
+        "LetterCode": "EE",
+        "DigitalCode": "233"
+    },
+    {
+        "Id": "246",
+        "shortName": "EFIOPIYA",
+        "FullName": "EFIOPIYA FEDERATIV DEMOKRATIK RESPUBLIKASI",
+        "LetterCode": "ET",
+        "DigitalCode": "231"
+    },
+    {
+        "Id": "247",
+        "shortName": "JANUBIY AFRIKA",
+        "FullName": "JANUBIY AFRIKA RESPUBLIKASI",
+        "LetterCode": "ZA",
+        "DigitalCode": "710"
+    },
+    {
+        "Id": "248",
+        "shortName": "JANUBIY SUDAN",
+        "FullName": "JANUBIY SUDAN",
+        "LetterCode": "SS",
+        "DigitalCode": "728"
+    },
+    {
+        "Id": "249",
+        "shortName": "JANUBIY JORJIYA VA JANUBIY SANDVICH OROLLARI",
+        "FullName": "JANUBIY JORJIYA VA JANUBIY SANDVICH OROLLARI",
+        "LetterCode": "GS",
+        "DigitalCode": "239"
+    },
+    {
+        "Id": "250",
+        "shortName": "YAMAYKA",
+        "FullName": "YAMAYKA",
+        "LetterCode": "JM",
+        "DigitalCode": "388"
+    },
+    {
+        "Id": "251",
+        "shortName": "YAPONIYA",
+        "FullName": "YAPONIYA",
+        "LetterCode": "JP",
+        "DigitalCode": "392"
+    },
+    {
+        "Id": "1",
+        "shortName": "AVSTRALIYA",
+        "FullName": "AVSTRALIYA",
+        "LetterCode": "AU",
+        "DigitalCode": "36"
+    }
+]

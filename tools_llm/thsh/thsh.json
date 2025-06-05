@@ -1,0 +1,198 @@
+[
+    {
+        "CODE": "100",
+        "groupcode": "-",
+        "name": "Tijorat tashkilotlari – yuridik shaxslarning tashkiliy-huquqiy shakllari",
+        "shortname": "-",
+        "correspondence": "-"
+    },
+    {
+        "CODE": "110",
+        "groupcode": "100",
+        "name": "Xususiy korxona",
+        "shortname": "XK",
+        "correspondence": "1010"
+    },
+    {
+        "CODE": "120",
+        "groupcode": "100",
+        "name": "Oilaviy korxona",
+        "shortname": "OK",
+        "correspondence": "1190"
+    },
+    {
+        "CODE": "130",
+        "groupcode": "100",
+        "name": "Fermer xo‘jaligi",
+        "shortname": "FX",
+        "correspondence": "1180*"
+    },
+    {
+        "CODE": "140",
+        "groupcode": "100",
+        "name": "Dehqon xo‘jaligi (yuridik shaxs tashkil etgan holda) ",
+        "shortname": "DX",
+        "correspondence": "1180*"
+    },
+    {
+        "CODE": "151",
+        "groupcode": "100",
+        "name": "Xo‘jalik shirkati",
+        "shortname": "XSh",
+        "correspondence": "1153, 1152*"
+    },
+    {
+        "CODE": "152",
+        "groupcode": "100",
+        "name": "Mas’uliyati cheklangan yoki qo‘shimcha mas’uliyatli jamiyat",
+        "shortname": "MJ",
+        "correspondence": "1152*"
+    },
+    {
+        "CODE": "153",
+        "groupcode": "100",
+        "name": "Aksiyadorlik jamiyati",
+        "shortname": "AJ",
+        "correspondence": "1150, 1151"
+    },
+    {
+        "CODE": "160",
+        "groupcode": "100",
+        "name": "Unitar korxona",
+        "shortname": "UK",
+        "correspondence": "1110, 1200"
+    },
+    {
+        "CODE": "170",
+        "groupcode": "100",
+        "name": "Ishlab chiqarish kooperativi",
+        "shortname": "IK",
+        "correspondence": "1170"
+    },
+    {
+        "CODE": "190",
+        "groupcode": "100",
+        "name": "Boshqa guruhlarga kiritilmagan tijoratchi tashkilot",
+        "shortname": "TTb",
+        "correspondence": "1290"
+    },
+    {
+        "CODE": "200",
+        "groupcode": "-",
+        "name": "Notijorat tashkilotlari – yuridik shaxslarning tashkiliy-huquqiy shakllari",
+        "shortname": "-",
+        "correspondence": "-"
+    },
+    {
+        "CODE": "210",
+        "groupcode": "200",
+        "name": "Jamoat birlashmasi",
+        "shortname": "JB",
+        "correspondence": "2200"
+    },
+    {
+        "CODE": "220",
+        "groupcode": "200",
+        "name": "Fuqarolarning o‘zini-o‘zi boshqarish organi ",
+        "shortname": "FOBO",
+        "correspondence": "2110"
+    },
+    {
+        "CODE": "230",
+        "groupcode": "200",
+        "name": "Matlubot kooperativi",
+        "shortname": "MK",
+        "correspondence": "2600*"
+    },
+    {
+        "CODE": "240",
+        "groupcode": "200",
+        "name": "Xususiy uy-joy mulkdorlarining shirkati ",
+        "shortname": "XUMSh",
+        "correspondence": "2600*, 2900*"
+    },
+    {
+        "CODE": "250",
+        "groupcode": "200",
+        "name": "Jamoat fondi",
+        "shortname": "JF",
+        "correspondence": "2400*"
+    },
+    {
+        "CODE": "260",
+        "groupcode": "200",
+        "name": "Yuridik shaxslarning birlashmasi (uyushma)",
+        "shortname": "U",
+        "correspondence": "2400*"
+    },
+    {
+        "CODE": "270",
+        "groupcode": "200",
+        "name": "Muassasa",
+        "shortname": "M",
+        "correspondence": "2100, 2300, 2900*"
+    },
+    {
+        "CODE": "290",
+        "groupcode": "200",
+        "name": "Boshqa guruhlarga kiritilmagan notijorat tashkilot",
+        "shortname": "NTb",
+        "correspondence": "2900*"
+    },
+    {
+        "CODE": "300",
+        "groupcode": "-",
+        "name": "Yuridik shaxs bo‘lmagan alohida bo‘linmalarning tashkiliy-huquqiy shakllari ",
+        "shortname": "-",
+        "correspondence": "-"
+    },
+    {
+        "CODE": "310",
+        "groupcode": "300",
+        "name": "Filial",
+        "shortname": "F",
+        "correspondence": "-"
+    },
+    {
+        "CODE": "320",
+        "groupcode": "300",
+        "name": "Vakolatxona",
+        "shortname": "V",
+        "correspondence": "-"
+    },
+    {
+        "CODE": "330",
+        "groupcode": "300",
+        "name": "Filial yoki vakolatxona sifatida rasmiylashtirilmagan alohida bo‘linma ",
+        "shortname": "FVb",
+        "correspondence": "-"
+    },
+    {
+        "CODE": "400",
+        "groupcode": "-",
+        "name": "Fuqarolarning tijorat faoliyatining tashkiliy-huquqiy shakllari ",
+        "shortname": "-",
+        "correspondence": "-"
+    },
+    {
+        "CODE": "410",
+        "groupcode": "400",
+        "name": "Yuridik shaxs tashkil etmagan dehqon xo‘jaligi ",
+        "shortname": "DXj",
+        "correspondence": "-"
+    },
+    {
+        "CODE": "420",
+        "groupcode": "400",
+        "name": "Yakka tartibdagi tadbirkor ",
+        "shortname": "YTT",
+        "correspondence": "-"
+    },
+    {
+        "CODE": "430",
+        "groupcode": "400",
+        "name": "Yuridik shaxs tashkil etmagan oilaviy tadbirkorlik",
+        "shortname": "OKj",
+        "correspondence": "-"
+    }
+]
