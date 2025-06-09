@@ -75,7 +75,21 @@ class CountryTool(BaseTool):
             self.entity_texts.append(country_text)
             self.entity_infos.append(("country", country))
         
-        print(f"Embedding uchun {len(self.entity_texts)} ta davlat ma'lumoti tayyorlandi.")
+        # Embeddinglarni oldindan hisoblash
+        try:
+            if self.use_embeddings and self.embedding_model is not None and self.entity_texts:
+                model = self.embedding_model.model
+                self.entity_embeddings_cache = model.encode(
+                    self.entity_texts, 
+                    convert_to_tensor=True, 
+                    show_progress_bar=False
+                )
+                print(f"Embedding uchun {len(self.entity_texts)} ta davlat ma'lumoti tayyorlandi va keshga saqlandi.")
+            else:
+                print(f"Embedding uchun {len(self.entity_texts)} ta davlat ma'lumoti tayyorlandi.")
+        except Exception as e:
+            logging.error(f"Embeddinglarni hisoblashda xatolik: {str(e)}")
+            print(f"Embedding uchun {len(self.entity_texts)} ta davlat ma'lumoti tayyorlandi (embedding kesh yaratilmadi).")
     
     def _search_country_data(self, query: str) -> str:
         """Davlat ma'lumotlaridan so'rov bo'yicha ma'lumot qidirish."""
@@ -136,39 +150,72 @@ class CountryTool(BaseTool):
         if not self.entity_texts or not self.embedding_model:
             return ""
         
-        # So'rovni embedding qilish
-        query_embedding = self.embedding_model([query])[0]  # __call__ metodini ishlatish
-        
-        # Barcha ma'lumotlar embeddinglarini olish
-        entity_embeddings = self.embedding_model(self.entity_texts)  # __call__ metodini ishlatish
-        
-        # Eng o'xshash ma'lumotlarni topish
-        query_embedding_tensor = torch.tensor([query_embedding])
-        entity_embeddings_tensor = torch.tensor(entity_embeddings)
-        cos_scores = util.cos_sim(query_embedding_tensor, entity_embeddings_tensor)[0]
-        
-        # Top 3 natijalarni olish
-        top_results = torch.topk(cos_scores, k=min(3, len(cos_scores)))
-        
-        # Natijalarni formatlash
-        results = []
-        for score, idx in zip(top_results[0], top_results[1]):
-            if score > 0.5:  # Minimal o'xshashlik chegarasi
-                entity_type, entity_info = self.entity_infos[idx]
-                if entity_type == "country":
-                    results.append((score.item(), self._format_country_info(entity_info)))
-        
-        # Natijalarni o'xshashlik darajasi bo'yicha saralash
-        results.sort(key=lambda x: x[0], reverse=True)
-        
-        if results:
-            if len(results) == 1:
-                return results[0][1]
-            else:
-                result = "Davlat ma'lumotlari:\n\n"
-                for _, country_info in results:
-                    result += country_info + "\n\n"
-                return result
+        try:
+            # CustomEmbeddingFunction obyektidan SentenceTransformer modelini olish
+            model = self.embedding_model.model
+            
+            # So'rovni embedding qilish
+            query_embedding = model.encode(query, convert_to_tensor=True, show_progress_bar=False)
+            
+            # Barcha ma'lumotlarni embedding qilish
+            # Agar entity_embeddings_cache mavjud bo'lmasa, yangi embeddinglarni hisoblash
+            if not hasattr(self, 'entity_embeddings_cache') or self.entity_embeddings_cache is None:
+                logging.info("Embeddinglar keshi yaratilmoqda...")
+                self.entity_embeddings_cache = model.encode(
+                    self.entity_texts, 
+                    convert_to_tensor=True, 
+                    show_progress_bar=False
+                )
+            
+            # Eng o'xshash ma'lumotlarni topish
+            cos_scores = util.cos_sim(query_embedding, self.entity_embeddings_cache)[0]
+            
+            # Top 3 natijalarni olish
+            top_k = min(3, len(cos_scores))
+            if top_k == 0:
+                return ""
+                
+            top_results = torch.topk(cos_scores, k=top_k)
+            
+            # Natijalarni formatlash
+            results = []
+            for score, idx in zip(top_results[0], top_results[1]):
+                if score > 0.5:  # Minimal o'xshashlik chegarasi
+                    entity_type, entity_info = self.entity_infos[idx]
+                    if entity_type == "country":
+                        results.append((score.item(), self._format_country_info(entity_info)))
+            
+            # Natijalarni o'xshashlik darajasi bo'yicha saralash
+            results.sort(key=lambda x: x[0], reverse=True)
+            
+            if results:
+                if len(results) == 1:
+                    return results[0][1]
+                else:
+                    result = "Davlat ma'lumotlari:\n\n"
+                    for _, country_info in results:
+                        result += country_info + "\n\n"
+                    return result
+        except Exception as e:
+            logging.error(f"Semantik qidirishda xatolik: {str(e)}")
+            # Xatolik bo'lganda oddiy qidiruv natijasini qaytarish
+            matching_countries = []
+            query_upper = query.upper()
+            for country in self.country_data:
+                short_name = country.get('shortName', '').upper()
+                full_name = country.get('FullName', '').upper()
+                
+                if query_upper in short_name or query_upper in full_name:
+                    matching_countries.append(country)
+            
+            if matching_countries:
+                if len(matching_countries) == 1:
+                    return self._format_country_info(matching_countries[0])
+                else:
+                    result = "Davlat ma'lumotlari:\n\n"
+                    for country in matching_countries[:3]:  # Faqat birinchi 3 tasini ko'rsatish
+                        result += self._format_country_info(country) + "\n\n"
+                    return result
         
         return ""
     

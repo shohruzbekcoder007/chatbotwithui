@@ -65,17 +65,17 @@ class NationTool(BaseTool):
                 self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
                 self._prepare_embedding_data()
             
+            # CustomEmbeddingFunction obyektidan SentenceTransformer modelini olish
+            model = self.embedding_model.model
+            
             # Query embeddingini olish
-            query_embedding = self.embedding_model.encode([query])[0]
+            query_embedding = model.encode(query, convert_to_tensor=True, show_progress_bar=False)
             
             # Entity embeddinglarini olish
-            entity_embeddings = self.embedding_model.encode(self.entity_texts)
+            entity_embeddings = model.encode(self.entity_texts, convert_to_tensor=True, show_progress_bar=False)
             
             # Cosine similarityni hisoblash
-            cos_scores = []
-            for entity_embedding in entity_embeddings:
-                cos_score = util.cos_sim([query_embedding], [entity_embedding])[0][0]
-                cos_scores.append(cos_score)
+            cos_scores = util.cos_sim(query_embedding, entity_embeddings)[0]
             
             # Natijalarni saralash
             cos_scores_tensor = torch.tensor(cos_scores)
