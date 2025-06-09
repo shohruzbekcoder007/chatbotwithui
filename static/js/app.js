@@ -244,7 +244,40 @@ document.addEventListener('DOMContentLoaded', async function () {
             redirectWithNewChat();
         });
     }
+    
+    // Setup chat link click handlers
+    setupChatLinkHandlers();
 });
+
+// Function to setup click handlers for chat links
+function setupChatLinkHandlers() {
+    // Use event delegation for chat links (works for dynamically added elements too)
+    document.querySelector('.chat-history').addEventListener('click', function(event) {
+        // Find if a chat link was clicked
+        const chatLink = event.target.closest('.chat-link');
+        if (chatLink) {
+            event.preventDefault(); // Prevent default navigation
+            
+            // Extract chat_id from href
+            const url = new URL(chatLink.href);
+            const chatId = url.searchParams.get('chat_id');
+            
+            if (chatId) {
+                // Update URL without page reload
+                window.history.pushState({}, '', `/?chat_id=${chatId}`);
+                
+                // Mark this chat as active
+                document.querySelectorAll('.chat-history-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                chatLink.querySelector('.chat-history-item').classList.add('active');
+                
+                // Load chat messages
+                loadChatMessages(chatId);
+            }
+        }
+    });
+}
 
 // Pagination state for chat list
 let chatListPagination = {
@@ -483,8 +516,7 @@ async function loadChatMessages(chatId) {
                     </div>
                 </div>
             </div>
-        </div>
-    `;
+        `;
             });
 
             // Auto scroll to bottom
