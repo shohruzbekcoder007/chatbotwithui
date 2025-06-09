@@ -8,7 +8,7 @@ from models.chat_message import ChatMessage
 router = APIRouter(prefix="/api", tags=["chat"])
 
 @router.get("/user-chats")
-async def get_user_chats(request: Request):
+async def get_user_chats(request: Request, limit: int = 10, offset: int = 0):
     try:
         # user_id ni olish
         user_id = request.state.user_id
@@ -20,10 +20,13 @@ async def get_user_chats(request: Request):
                 detail="Authentication required"
             )
         
-        # Foydalanuvchining barcha suhbatlarini olish
+        # Umumiy chat sonini olish (pagination uchun)
+        total_chats = await UserChatList.find(UserChatList.user_id == user_id).count()
+        
+        # Foydalanuvchining suhbatlarini pagination bilan olish
         user_chats = await UserChatList.find(
             UserChatList.user_id == user_id
-        ).sort("-updated_at").to_list()  # Eng so'nggi yangilangan birinchi
+        ).sort("-updated_at").skip(offset).limit(limit).to_list()  # Eng so'nggi yangilangan birinchi
         
         # Formatlash
         formatted_chats = []
@@ -35,7 +38,16 @@ async def get_user_chats(request: Request):
                 "updated_at": chat.updated_at.isoformat()
             })
         
-        return {"success": True, "chats": formatted_chats}
+        return {
+            "success": True, 
+            "chats": formatted_chats,
+            "pagination": {
+                "total": total_chats,
+                "offset": offset,
+                "limit": limit,
+                "has_more": offset + limit < total_chats
+            }
+        }
     except HTTPException as e:
         # HTTPException qayta ko'taramiz
         raise e
