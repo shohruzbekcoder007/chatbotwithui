@@ -9,6 +9,7 @@ from tools_llm.dbibt.dbibt_tool import DBIBTTool
 from tools_llm.soato.soato_tool import SoatoTool
 from tools_llm.nation.nation_tool import NationTool
 from tools_llm.ckp.ckp_tool_simple import CkpTool
+from tools_llm.country.country_tool import CountryTool
 from retriever.langchain_chroma import CustomEmbeddingFunction
 
 # LLM modelini yaratish
@@ -26,6 +27,7 @@ soato_tool = SoatoTool("tools_llm/soato/soato.json", use_embeddings=True, embedd
 nation_tool = NationTool("tools_llm/nation/nation_data.json", use_embeddings=True, embedding_model=shared_embedding_model)
 ckp_tool = CkpTool("tools_llm/ckp/ckp.json", use_embeddings=True, embedding_model=shared_embedding_model)
 dbibt_tool = DBIBTTool("tools_llm/dbibt/dbibt.json", use_embeddings=True, embedding_model=shared_embedding_model)
+country_tool = CountryTool("tools_llm/country/country.json", use_embeddings=True, embedding_model=shared_embedding_model)
 
 # Embedding ma'lumotlarini tayyorlash
 print("Barcha toollar uchun embedding ma'lumotlari tayyorlanmoqda...")
@@ -33,10 +35,11 @@ soato_tool._prepare_embedding_data()
 nation_tool._prepare_embedding_data()
 ckp_tool._prepare_embedding_data()
 dbibt_tool._prepare_embedding_data()
+country_tool._prepare_embedding_data()
 
 # Barcha toollarni bir agent ichida birlashtirish
 combined_agent = initialize_agent(
-    tools=[soato_tool, nation_tool, ckp_tool, dbibt_tool],
+    tools=[soato_tool, nation_tool, ckp_tool, dbibt_tool, country_tool],
     llm=llm,
     agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
     handle_parsing_errors=True,
@@ -51,9 +54,11 @@ combined_agent = initialize_agent(
         3. ckp_tool - MST/CKP (Mahsulotlarning tasniflagichi) ma"lumotlarini qidirish va tahlil qilish uchun mo"ljallangan vosita. Bu tool orqali mahsulotlar kodlari, nomlari va tasniflarini izlash, ularning ma"lumotlarini ko"rish va tahlil qilish mumkin. Qidiruv so"z, kod yoki tasnif bo"yicha amalga oshirilishi mumkin.
         
         4. dbibt_tool - O"zbekiston Respublikasi Davlat va xo"jalik boshqaruvi idoralarini belgilash tizimi (DBIBT) ma"lumotlarini qidirish uchun tool. Bu tool orqali DBIBT kodi, tashkilot nomi, OKPO/KTUT yoki STIR/INN raqami bo"yicha qidiruv qilish mumkin. Masalan: "08824", "Vazirlar Mahkamasi", yoki "07474" kabi so"rovlar bilan qidiruv qilish mumkin.
+        
+        5. country_tool - Davlatlar ma'lumotlarini qidirish uchun mo'ljallangan vosita. Bu tool orqali davlatlarning qisqa nomi, to'liq nomi, harf kodi va raqamli kodi bo'yicha qidiruv qilish mumkin. Misol uchun: "AQSH", "Rossiya", "UZ", "398" (Qozog'iston raqamli kodi) kabi so'rovlar orqali ma'lumotlarni izlash mumkin.
 
         Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning. 
-        Agar foydalanuvchi SOATO/MHOBIT, millat yoki MST ma'lumotlari haqida so'rasa, tegishli toolni chaqiring.
+        Agar foydalanuvchi SOATO/MHOBIT, millat, MST yoki davlat ma'lumotlari haqida so'rasa, tegishli toolni chaqiring.
         Toollarni chaqirish uchun Action formatidan foydalaning.""")
     )
 

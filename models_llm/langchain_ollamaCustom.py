@@ -14,6 +14,7 @@ from langchain_core.messages import (
 from langchain_community.chat_models import ChatOllama
 from langchain.agents import initialize_agent, AgentType
 from langchain.memory import ConversationBufferMemory
+from tools_llm.country.country_tool import CountryTool
 from tools_llm.dbibt.dbibt_tool import DBIBTTool
 from tools_llm.soato.soato_tool import SoatoTool
 from tools_llm.nation.nation_tool import NationTool
@@ -151,6 +152,7 @@ class LangChainOllamaModel:
             nation_tool = NationTool("tools_llm/nation/nation_data.json", use_embeddings=True, embedding_model=shared_embedding_model)
             ckp_tool = CkpTool("tools_llm/ckp/ckp.json", use_embeddings=True, embedding_model=shared_embedding_model)
             dbibt_tool = DBIBTTool("tools_llm/dbibt/dbibt.json", use_embeddings=True, embedding_model=shared_embedding_model)
+            country_tool = CountryTool("tools_llm/country/country.json", use_embeddings=True, embedding_model=shared_embedding_model)
             
             # Embedding ma'lumotlarini tayyorlash
             logger.info("Barcha toollar uchun embedding ma'lumotlari tayyorlanmoqda...")
@@ -158,10 +160,11 @@ class LangChainOllamaModel:
             nation_tool._prepare_embedding_data()
             ckp_tool._prepare_embedding_data()
             dbibt_tool._prepare_embedding_data()
+            country_tool._prepare_embedding_data()
             
             # Agentni yaratish - mavjud modeldan foydalanish
             self.agent = initialize_agent(
-                tools=[soato_tool, nation_tool, ckp_tool, dbibt_tool],
+                tools=[soato_tool, nation_tool, ckp_tool, dbibt_tool, country_tool],
                 llm=self.model,  # Yangi model yaratish o'rniga mavjud modeldan foydalanish
                 agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
                 handle_parsing_errors=True,
@@ -176,6 +179,8 @@ class LangChainOllamaModel:
                     3. ckp_tool - MST/CKP (Mahsulotlarning tasniflagichi) ma'lumotlarini qidirish va tahlil qilish uchun mo'ljallangan vosita. Bu tool orqali mahsulotlar kodlari, nomlari va tasniflarini izlash, ularning ma'lumotlarini ko"rish va tahlil qilish mumkin. Qidiruv so'z, kod yoki tasnif bo"yicha amalga oshirilishi mumkin.
                     
                     4. dbibt_tool - O'zbekiston Respublikasi Davlat va xo'jalik boshqaruvi idoralarini belgilash tizimi (DBIBT) ma'lumotlarini qidirish uchun tool. Bu tool orqali DBIBT kodi, tashkilot nomi, OKPO/KTUT yoki STIR/INN raqami bo"yicha qidiruv qilish mumkin. Masalan: "08824", "Vazirlar Mahkamasi", yoki "07474" kabi so"rovlar bilan qidiruv qilish mumkin.
+
+                    5. country_tool - Davlatlar ma'lumotlarini qidirish uchun mo'ljallangan vosita. Bu tool orqali davlatlarning qisqa nomi, to'liq nomi, harf kodi va raqamli kodi bo'yicha qidiruv qilish mumkin. Misol uchun: "AQSH", "Rossiya", "UZ", "398" (Qozog'iston raqamli kodi) kabi so'rovlar orqali ma'lumotlarni izlash mumkin. Natijalar davlat kodi, qisqa nomi, to'liq nomi va kodlari bilan qaytariladi.
 
                     Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning. 
                     Agar foydalanuvchi SOATO/MHOBIT (viloyat, tuman, shahar), millat yoki MST ma'lumotlari haqida so'rasa, tegishli toolni chaqiring.
@@ -200,7 +205,8 @@ class LangChainOllamaModel:
         agent_keywords = [
             "soato", "mhobit", "viloyat", "tuman", "shahar", "millat", "mst", "ckp", 
             "mahsulot", "tasnif", "dbibt", "tashkilot", "okpo", "ktut", "stir", "inn",
-            "статистика", "статистик", "statistika", "statistik"
+            "статистика", "статистик", "statistika", "statistik",
+            "davlat", "mamlakat", "country", "kod", "iso", "o'zbekiston", "uzbekistan", "aqsh", "rossiya"
         ]
         
         # So'rovni kichik harflarga o'tkazib, kalit so'zlarni tekshirish
@@ -565,7 +571,7 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "llama3.3:70b-instruct-q3_K_M", base_url: str = "http://ai-2:11434", use_agent: bool = True) -> LangChainOllamaModel:
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "devstral", base_url: str = "http://localhost:11434", use_agent: bool = True) -> LangChainOllamaModel:
     return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url, use_agent=use_agent)
 
 # Asosiy model obyekti (eski kod bilan moslik uchun)
