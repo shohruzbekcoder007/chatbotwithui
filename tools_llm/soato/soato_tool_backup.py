@@ -203,18 +203,16 @@ class SoatoTool(BaseTool):
                 code = code_match.group(1)
                 logging.info(f"Original so'rovdan SOATO kodi topildi: {code}")
                 code_result = self._search_by_code(code)
-                # Kod bo'yicha natija topilgan yoki topilmagan bo'lsa ham qaytaramiz
-                # Bu o'xshash kodlarni taklif qilish imkonini beradi
-                logging.info(f"SOATO kodi bo'yicha qidiruv natijasi: {code}")
-                return code_result
+                if code_result and "topilmadi" not in code_result:
+                    logging.info(f"SOATO kodi bo'yicha natija topildi: {code}")
+                    return code_result
         
             # Tozalangan so'rovda raqamli kod qidirish
             if re.match(r'^\d+$', query):
                 code_result = self._search_by_code(query)
-                # Kod bo'yicha natija topilgan yoki topilmagan bo'lsa ham qaytaramiz
-                # Bu o'xshash kodlarni taklif qilish imkonini beradi
-                logging.info(f"SOATO kodi bo'yicha qidiruv natijasi: {query}")
-                return code_result
+                if code_result and "topilmadi" not in code_result:
+                    logging.info(f"SOATO kodi bo'yicha natija topildi: {query}")
+                    return code_result
             
             # Agar so'rov juda qisqa bo'lib qolsa (masalan, faqat "kodi" so'zi bo'lsa), original so'rovni qaytaramiz
             if len(query) < 3 and len(original_query) > 3:
@@ -353,98 +351,7 @@ class SoatoTool(BaseTool):
         except ValueError:
             pass  # Raqamga o'tkazishda xatolik bo'lsa, o'tkazib yuborish
         
-        # Kod topilmadi, eng yaqin kodlarni topish
-        similar_codes = self._find_similar_codes(code)
-        
-        if similar_codes:
-            result = f"SOATO kodi {code} bo'yicha ma'lumot topilmadi.\n\n"
-            result += "Eng yaqin SOATO kodlari:\n"
-            for similar_code, info in similar_codes:
-                result += f"- {similar_code}: {info}\n"
-            return result
-        else:
-            return f"SOATO kodi {code} bo'yicha ma'lumot topilmadi. Iltimos, boshqa kod bilan qayta urinib ko'ring."
-    
-    def _find_similar_codes(self, code: str, max_results: int = 5) -> list:
-        """Berilgan SOATO kodiga o'xshash kodlarni topish"""
-        similar_codes = []
-        code_int = int(code)
-        
-        # Barcha mavjud SOATO kodlarini yig'ish
-        all_codes = []
-        country = self.soato_data.get("country", {})
-        
-        # Viloyatlar kodlarini yig'ish
-        for region in country.get("regions", []):
-            region_code = region.get("code")
-            if region_code:
-                all_codes.append((str(region_code), f"{region.get('name_latin', '')} viloyati"))
-            
-            # Tumanlar kodlarini yig'ish
-            for district in region.get("districts", []):
-                district_code = district.get("code")
-                if district_code:
-                    all_codes.append((str(district_code), f"{district.get('name_latin', '')} tumani, {region.get('name_latin', '')} viloyati"))
-                
-                # Shaharlar kodlarini yig'ish
-                for city in district.get("cities", []):
-                    city_code = city.get("code")
-                    if city_code:
-                        all_codes.append((str(city_code), f"{city.get('name_latin', '')} shahri, {region.get('name_latin', '')} viloyati"))
-                
-                # Shaharchalar kodlarini yig'ish
-                for settlement in district.get("urban_settlements", []):
-                    settlement_code = settlement.get("code")
-                    if settlement_code:
-                        all_codes.append((str(settlement_code), f"{settlement.get('name_latin', '')} shaharchasi, {district.get('name_latin', '')} tumani"))
-                
-                # Qishloq fuqarolar yig'inlari kodlarini yig'ish
-                for assembly in district.get("rural_assemblies", []):
-                    assembly_code = assembly.get("code")
-                    if assembly_code:
-                        all_codes.append((str(assembly_code), f"{assembly.get('name_latin', '')} QFY, {district.get('name_latin', '')} tumani"))
-        
-        # Eng o'xshash kodlarni topish
-        # 1. Birinchi raqamlari bir xil bo'lgan kodlar (viloyat kodi bir xil)
-        prefix_matches = []
-        for c, info in all_codes:
-            # Kodni raqamga o'tkazish
-            try:
-                c_int = int(c)
-                # Birinchi 2 raqami bir xil bo'lgan kodlarni topish (viloyat kodi)
-                if str(c)[:2] == code[:2] and c != code:
-                    prefix_matches.append((c, info))
-            except ValueError:
-                continue
-        
-        # 2. Raqamlar farqi eng kam bo'lgan kodlar
-        numeric_matches = []
-        for c, info in all_codes:
-            try:
-                c_int = int(c)
-                # Raqamlar farqini hisoblash
-                diff = abs(c_int - code_int)
-                # Farq 100 dan kam bo'lgan kodlarni olish
-                if diff < 100 and c != code:
-                    numeric_matches.append((c, info, diff))
-            except ValueError:
-                continue
-        
-        # Raqamlar farqi bo'yicha saralash
-        numeric_matches.sort(key=lambda x: x[2])
-        
-        # Natijalarni birlashtirish
-        # Avval prefix bo'yicha o'xshashlar
-        for c, info in prefix_matches[:3]:  # Eng ko'pi bilan 3 ta
-            if (c, info) not in similar_codes:
-                similar_codes.append((c, info))
-        
-        # Keyin raqamlar farqi bo'yicha o'xshashlar
-        for c, info, _ in numeric_matches[:max_results - len(similar_codes)]:  # Qolgan joylarni to'ldirish
-            if (c, info) not in similar_codes:
-                similar_codes.append((c, info))
-        
-        return similar_codes[:max_results]  # Eng ko'pi bilan max_results ta natija qaytarish
+        return f"SOATO kodi {code} bo'yicha ma'lumot topilmadi. Iltimos, boshqa kod bilan qayta urinib ko'ring."
     
     def _semantic_search(self, query: str) -> str:
         """Semantik qidiruv - embedding modelini ishlatib o'xshash ma'lumotlarni topish"""
