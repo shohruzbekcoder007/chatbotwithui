@@ -229,7 +229,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     const chatId = getChatIdFromUrl();
 
     if (chatId) {
-        loadChatHistory(chatId);
+        // Load chat list sidebar
+        await loadChatHistory(chatId);
+        
+        // Load the actual chat messages for this chat
+        await loadChatMessages(chatId);
     }
     // No else needed - server will handle missing chat_id
 
