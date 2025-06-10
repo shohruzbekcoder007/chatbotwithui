@@ -23,7 +23,8 @@
                         @click="open = !open">
                         <span x-text="selectedModel"></span>
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
                     <div x-show="open" @click.outside="open = false" style="width: 280px;"
@@ -271,8 +272,36 @@
                 </div>
             </div>
             <div class="chat-input-container">
-                <form class="chat-input" onsubmit="onsubmitstream(event)">
-                    <input type="text" placeholder="Xabar yozing...">
+                <form class="chat-input" onsubmit="onsubmitstream(event)" x-data="{ 
+                    open: false, 
+                    selectedValue: 'default',
+                    selectedText: 'Umumiy',
+                    options: [
+                        { value: 'default', text: 'Umumiy' },
+                        { value: 'statistics', text: 'Statistik klassifikatorlar' },
+                        { value: 'analysis', text: '1-kb shakli' },
+                        { value: 'regression', text: '2-kb shakli' }
+                    ]
+                }">
+                    <div class="custom-select-container">
+                        <input type="hidden" name="topic" :value="selectedValue">
+                        <button type="button" @click="open = !open" class="custom-select-button">
+                            <span x-text="selectedText"></span>
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div x-show="open" @click.outside="open = false" class="custom-select-dropdown">
+                            <template x-for="option in options" :key="option.value">
+                                <button type="button" @click="selectedValue = option.value; selectedText = option.text; open = false" 
+                                    class="custom-select-option" 
+                                    :class="{ 'selected': selectedValue === option.value }">
+                                    <span x-text="option.text"></span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                    <input type="text" placeholder="Xabar yozing..." id="messageInput" name="message">
                     <button type="submit">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                             <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(90 12 12)" />
