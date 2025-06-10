@@ -7,12 +7,12 @@
       {
         "code": "1703",
         "name": "Andijon viloyati",
-        "center": "Andijon sh.",
+        "center": "Andijon shahar",
         "districts": [
           {
             "code": "1703202",
             "name": "Oltinko‘l tumani",
-            "center": "Oltinko‘l a.p.",
+            "center": "Oltinko‘l aholi punkti",
             "settlements": [
               {
                 "code": "1703202552",
@@ -442,7 +442,7 @@
           {
             "code": "1703211",
             "name": "Jalaquduq tumani",
-            "center": "Jalaquduq sh.",
+            "center": "Jalaquduq shahar",
             "settlements": [
               {
                 "code": "1703211501",
@@ -534,7 +534,7 @@
           {
             "code": "1703214",
             "name": "Izboskan tumani",
-            "center": "Paytug sh.",
+            "center": "Paytug shahar",
             "settlements": [
               {
                 "code": "1703214501",
@@ -653,7 +653,7 @@
           {
             "code": "1703220",
             "name": "Qo‘rg‘ontepa tumani",
-            "center": "Qo‘rg‘ontepa sh.",
+            "center": "Qo‘rg‘ontepa shahar",
             "settlements": [
               {
                 "code": "1703220501",
@@ -705,7 +705,7 @@
           {
             "code": "1703224",
             "name": "Asaka tumani",
-            "center": "Asaka sh.",
+            "center": "Asaka shahar",
             "settlements": [
               {
                 "code": "1703224501",
@@ -782,7 +782,7 @@
           {
             "code": "1703227",
             "name": "Marxamat tumani",
-            "center": "Marxamat sh.",
+            "center": "Marxamat shahar",
             "settlements": [
               {
                 "code": "1703227501",
@@ -874,7 +874,7 @@
           {
             "code": "1703230",
             "name": "Shaxrixon tumani",
-            "center": "Shaxrixon sh.",
+            "center": "Shaxrixon shahar",
             "settlements": [
               {
                 "code": "1703230501",
@@ -966,7 +966,7 @@
           {
             "code": "1703232",
             "name": "Paxtaobod tumani",
-            "center": "Paxtaobod sh.",
+            "center": "Paxtaobod shahar",
             "settlements": [
               {
                 "code": "1703232501",
@@ -1023,7 +1023,7 @@
           {
             "code": "1703236",
             "name": "Xo‘jaobod tumani",
-            "center": "Xo‘jaobod sh.",
+            "center": "Xo‘jaobod shahar",
             "settlements": [
               {
                 "code": "1703236501",
@@ -1084,7 +1084,7 @@
           },
           {
             "code": "1703400",
-            "name": "Andijon v-tining vil-t ahamiyatiga ega shaharlari",
+            "name": "Andijon viloyatining vililoyat ahamiyatiga ega shaharlari",
             "center": "",
             "settlements": []
           },
@@ -1106,7 +1106,7 @@
               },
               {
                 "code": "1703408800",
-                "name": "Xonobod sh. xok-tiga qarashli qishloq fuqarolar yig‘inlari",
+                "name": "Xonobodshahar xok-tiga qarashli qishloq fuqarolar yig‘inlari",
                 "center": ""
               },
               {
@@ -1121,12 +1121,12 @@
       {
         "code": "1706",
         "name": "Buxoro viloyati",
-        "center": "Buxoro sh.",
+        "center": "Buxoro shahar",
         "districts": [
           {
             "code": "1706204",
             "name": "Olot tumani",
-            "center": "Olot sh.",
+            "center": "Olot shahar",
             "settlements": [
               {
                 "code": "1706204501",
@@ -1350,7 +1350,7 @@
           {
             "code": "1706212",
             "name": "Vobkent tumani",
-            "center": "Vobkent sh.",
+            "center": "Vobkent shahar",
             "settlements": [
               {
                 "code": "1706212501",
@@ -1437,7 +1437,7 @@
           {
             "code": "1706215",
             "name": "G‘ijduvon tumani",
-            "center": "G‘ijduvon sh.",
+            "center": "G‘ijduvon shahar",
             "settlements": [
               {
                 "code": "1706215501",
@@ -1589,7 +1589,7 @@
           {
             "code": "1706219",
             "name": "Kogon tumani",
-            "center": "Kogon sh.",
+            "center": "Kogon shahar",
             "settlements": [
               {
                 "code": "1706219557",
@@ -1656,7 +1656,7 @@
           {
             "code": "1706230",
             "name": "Qorako‘l tumani",
-            "center": "Qorako‘l sh.",
+            "center": "Qorako‘l shahar",
             "settlements": [
               {
                 "code": "1706230501",
@@ -1813,7 +1813,7 @@
           {
             "code": "1706232",
             "name": "Qorovulbozor tumani",
-            "center": "Qorovulbozor sh.",
+            "center": "Qorovulbozor shahar",
             "settlements": [
               {
                 "code": "1706232501",
@@ -1932,7 +1932,7 @@
           {
             "code": "1706242",
             "name": "Romitan tumani",
-            "center": "Romitan sh.",
+            "center": "Romitan shahar",
             "settlements": [
               {
                 "code": "1706242501",
@@ -2121,7 +2121,7 @@
           {
             "code": "1706258",
             "name": "Shofirkon tumani",
-            "center": "Shofirkon sh.",
+            "center": "Shofirkon shahar",
             "settlements": [
               {
                 "code": "1706258501",
@@ -2268,7 +2268,7 @@
       {
         "code": "1708",
         "name": "Jizzax viloyati",
-        "center": "Jizzax sh.",
+        "center": "Jizzax shahar",
         "districts": [
           {
             "code": "1708201",
@@ -2422,7 +2422,7 @@
           {
             "code": "1708209",
             "name": "G‘allaorol tumani",
-            "center": "G‘allaorol sh.",
+            "center": "G‘allaorol shahar",
             "settlements": [
               {
                 "code": "1708209501",
@@ -2646,7 +2646,7 @@
           {
             "code": "1708215",
             "name": "Do‘stlik tumani",
-            "center": "Do‘stlik sh.",
+            "center": "Do‘stlik shahar",
             "settlements": [
               {
                 "code": "1708215501",
@@ -2857,7 +2857,7 @@
           {
             "code": "1708223",
             "name": "Mirzacho‘l tumani",
-            "center": "Gagarin sh.",
+            "center": "Gagarin shahar",
             "settlements": [
               {
                 "code": "1708223501",
@@ -2976,7 +2976,7 @@
           {
             "code": "1708228",
             "name": "Paxtakor tumani",
-            "center": "Paxtakor sh.",
+            "center": "Paxtakor shahar",
             "settlements": [
               {
                 "code": "1708228500",
@@ -3110,7 +3110,7 @@
           {
             "code": "1708237",
             "name": "Yangiobod tumani",
-            "center": "Balandchaqir a.p.",
+            "center": "Balandchaqir aholi punkti",
             "settlements": [
               {
                 "code": "1708237552",
@@ -3165,12 +3165,12 @@
       {
         "code": "1710",
         "name": "Qashqadaryo viloyati",
-        "center": "Qarshi sh.",
+        "center": "Qarshi shahar",
         "districts": [
           {
             "code": "1710207",
             "name": "G‘uzor tumani",
-            "center": "G‘uzor sh.",
+            "center": "G‘uzor shahar",
             "settlements": [
               {
                 "code": "1710207501",
@@ -3369,7 +3369,7 @@
           {
             "code": "1710220",
             "name": "Qamashi tumani",
-            "center": "Qamashi sh.",
+            "center": "Qamashi shahar",
             "settlements": [
               {
                 "code": "1710220501",
@@ -3466,7 +3466,7 @@
           {
             "code": "1710224",
             "name": "Qarshi tumani",
-            "center": "Beshkent sh.",
+            "center": "Beshkent shahar",
             "settlements": [
               {
                 "code": "1710224501",
@@ -3633,7 +3633,7 @@
           {
             "code": "1710229",
             "name": "Koson tumani",
-            "center": "Koson sh.",
+            "center": "Koson shahar",
             "settlements": [
               {
                 "code": "1710229501",
@@ -3765,7 +3765,7 @@
           {
             "code": "1710232",
             "name": "Kitob tumani",
-            "center": "Kitob sh.",
+            "center": "Kitob shahar",
             "settlements": [
               {
                 "code": "1710232501",
@@ -3994,7 +3994,7 @@
           {
             "code": "1710234",
             "name": "Muborak tumani",
-            "center": "Muborak sh.",
+            "center": "Muborak shahar",
             "settlements": [
               {
                 "code": "1710234501",
@@ -4056,7 +4056,7 @@
           {
             "code": "1710235",
             "name": "Nishon tumani",
-            "center": "Yangi Nishon sh.",
+            "center": "Yangi Nishon shahar",
             "settlements": [
               {
                 "code": "1710235501",
@@ -4270,7 +4270,7 @@
           {
             "code": "1710240",
             "name": "Ko‘kdala tumani",
-            "center": "Yettitom sh.",
+            "center": "Yettitom shahar",
             "settlements": [
               {
                 "code": "1710240551",
@@ -4342,7 +4342,7 @@
           {
             "code": "1710242",
             "name": "Chiroqchi tumani",
-            "center": "Chiroqchi sh.",
+            "center": "Chiroqchi shahar",
             "settlements": [
               {
                 "code": "1710242501",
@@ -4444,7 +4444,7 @@
           {
             "code": "1710245",
             "name": "Shahrisabz tumani",
-            "center": "Shahrisabz sh.",
+            "center": "Shahrisabz shahar",
             "settlements": [
               {
                 "code": "1710245553",
@@ -4581,7 +4581,7 @@
           {
             "code": "1710250",
             "name": "Yakkabog‘ tumani",
-            "center": "Yakkabog‘ sh.",
+            "center": "Yakkabog‘ shahar",
             "settlements": [
               {
                 "code": "1710250501",
@@ -4738,7 +4738,7 @@
       {
         "code": "1712",
         "name": "Navoiy viloyati",
-        "center": "Navoiy sh.",
+        "center": "Navoiy shahar",
         "districts": [
           {
             "code": "1712211",
@@ -4815,7 +4815,7 @@
           {
             "code": "1712216",
             "name": "Qiziltepa tumani",
-            "center": "Qiziltepa sh.",
+            "center": "Qiziltepa shahar",
             "settlements": [
               {
                 "code": "1712216501",
@@ -4932,7 +4932,7 @@
           {
             "code": "1712230",
             "name": "Navbahor tumani",
-            "center": "Beshrabot a.p.",
+            "center": "Beshrabot aholi punkti",
             "settlements": [
               {
                 "code": "1712230552",
@@ -5076,7 +5076,7 @@
           {
             "code": "1712238",
             "name": "Nurota tumani",
-            "center": "Nurota sh.",
+            "center": "Nurota shahar",
             "settlements": [
               {
                 "code": "1712238501",
@@ -5200,7 +5200,7 @@
           {
             "code": "1712248",
             "name": "Uchquduq tumani",
-            "center": "Uchquduq sh.",
+            "center": "Uchquduq shahar",
             "settlements": [
               {
                 "code": "1712248501",
@@ -5247,7 +5247,7 @@
           {
             "code": "1712251",
             "name": "Xatirchi tumani",
-            "center": "Yangirabod sh.",
+            "center": "Yangirabod shahar",
             "settlements": [
               {
                 "code": "1712251501",
@@ -5406,7 +5406,7 @@
       {
         "code": "1714",
         "name": "Namangan viloyati",
-        "center": "Namangan sh.",
+        "center": "Namangan shahar",
         "districts": [
           {
             "code": "1714204",
@@ -5493,7 +5493,7 @@
           {
             "code": "1714207",
             "name": "Kosonsoy tumani",
-            "center": "Kosonsoy sh.",
+            "center": "Kosonsoy shahar",
             "settlements": [
               {
                 "code": "1714207501",
@@ -5547,7 +5547,7 @@
               },
               {
                 "code": "1714207569",
-                "name": "Yangi shahar",
+                "name": "Yangi  shahar",
                 "center": ""
               },
               {
@@ -5682,7 +5682,7 @@
           {
             "code": "1714216",
             "name": "Norin tumani",
-            "center": "Xaqqulobod sh.",
+            "center": "Xaqqulobod shahar",
             "settlements": [
               {
                 "code": "1714216501",
@@ -5779,7 +5779,7 @@
           {
             "code": "1714219",
             "name": "Pop tumani",
-            "center": "Pop sh.",
+            "center": "Pop shahar",
             "settlements": [
               {
                 "code": "1714219501",
@@ -5921,7 +5921,7 @@
           {
             "code": "1714224",
             "name": "To‘raqo‘rg‘on tumani",
-            "center": "To‘raqo‘rg‘on sh.",
+            "center": "To‘raqo‘rg‘on shahar",
             "settlements": [
               {
                 "code": "1714224501",
@@ -6160,7 +6160,7 @@
           {
             "code": "1714234",
             "name": "Uchqo‘rg‘on tumani",
-            "center": "Uchqo‘rg‘on sh.",
+            "center": "Uchqo‘rg‘on shahar",
             "settlements": [
               {
                 "code": "1714234501",
@@ -6237,7 +6237,7 @@
           {
             "code": "1714236",
             "name": "Chortoq tumani",
-            "center": "Chortoq sh.",
+            "center": "Chortoq shahar",
             "settlements": [
               {
                 "code": "1714236501",
@@ -6349,7 +6349,7 @@
           {
             "code": "1714237",
             "name": "Chust tumani",
-            "center": "Chust sh.",
+            "center": "Chust shahar",
             "settlements": [
               {
                 "code": "1714237501",
@@ -6662,7 +6662,7 @@
       {
         "code": "1718",
         "name": "Samarqand viloyati",
-        "center": "Samarqand sh.",
+        "center": "Samarqand shahar",
         "districts": [
           {
             "code": "1718200",
@@ -6765,7 +6765,7 @@
           {
             "code": "1718206",
             "name": "Bulung‘ur tumani",
-            "center": "Bulung‘ur sh.",
+            "center": "Bulung‘ur shahar",
             "settlements": [
               {
                 "code": "1718206501",
@@ -6832,7 +6832,7 @@
           {
             "code": "1718209",
             "name": "Jomboy tumani",
-            "center": "Jomboy sh.",
+            "center": "Jomboy shahar",
             "settlements": [
               {
                 "code": "1718209501",
@@ -6914,7 +6914,7 @@
           {
             "code": "1718212",
             "name": "Ishtixon tumani",
-            "center": "Ishtixon sh.",
+            "center": "Ishtixon shahar",
             "settlements": [
               {
                 "code": "1718212501",
@@ -7200,7 +7200,7 @@
           {
             "code": "1718218",
             "name": "Narpay tumani",
-            "center": "Oqtosh sh.",
+            "center": "Oqtosh shahar",
             "settlements": [
               {
                 "code": "1718218501",
@@ -7277,7 +7277,7 @@
           {
             "code": "1718224",
             "name": "Payariq tumani",
-            "center": "Payariq sh.",
+            "center": "Payariq shahar",
             "settlements": [
               {
                 "code": "1718224501",
@@ -7399,7 +7399,7 @@
           {
             "code": "1718227",
             "name": "Pastdarg‘om tumani",
-            "center": "Juma sh.",
+            "center": "Juma shahar",
             "settlements": [
               {
                 "code": "1718227501",
@@ -7690,7 +7690,7 @@
           {
             "code": "1718235",
             "name": "Nurobod tumani",
-            "center": "Nurobod sh.",
+            "center": "Nurobod shahar",
             "settlements": [
               {
                 "code": "1718235501",
@@ -7747,7 +7747,7 @@
           {
             "code": "1718236",
             "name": "Urgut tumani",
-            "center": "Urgut sh.",
+            "center": "Urgut shahar",
             "settlements": [
               {
                 "code": "1718236501",
@@ -7977,7 +7977,7 @@
       {
         "code": "1722",
         "name": "Surxondaryo viloyati",
-        "center": "Termiz sh.",
+        "center": "Termiz shahar",
         "districts": [
           {
             "code": "1722201",
@@ -8168,7 +8168,7 @@
               },
               {
                 "code": "1722202579",
-                "name": "Novshahar",
+                "name": "Nov shahar",
                 "center": ""
               },
               {
@@ -8233,7 +8233,7 @@
           {
             "code": "1722204",
             "name": "Boysun tumani",
-            "center": "Boysun sh.",
+            "center": "Boysun shahar",
             "settlements": [
               {
                 "code": "1722204501",
@@ -8417,7 +8417,7 @@
           {
             "code": "1722210",
             "name": "Denov tumani",
-            "center": "Denov sh.",
+            "center": "Denov shahar",
             "settlements": [
               {
                 "code": "1722210501",
@@ -8579,7 +8579,7 @@
           {
             "code": "1722212",
             "name": "Jarqo‘rg‘on tumani",
-            "center": "Jarqo‘rg‘on sh.",
+            "center": "Jarqo‘rg‘on shahar",
             "settlements": [
               {
                 "code": "1722212501",
@@ -8656,7 +8656,7 @@
           {
             "code": "1722214",
             "name": "Qumqo‘rg‘on tumani",
-            "center": "Qumqo‘rg‘on sh.",
+            "center": "Qumqo‘rg‘on shahar",
             "settlements": [
               {
                 "code": "1722214501",
@@ -9111,7 +9111,7 @@
           {
             "code": "1722223",
             "name": "Sherobod tumani",
-            "center": "Sherobod sh.",
+            "center": "Sherobod shahar",
             "settlements": [
               {
                 "code": "1722223501",
@@ -9208,7 +9208,7 @@
           {
             "code": "1722226",
             "name": "Sho‘rchi tumani",
-            "center": "Sho‘rchi sh.",
+            "center": "Sho‘rchi shahar",
             "settlements": [
               {
                 "code": "1722226501",
@@ -9333,7 +9333,7 @@
       {
         "code": "1724",
         "name": "Sirdaryo viloyati",
-        "center": "Guliston sh.",
+        "center": "Guliston shahar",
         "districts": [
           {
             "code": "1724206",
@@ -9735,7 +9735,7 @@
           {
             "code": "1724231",
             "name": "Sirdaryo tumani",
-            "center": "Sirdaryo sh.",
+            "center": "Sirdaryo shahar",
             "settlements": [
               {
                 "code": "1724231501",
@@ -10036,12 +10036,12 @@
       {
         "code": "1727",
         "name": "Toshkent viloyati",
-        "center": "Nurafshon sh.",
+        "center": "Nurafshon shahar",
         "districts": [
           {
             "code": "1727206",
             "name": "Oqqo‘rg‘on tumani",
-            "center": "Oqqo‘rg‘on sh.",
+            "center": "Oqqo‘rg‘on shahar",
             "settlements": [
               {
                 "code": "1727206501",
@@ -10118,7 +10118,7 @@
           {
             "code": "1727212",
             "name": "Ohangaron tumani",
-            "center": "Ohangaron sh.",
+            "center": "Ohangaron shahar",
             "settlements": [
               {
                 "code": "1727212552",
@@ -10287,7 +10287,7 @@
           {
             "code": "1727224",
             "name": "Bo‘stonliq tumani",
-            "center": "G‘azalkent sh.",
+            "center": "G‘azalkent shahar",
             "settlements": [
               {
                 "code": "1727224501",
@@ -10479,7 +10479,7 @@
           {
             "code": "1727228",
             "name": "Bo‘ka tumani",
-            "center": "Bo‘ka sh.",
+            "center": "Bo‘ka shahar",
             "settlements": [
               {
                 "code": "1727228501",
@@ -10536,7 +10536,7 @@
           {
             "code": "1727233",
             "name": "Quyichirchiq tumani",
-            "center": "Do‘stobod sh.",
+            "center": "Do‘stobod shahar",
             "settlements": [
               {
                 "code": "1727233500",
@@ -10944,7 +10944,7 @@
           {
             "code": "1727249",
             "name": "Parkent tumani",
-            "center": "Parkent sh.",
+            "center": "Parkent shahar",
             "settlements": [
               {
                 "code": "1727249501",
@@ -11021,7 +11021,7 @@
           {
             "code": "1727250",
             "name": "Pskent tumani",
-            "center": "Pskent sh.",
+            "center": "Pskent shahar",
             "settlements": [
               {
                 "code": "1727250501",
@@ -11078,7 +11078,7 @@
           {
             "code": "1727253",
             "name": "O‘rtachirchiq tumani",
-            "center": "Nurafshon sh.",
+            "center": "Nurafshon shahar",
             "settlements": [
               {
                 "code": "1727253555",
@@ -11175,7 +11175,7 @@
           {
             "code": "1727256",
             "name": "Chinoz tumani",
-            "center": "Chinoz sh.",
+            "center": "Chinoz shahar",
             "settlements": [
               {
                 "code": "1727256501",
@@ -11277,7 +11277,7 @@
           {
             "code": "1727259",
             "name": "Yangiyo‘l tumani",
-            "center": "Yangiyo‘l sh.",
+            "center": "Yangiyo‘l shahar",
             "settlements": [
               {
                 "code": "1727259553",
@@ -11354,7 +11354,7 @@
           {
             "code": "1727265",
             "name": "Toshkent tumani",
-            "center": "Keles sh.",
+            "center": "Keles shahar",
             "settlements": [
               {
                 "code": "1727265501",
@@ -11531,7 +11531,7 @@
       {
         "code": "1730",
         "name": "Farg‘ona viloyati",
-        "center": "Farg‘ona sh.",
+        "center": "Farg‘ona shahar",
         "districts": [
           {
             "code": "1730203",
@@ -11698,7 +11698,7 @@
           {
             "code": "1730206",
             "name": "Qo‘shtepa tumani",
-            "center": "Langar a.p.",
+            "center": "Langar aholi punkti",
             "settlements": [
               {
                 "code": "1730206553",
@@ -12139,7 +12139,7 @@
           {
             "code": "1730215",
             "name": "Beshariq tumani",
-            "center": "Beshariq sh.",
+            "center": "Beshariq shahar",
             "settlements": [
               {
                 "code": "1730215501",
@@ -12251,7 +12251,7 @@
           {
             "code": "1730218",
             "name": "Quva tumani",
-            "center": "Quva sh.",
+            "center": "Quva shahar",
             "settlements": [
               {
                 "code": "1730218501",
@@ -12510,7 +12510,7 @@
           {
             "code": "1730224",
             "name": "Rishton tumani",
-            "center": "Rishton sh.",
+            "center": "Rishton shahar",
             "settlements": [
               {
                 "code": "1730224501",
@@ -12826,7 +12826,7 @@
           {
             "code": "1730230",
             "name": "O‘zbekiston tumani",
-            "center": "Yaypan sh.",
+            "center": "Yaypan shahar",
             "settlements": [
               {
                 "code": "1730230501",
@@ -13580,7 +13580,7 @@
       {
         "code": "1733",
         "name": "Xorazm viloyati",
-        "center": "Urganch sh.",
+        "center": "Urganch shahar",
         "districts": [
           {
             "code": "1733204",
@@ -13876,7 +13876,7 @@
           {
             "code": "1733217",
             "name": "Urganch tumani",
-            "center": "Qoroul a.p.",
+            "center": "Qoroul aholi punkti",
             "settlements": [
               {
                 "code": "1733217554",
@@ -14154,7 +14154,7 @@
           {
             "code": "1733226",
             "name": "Xiva tumani",
-            "center": "Xiva sh.",
+            "center": "Xiva shahar",
             "settlements": [
               {
                 "code": "1733226552",
@@ -14506,7 +14506,7 @@
       {
         "code": "1735",
         "name": "Qoraqalpog‘iston Respublikasi",
-        "center": "Nukus sh.",
+        "center": "Nukus shahar",
         "districts": [
           {
             "code": "1735200",
@@ -14517,7 +14517,7 @@
           {
             "code": "1735204",
             "name": "Amudaryo tumani",
-            "center": "Mang‘it sh.",
+            "center": "Mang‘it shahar",
             "settlements": [
               {
                 "code": "1735204501",
@@ -14634,7 +14634,7 @@
           {
             "code": "1735207",
             "name": "Beruniy tumani",
-            "center": "Beruniy sh.",
+            "center": "Beruniy shahar",
             "settlements": [
               {
                 "code": "1735207501",
@@ -14877,7 +14877,7 @@
           {
             "code": "1735215",
             "name": "Qo‘ng‘irot tumani",
-            "center": "Qo‘ng‘irot sh.",
+            "center": "Qo‘ng‘irot shahar",
             "settlements": [
               {
                 "code": "1735215501",
@@ -15031,7 +15031,7 @@
           {
             "code": "1735222",
             "name": "Mo‘ynoq tumani",
-            "center": "Mo‘ynoq sh.",
+            "center": "Mo‘ynoq shahar",
             "settlements": [
               {
                 "code": "1735222501",
@@ -15130,7 +15130,7 @@
           {
             "code": "1735228",
             "name": "Taxiatosh tumani",
-            "center": "Taxiatosh sh.",
+            "center": "Taxiatosh shahar",
             "settlements": [
               {
                 "code": "1735228501",
@@ -15224,7 +15224,7 @@
           {
             "code": "1735233",
             "name": "To‘rtko‘l tumani",
-            "center": "To‘rtko‘l sh.",
+            "center": "To‘rtko‘l shahar",
             "settlements": [
               {
                 "code": "1735233501",
@@ -15341,7 +15341,7 @@
           {
             "code": "1735236",
             "name": "Xo‘jayli tumani",
-            "center": "Xo‘jayli sh.",
+            "center": "Xo‘jayli shahar",
             "settlements": [
               {
                 "code": "1735236501",
@@ -15398,7 +15398,7 @@
           {
             "code": "1735240",
             "name": "Chimboy tumani",
-            "center": "Chimboy sh.",
+            "center": "Chimboy shahar",
             "settlements": [
               {
                 "code": "1735240501",
@@ -15470,7 +15470,7 @@
           {
             "code": "1735243",
             "name": "Shumanay tumani",
-            "center": "Shumanay sh.",
+            "center": "Shumanay shahar",
             "settlements": [
               {
                 "code": "1735243501",
@@ -15522,7 +15522,7 @@
           {
             "code": "1735250",
             "name": "Ellikkala tumani",
-            "center": "Bo‘ston sh.",
+            "center": "Bo‘ston shahar",
             "settlements": [
               {
                 "code": "1735250501",
