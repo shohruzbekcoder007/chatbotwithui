@@ -487,9 +487,8 @@ class LangChainOllamaModel:
         if self.use_agent and self.agent and self._is_agent_query(query):
             try:
                 logger.info(f"So'rov agentga yo'naltirildi (stream) (session: {self.session_id})")
-                result = self.agent.invoke({"input": query})
-                # Agent natijasini bir marta to'liq yuborish
-                yield result["output"]
+                async for chunk in self.agent.astream({"input": query}):
+                    yield chunk["output"]
                 return
             except Exception as e:
                 logger.error(f"Agent xatoligi (stream): {str(e)}, modelga o'tilmoqda")
