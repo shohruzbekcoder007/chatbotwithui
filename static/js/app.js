@@ -229,7 +229,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     const chatId = getChatIdFromUrl();
 
     if (chatId) {
-        loadChatHistory(chatId);
+        // Load chat list sidebar
+        await loadChatHistory(chatId);
+        
+        // Load the actual chat messages for this chat
+        await loadChatMessages(chatId);
     }
     // No else needed - server will handle missing chat_id
 
@@ -240,10 +244,52 @@ document.addEventListener('DOMContentLoaded', async function () {
             redirectWithNewChat();
         });
     }
+    
+    // Setup chat link click handlers
+    setupChatLinkHandlers();
 });
 
+// Function to setup click handlers for chat links
+function setupChatLinkHandlers() {
+    // Use event delegation for chat links (works for dynamically added elements too)
+    document.querySelector('.chat-history').addEventListener('click', function(event) {
+        // Find if a chat link was clicked
+        const chatLink = event.target.closest('.chat-link');
+        if (chatLink) {
+            event.preventDefault(); // Prevent default navigation
+            
+            // Extract chat_id from href
+            const url = new URL(chatLink.href);
+            const chatId = url.searchParams.get('chat_id');
+            
+            if (chatId) {
+                // Update URL without page reload
+                window.history.pushState({}, '', `/?chat_id=${chatId}`);
+                
+                // Mark this chat as active
+                document.querySelectorAll('.chat-history-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                chatLink.querySelector('.chat-history-item').classList.add('active');
+                
+                // Load chat messages
+                loadChatMessages(chatId);
+            }
+        }
+    });
+}
+
+// Pagination state for chat list
+let chatListPagination = {
+    offset: 0,
+    limit: 10,
+    hasMore: true,
+    isLoading: false,
+    total: 0
+};
+
 // Function to load chat history
-async function loadChatHistory(chatId) {
+async function loadChatHistory(chatId, resetPagination = true) {
     if (!chatId) {
         chatId = getChatIdFromUrl();
         if (!chatId) {
@@ -252,29 +298,57 @@ async function loadChatHistory(chatId) {
         }
     }
 
+    // Reset pagination if needed
+    if (resetPagination) {
+        chatListPagination = {
+            offset: 0,
+            limit: 10,
+            hasMore: true,
+            isLoading: false,
+            total: 0
+        };
+    }
+
+    // If already loading, don't make another request
+    if (chatListPagination.isLoading) {
+        return;
+    }
+
+    chatListPagination.isLoading = true;
+
     // Cookie'dan token olish uchun so'rov yuborishda credentials: 'include' ishlatamiz
     // Tokenni tekshirish server tomonida amalga oshiriladi
-
     const headers = {
         'Content-Type': 'application/json'
     };
 
-    // So'rovni yuborish
-    const response = await fetch(`/api/user-chats`, {
+    // So'rovni yuborish with pagination parameters
+    const response = await fetch(`/api/user-chats?limit=${chatListPagination.limit}&offset=${chatListPagination.offset}`, {
         method: 'GET',
         headers: headers,
         credentials: 'include' // Cookie'larni yuborish uchun
     });
 
     if (!response.ok) {
+        chatListPagination.isLoading = false;
         throw new Error('Failed to load chat history');
     } else {
         const data = await response.json();
         if (data.success) {
-            console.log(data.chats, "<-chats");
+            console.log(data.chats, "<-chats", data.pagination);
             let chatHistory = document.querySelector('.chat-history');
-            chatHistory.innerHTML = ''; // Avvalgi chatlarni tozalash
+            
+            // Update pagination state
+            chatListPagination.hasMore = data.pagination.has_more;
+            chatListPagination.total = data.pagination.total;
+            chatListPagination.offset = data.pagination.offset;
+            
+            // Only clear the container if this is the first page
+            if (chatListPagination.offset === 0) {
+                chatHistory.innerHTML = ''; // Avvalgi chatlarni tozalash
+            }
 
+            // Add new chats to the list
             data?.chats?.forEach?.(chat => {
                 chatHistory.innerHTML += `
                     <div class="chat-item-container">
@@ -304,12 +378,67 @@ async function loadChatHistory(chatId) {
                 `;
             });
 
-            // Agar chatlar bo'lmasa
-            if (!data.chats || data.chats.length === 0) {
+            // Agar chatlar bo'lmasa va birinchi sahifa bo'lsa
+            if ((!data.chats || data.chats.length === 0) && chatListPagination.offset === 0) {
                 chatHistory.innerHTML = '<div class="no-chats-message">Hozircha chatlar yo\'q</div>';
             }
+            
+            // Add load more button if there are more chats
+            if (chatListPagination.hasMore) {
+                // Remove existing load more button if any
+                const existingLoadMoreBtn = document.querySelector('.load-more-chats');
+                if (existingLoadMoreBtn) {
+                    existingLoadMoreBtn.remove();
+                }
+                
+                // Add new load more button
+                const loadMoreBtn = document.createElement('div');
+                loadMoreBtn.className = 'load-more-chats';
+                loadMoreBtn.textContent = 'Ko\'proq yuklash...';
+                loadMoreBtn.onclick = loadMoreChats;
+                chatHistory.appendChild(loadMoreBtn);
+            }
+            
+            // Setup scroll event for chat history container
+            setupChatHistoryScroll();
+        }
+        
+        chatListPagination.isLoading = false;
+    }
+}
+
+// Function to load more chats when scrolling or clicking load more
+async function loadMoreChats() {
+    if (chatListPagination.hasMore && !chatListPagination.isLoading) {
+        chatListPagination.offset += chatListPagination.limit;
+        await loadChatHistory(getChatIdFromUrl(), false);
+    }
+}
+
+// Setup scroll event for chat history container
+function setupChatHistoryScroll() {
+    const chatHistory = document.querySelector('.chat-history');
+    
+    // Remove existing event listener if any
+    chatHistory.removeEventListener('scroll', handleChatHistoryScroll);
+    
+    // Add new event listener
+    chatHistory.addEventListener('scroll', handleChatHistoryScroll);
+}
+
+// Handle scroll event for chat history container
+function handleChatHistoryScroll() {
+    const chatHistory = document.querySelector('.chat-history');
+    
+    // If scrolled near bottom, load more chats
+    if (chatHistory.scrollTop + chatHistory.clientHeight >= chatHistory.scrollHeight - 100) {
+        if (chatListPagination.hasMore && !chatListPagination.isLoading) {
+            loadMoreChats();
         }
     }
+}
+
+async function loadChatMessages(chatId) {
     try {
         // Get token for authorization
         const token = localStorage.getItem('token');
@@ -387,8 +516,7 @@ async function loadChatHistory(chatId) {
                     </div>
                 </div>
             </div>
-        </div>
-    `;
+        `;
             });
 
             // Auto scroll to bottom

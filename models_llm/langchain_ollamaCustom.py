@@ -20,6 +20,7 @@ from tools_llm.soato.soato_tool import SoatoTool
 from tools_llm.nation.nation_tool import NationTool
 from tools_llm.ckp.ckp_tool_simple import CkpTool
 from retriever.langchain_chroma import CustomEmbeddingFunction
+from tools_llm.thsh.thsh_tool import THSHTool
 
 # .env faylidan konfiguratsiyani o'qish
 load_dotenv()
@@ -159,6 +160,7 @@ class LangChainOllamaModel:
             ckp_tool = CkpTool("tools_llm/ckp/ckp.json", use_embeddings=True, embedding_model=shared_embedding_model)
             dbibt_tool = DBIBTTool("tools_llm/dbibt/dbibt.json", use_embeddings=True, embedding_model=shared_embedding_model)
             country_tool = CountryTool("tools_llm/country/country.json", use_embeddings=True, embedding_model=shared_embedding_model)
+            thsh_tool = THSHTool("tools_llm/thsh/thsh.json", use_embeddings=True, embedding_model=shared_embedding_model)
             
             # Embedding ma'lumotlarini tayyorlash
             logger.info("Barcha toollar uchun embedding ma'lumotlari tayyorlanmoqda...")
@@ -180,7 +182,7 @@ class LangChainOllamaModel:
             
             # Agentni yaratish - mavjud modeldan foydalanish
             self.agent = initialize_agent(
-                tools=[soato_tool, nation_tool, ckp_tool, dbibt_tool, country_tool],
+                tools=[soato_tool, nation_tool, ckp_tool, dbibt_tool, country_tool, thsh_tool],
                 llm=self.model,  # Yangi model yaratish o'rniga mavjud modeldan foydalanish
                 agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
                 handle_parsing_errors=True,
@@ -509,9 +511,8 @@ class LangChainOllamaModel:
         if self.use_agent and self.agent and self._is_agent_query(query):
             try:
                 logger.info(f"So'rov agentga yo'naltirildi (stream) (session: {self.session_id})")
-                result = self.agent.invoke({"input": query})
-                # Agent natijasini bir marta to'liq yuborish
-                yield result["output"]
+                async for chunk in self.agent.astream({"input": query}):
+                    yield chunk["output"]
                 return
             except Exception as e:
                 logger.error(f"Agent xatoligi (stream): {str(e)}, modelga o'tilmoqda")

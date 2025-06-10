@@ -10,6 +10,7 @@ from tools_llm.soato.soato_tool import SoatoTool
 from tools_llm.nation.nation_tool import NationTool
 from tools_llm.ckp.ckp_tool_simple import CkpTool
 from tools_llm.country.country_tool import CountryTool
+from tools_llm.thsh.thsh_tool import THSHTool
 from retriever.langchain_chroma import CustomEmbeddingFunction
 
 # LLM modelini yaratish
@@ -28,6 +29,7 @@ nation_tool = NationTool("tools_llm/nation/nation_data.json", use_embeddings=Tru
 ckp_tool = CkpTool("tools_llm/ckp/ckp.json", use_embeddings=True, embedding_model=shared_embedding_model)
 dbibt_tool = DBIBTTool("tools_llm/dbibt/dbibt.json", use_embeddings=True, embedding_model=shared_embedding_model)
 country_tool = CountryTool("tools_llm/country/country.json", use_embeddings=True, embedding_model=shared_embedding_model)
+thsh_tool = THSHTool("tools_llm/thsh/thsh.json", use_embeddings=True, embedding_model=shared_embedding_model)
 
 # Embedding ma'lumotlarini tayyorlash
 print("Barcha toollar uchun embedding ma'lumotlari tayyorlanmoqda...")
@@ -36,10 +38,11 @@ nation_tool._prepare_embedding_data()
 ckp_tool._prepare_embedding_data()
 dbibt_tool._prepare_embedding_data()
 country_tool._prepare_embedding_data()
+thsh_tool._prepare_embedding_data()
 
 # Barcha toollarni bir agent ichida birlashtirish
 combined_agent = initialize_agent(
-    tools=[soato_tool, nation_tool, ckp_tool, dbibt_tool, country_tool],
+    tools=[soato_tool, nation_tool, ckp_tool, dbibt_tool, country_tool, thsh_tool],
     llm=llm,
     agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
     handle_parsing_errors=True,
@@ -57,8 +60,10 @@ combined_agent = initialize_agent(
         
         5. country_tool - Davlatlar ma'lumotlarini qidirish uchun mo'ljallangan vosita. Bu tool orqali davlatlarning qisqa nomi, to'liq nomi, harf kodi va raqamli kodi bo'yicha qidiruv qilish mumkin. Misol uchun: "AQSH", "Rossiya", "UZ", "398" (Qozog'iston raqamli kodi) kabi so'rovlar orqali ma'lumotlarni izlash mumkin.
 
+        6. thsh_tool - Tashkiliy-huquqiy shakllar (THSH) ma'lumotlarini qidirish uchun mo'ljallangan vosita. Bu tool orqali tashkiliy-huquqiy shakllarning kodi, nomi, qisqa nomi va boshqa ma'lumotlar bo'yicha qidiruv qilish mumkin. Misol uchun: '110' (Xususiy korxona), 'Aksiyadorlik jamiyati', 'MJ' (Mas'uliyati cheklangan jamiyat) kabi so'rovlar orqali ma'lumotlarni izlash mumkin.
+
         Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning. 
-        Agar foydalanuvchi SOATO/MHOBIT, millat, MST yoki davlat ma'lumotlari haqida so'rasa, tegishli toolni chaqiring.
+        Agar foydalanuvchi SOATO/MHOBIT, millat, MST, davlat ma'lumotlari yoki tashkiliy-huquqiy shakllar haqida so'rasa, tegishli toolni chaqiring.
         Toollarni chaqirish uchun Action formatidan foydalaning.""")
     )
 
