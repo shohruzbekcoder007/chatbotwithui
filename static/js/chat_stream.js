@@ -31,9 +31,8 @@ async function onsubmitstream(event) {
     addMessage('user', userText); // foydalanuvchi xabarini ko'rsatish
     input.value = "";
 
-    const chatMessagesDiv = document.querySelector('.conversation > div:last-child');
-    // const chatMessagesDiv = document.querySelector(".conversation");
-
+    // To'g'ri selector ishlatish - conversation konteyneriga to'g'ridan-to'g'ri qo'shish
+    const chatMessagesDiv = document.querySelector('.conversation');
 
     const botMsg = document.createElement("div");
     botMsg.className = "message bot";
@@ -90,7 +89,7 @@ async function onsubmitstream(event) {
 
             const chunk = decoder.decode(value, { stream: true });
 
-            // SSE protokol bo‘yicha "data: " prefiksi bo‘ladi
+            // SSE protokol bo'yicha "data: " prefiksi bo'ladi
             chunk.split("\n").forEach(line => {
                 if (line) {
                     const token = line;
@@ -128,6 +127,7 @@ async function onsubmitstream(event) {
         `
     } catch (err) {
         messageTextSpan.textContent = "Ulanishda xatolik yuz berdi.";
+        console.error("Streaming error:", err);
     }
 }
 

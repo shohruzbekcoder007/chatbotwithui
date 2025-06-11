@@ -127,7 +127,7 @@ class CustomEmbeddingFunction:
         
         return embeddings.tolist() if isinstance(embeddings, torch.Tensor) else embeddings
     
-    def similarity_search(self, query: str, texts: List[str], top_k: int = 5) -> List[Dict[str, Any]]:
+    def similarity_search(self, query: str, texts: List[str], top_k: int = 15) -> List[Dict[str, Any]]:
         """
         Semantik o'xshashlik asosida qidirish
         
@@ -254,29 +254,38 @@ class ChromaManager:
         except Exception as e:
             print(f"Hujjatlarni qo'shishda xatolik: {e}")
     
-    def search_documents(self, query: str, n_results: int = 5):
+    def search_documents(self, query: str, n_results: int = 15):
         """Hujjatlar orasidan qidirish"""
         return self.hybrid_search(query, n_results)
 
-    def hybrid_search(self, query: str, n_results: int = 5):
+    def hybrid_search(self, query: str, n_results: int = 15):
         """
         Hybrid qidiruv - semantic va keyword qidiruvlarni birlashtirib ishlatish
         """
         try:
+            # Query ni tozalash va validatsiya qilish
+            cleaned_query = query.strip()
+            
             # Semantic search
             semantic_results = self.collection.query(
-                query_texts=[query],
+                query_texts=[cleaned_query],
                 n_results=min(n_results * 2, 50),  # Ko'proq natija olish
                 include=['documents', 'distances', 'metadatas']
             )
 
-            # Keyword search
-            keyword_results = self.collection.query(
-                query_texts=[query],
-                n_results=min(n_results * 2, 50),
-                where_document={"$contains": query},  # Exact match qidirish
-                include=['documents', 'distances', 'metadatas']
-            )
+            # Keyword search - faqat query uzunligi 3 dan katta bo'lsa
+            keyword_results = None
+            if len(cleaned_query) >= 3:
+                try:
+                    keyword_results = self.collection.query(
+                        query_texts=[cleaned_query],
+                        n_results=min(n_results * 2, 50),
+                        where_document={"$contains": cleaned_query},  # Exact match qidirish
+                        include=['documents', 'distances', 'metadatas']
+                    )
+                except Exception as keyword_error:
+                    print(f"Keyword search xatoligi: {str(keyword_error)}")
+                    keyword_results = None
 
             # Natijalarni birlashtirish
             all_docs = []
@@ -289,15 +298,12 @@ class ChromaManager:
                         all_docs.append(doc)
                         seen_docs.add(doc)
 
-            # Keyword natijalarni qo'shish
+            # Keyword natijalarni qo'shish (agar mavjud bo'lsa)
             if keyword_results and 'documents' in keyword_results:
                 for doc in keyword_results['documents'][0]:
                     if doc not in seen_docs:
                         all_docs.append(doc)
                         seen_docs.add(doc)
-
-            # n_results gacha cheklash
-            # all_docs = all_docs[:n_results]
 
             # Only call cross_encode_sort if we have documents
             if all_docs:
@@ -408,7 +414,7 @@ def remove_all_documents():
     """Barcha hujjatlarni o'chirish"""
     return chroma_manager.delete_all_documents()
 
-def search_documents(query: str, n_results: int = 5):
+def search_documents(query: str, n_results: int = 15):
     """Hujjatlar orasidan qidirish"""
     return chroma_manager.search_documents(query, n_results)
 

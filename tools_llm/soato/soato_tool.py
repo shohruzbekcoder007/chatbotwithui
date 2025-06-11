@@ -189,9 +189,7 @@ class SoatoTool(BaseTool):
             query = query.replace("мхобт", "")
             query = query.replace("soato", "")
             query = query.replace("kodi", "").strip()
-            
-            # Qarshi shahri va boshqa shaharlar/tumanlar yuqoridagi mexanizm orqali qidiriladi
-            
+                        
             logging.info(f"Qidirilayotgan so'rov: '{original_query}', tozalangan so'rov: '{query}'")
             
             # Original so'rovda raqamli kod qidirish
@@ -434,6 +432,9 @@ class SoatoTool(BaseTool):
             clean_query = clean_query.replace("kodi", "").replace("code", "")
             clean_query = clean_query.strip()
             
+            # Device ni aniqlash (CPU yoki CUDA)
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            
             # Viloyat va tumanlar ro'yxati so'ralganda
             if ("viloyat" in clean_query and "tuman" in clean_query) or "viloyatining tumanlari" in clean_query:
                 region_name = self._detect_region_in_query(clean_query)
@@ -454,15 +455,33 @@ class SoatoTool(BaseTool):
                 except Exception as e:
                     logging.error(f"Fuzzy search error: {str(e)}")
             
-            # Query embedding olish
+            # Query embedding olish va device ga joylashtirish
             logging.info(f"Semantik qidiruv ishlatilmoqda: {clean_query}")
             query_embedding = self.embedding_model.encode([clean_query], normalize=True)[0]
-            entity_embeddings = self.embedding_model.encode(self.entity_texts, normalize=True)
+            if hasattr(query_embedding, 'to'):
+                query_embedding = torch.tensor(query_embedding).to(device)
+            elif isinstance(query_embedding, torch.Tensor):
+                query_embedding = query_embedding.to(device)
             
-            # O'xshashlik hisoblash
+            entity_embeddings = self.embedding_model.encode(self.entity_texts, normalize=True)
+            if hasattr(entity_embeddings, 'to'):
+                entity_embeddings = torch.tensor(entity_embeddings).to(device)
+            elif isinstance(entity_embeddings, torch.Tensor):
+                entity_embeddings = entity_embeddings.to(device)
+            
+            # O'xshashlik hisoblash - device consistency bilan
             similarities = []
             for i, entity_embedding in enumerate(entity_embeddings):
-                sim = util.dot_score(query_embedding, entity_embedding).item()
+                # Entity embedding ni device ga ko'chirish
+                if hasattr(entity_embedding, 'to'):
+                    entity_embedding = entity_embedding.to(device)
+                elif isinstance(entity_embedding, torch.Tensor):
+                    entity_embedding = entity_embedding.to(device)
+                else:
+                    entity_embedding = torch.tensor(entity_embedding).to(device)
+                
+                # Dot product similarity hisoblash - device consistency bilan
+                sim = torch.dot(query_embedding, entity_embedding).item()
                 similarities.append((i, sim))
             
             # Natijalarni saralash
@@ -543,6 +562,14 @@ class SoatoTool(BaseTool):
         search_name = search_name.replace("soato", "")
         search_name = search_name.replace("kodi", "").strip()
         
+        # Toshkent shahri uchun maxsus qidirish
+        if "toshkent" in search_name and ("shahar" in search_name or "shahri" in search_name):
+            # Toshkent shahrini topish - kod 1726
+            for region in self.soato_data.get("country", {}).get("regions", []):
+                if region.get("code") == "1726" or region.get("name", "").lower() == "toshkent shahri":
+                    exact_matches.append(("region", self._format_region_info(region), 1.0))
+                    break
+        
         if "tumani" in search_name:
             search_type = "district"
             search_name = search_name.replace("tumani", "").strip()
@@ -557,6 +584,10 @@ class SoatoTool(BaseTool):
             search_name = search_name.replace("qishloq'i", "").replace("qishlogi", "").strip()
         
         logging.info(f"Qidirilayotgan so'rov: '{query}', qidiruv nomi: '{search_name}'")
+        
+        # Agar Toshkent shahri uchun aniq natija topilgan bo'lsa, uni qaytarish
+        if exact_matches:
+            return exact_matches[0][1]
         
         # Davlat ma'lumotlarini qidirish
         country = self.soato_data.get("country", {})

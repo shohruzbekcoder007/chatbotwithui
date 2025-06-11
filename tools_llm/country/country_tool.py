@@ -162,36 +162,47 @@ class CountryTool(BaseTool):
                     logging.error(f"Embedding modelini yuklashda xatolik: {str(e)}")
                     return "Embedding modelini yuklashda xatolik."
             
+            # Device ni aniqlash (CPU yoki CUDA)
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            
             # So'rovni tozalash
             clean_query = query.lower()
             
-            # So'rov embeddingini olish
+            # So'rov embeddingini olish va device ga joylashtirish
             model = self.embedding_model.model
             batch_size = 100  # Bir vaqtda qayta ishlanadigan hujjatlar soni
             top_k = 5  # Eng yuqori o'xshashlikdagi natijalar soni
             
             query_embedding = model.encode(clean_query, convert_to_tensor=True, show_progress_bar=False)
+            if hasattr(query_embedding, 'to'):
+                query_embedding = query_embedding.to(device)
             
             # Barcha ma'lumotlarni embedding qilish
             # Agar entity_embeddings_cache mavjud bo'lmasa, yangi embeddinglarni hisoblash
             if not hasattr(self, 'entity_embeddings_cache') or self.entity_embeddings_cache is None:
                 logging.info("Davlatlar embeddinglar keshi yaratilmoqda...")
-                self.entity_embeddings_cache = torch.zeros((len(self.entity_texts), model.get_sentence_embedding_dimension()))
+                self.entity_embeddings_cache = torch.zeros((len(self.entity_texts), model.get_sentence_embedding_dimension()), device=device)
                 
                 # Hujjatlarni batch usulida qayta ishlash
                 for i in range(0, len(self.entity_texts), batch_size):
                     batch_texts = self.entity_texts[i:i+batch_size]
                     
-                    # Batch embeddinglarini olish
+                    # Batch embeddinglarini olish va device ga joylashtirish
                     batch_embeddings = model.encode(batch_texts, convert_to_tensor=True, show_progress_bar=False)
+                    if hasattr(batch_embeddings, 'to'):
+                        batch_embeddings = batch_embeddings.to(device)
                     
                     # Embeddinglarni keshga saqlash
                     self.entity_embeddings_cache[i:i+len(batch_texts)] = batch_embeddings
                 
                 logging.info(f"Davlatlar embeddinglar keshi yaratildi: {len(self.entity_texts)} ta element")
+            else:
+                # Agar mavjud cache boshqa device da bo'lsa, uni to'g'ri device ga ko'chirish
+                if hasattr(self.entity_embeddings_cache, 'device') and self.entity_embeddings_cache.device != device:
+                    self.entity_embeddings_cache = self.entity_embeddings_cache.to(device)
             
-            # Eng o'xshash ma'lumotlarni topish
-            cos_scores = util.cos_sim(query_embedding, self.entity_embeddings_cache)[0]
+            # Eng o'xshash ma'lumotlarni topish - device consistency bilan
+            cos_scores = torch.cosine_similarity(query_embedding.unsqueeze(0), self.entity_embeddings_cache, dim=1)
             
             # Top natijalarni olish
             top_k = min(top_k, len(cos_scores))

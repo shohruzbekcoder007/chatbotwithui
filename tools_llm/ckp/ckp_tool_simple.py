@@ -324,7 +324,7 @@ class CkpTool(BaseTool):
                 if code in item_code:
                     name = item.get("NAME", "")
                     prefix_matches.append(f"Kod: {item_code}\nNomi: {name}")
-                    logging.info(f"Kod qismi bilan mos kelish topildi: {item_code}")
+                    logging.info(f"Kod qismi bilan mos kelindi: {item_code}")
         
         # Natijalarni birlashtirish
         results.extend(prefix_matches)
@@ -430,24 +430,35 @@ class CkpTool(BaseTool):
             batch_size = 100  # Bir vaqtda qayta ishlanadigan hujjatlar soni
             top_k = 5  # Eng yuqori o'xshashlikdagi natijalar soni
             
-            # So'rov embeddingini olish
+            # Device ni aniqlash (CPU yoki CUDA)
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            
+            # So'rov embeddingini olish va device ga joylashtirish
             query_embedding = model.encode(clean_query, convert_to_tensor=True, show_progress_bar=False)
+            if hasattr(query_embedding, 'to'):
+                query_embedding = query_embedding.to(device)
             
             # Barcha ma'lumotlarni embedding qilish
             # Agar entity_embeddings_cache mavjud bo'lmasa, yangi embeddinglarni hisoblash
             if not hasattr(self, 'entity_embeddings_cache') or self.entity_embeddings_cache is None:
                 logging.info("CKP embeddinglar keshi yaratilmoqda...")
-                self.entity_embeddings_cache = torch.zeros((len(self.entity_texts), model.get_sentence_embedding_dimension()))
+                self.entity_embeddings_cache = torch.zeros((len(self.entity_texts), model.get_sentence_embedding_dimension()), device=device)
                 
                 # Hujjatlarni batch usulida qayta ishlash
                 for i in range(0, len(self.entity_texts), batch_size):
                     batch_texts = self.entity_texts[i:i+batch_size]
                     
-                    # Batch embeddinglarini olish
+                    # Batch embeddinglarini olish va device ga joylashtirish
                     batch_embeddings = model.encode(batch_texts, convert_to_tensor=True, show_progress_bar=False)
+                    if hasattr(batch_embeddings, 'to'):
+                        batch_embeddings = batch_embeddings.to(device)
                     
                     # Embeddinglarni keshga saqlash
                     self.entity_embeddings_cache[i:i+len(batch_texts)] = batch_embeddings
+            
+            # Agar mavjud cache boshqa device da bo'lsa, uni to'g'ri device ga ko'chirish
+            if hasattr(self.entity_embeddings_cache, 'device') and self.entity_embeddings_cache.device != device:
+                self.entity_embeddings_cache = self.entity_embeddings_cache.to(device)
             
             # Eng o'xshash ma'lumotlarni topish
             cos_scores = util.cos_sim(query_embedding, self.entity_embeddings_cache)[0]
