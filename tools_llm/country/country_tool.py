@@ -16,13 +16,14 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 class CountryTool(BaseTool):
     """Davlatlar ma'lumotlarini qidirish uchun tool."""
     name: str = "country_tool"
-    description: str = "Davlatlar ma'lumotlarini qidirish uchun mo'ljallangan vosita. Bu tool orqali davlatlarning qisqa nomi, to'liq nomi, harf kodi va raqamli kodi bo'yicha qidiruv qilish mumkin. Misol uchun: \"AQSH\", \"Rossiya\", \"UZ\", \"398\" (Qozog'iston raqamli kodi) kabi so'rovlar orqali ma'lumotlarni izlash mumkin. Natijalar davlat kodi, qisqa nomi, to'liq nomi va kodlari bilan qaytariladi."
+    description: str = "Davlatlar ma'lumotlarini qidirish uchun mo'ljallangan vosita. Bu tool orqali davlatlarning qisqa nomi, to'liq nomi, harf kodi va raqamli kodi bo'yicha qidiruv qilish mumkin. Misol uchun: \"AQSH\", \"Rossiya\", \"UZ\", \"398\" (Qozog'iston raqamli kodi) kabi so'rovlar orqali ma'lumotlarni izlash mumkin. Natijalar davlat kodi, qisqa nomi, to'liq nomi va kodlari bilan qaytariladi."""
     
     country_data: List[Dict] = Field(default_factory=list)
     use_embeddings: bool = Field(default=False)
     embedding_model: Optional[CustomEmbeddingFunction] = Field(default=None)
     entity_texts: List[str] = Field(default_factory=list)
     entity_infos: List[Dict] = Field(default_factory=list)
+    entity_embeddings_cache: Optional[torch.Tensor] = Field(default=None)
     
     def __init__(self, country_file_path: str, use_embeddings: bool = True, embedding_model=None):
         """Initialize the Country tool with the path to the Country JSON file."""
@@ -30,13 +31,16 @@ class CountryTool(BaseTool):
         self.country_data = self._load_country_data(country_file_path)
         self.use_embeddings = use_embeddings
         
-        # Embedding modelini tashqaridan olish yoki yaratish
+        # Embedding modelini tashqaridan olish
         if embedding_model is not None:
             self.embedding_model = embedding_model
-        elif self.use_embeddings and self.embedding_model is None:
-            print("Embedding modeli yuklanmoqda...")
-            self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
-            self._prepare_embedding_data()
+            logging.info("Tashqaridan berilgan embedding modeli o'rnatildi.")
+        else:
+            # Embedding modelini kerak bo'lganda yuklaymiz
+            self.embedding_model = None
+            
+        # Embedding ma'lumotlarini tayyorlash
+        self._prepare_embedding_data()
     
     def _load_country_data(self, file_path: str) -> List[Dict[str, Any]]:
         """Load Country data from JSON file."""
@@ -75,21 +79,14 @@ class CountryTool(BaseTool):
             self.entity_texts.append(country_text)
             self.entity_infos.append(("country", country))
         
-        # Embeddinglarni oldindan hisoblash
+        # Embeddinglarni kerak bo'lganda hisoblaymiz
         try:
-            if self.use_embeddings and self.embedding_model is not None and self.entity_texts:
-                model = self.embedding_model.model
-                self.entity_embeddings_cache = model.encode(
-                    self.entity_texts, 
-                    convert_to_tensor=True, 
-                    show_progress_bar=False
-                )
-                print(f"Embedding uchun {len(self.entity_texts)} ta davlat ma'lumoti tayyorlandi va keshga saqlandi.")
-            else:
-                print(f"Embedding uchun {len(self.entity_texts)} ta davlat ma'lumoti tayyorlandi.")
+            if self.use_embeddings and self.entity_texts:
+                logging.info(f"Davlatlar uchun {len(self.entity_texts)} ta embedding ma'lumoti tayyorlandi.")
+                # Embeddinglarni kerak bo'lganda hisoblaymiz
+                self.entity_embeddings_cache = None
         except Exception as e:
-            logging.error(f"Embeddinglarni hisoblashda xatolik: {str(e)}")
-            print(f"Embedding uchun {len(self.entity_texts)} ta davlat ma'lumoti tayyorlandi (embedding kesh yaratilmadi).")
+            logging.error(f"Davlatlar embeddinglarini tayyorlashda xatolik: {str(e)}")
     
     def _search_country_data(self, query: str) -> str:
         """Davlat ma'lumotlaridan so'rov bo'yicha ma'lumot qidirish."""
@@ -147,31 +144,56 @@ class CountryTool(BaseTool):
     
     def _semantic_search(self, query: str) -> str:
         """Semantik qidirish orqali davlat ma'lumotlarini topish"""
-        if not self.entity_texts or not self.embedding_model:
-            return ""
+        if not self.entity_texts or not self.entity_infos:
+            return "Ma'lumotlar mavjud emas."
+        
+        if not self.use_embeddings:
+            return "Semantik qidiruv o'chirilgan."
         
         try:
-            # CustomEmbeddingFunction obyektidan SentenceTransformer modelini olish
-            model = self.embedding_model.model
+            # Embedding modelini kerak bo'lganda yuklash (lazy loading)
+            if self.embedding_model is None:
+                logging.info("Embedding modeli yuklanmoqda...")
+                try:
+                    self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
+                    logging.info("Embedding modeli yuklandi")
+                except Exception as e:
+                    logging.error(f"Embedding modelini yuklashda xatolik: {str(e)}")
+                    return "Embedding modelini yuklashda xatolik."
             
-            # So'rovni embedding qilish
-            query_embedding = model.encode(query, convert_to_tensor=True, show_progress_bar=False)
+            # So'rovni tozalash
+            clean_query = query.lower()
+            
+            # So'rov embeddingini olish
+            model = self.embedding_model.model
+            batch_size = 100  # Bir vaqtda qayta ishlanadigan hujjatlar soni
+            top_k = 5  # Eng yuqori o'xshashlikdagi natijalar soni
+            
+            query_embedding = model.encode(clean_query, convert_to_tensor=True, show_progress_bar=False)
             
             # Barcha ma'lumotlarni embedding qilish
             # Agar entity_embeddings_cache mavjud bo'lmasa, yangi embeddinglarni hisoblash
             if not hasattr(self, 'entity_embeddings_cache') or self.entity_embeddings_cache is None:
-                logging.info("Embeddinglar keshi yaratilmoqda...")
-                self.entity_embeddings_cache = model.encode(
-                    self.entity_texts, 
-                    convert_to_tensor=True, 
-                    show_progress_bar=False
-                )
+                logging.info("Davlatlar embeddinglar keshi yaratilmoqda...")
+                self.entity_embeddings_cache = torch.zeros((len(self.entity_texts), model.get_sentence_embedding_dimension()))
+                
+                # Hujjatlarni batch usulida qayta ishlash
+                for i in range(0, len(self.entity_texts), batch_size):
+                    batch_texts = self.entity_texts[i:i+batch_size]
+                    
+                    # Batch embeddinglarini olish
+                    batch_embeddings = model.encode(batch_texts, convert_to_tensor=True, show_progress_bar=False)
+                    
+                    # Embeddinglarni keshga saqlash
+                    self.entity_embeddings_cache[i:i+len(batch_texts)] = batch_embeddings
+                
+                logging.info(f"Davlatlar embeddinglar keshi yaratildi: {len(self.entity_texts)} ta element")
             
             # Eng o'xshash ma'lumotlarni topish
             cos_scores = util.cos_sim(query_embedding, self.entity_embeddings_cache)[0]
             
-            # Top 3 natijalarni olish
-            top_k = min(3, len(cos_scores))
+            # Top natijalarni olish
+            top_k = min(top_k, len(cos_scores))
             if top_k == 0:
                 return ""
                 
@@ -193,9 +215,10 @@ class CountryTool(BaseTool):
                     return results[0][1]
                 else:
                     result = "Davlat ma'lumotlari:\n\n"
-                    for _, country_info in results:
-                        result += country_info + "\n\n"
+                    for score, country_info in results:
+                        result += f"{country_info} (o'xshashlik: {score:.2f})\n\n"
                     return result
+            return ""
         except Exception as e:
             logging.error(f"Semantik qidirishda xatolik: {str(e)}")
             # Xatolik bo'lganda oddiy qidiruv natijasini qaytarish

@@ -25,6 +25,7 @@ class SoatoTool(BaseTool):
     embedding_model: Optional[CustomEmbeddingFunction] = Field(default=None)
     entity_texts: List[str] = Field(default_factory=list)
     entity_infos: List[Dict] = Field(default_factory=list)
+    entity_embeddings_cache: Optional[torch.Tensor] = Field(default=None)
     
     def __init__(self, soato_file_path: str, use_embeddings: bool = True, embedding_model=None):
         """Initialize the SOATO tool with the path to the SOATO JSON file."""
@@ -32,14 +33,16 @@ class SoatoTool(BaseTool):
         self.soato_data = self._load_soato_data(soato_file_path)
         self.use_embeddings = use_embeddings
         
-        # Embedding modelini tashqaridan olish yoki yaratish
+        # Embedding modelini tashqaridan olish
         if embedding_model is not None:
             self.embedding_model = embedding_model
-        elif self.use_embeddings and self.embedding_model is None:
-            print("Embedding modeli yuklanmoqda...")
-            self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
-            # print("Embedding ma'lumotlari tayyorlanmoqda...")
-            self._prepare_embedding_data()
+            logging.info("Tashqaridan berilgan embedding modeli o'rnatildi.")
+        else:
+            # Embedding modelini kerak bo'lganda yuklaymiz
+            self.embedding_model = None
+            
+        # Embedding ma'lumotlarini tayyorlash
+        self._prepare_embedding_data()
     
     def _load_soato_data(self, file_path: str) -> Dict[str, Any]:
         """Load SOATO data from JSON file."""
@@ -76,39 +79,46 @@ class SoatoTool(BaseTool):
         country = self.soato_data.get("country", {})
         country_text = f"O'zbekiston Respublikasi {country.get('name_latin', '')} {country.get('name_cyrillic', '')} {country.get('name_russian', '')}"
         self.entity_texts.append(country_text)
-        self.entity_infos.append(("country", country, None, None))
+        self.entity_infos.append(("country", country))
         
         # Viloyatlar ma'lumotlarini qo'shish
         for region in country.get("regions", []):
-            region_text = f"Viloyat {region.get('name_latin', '')} {region.get('name_cyrillic', '')} {region.get('name_russian', '')} {region.get('center_latin', '')}"
+            region_text = f"{region.get('name_latin', '')} {region.get('name_cyrillic', '')} {region.get('name_russian', '')} {region.get('code', '')}"
             self.entity_texts.append(region_text)
-            self.entity_infos.append(("region", region, None, None))
+            self.entity_infos.append(("region", region))
             
             # Tumanlar ma'lumotlarini qo'shish
             for district in region.get("districts", []):
-                district_text = f"Tuman {district.get('name_latin', '')} {district.get('name_cyrillic', '')} {district.get('name_russian', '')} {district.get('center_latin', '')}"
+                district_text = f"{district.get('name_latin', '')} {district.get('name_cyrillic', '')} {district.get('name_russian', '')} {district.get('code', '')}"
                 self.entity_texts.append(district_text)
-                self.entity_infos.append(("district", district, region, None))
+                self.entity_infos.append(("district", {"district": district, "region": region}))
                 
                 # Shaharlar ma'lumotlarini qo'shish
                 for city in district.get("cities", []):
-                    city_text = f"Shahar {city.get('name_latin', '')} {city.get('name_cyrillic', '')} {city.get('name_russian', '')}"
+                    city_text = f"{city.get('name_latin', '')} {city.get('name_cyrillic', '')} {city.get('name_russian', '')} {city.get('code', '')}"
                     self.entity_texts.append(city_text)
-                    self.entity_infos.append(("city", city, district, region))
+                    self.entity_infos.append(("city", {"city": city, "district": district, "region": region}))
                 
                 # Shaharchalar ma'lumotlarini qo'shish
-                for settlement in district.get("urban_settlements", []):
-                    settlement_text = f"Shaharcha {settlement.get('name_latin', '')} {settlement.get('name_cyrillic', '')} {settlement.get('name_russian', '')}"
+                for settlement in district.get("settlements", []):
+                    settlement_text = f"{settlement.get('name_latin', '')} {settlement.get('name_cyrillic', '')} {settlement.get('name_russian', '')} {settlement.get('code', '')}"
                     self.entity_texts.append(settlement_text)
-                    self.entity_infos.append(("urban_settlement", settlement, district, region))
+                    self.entity_infos.append(("settlement", {"settlement": settlement, "district": district, "region": region}))
                 
                 # Qishloq fuqarolar yig'inlari ma'lumotlarini qo'shish
-                for assembly in district.get("rural_assemblies", []):
-                    assembly_text = f"Qishloq {assembly.get('name_latin', '')} {assembly.get('name_cyrillic', '')} {assembly.get('name_russian', '')}"
+                for assembly in district.get("assemblies", []):
+                    assembly_text = f"{assembly.get('name_latin', '')} {assembly.get('name_cyrillic', '')} {assembly.get('name_russian', '')} {assembly.get('code', '')}"
                     self.entity_texts.append(assembly_text)
-                    self.entity_infos.append(("rural_assembly", assembly, district, region))
+                    self.entity_infos.append(("assembly", {"assembly": assembly, "district": district, "region": region}))
         
-        print(f"Embedding uchun {len(self.entity_texts)} ta ma'lumot tayyorlandi.")
+        # Embeddinglarni kerak bo'lganda hisoblaymiz
+        try:
+            if self.use_embeddings and self.entity_texts:
+                logging.info(f"SOATO uchun {len(self.entity_texts)} ta embedding ma'lumoti tayyorlandi.")
+                # Embeddinglarni kerak bo'lganda hisoblaymiz
+                self.entity_embeddings_cache = None
+        except Exception as e:
+            logging.error(f"SOATO embeddinglarini tayyorlashda xatolik: {str(e)}")
     
     def _search_soato_data(self, query: str) -> str:
         """SOATO ma'lumotlaridan so'rov bo'yicha ma'lumot qidirish."""
@@ -451,6 +461,9 @@ class SoatoTool(BaseTool):
         if not self.entity_texts or not self.entity_infos:
             return "Embedding ma'lumotlari mavjud emas."
         
+        if not self.use_embeddings:
+            return "Semantik qidiruv o'chirilgan."
+            
         try:
             # So'rovni tozalash
             clean_query = query.lower()
@@ -478,78 +491,88 @@ class SoatoTool(BaseTool):
                 except Exception as e:
                     logging.error(f"Fuzzy search error: {str(e)}")
             
-            # Query embedding olish
-            logging.info(f"Semantik qidiruv ishlatilmoqda: {clean_query}")
-            query_embedding = self.embedding_model.encode([clean_query], normalize=True)[0]
-            entity_embeddings = self.embedding_model.encode(self.entity_texts, normalize=True)
-            
-            # O'xshashlik hisoblash
-            similarities = []
-            for i, entity_embedding in enumerate(entity_embeddings):
-                sim = util.dot_score(query_embedding, entity_embedding).item()
-                similarities.append((i, sim))
-            
-            # Natijalarni saralash
-            similarities.sort(key=lambda x: x[1], reverse=True)
-            
-            # Eng yaxshi natijalarni olish
-            top_entities = []
-            for i, sim in similarities[:5]:  # Top 5 natija
-                entity_type, entity, parent, grandparent = self.entity_infos[i]
-                top_entities.append((entity_type, entity, parent, grandparent, sim))
-            
-            # Eng yaxshi natijani formatlash
-            try:
-                entity_type, entity, parent, grandparent, sim = top_entities[0]
+            # Embedding modelini kerak bo'lganda yuklash (lazy loading)
+            if self.embedding_model is None:
+                logging.info("Embedding modeli yuklanmoqda...")
+                self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
                 
-                # Agar o'xshashlik past bo'lsa, natija qaytarmaslik
-                if sim < 0.4:
-                    return "Semantik qidiruv bo'yicha natija topilmadi."
+            model = self.embedding_model.model
+            batch_size = 100  # Bir vaqtda qayta ishlanadigan hujjatlar soni
+            top_k = 3  # Eng yuqori o'xshashlikdagi natijalar soni
+            
+            # So'rov embeddingini olish
+            query_embedding = model.encode(clean_query, convert_to_tensor=True, show_progress_bar=False)
+            
+            # Barcha ma'lumotlarni embedding qilish
+            # Agar entity_embeddings_cache mavjud bo'lmasa, yangi embeddinglarni hisoblash
+            if not hasattr(self, 'entity_embeddings_cache') or self.entity_embeddings_cache is None:
+                logging.info("SOATO embeddinglar keshi yaratilmoqda...")
+                self.entity_embeddings_cache = torch.zeros((len(self.entity_texts), model.get_sentence_embedding_dimension()))
                 
-                # Ma'lumotni formatlash
-                if entity_type == "country":
-                    result = self._get_country_info()
-                elif entity_type == "region":
-                    result = self._format_region_info(entity)
-                elif entity_type == "district":
-                    result = self._format_district_info(entity, parent)
-                elif entity_type == "city":
-                    result = self._format_city_info(entity, parent, grandparent)
-                elif entity_type == "urban_settlement":
-                    result = self._format_settlement_info(entity, parent, grandparent)
-                elif entity_type == "rural_assembly":
-                    result = self._format_assembly_info(entity, parent, grandparent)
+                # Hujjatlarni batch usulida qayta ishlash
+                for i in range(0, len(self.entity_texts), batch_size):
+                    batch_texts = self.entity_texts[i:i+batch_size]
+                    
+                    # Batch embeddinglarini olish
+                    batch_embeddings = model.encode(batch_texts, convert_to_tensor=True, show_progress_bar=False)
+                    
+                    # Embeddinglarni keshga saqlash
+                    self.entity_embeddings_cache[i:i+len(batch_texts)] = batch_embeddings
+            
+            # Eng o'xshash ma'lumotlarni topish
+            cos_scores = util.cos_sim(query_embedding, self.entity_embeddings_cache)[0]
+            
+            # Top natijalarni olish
+            top_k = min(top_k, len(cos_scores))
+            if top_k == 0:
+                return ""
+                
+            top_results = torch.topk(cos_scores, k=top_k)
+            
+            # Natijalarni formatlash
+            results = []
+            for score, idx in zip(top_results[0], top_results[1]):
+                if score > 0.5:  # Minimal o'xshashlik chegarasi
+                    entity_type, entity_info = self.entity_infos[idx]
+                    self._add_result_by_entity_type(results, entity_type, entity_info, score.item())
+            
+            # Natijalarni o'xshashlik darajasi bo'yicha saralash
+            results.sort(key=lambda x: x[0], reverse=True)
+            
+            if results:
+                if len(results) == 1:
+                    return results[0][1]
                 else:
-                    result = f"Noma'lum ma'lumot turi: {entity_type}"
-                
-                # Agar asosiy natija o'xshashligi past bo'lsa (<=0.6), boshqa natijalarni ham ko'rsatish
-                if sim <= 0.6 and len(top_entities) > 1:
-                    result += "\n\nBoshqa mos natijalar:\n"
-                    for i, (e_type, e, p, gp, sim) in enumerate(top_entities[1:4], 1):  # Faqat keyingi 3 ta natija
-                        entity_name = ""
-                        if e_type == "country":
-                            entity_name = "O'zbekiston Respublikasi"
-                        elif e_type == "region":
-                            entity_name = f"{e.get('name_latin', 'N/A')} viloyati"
-                        elif e_type == "district":
-                            entity_name = f"{e.get('name_latin', 'N/A')} tumani"
-                        elif e_type == "city":
-                            entity_name = f"{e.get('name_latin', 'N/A')} shahri"
-                        elif e_type == "urban_settlement":
-                            entity_name = f"{e.get('name_latin', 'N/A')} shaharchasi"
-                        elif e_type == "rural_assembly":
-                            entity_name = f"{e.get('name_latin', 'N/A')} qishlog'i"
-                        
-                        if entity_name:
-                            result += f"\n{i}. {entity_name}: {sim:.2f}"
-                
-                return result
-            except Exception as format_error:
-                logging.error(f"Ma'lumotni formatlashda xatolik: {str(format_error)}")
-                return f"Ma'lumot formati xatoligi: {entity_type} - {entity.get('name_latin', 'N/A')}\n\n"
+                    result = ""
+                    for _, info in results:
+                        result += info + "\n\n"
+                    return result
+            return ""
         except Exception as e:
             logging.error(f"Semantik qidirishda xatolik: {str(e)}")
             return "Semantik qidiruv jarayonida xatolik yuz berdi."
+    
+    def _add_result_by_entity_type(self, results, entity_type, entity_info, score):
+        """Entity turiga qarab natijani qo'shish"""
+        if entity_type == "country":
+            results.append((score, self._get_country_info()))
+        elif entity_type == "region":
+            results.append((score, self._format_region_info(entity_info)))
+        elif entity_type == "district":
+            region = entity_info.get("region", {})
+            results.append((score, self._format_district_info(entity_info, region)))
+        elif entity_type == "city":
+            district = entity_info.get("district", {})
+            region = entity_info.get("region", {})
+            results.append((score, self._format_city_info(entity_info, district, region)))
+        elif entity_type == "urban_settlement":
+            district = entity_info.get("district", {})
+            region = entity_info.get("region", {})
+            results.append((score, self._format_settlement_info(entity_info, district, region)))
+        elif entity_type == "rural_assembly":
+            district = entity_info.get("district", {})
+            region = entity_info.get("region", {})
+            results.append((score, self._format_assembly_info(entity_info, district, region)))
     
     def _search_by_name(self, query: str) -> str:
         """Nomi bo'yicha ma'muriy hududiy birlikni qidirish"""

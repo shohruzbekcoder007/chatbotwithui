@@ -25,7 +25,7 @@ class NationTool(BaseTool):
     entity_texts: List[str] = Field(default_factory=list)
     entity_infos: List[Dict] = Field(default_factory=list)
     use_embeddings: bool = Field(default=True)
-    uembedding_model: Optional[CustomEmbeddingFunction] = Field(default=None)
+    entity_embeddings_cache: Optional[torch.Tensor] = Field(default=None)
     
     def __init__(self, nation_file_path: str, use_embeddings: bool = True, embedding_model=None):
         """Initialize the SOATO tool with the path to the SOATO JSON file."""
@@ -33,14 +33,16 @@ class NationTool(BaseTool):
         self.nation_data = self._load_nation_data(nation_file_path)
         self.use_embeddings = use_embeddings
         
-        # Embedding modelini tashqaridan olish yoki yaratish
+        # Embedding modelini tashqaridan olish
         if embedding_model is not None:
             self.embedding_model = embedding_model
-        elif self.use_embeddings and self.embedding_model is None:
-            print("Embedding modeli yuklanmoqda...")
-            self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
-            print("Embedding ma'lumotlari tayyorlanmoqda...")
-            self._prepare_embedding_data()
+            logging.info("Tashqaridan berilgan embedding modeli o'rnatildi.")
+        else:
+            # Embedding modelini kerak bo'lganda yuklaymiz
+            self.embedding_model = None
+            
+        # Embedding ma'lumotlarini tayyorlash
+        self._prepare_embedding_data()
 
     def _load_nation_data(self, file_path: str) -> Dict[str, Any]:
         """Load nation data from JSON file."""
@@ -54,6 +56,10 @@ class NationTool(BaseTool):
         """Prepare embedding data for the nation data."""
         self.entity_texts = [entity['NAME'] for entity in self.nation_data]
         self.entity_infos = self.nation_data
+        
+        # Embeddinglarni kerak bo'lganda hisoblaymiz
+        self.entity_embeddings_cache = None
+        logging.info(f"Embedding uchun {len(self.entity_texts)} ta davlat ma'lumoti tayyorlandi.")
 
     def _semantic_search(self, query: str, return_raw: bool = False) -> Union[List[Dict], str]:
         """Semantik qidiruv."""
@@ -61,28 +67,58 @@ class NationTool(BaseTool):
             if not self.entity_texts or not self.entity_infos:
                 return [] if return_raw else "Ma'lumotlar mavjud emas."
             
+            if not self.use_embeddings:
+                return [] if return_raw else "Semantik qidiruv o'chirilgan."
+            
+            # Embedding modeli yuklanmagan bo'lsa, yuklash
             if self.embedding_model is None:
+                logging.info("Embedding modeli yuklanmoqda...")
                 self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
                 self._prepare_embedding_data()
             
             # CustomEmbeddingFunction obyektidan SentenceTransformer modelini olish
             model = self.embedding_model.model
             
+            # Xotira tejash uchun batch usulida ishlash
+            batch_size = 100  # Bir vaqtda qayta ishlanadigan hujjatlar soni
+            
             # Query embeddingini olish
             query_embedding = model.encode(query, convert_to_tensor=True, show_progress_bar=False)
             
             # Entity embeddinglarini olish
-            entity_embeddings = model.encode(self.entity_texts, convert_to_tensor=True, show_progress_bar=False)
-            
-            # Cosine similarityni hisoblash
-            cos_scores = util.cos_sim(query_embedding, entity_embeddings)[0]
-            
-            # Natijalarni saralash
-            cos_scores_tensor = torch.tensor(cos_scores)
-            sorted_indices = torch.argsort(cos_scores_tensor, descending=True)
-            
-            # Top natijalarni olish
-            results = [self.entity_infos[idx] for idx in sorted_indices]
+            if not hasattr(self, 'entity_embeddings_cache') or self.entity_embeddings_cache is None:
+                logging.info("Nation embeddinglar keshi yaratilmoqda...")
+                
+                # Natijalarni saqlash uchun
+                all_scores = []
+                
+                # Hujjatlarni batch usulida qayta ishlash
+                for i in range(0, len(self.entity_texts), batch_size):
+                    batch_texts = self.entity_texts[i:i+batch_size]
+                    
+                    # Batch embeddinglarini olish
+                    batch_embeddings = model.encode(batch_texts, convert_to_tensor=True, show_progress_bar=False)
+                    
+                    # Har bir embedding uchun o'xshashlikni hisoblash
+                    for j, emb in enumerate(batch_embeddings):
+                        cos_score = util.cos_sim([query_embedding], [emb])[0][0].item()
+                        all_scores.append((i+j, cos_score))
+                
+                # O'xshashlik bo'yicha saralash
+                all_scores.sort(key=lambda x: x[1], reverse=True)
+                
+                # Top natijalarni olish
+                results = [self.entity_infos[idx] for idx, _ in all_scores[:10]]  # Top 10 natijalarni olish
+            else:
+                # Agar embeddinglar keshi mavjud bo'lsa, to'g'ridan-to'g'ri hisoblash
+                cos_scores = util.cos_sim(query_embedding, self.entity_embeddings_cache)[0]
+                
+                # Natijalarni saralash
+                cos_scores_tensor = torch.tensor(cos_scores)
+                sorted_indices = torch.argsort(cos_scores_tensor, descending=True)
+                
+                # Top natijalarni olish
+                results = [self.entity_infos[idx] for idx in sorted_indices[:10]]  # Top 10 natijalarni olish
             
             if return_raw:
                 return results
