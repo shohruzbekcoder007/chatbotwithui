@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 _MODEL_CACHE = {}
 
 # Global semaphore - bir vaqtda nechta so'rov bajarilishi mumkinligini cheklaydi
-_MODEL_SEMAPHORE = asyncio.Semaphore(10)  # Bir vaqtda 5 ta so'rovga ruxsat
+_MODEL_SEMAPHORE = asyncio.Semaphore(10)  # Bir vaqtda 10 ta so'rovga ruxsat
 
 class LangChainOllamaModel:
     """Ollama bilan LangChain integratsiyasi - ko'p foydalanuvchilar uchun optimallashtirilgan"""
@@ -149,8 +149,14 @@ class LangChainOllamaModel:
             # Bitta embedding modelini yaratish, barcha toollar uchun
             shared_embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
             
-            # Toollarni yaratish
-            soato_tool = SoatoTool("tools_llm/soato/soato.json", use_embeddings=True, embedding_model=shared_embedding_model)
+            # Toollarni yaratish - yangi improved SOATO tool
+            logger.info("Improved SOATO tool yaratilmoqda...")
+            soato_tool = SoatoTool(
+                soato_file_path="tools_llm/soato/soato.json", 
+                use_embeddings=True, 
+                embedding_model=shared_embedding_model
+            )
+            
             nation_tool = NationTool("tools_llm/nation/nation_data.json", use_embeddings=True, embedding_model=shared_embedding_model)
             ckp_tool = CkpTool("tools_llm/ckp/ckp.json", use_embeddings=True, embedding_model=shared_embedding_model)
             dbibt_tool = DBIBTTool("tools_llm/dbibt/dbibt.json", use_embeddings=True, embedding_model=shared_embedding_model)
@@ -160,13 +166,27 @@ class LangChainOllamaModel:
             
             # Embedding ma'lumotlarini tayyorlash
             logger.info("Barcha toollar uchun embedding ma'lumotlari tayyorlanmoqda...")
-            soato_tool._prepare_embedding_data()
-            nation_tool._prepare_embedding_data()
-            ckp_tool._prepare_embedding_data()
-            dbibt_tool._prepare_embedding_data()
-            country_tool._prepare_embedding_data()
-            thsh_tool._prepare_embedding_data()
-            tif_tn_tool._prepare_embedding_data()
+            try:
+                # SOATO tool embedding ma'lumotlarini tayyorlash
+                if hasattr(soato_tool, '_prepare_embedding_data'):
+                    soato_tool._prepare_embedding_data()
+                    logger.info("SOATO tool embedding ma'lumotlari tayyor")
+                
+                # Boshqa toollar uchun embedding tayyorlash
+                if hasattr(nation_tool, '_prepare_embedding_data'):
+                    nation_tool._prepare_embedding_data()
+                if hasattr(ckp_tool, '_prepare_embedding_data'):
+                    ckp_tool._prepare_embedding_data()
+                if hasattr(dbibt_tool, '_prepare_embedding_data'):
+                    dbibt_tool._prepare_embedding_data()
+                if hasattr(country_tool, '_prepare_embedding_data'):
+                    country_tool._prepare_embedding_data()
+                if hasattr(thsh_tool, '_prepare_embedding_data'):
+                    thsh_tool._prepare_embedding_data()
+                logger.info("Barcha toollar uchun embedding ma'lumotlari tayyor")
+                
+            except Exception as e:
+                logger.warning(f"Embedding ma'lumotlarini tayyorlashda ogohlantirish: {e}")
             
             # Agentni yaratish - mavjud modeldan foydalanish
             self.agent = initialize_agent(
@@ -178,7 +198,13 @@ class LangChainOllamaModel:
                 memory=ConversationBufferMemory(memory_key="chat_history", return_messages=True),
                 system_message=SystemMessage(content="""Siz O'zbekiston Respublikasi Davlat statistika qo'mitasi ma'lumotlari bilan ishlash uchun maxsus agentsiz. 
                     Sizda quyidagi toollar mavjud:
-                    1. soato_tool - O'zbekiston Respublikasining ma'muriy-hududiy birliklari (SOATO/MHOBIT) ma'lumotlarini qidirish uchun mo'ljallangan vosita. Bu tool orqali viloyatlar, tumanlar, shaharlar va boshqa ma'muriy birliklarning kodlari, nomlari va joylashuvlarini topish mumkin. Yoki saoto/mhobt kodi berilsa, unga mos hudud nomini topish mumkin. Misol uchun: "Toshkent shahar", "Samarqand viloyati", "1710 soato" (Qashqadaryo viloyati kodi), "Buxoro tumani" kabi so"rovlar orqali ma'lumotlarni izlash mumkin.
+                    
+                    1. soato_tool - O'zbekiston Respublikasining ma'muriy-hududiy birliklari (SOATO/MHOBIT) ma'lumotlarini qidirish uchun mo'ljallangan professional vosita. Bu tool LangChain best practices asosida yaratilgan va quyidagi imkoniyatlarni taqdim etadi:
+                       - Viloyatlar, tumanlar, shaharlar va aholi punktlarning soato yoki mhobt kodlari va nomlari
+                       - SOATO/MHOBIT kodlari bo'yicha aniq qidiruv
+                       - Ma'muriy birliklarning ierarxik tuzilishi
+                       - Viloyatlar, tumanlar va aholi punktlari soni haqida ma'lumotlar
+                       Misol so'rovlar: "Toshkent viloyati tumanlari mhobt kodlari", "Samarqand viloyati soato si qanday", "1710 soato kodi", "Buxoro viloyati tumanlari soni", "Andijon ma'muriy markazi"
                     
                     2. nation_tool - O'zbekiston Respublikasi millat klassifikatori ma'lumotlarini qidirish uchun tool. Bu tool orqali millat kodi yoki millat nomi bo"yicha qidiruv qilish mumkin. Masalan: "01" (o'zbek), "05" (rus), yoki "tojik" kabi so"rovlar bilan qidiruv qilish mumkin. Tool millat kodi, nomi va boshqa tegishli ma'lumotlarni qaytaradi.
                     
@@ -195,8 +221,23 @@ class LangChainOllamaModel:
                     Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning. 
                     Agar foydalanuvchi SOATO/MHOBIT (viloyat, tuman, shahar), millat, MST, davlat ma'lumotlari yoki tashkiliy-huquqiy shakllar haqida so'rasa, tegishli toolni chaqiring.
                     Toollarni chaqirish uchun Action formatidan foydalaning.""")
+                    JUDA MUHIM QOIDALAR: 
+                    1. Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning
+                    2. Tool ishlatganingizdan keyin MAJBURIY ravishda Final Answer bering
+                    3. Tool HTML formatida ma'lumot qaytarganida, uni AYNAN shunday Final Answer da qo'ying
+                    4. Final Answer da tool dan kelgan HTML teglarni o'zgartirmang, to'g'ridan-to'g'ri copy-paste qiling
+                    5. HTML formatga mos kelmaydigan matnni qo'shmang
+                    6. Agar tool <div><strong>SOATO MA'LUMOTLARI:</strong></div> deb boshlangan HTML qaytarsa, aynan shuni Final Answer da ham qo'ying
+                    7. HECH QACHON tool javobini oddiy matnga o'tkazmang, HTML formatini saqlang
+                    
+                    NAMUNA:
+                    Tool HTML format: <div><strong>SOATO:</strong></div><ul><li>Item 1</li></ul>
+                    Final Answer: <div><strong>SOATO:</strong></div><ul><li>Item 1</li></ul>
+                     """),
+                max_iterations=3,  # Maksimal iteratsiya sonini cheklash
+                early_stopping_method="generate"  # Erta to'xtatish usuli
             )
-            logger.info(f"Agent muvaffaqiyatli yaratildi (session: {self.session_id})")
+            logger.info(f"Agent muvaffaqiyatli yaratildi (session: {self.session_id}) - Improved SOATO tool bilan")
         except Exception as e:
             logger.error(f"Agent yaratishda xatolik: {str(e)}")
             self.agent = None
@@ -212,11 +253,13 @@ class LangChainOllamaModel:
             bool: Agentga tegishli bo'lsa True, aks holda False
         """
         # Agentga tegishli so'rovlarni aniqlash uchun kalit so'zlar
+        # SOATO tool uchun yangi kalit so'zlar qo'shildi
         agent_keywords = [
             "soato", "mhobit", "viloyat", "tuman", "shahar", "millat", "mst", "ckp", 
             "mahsulot", "tasnif", "dbibt", "tashkilot", "okpo", "ktut", "stir", "inn",
             "статистика", "статистик", "statistika", "statistik",
-            "davlat", "mamlakat", "country", "kod", "iso", "o'zbekiston", "uzbekistan", "aqsh", "rossiya"
+            "davlat", "mamlakat", "country", "kod", 
+            "markaz", "markazi", "ma'muriy", "aholi punkti", "tumanlari", "tumanlar"
         ]
         
         # So'rovni kichik harflarga o'tkazib, kalit so'zlarni tekshirish
@@ -477,7 +520,7 @@ class LangChainOllamaModel:
     
     async def chat_stream(self, context: str, query: str, language: str = "uz", device: str = "web") -> AsyncGenerator[str, None]:
         """
-        Javobni SSE orqali stream ko'rinishda yuborish
+        Javobni SSE orqali stream ko'rinishida yuborish
         
         Args:
             context (str): System prompt
@@ -492,9 +535,28 @@ class LangChainOllamaModel:
         if self.use_agent and self.agent and self._is_agent_query(query):
             try:
                 logger.info(f"So'rov agentga yo'naltirildi (stream) (session: {self.session_id})")
-                async for chunk in self.agent.astream({"input": query}):
-                    yield chunk["output"]
+                # Agent javobini to'liq olish
+                result = await asyncio.wait_for(
+                    asyncio.get_event_loop().run_in_executor(
+                        None, 
+                        lambda: self.agent.invoke({"input": query})
+                    ), 
+                    timeout=60.0
+                )
+                
+                # Javobni tokenlar bo'yicha ajratib stream qilish
+                response_text = result.get("output", "") if isinstance(result, dict) else str(result)
+                response_text = response_text.replace("\n", "<br>")
+                
+                # Javobni tokenlar bo'yicha stream qilish
+                import time
+                for char in response_text:
+                    yield char
+                    await asyncio.sleep(0.01)  # Kichik kechikish stream effekti uchun
                 return
+            except asyncio.TimeoutError:
+                logger.error(f"Agent timeout (stream): {self.session_id}")
+                yield "Agent javob berish vaqti tugadi. Modelga o'tilmoqda..."
             except Exception as e:
                 logger.error(f"Agent xatoligi (stream): {str(e)}, modelga o'tilmoqda")
                 # Agent xatolik bersa, modelga o'tish
@@ -580,7 +642,7 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "devstral", base_url: str = "http://localhost:11434", use_agent: bool = True) -> LangChainOllamaModel:
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "llama3.3:70b-instruct-q2_K", base_url: str = "http://172.16.8.44:11434", use_agent: bool = True) -> LangChainOllamaModel:
     return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url, use_agent=use_agent)
 
 # Asosiy model obyekti (eski kod bilan moslik uchun)

@@ -74,7 +74,7 @@ async def chat(request: Request, chat_request: ChatRequest):
             return {"error": str(chat_error)}
         
         # Yangi javobni sessiyaga saqlash
-        change_redis(user_id, chat_request.query, response_current)
+        await change_redis(user_id, chat_request.query, response_current)
         
         # Savol va javobni MongoDB ga saqlash (faqat autentifikatsiya qilingan foydalanuvchilar uchun)
         if user_id != "anonymous":

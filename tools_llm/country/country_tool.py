@@ -30,6 +30,7 @@ class CountryTool(BaseTool):
         super().__init__()
         self.country_data = self._load_country_data(country_file_path)
         self.use_embeddings = use_embeddings
+        self.entity_embeddings_cache = None
         
         # Embedding modelini tashqaridan olish
         if embedding_model is not None:
