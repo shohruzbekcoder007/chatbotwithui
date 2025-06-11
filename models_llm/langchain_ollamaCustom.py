@@ -183,6 +183,8 @@ class LangChainOllamaModel:
                     country_tool._prepare_embedding_data()
                 if hasattr(thsh_tool, '_prepare_embedding_data'):
                     thsh_tool._prepare_embedding_data()
+                if hasattr(tif_tn_tool, '_prepare_embedding_data'):
+                    tif_tn_tool._prepare_embedding_data()
                 logger.info("Barcha toollar uchun embedding ma'lumotlari tayyor")
                 
             except Exception as e:
@@ -509,6 +511,54 @@ class LangChainOllamaModel:
         result = int((estimate1 + estimate2) / 2)
         
         return max(1, result)
+
+    async def chat_stream_old(self, context: str, query: str, language: str = "uz", device: str = "web") -> AsyncGenerator[str, None]:
+        """
+        Javobni SSE orqali stream ko'rinishida yuborish
+        
+        Args:
+            context (str): System prompt
+            query (str): User savoli
+            language (str): Til
+            device (str): Qurilma
+            
+        Yields:
+            str: Modeldan kelayotgan har bir token yoki parcha
+        """
+        # Agent ishlatish yoki yo'qligini tekshirish
+        if self.use_agent and self.agent and self._is_agent_query(query):
+            try:
+                logger.info(f"So'rov agentga yo'naltirildi (stream) (session: {self.session_id})")
+                # Agent javobini to'liq olish
+                result = await asyncio.wait_for(
+                    asyncio.get_event_loop().run_in_executor(
+                        None, 
+                        lambda: self.agent.invoke({"input": query})
+                    ), 
+                    timeout=60.0
+                )
+                
+                # Javobni tokenlar bo'yicha ajratib stream qilish
+                response_text = result.get("output", "") if isinstance(result, dict) else str(result)
+                response_text = response_text.replace("\n", "<br>")
+                
+                # Javobni tokenlar bo'yicha stream qilish
+                import time
+                for char in response_text:
+                    yield char
+                    await asyncio.sleep(0.01)  # Kichik kechikish stream effekti uchun
+                return
+            except asyncio.TimeoutError:
+                logger.error(f"Agent timeout (stream): {self.session_id}")
+                yield "Agent javob berish vaqti tugadi. Modelga o'tilmoqda..."
+            except Exception as e:
+                logger.error(f"Agent xatoligi (stream): {str(e)}, modelga o'tilmoqda")
+                # Agent xatolik bersa, modelga o'tish
+        
+        # Agentga tegishli bo'lmagan so'rovlar yoki agent xatolik bergan holda model ishlatiladi
+        messages = self._create_messages(context, query, language, device)
+        async for chunk in self._stream_invoke(messages):
+            yield chunk
     
     async def chat_stream(self, context: str, query: str, language: str = "uz", device: str = "web") -> AsyncGenerator[str, None]:
         """
