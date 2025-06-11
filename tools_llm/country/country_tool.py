@@ -23,12 +23,14 @@ class CountryTool(BaseTool):
     embedding_model: Optional[CustomEmbeddingFunction] = Field(default=None)
     entity_texts: List[str] = Field(default_factory=list)
     entity_infos: List[Dict] = Field(default_factory=list)
+    entity_embeddings_cache: Optional[Any] = Field(default=None)
     
     def __init__(self, country_file_path: str, use_embeddings: bool = True, embedding_model=None):
         """Initialize the Country tool with the path to the Country JSON file."""
         super().__init__()
         self.country_data = self._load_country_data(country_file_path)
         self.use_embeddings = use_embeddings
+        self.entity_embeddings_cache = None
         
         # Embedding modelini tashqaridan olish yoki yaratish
         if embedding_model is not None:
@@ -36,6 +38,9 @@ class CountryTool(BaseTool):
         elif self.use_embeddings and self.embedding_model is None:
             print("Embedding modeli yuklanmoqda...")
             self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
+        
+        # Embedding ma'lumotlarini tayyorlash
+        if self.use_embeddings and self.embedding_model is not None:
             self._prepare_embedding_data()
     
     def _load_country_data(self, file_path: str) -> List[Dict[str, Any]]:

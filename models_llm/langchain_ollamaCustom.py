@@ -171,10 +171,16 @@ class LangChainOllamaModel:
                     logger.info("SOATO tool embedding ma'lumotlari tayyor")
                 
                 # Boshqa toollar uchun embedding tayyorlash
-                nation_tool._prepare_embedding_data()
-                ckp_tool._prepare_embedding_data()
-                dbibt_tool._prepare_embedding_data()
-                country_tool._prepare_embedding_data()
+                if hasattr(nation_tool, '_prepare_embedding_data'):
+                    nation_tool._prepare_embedding_data()
+                if hasattr(ckp_tool, '_prepare_embedding_data'):
+                    ckp_tool._prepare_embedding_data()
+                if hasattr(dbibt_tool, '_prepare_embedding_data'):
+                    dbibt_tool._prepare_embedding_data()
+                if hasattr(country_tool, '_prepare_embedding_data'):
+                    country_tool._prepare_embedding_data()
+                if hasattr(thsh_tool, '_prepare_embedding_data'):
+                    thsh_tool._prepare_embedding_data()
                 logger.info("Barcha toollar uchun embedding ma'lumotlari tayyor")
                 
             except Exception as e:
@@ -192,10 +198,11 @@ class LangChainOllamaModel:
                     Sizda quyidagi toollar mavjud:
                     
                     1. soato_tool - O'zbekiston Respublikasining ma'muriy-hududiy birliklari (SOATO/MHOBIT) ma'lumotlarini qidirish uchun mo'ljallangan professional vosita. Bu tool LangChain best practices asosida yaratilgan va quyidagi imkoniyatlarni taqdim etadi:
-                       • Viloyatlar, tumanlar, shaharlar va aholi punktlarning soato yoki mhobt kodlari va nomlari
-                       • SOATO/MHOBIT kodlari bo'yicha aniq qidiruv
-                       • Ma'muriy birliklarning ierarxik tuzilishi
-                       Misol so'rovlar: "Toshkent viloyati tumanlari mhobt kodlari", "Samarqand viloyati soato si qanday", "1710 soato kodi", "Buxoro tumani mhobt  kodi", "Andijon ma'muriy markazi"
+                       - Viloyatlar, tumanlar, shaharlar va aholi punktlarning soato yoki mhobt kodlari va nomlari
+                       - SOATO/MHOBIT kodlari bo'yicha aniq qidiruv
+                       - Ma'muriy birliklarning ierarxik tuzilishi
+                       - Viloyatlar, tumanlar va aholi punktlari soni haqida ma'lumotlar
+                       Misol so'rovlar: "Toshkent viloyati tumanlari mhobt kodlari", "Samarqand viloyati soato si qanday", "1710 soato kodi", "Buxoro viloyati tumanlari soni", "Andijon ma'muriy markazi"
                     
                     2. nation_tool - O'zbekiston Respublikasi millat klassifikatori ma'lumotlarini qidirish uchun tool. Bu tool orqali millat kodi yoki millat nomi bo"yicha qidiruv qilish mumkin. Masalan: "01" (o'zbek), "05" (rus), yoki "tojik" kabi so"rovlar bilan qidiruv qilish mumkin. Tool millat kodi, nomi va boshqa tegishli ma'lumotlarni qaytaradi.
                     
@@ -205,13 +212,21 @@ class LangChainOllamaModel:
 
                     5. country_tool - Davlatlar ma'lumotlarini qidirish uchun mo'ljallangan vosita. Bu tool orqali davlatlarning qisqa nomi, to'liq nomi, harf kodi va raqamli kodi bo'yicha qidiruv qilish mumkin. Misol uchun: "AQSH", "Rossiya", "UZ", "398" (Qozog'iston raqamli kodi) kabi so'rovlar orqali ma'lumotlarni izlash mumkin. Natijalar davlat kodi, qisqa nomi, to'liq nomi va kodlari bilan qaytariladi.
 
-                    MUHIM: 
-                    - Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning
-                    - Toollarni chaqirish uchun Action formatidan foydalaning
-                    - Har bir tool o'z xatoliklarini boshqaradi va foydalanuvchiga tushunarli xabarlar beradi
+                    JUDA MUHIM QOIDALAR: 
+                    1. Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning
+                    2. Tool ishlatganingizdan keyin MAJBURIY ravishda Final Answer bering
+                    3. Tool HTML formatida ma'lumot qaytarganida, uni AYNAN shunday Final Answer da qo'ying
+                    4. Final Answer da tool dan kelgan HTML teglarni o'zgartirmang, to'g'ridan-to'g'ri copy-paste qiling
+                    5. HTML formatga mos kelmaydigan matnni qo'shmang
+                    6. Agar tool <div><strong>SOATO MA'LUMOTLARI:</strong></div> deb boshlangan HTML qaytarsa, aynan shuni Final Answer da ham qo'ying
+                    7. HECH QACHON tool javobini oddiy matnga o'tkazmang, HTML formatini saqlang
                     
-                    Each response must be formatted in HTML. Follow the guidelines below: Use <p> for text blocks, Use <strong> or <b> for important words, Use <ul> and <li> for lists, Use <code> for code snippets, Use <br> for line breaks within text, Every response should maintain semantic and visual clarity.
-                     """)
+                    NAMUNA:
+                    Tool HTML format: <div><strong>SOATO:</strong></div><ul><li>Item 1</li></ul>
+                    Final Answer: <div><strong>SOATO:</strong></div><ul><li>Item 1</li></ul>
+                     """),
+                max_iterations=3,  # Maksimal iteratsiya sonini cheklash
+                early_stopping_method="generate"  # Erta to'xtatish usuli
             )
             logger.info(f"Agent muvaffaqiyatli yaratildi (session: {self.session_id}) - Improved SOATO tool bilan")
         except Exception as e:
@@ -496,7 +511,7 @@ class LangChainOllamaModel:
     
     async def chat_stream(self, context: str, query: str, language: str = "uz", device: str = "web") -> AsyncGenerator[str, None]:
         """
-        Javobni SSE orqali stream ko'rinishda yuborish
+        Javobni SSE orqali stream ko'rinishida yuborish
         
         Args:
             context (str): System prompt
@@ -511,9 +526,28 @@ class LangChainOllamaModel:
         if self.use_agent and self.agent and self._is_agent_query(query):
             try:
                 logger.info(f"So'rov agentga yo'naltirildi (stream) (session: {self.session_id})")
-                async for chunk in self.agent.astream({"input": query}):
-                    yield chunk["output"]
+                # Agent javobini to'liq olish
+                result = await asyncio.wait_for(
+                    asyncio.get_event_loop().run_in_executor(
+                        None, 
+                        lambda: self.agent.invoke({"input": query})
+                    ), 
+                    timeout=60.0
+                )
+                
+                # Javobni tokenlar bo'yicha ajratib stream qilish
+                response_text = result.get("output", "") if isinstance(result, dict) else str(result)
+                response_text = response_text.replace("\n", "<br>")
+                
+                # Javobni tokenlar bo'yicha stream qilish
+                import time
+                for char in response_text:
+                    yield char
+                    await asyncio.sleep(0.01)  # Kichik kechikish stream effekti uchun
                 return
+            except asyncio.TimeoutError:
+                logger.error(f"Agent timeout (stream): {self.session_id}")
+                yield "Agent javob berish vaqti tugadi. Modelga o'tilmoqda..."
             except Exception as e:
                 logger.error(f"Agent xatoligi (stream): {str(e)}, modelga o'tilmoqda")
                 # Agent xatolik bersa, modelga o'tish
@@ -599,7 +633,7 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "devstral", base_url: str = "http://localhost:11434", use_agent: bool = True) -> LangChainOllamaModel:
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "llama3.3:70b-instruct-q2_K", base_url: str = "http://172.16.8.44:11434", use_agent: bool = True) -> LangChainOllamaModel:
     return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url, use_agent=use_agent)
 
 # Asosiy model obyekti (eski kod bilan moslik uchun)
