@@ -249,6 +249,53 @@ body {
     outline: none;
 }
 
+.chat-input .chat-select {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px 30px 8px 12px;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+    min-width: 200px;
+    margin-right: 8px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.chat-input .chat-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.chat-input .chat-select:hover {
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+}
+
+.chat-input .chat-select option {
+    padding: 10px;
+    font-size: 14px;
+    background-color: white;
+    color: #374151;
+}
+
+.chat-input .chat-select option:hover,
+.chat-input .chat-select option:focus,
+.chat-input .chat-select option:checked {
+    background-color: #3b82f6;
+    color: white;
+}
+
 .chat-input input::placeholder {
     color: #9ca3af;
 }
@@ -264,6 +311,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.custom-select-container button.custom-select-button {
+    height: 100%;
+    border: 1px solid rgba(229,231,235,1);
 }
 
 .chat-input button:hover {
@@ -627,4 +679,76 @@ body {
 .bot li {
     list-style-type: disc !important;
     padding: 4px 0;
+}
+
+.custom-select-container {
+    position: relative;
+    margin-right: 8px;
+}
+
+.custom-select-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 200px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.custom-select-button:hover {
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+}
+
+.custom-select-button svg {
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    color: #6b7280;
+}
+
+.custom-select-dropdown {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    margin-top: 4px;
+    width: 100%;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.custom-select-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    color: #374151;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.custom-select-option:hover {
+    background-color: #f1f5f9;
+}
+
+.custom-select-option.selected {
+    background-color: #eff6ff;
+    color: #3b82f6;
+    font-weight: 500;
 }

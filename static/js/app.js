@@ -335,7 +335,6 @@ async function loadChatHistory(chatId, resetPagination = true) {
     } else {
         const data = await response.json();
         if (data.success) {
-            console.log(data.chats, "<-chats", data.pagination);
             let chatHistory = document.querySelector('.chat-history');
             
             // Update pagination state

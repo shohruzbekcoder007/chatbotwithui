@@ -14,8 +14,11 @@ async function onsubmitstream(event) {
     
     event.preventDefault();
 
-    const input = event.target.querySelector('input');
+    const input = event.target.querySelector('input[name="message"]');
+    const topicInput = event.target.querySelector('input[name="topic"]');
     const userText = input.value.trim();
+    const topic = topicInput ? topicInput.value : 'default';
+    console.log(topic, "<topic>");
     if (!userText) return;
 
     const chatId = getChatIdFromUrl();
@@ -67,7 +70,8 @@ async function onsubmitstream(event) {
                 query: userText,
                 chat_id: chatId,
                 language: "uz",
-                device: "web"
+                device: "web",
+                topic: topic
             })
         });
 

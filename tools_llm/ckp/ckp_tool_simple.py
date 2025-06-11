@@ -2,8 +2,9 @@ import json
 import os
 import re
 import logging
+import torch
 from typing import Dict, List, Any, Optional, Union, Type
-from sentence_transformers import SentenceTransformer, util
+from sentence_transformers import util
 from retriever.langchain_chroma import CustomEmbeddingFunction
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
@@ -29,6 +30,7 @@ class CkpTool(BaseTool):
     embedding_model: Optional[Any] = Field(default=None)
     use_embeddings: bool = Field(default=True)
     external_embedding_model: Optional[Any] = Field(default=None)
+    entity_embeddings_cache: Optional[torch.Tensor] = Field(default=None)
     
     def __init__(self, ckp_file_path: str, use_embeddings: bool = True, embedding_model=None):
         super().__init__()
@@ -38,11 +40,13 @@ class CkpTool(BaseTool):
         # Ma'lumotlarni yuklash
         self._load_data(ckp_file_path)
         
-        # Embedding modelini yuklash
-        self._load_embedding_model()
-        
-        # Embedding ma'lumotlarini tayyorlash
-        self._prepare_embedding_data()
+        # Embedding modelini tashqaridan olish
+        if embedding_model is not None:
+            self.embedding_model = embedding_model
+            self._prepare_embedding_data()
+        else:
+            # Lazy loading - embedding modeli kerak bo'lganda yuklanadi
+            self.embedding_model = None
     
     def _load_data(self, ckp_file_path: str):
         """CKP ma'lumotlarini yuklash"""
@@ -92,29 +96,29 @@ class CkpTool(BaseTool):
             raise RuntimeError(f"CKP ma'lumotlarini yuklashda xatolik: {str(e)}")
     
     def _load_embedding_model(self):
-        """Embedding modelini yuklash"""
+        """Embedding modelini yuklash (lazy loading)"""
         try:
             if not self.use_embeddings:
+                logging.info("Embedding o'chirilgan")
                 return
-            
-            # Agar tashqaridan embedding model berilgan bo'lsa, uni ishlatish
+                
+            # Agar model tashqaridan berilgan bo'lsa, uni ishlatish
             if self.external_embedding_model is not None:
                 self.embedding_model = self.external_embedding_model
-                logging.info("Tashqaridan berilgan embedding modeli muvaffaqiyatli o'rnatildi.")
+                logging.info("Tashqi embedding modeli ishlatilmoqda")
                 return
-            
-            logging.info("Embedding modeli yuklanmoqda...")
-            
-            # Custom embedding function orqali modelni yuklash
-            embedding_function = CustomEmbeddingFunction()
-            
-            # Embedding modelini tekshirish
-            if hasattr(embedding_function, 'model'):
-                self.embedding_model = embedding_function
-                logging.info("Embedding modeli muvaffaqiyatli yuklandi.")
-            else:
-                logging.error("Embedding modeli mavjud emas: CustomEmbeddingFunction.model topilmadi")
-                self.embedding_model = None
+                
+            # Agar model yuklanmagan bo'lsa, yangi model yaratish
+            if self.embedding_model is None:
+                try:
+                    # Embedding modelini yuklash
+                    logging.info("Embedding modeli yuklanmoqda...")
+                    self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
+                    logging.info("Embedding modeli yuklandi")
+                except Exception as e:
+                    logging.error(f"Embedding modelini yuklashda xatolik: {str(e)}")
+                    self.embedding_model = None
+                    self.use_embeddings = False
                 
         except Exception as e:
             logging.error(f"Embedding modelini yuklashda xatolik: {str(e)}")
@@ -122,14 +126,15 @@ class CkpTool(BaseTool):
     
     def _prepare_embedding_data(self):
         """Embedding uchun ma'lumotlarni tayyorlash"""
-        self.entity_texts = []
-        self.entity_infos = []
-        
-        # Barcha ma'lumotlarni qo'shish
-        for item in self.ckp_data:
-            content = item.get("content", "")
-            self.entity_texts.append(content)
-            self.entity_infos.append(item)
+        try:
+            # Entity ma'lumotlarini tayyorlash
+            self.entity_texts = [item.get('content', '') for item in self.ckp_data]
+            self.entity_infos = self.ckp_data
+            
+            # Embedding keshini tozalash
+            self.entity_embeddings_cache = None
+        except Exception as e:
+            logging.error(f"Embedding ma'lumotlarini tayyorlashda xatolik: {str(e)}")
     
     def _run(self, query: str) -> str:
         """Tool ishga tushirilganda bajariladigan asosiy metod
@@ -404,11 +409,8 @@ class CkpTool(BaseTool):
         if not self.entity_texts or not self.entity_infos:
             return [] if return_raw else "Embedding ma'lumotlari mavjud emas."
         
-        # Embedding modeli mavjudligini tekshirish
-        if self.embedding_model is None:
-            error_msg = "Embedding modeli yuklanmagan. Semantik qidiruv ishlamaydi."
-            logging.error(error_msg)
-            return [] if return_raw else error_msg
+        if not self.use_embeddings:
+            return [] if return_raw else "Semantik qidiruv o'chirilgan."
         
         try:
             # So'rovni tozalash va muhim so'zlarni ajratib olish
@@ -417,50 +419,82 @@ class CkpTool(BaseTool):
             # Muhim so'zlarni ajratib olish
             important_words = [word for word in clean_query.split() if len(word) > 2]
             
-            # Query embedding olish
-            logging.info(f"Semantik qidiruv ishlatilmoqda: {clean_query}")
-            query_embedding = self.embedding_model.encode([clean_query], normalize=True)[0]
-            entity_embeddings = self.embedding_model.encode(self.entity_texts, normalize=True)
+            # Embedding modelini kerak bo'lganda yuklash (lazy loading)
+            if self.embedding_model is None:
+                logging.info("Embedding modeli yuklanmoqda...")
+                self._load_embedding_model()
+                if self.embedding_model is None:
+                    return [] if return_raw else "Embedding modeli yuklanmagan. Semantik qidiruv ishlamaydi."
             
-            # O'xshashlik hisoblash
-            similarities = []
-            for i, entity_embedding in enumerate(entity_embeddings):
-                content = self.entity_infos[i].get("content", "")
-                
-                # Semantik o'xshashlik
-                sim = util.dot_score(query_embedding, entity_embedding).item()
-                
-                # Muhim so'zlar mavjudligini tekshirish - bu natijalarni yaxshilaydi
-                word_match_bonus = 0
-                for word in important_words:
-                    if word in content.lower():
-                        word_match_bonus += 0.1
-                
-                # Umumiy o'xshashlik
-                total_sim = sim + word_match_bonus
-                similarities.append((i, total_sim, sim))
+            model = self.embedding_model.model
+            batch_size = 100  # Bir vaqtda qayta ishlanadigan hujjatlar soni
+            top_k = 5  # Eng yuqori o'xshashlikdagi natijalar soni
             
-            # Natijalarni saralash
-            similarities.sort(key=lambda x: x[1], reverse=True)
+            # So'rov embeddingini olish
+            query_embedding = model.encode(clean_query, convert_to_tensor=True, show_progress_bar=False)
             
-            # Eng yuqori o'xshashlikdagi natijalarni olish (0.3 dan yuqori)
+            # Barcha ma'lumotlarni embedding qilish
+            # Agar entity_embeddings_cache mavjud bo'lmasa, yangi embeddinglarni hisoblash
+            if not hasattr(self, 'entity_embeddings_cache') or self.entity_embeddings_cache is None:
+                logging.info("CKP embeddinglar keshi yaratilmoqda...")
+                self.entity_embeddings_cache = torch.zeros((len(self.entity_texts), model.get_sentence_embedding_dimension()))
+                
+                # Hujjatlarni batch usulida qayta ishlash
+                for i in range(0, len(self.entity_texts), batch_size):
+                    batch_texts = self.entity_texts[i:i+batch_size]
+                    
+                    # Batch embeddinglarini olish
+                    batch_embeddings = model.encode(batch_texts, convert_to_tensor=True, show_progress_bar=False)
+                    
+                    # Embeddinglarni keshga saqlash
+                    self.entity_embeddings_cache[i:i+len(batch_texts)] = batch_embeddings
+            
+            # Eng o'xshash ma'lumotlarni topish
+            cos_scores = util.cos_sim(query_embedding, self.entity_embeddings_cache)[0]
+            
+            # Top natijalarni olish
+            top_k = min(top_k, len(cos_scores))
+            if top_k == 0:
+                return [] if return_raw else ""
+                
+            top_results = torch.topk(cos_scores, k=top_k)
+            
+            # Natijalarni formatlash
             results = []
-            for i, total_sim, sim in similarities[:20]:
-                if total_sim > 0.3:
-                    results.append(self.entity_texts[i])
+            for score, idx in zip(top_results[0], top_results[1]):
+                if score > 0.3:  # Minimal o'xshashlik chegarasi
+                    # Muhim so'zlar mavjudligini tekshirish - bu natijalarni yaxshilaydi
+                    word_match_bonus = 0
+                    content = self.entity_infos[idx].get("content", "")
+                    for word in important_words:
+                        if word in content.lower():
+                            word_match_bonus += 0.1
+                    
+                    # Umumiy o'xshashlik
+                    total_sim = score.item() + word_match_bonus
+                    results.append((total_sim, self.entity_texts[idx]))
+            
+            # Natijalarni o'xshashlik darajasi bo'yicha saralash
+            results.sort(key=lambda x: x[0], reverse=True)
             
             logging.info(f"Semantik qidiruv natijalar soni: {len(results)}")
             
             if return_raw:
-                return results
+                return [text for _, text in results]
             
             # Natijalarni formatlash
             if results:
                 if len(results) > 5:
-                    result_text = "\n\n".join(results[:5])
+                    result_texts = []
+                    for i, (sim, text) in enumerate(results[:5]):
+                        result_texts.append(f"{text} (o'xshashlik: {sim:.2f})")
+                    result_text = "\n\n".join(result_texts)
                     result_text += f"\n\nJami {len(results)} ta natija topildi. Qidirishni aniqlashtiring."
                 else:
-                    result_text = "\n\n".join(results)
+                    result_texts = []
+                    for i, (sim, text) in enumerate(results):
+                        result_texts.append(f"{text} (o'xshashlik: {sim:.2f})")
+                    result_text = "\n\n".join(result_texts)
                 
                 return result_text
             

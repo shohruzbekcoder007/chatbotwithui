@@ -33,21 +33,23 @@ class DBIBTTool(BaseTool):
     entity_INN: List[str] = Field(default_factory=list)
     entity_NAME: List[str] = Field(default_factory=list)
     use_embeddings: bool = Field(default=True)
-    uembedding_model: Optional[CustomEmbeddingFunction] = Field(default=None)
+    external_embedding_model: Optional[CustomEmbeddingFunction] = Field(default=None)
+    entity_embeddings_cache: Optional[torch.Tensor] = Field(default=None)
     
     def __init__(self, dbibt_file_path: str, use_embeddings: bool = True, embedding_model=None):
-        """Initialize the SOATO tool with the path to the SOATO JSON file."""
+        """Initialize the DBIBT tool with the path to the DBIBT JSON file."""
         super().__init__()
         self.dbibt_data = self._load_dbibt_data(dbibt_file_path)
         self.use_embeddings = use_embeddings
+        self.external_embedding_model = embedding_model
         
-        # Embedding modelini tashqaridan olish yoki yaratish
+        # Embedding modelini tashqaridan olish
         if embedding_model is not None:
             self.embedding_model = embedding_model
-        elif self.use_embeddings and self.embedding_model is None:
-            print("Embedding modeli yuklanmoqda...")
-            self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
             self._prepare_embedding_data()
+        else:
+            # Lazy loading - embedding modeli kerak bo'lganda yuklanadi
+            self.embedding_model = None
 
     def _load_dbibt_data(self, dbibt_file_path: str) -> Dict:
         """DBIBT ma'lumotlarini yuklash"""
@@ -61,6 +63,9 @@ class DBIBTTool(BaseTool):
         self.entity_OKPO = [entity['OKPO'] for entity in self.dbibt_data]
         self.entity_INN = [entity['INN'] for entity in self.dbibt_data]
         self.entity_NAME = [entity['NAME'] for entity in self.dbibt_data]
+        
+        # Embedding keshini tozalash
+        self.entity_embeddings_cache = None
 
     def _extract_important_words(self, query: str) -> List[str]:
         """So'rovdan muhim so'zlarni ajratib olish
@@ -176,10 +181,13 @@ class DBIBTTool(BaseTool):
             return f"Qidirishda xatolik: {str(e)}"
 
     def _semantic_search(self, query: str, return_raw: bool = False) -> Union[List[Dict], str]:
-        """Semantik qidiruv."""
+        """Semantik qidiruv - embedding modelini ishlatib o'xshash ma'lumotlarni topish"""
         try: 
             if not self.entity_DBIBT or not self.entity_OKPO or not self.entity_INN or not self.entity_NAME:
                 return [] if return_raw else "Ma'lumotlar mavjud emas."
+            
+            if not self.use_embeddings:
+                return [] if return_raw else "Semantik qidiruv o'chirilgan."
 
             # STIR va INN bir xil ma'noda ekanligini tekshirish
             query_lower = query.lower()
@@ -192,48 +200,79 @@ class DBIBTTool(BaseTool):
                 query = query_lower.replace("ktut", "").strip()
                 logging.info(f"Semantik qidiruvda KTUT so'rovi OKPO sifatida qidirilmoqda: {query}")
 
+            # Embedding modelini kerak bo'lganda yuklash (lazy loading)
             if self.embedding_model is None:
+                logging.info("Embedding modeli yuklanmoqda...")
                 self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
                 self._prepare_embedding_data()
+                
+            model = self.embedding_model.model
+            batch_size = 100  # Bir vaqtda qayta ishlanadigan hujjatlar soni
+            top_k = 5  # Eng yuqori o'xshashlikdagi natijalar soni
 
-            # Query embeddingini olish
-            query_embedding = self.embedding_model.encode([query])[0]
+            # So'rov embeddingini olish
+            query_embedding = model.encode(query, convert_to_tensor=True, show_progress_bar=False)
             
-            # Entity embeddinglarini olish
-            entity_embeddings = self.embedding_model.encode(self.dbibt_data)
+            # Entity ma'lumotlarini tayyorlash
+            entity_texts = [f"{entity['DBIBT']} {entity['NAME']} {entity['OKPO']} {entity['INN']}" for entity in self.dbibt_data]
             
-            # Cosine similarityni hisoblash
-            cos_scores = []
-            for entity_embedding in entity_embeddings:
-                cos_score = util.cos_sim([query_embedding], [entity_embedding])[0][0]
-                cos_scores.append(cos_score)
+            # Barcha ma'lumotlarni embedding qilish
+            # Agar entity_embeddings_cache mavjud bo'lmasa, yangi embeddinglarni hisoblash
+            if not hasattr(self, 'entity_embeddings_cache') or self.entity_embeddings_cache is None:
+                logging.info("DBIBT embeddinglar keshi yaratilmoqda...")
+                self.entity_embeddings_cache = torch.zeros((len(entity_texts), model.get_sentence_embedding_dimension()))
+                
+                # Hujjatlarni batch usulida qayta ishlash
+                for i in range(0, len(entity_texts), batch_size):
+                    batch_texts = entity_texts[i:i+batch_size]
+                    
+                    # Batch embeddinglarini olish
+                    batch_embeddings = model.encode(batch_texts, convert_to_tensor=True, show_progress_bar=False)
+                    
+                    # Embeddinglarni keshga saqlash
+                    self.entity_embeddings_cache[i:i+len(batch_texts)] = batch_embeddings
             
-            # Natijalarni saralash
-            cos_scores_tensor = torch.tensor(cos_scores)
-            sorted_indices = torch.argsort(cos_scores_tensor, descending=True)
+            # Eng o'xshash ma'lumotlarni topish
+            cos_scores = util.cos_sim(query_embedding, self.entity_embeddings_cache)[0]
             
             # Top natijalarni olish
-            results = [self.dbibt_data[idx] for idx in sorted_indices]
-
+            top_k = min(top_k, len(cos_scores))
+            if top_k == 0:
+                return [] if return_raw else ""
+                
+            top_results = torch.topk(cos_scores, k=top_k)
+            
+            # Natijalarni formatlash
+            results = []
+            for score, idx in zip(top_results[0], top_results[1]):
+                if score > 0.5:  # Minimal o'xshashlik chegarasi
+                    results.append((score.item(), self.dbibt_data[idx]))
+            
+            # Natijalarni o'xshashlik darajasi bo'yicha saralash
+            results.sort(key=lambda x: x[0], reverse=True)
+            
             if return_raw:
-                return results
+                return [item for _, item in results]
             
             # Natijalarni formatlash
             formatted_results = []
-            for i, result in enumerate(results[:5]):  # Top 5 natijalarni ko'rsatish
-                formatted_results.append(f"{i+1}. Kod: {result['DBIBT']}, DBIBT: {result['DBIBT']}, OKPO/KTUT: {result['OKPO']}, STIR/INN: {result['INN']}, Nomi: {result['NAME']}")
+            for i, (score, result) in enumerate(results):
+                formatted_results.append(
+                    f"{i+1}. Kod: {result['DBIBT']}, OKPO/KTUT: {result['OKPO']}, "
+                    f"STIR/INN: {result['INN']}, Nomi: {result['NAME']} "
+                    f"(o'xshashlik: {score:.2f})"
+                )
             
             formatted_text = "\n".join(formatted_results)
             
-            if len(results) > 5:
-                formatted_text += f"\n\nJami {len(results)} ta natija topildi."
-            
-            return formatted_text
+            if len(results) > 0:
+                return formatted_text
+            return ""
                 
         except Exception as e:
             logging.error(f"Semantik qidiruvda xatolik: {str(e)}")
             return [] if return_raw else f"Semantik qidiruvda xatolik: {str(e)}"
-    
+
     def _search_dbibt_data(self, query: str) -> Union[List[Dict], str]:
         """Search for a specific query in the DBIBT data."""
         try:

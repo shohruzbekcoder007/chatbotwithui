@@ -23,6 +23,7 @@ class THSHTool(BaseTool):
     embedding_model: Optional[CustomEmbeddingFunction] = Field(default=None)
     entity_texts: List[str] = Field(default_factory=list)
     entity_infos: List[Dict] = Field(default_factory=list)
+    entity_embeddings_cache: Optional[torch.Tensor] = Field(default=None)
     
     def __init__(self, thsh_file_path: str, use_embeddings: bool = True, embedding_model=None):
         """Initialize the THSH tool with the path to the THSH JSON file."""
@@ -30,13 +31,13 @@ class THSHTool(BaseTool):
         self.thsh_data = self._load_thsh_data(thsh_file_path)
         self.use_embeddings = use_embeddings
         
-        # Embedding modelini tashqaridan olish yoki yaratish
+        # Embedding modelini tashqaridan olish
         if embedding_model is not None:
             self.embedding_model = embedding_model
-        elif self.use_embeddings and self.embedding_model is None:
-            print("Embedding modeli yuklanmoqda...")
-            self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
-            self._prepare_embedding_data()
+            logging.info("Tashqaridan berilgan embedding modeli o'rnatildi.")
+        else:
+            # Embedding modelini kerak bo'lganda yuklaymiz
+            self.embedding_model = None
     
     def _load_thsh_data(self, file_path: str) -> List[Dict[str, Any]]:
         """Load THSH data from JSON file."""
@@ -75,19 +76,12 @@ class THSHTool(BaseTool):
             self.entity_texts.append(thsh_text)
             self.entity_infos.append(("thsh", thsh))
         
-        # Embeddinglarni oldindan hisoblash
+        # Embeddinglarni kerak bo'lganda hisoblaymiz
         try:
-            if self.use_embeddings and self.embedding_model is not None and self.entity_texts:
-                model = self.embedding_model.model
-                # Embeddinglarni hisoblash va saqlash
-                embeddings = model.encode(
-                    self.entity_texts, 
-                    convert_to_tensor=True, 
-                    show_progress_bar=False
-                )
-                # Embeddinglarni klassdagi o'zgaruvchiga saqlash
-                self.entity_embeddings_cache = embeddings
-                logging.info("THSH embedding ma'lumotlari tayyorlandi")
+            if self.use_embeddings and self.entity_texts:
+                logging.info(f"THSH uchun {len(self.entity_texts)} ta embedding ma'lumoti tayyorlandi.")
+                # Embeddinglarni kerak bo'lganda hisoblaymiz
+                self.entity_embeddings_cache = None
         except Exception as e:
             logging.error(f"THSH embeddinglarini tayyorlashda xatolik: {str(e)}")
     
@@ -179,36 +173,70 @@ class THSHTool(BaseTool):
     def _semantic_search(self, query: str) -> str:
         """Semantik qidirish orqali THSH ma'lumotlarini topish"""
         try:
+            if not self.use_embeddings:
+                return "Semantik qidiruv o'chirilgan."
+                
+            if self.embedding_model is None:
+                logging.info("Embedding modeli yuklanmoqda...")
+                self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
+                
             model = self.embedding_model.model
+            
+            # Xotira tejash uchun batch usulida ishlash
+            batch_size = 100  # Bir vaqtda qayta ishlanadigan hujjatlar soni
+            top_k = 3  # Eng yuqori o'xshashlikdagi natijalar soni
+            
+            # So'rov embeddingini olish
             query_embedding = model.encode(query, convert_to_tensor=True, show_progress_bar=False)
             
             # Barcha ma'lumotlarni embedding qilish
             # Agar entity_embeddings_cache mavjud bo'lmasa, yangi embeddinglarni hisoblash
             if not hasattr(self, 'entity_embeddings_cache') or self.entity_embeddings_cache is None:
                 logging.info("Embeddinglar keshi yaratilmoqda...")
-                self.entity_embeddings_cache = model.encode(
-                    self.entity_texts, 
-                    convert_to_tensor=True, 
-                    show_progress_bar=False
-                )
-            
-            # Eng o'xshash ma'lumotlarni topish
-            cos_scores = util.cos_sim(query_embedding, self.entity_embeddings_cache)[0]
-            
-            # Top 3 natijalarni olish
-            top_k = min(3, len(cos_scores))
-            if top_k == 0:
-                return ""
                 
-            top_results = torch.topk(cos_scores, k=top_k)
-            
-            # Natijalarni formatlash
-            results = []
-            for score, idx in zip(top_results[0], top_results[1]):
-                if score > 0.5:  # Minimal o'xshashlik chegarasi
-                    entity_type, entity_info = self.entity_infos[idx]
-                    if entity_type == "thsh":
-                        results.append((score.item(), self._format_thsh_info(entity_info)))
+                # Natijalarni saqlash uchun
+                all_scores = []
+                
+                # Hujjatlarni batch usulida qayta ishlash
+                for i in range(0, len(self.entity_texts), batch_size):
+                    batch_texts = self.entity_texts[i:i+batch_size]
+                    
+                    # Batch embeddinglarini olish
+                    batch_embeddings = model.encode(batch_texts, convert_to_tensor=True, show_progress_bar=False)
+                    
+                    # Har bir embedding uchun o'xshashlikni hisoblash
+                    for j, emb in enumerate(batch_embeddings):
+                        cos_score = util.cos_sim([query_embedding], [emb])[0][0].item()
+                        all_scores.append((i+j, cos_score))
+                
+                # O'xshashlik bo'yicha saralash
+                all_scores.sort(key=lambda x: x[1], reverse=True)
+                
+                # Top natijalarni olish
+                results = []
+                for idx, score in all_scores[:top_k]:
+                    if score > 0.5 and idx < len(self.entity_infos):  # Minimal o'xshashlik chegarasi
+                        entity_type, entity_info = self.entity_infos[idx]
+                        if entity_type == "thsh":
+                            results.append((score, self._format_thsh_info(entity_info)))
+            else:
+                # Eng o'xshash ma'lumotlarni topish
+                cos_scores = util.cos_sim(query_embedding, self.entity_embeddings_cache)[0]
+                
+                # Top natijalarni olish
+                top_k = min(top_k, len(cos_scores))
+                if top_k == 0:
+                    return ""
+                    
+                top_results = torch.topk(cos_scores, k=top_k)
+                
+                # Natijalarni formatlash
+                results = []
+                for score, idx in zip(top_results[0], top_results[1]):
+                    if score > 0.5:  # Minimal o'xshashlik chegarasi
+                        entity_type, entity_info = self.entity_infos[idx]
+                        if entity_type == "thsh":
+                            results.append((score.item(), self._format_thsh_info(entity_info)))
             
             # Natijalarni o'xshashlik darajasi bo'yicha saralash
             results.sort(key=lambda x: x[0], reverse=True)
@@ -221,6 +249,7 @@ class THSHTool(BaseTool):
                     for _, thsh_info in results:
                         result += thsh_info + "\n\n"
                     return result
+            return ""
         except Exception as e:
             logging.error(f"Semantik qidirishda xatolik: {str(e)}")
             # Xatolik bo'lganda oddiy qidiruv natijasini qaytarish
