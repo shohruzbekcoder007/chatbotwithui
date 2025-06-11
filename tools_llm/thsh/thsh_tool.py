@@ -182,12 +182,17 @@ class THSHTool(BaseTool):
                 
             model = self.embedding_model.model
             
+            # Device ni aniqlash (CPU yoki CUDA)
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            
             # Xotira tejash uchun batch usulida ishlash
             batch_size = 100  # Bir vaqtda qayta ishlanadigan hujjatlar soni
             top_k = 3  # Eng yuqori o'xshashlikdagi natijalar soni
             
-            # So'rov embeddingini olish
+            # So'rov embeddingini olish va device ga joylashtirish
             query_embedding = model.encode(query, convert_to_tensor=True, show_progress_bar=False)
+            if hasattr(query_embedding, 'to'):
+                query_embedding = query_embedding.to(device)
             
             # Barcha ma'lumotlarni embedding qilish
             # Agar entity_embeddings_cache mavjud bo'lmasa, yangi embeddinglarni hisoblash
@@ -201,12 +206,19 @@ class THSHTool(BaseTool):
                 for i in range(0, len(self.entity_texts), batch_size):
                     batch_texts = self.entity_texts[i:i+batch_size]
                     
-                    # Batch embeddinglarini olish
+                    # Batch embeddinglarini olish va device ga joylashtirish
                     batch_embeddings = model.encode(batch_texts, convert_to_tensor=True, show_progress_bar=False)
+                    if hasattr(batch_embeddings, 'to'):
+                        batch_embeddings = batch_embeddings.to(device)
                     
                     # Har bir embedding uchun o'xshashlikni hisoblash
                     for j, emb in enumerate(batch_embeddings):
-                        cos_score = util.cos_sim([query_embedding], [emb])[0][0].item()
+                        # Embeddingni to'g'ri device ga ko'chirish
+                        if hasattr(emb, 'to'):
+                            emb = emb.to(device)
+                        
+                        # Cosine similarity hisoblash - device consistency bilan
+                        cos_score = util.cos_sim(query_embedding.unsqueeze(0), emb.unsqueeze(0))[0][0].item()
                         all_scores.append((i+j, cos_score))
                 
                 # O'xshashlik bo'yicha saralash
@@ -220,6 +232,10 @@ class THSHTool(BaseTool):
                         if entity_type == "thsh":
                             results.append((score, self._format_thsh_info(entity_info)))
             else:
+                # Agar mavjud cache boshqa device da bo'lsa, uni to'g'ri device ga ko'chirish
+                if hasattr(self.entity_embeddings_cache, 'device') and self.entity_embeddings_cache.device != device:
+                    self.entity_embeddings_cache = self.entity_embeddings_cache.to(device)
+                
                 # Eng o'xshash ma'lumotlarni topish
                 cos_scores = util.cos_sim(query_embedding, self.entity_embeddings_cache)[0]
                 

@@ -293,12 +293,19 @@ class TIFTNTool(BaseTool):
                 logging.info("Embedding modeli yuklanmoqda...")
                 self.embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
             
+            # Device ni aniqlash (CPU yoki CUDA)
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            
             # Xotira tejash uchun batch usulida ishlash
             batch_size = 100  # Bir vaqtda qayta ishlanadigan hujjatlar soni
             top_k = 20  # Eng yuqori o'xshashlikdagi natijalar soni
             
-            # So'rov embeddingini olish
+            # So'rov embeddingini olish va device ga joylashtirish
             query_embedding = self.embedding_model.encode([query])[0]
+            if isinstance(query_embedding, torch.Tensor):
+                query_embedding = query_embedding.to(device)
+            else:
+                query_embedding = torch.tensor(query_embedding).to(device)
             
             # Natijalarni saqlash uchun
             all_scores = []
@@ -310,9 +317,16 @@ class TIFTNTool(BaseTool):
                 # Batch embeddinglarini olish
                 batch_embeddings = self.embedding_model.encode(batch_texts)
                 
-                # Har bir embedding uchun o'xshashlikni hisoblash
+                # Har bir embedding uchun o'xshashlikni hisoblash - device consistency bilan
                 for j, emb in enumerate(batch_embeddings):
-                    cos_score = util.cos_sim([query_embedding], [emb])[0][0].item()
+                    # Embeddingni to'g'ri device ga ko'chirish
+                    if isinstance(emb, torch.Tensor):
+                        emb = emb.to(device)
+                    else:
+                        emb = torch.tensor(emb).to(device)
+                    
+                    # Cosine similarity hisoblash - tensor dimensionlarini to'g'rilash
+                    cos_score = torch.cosine_similarity(query_embedding.unsqueeze(0), emb.unsqueeze(0)).item()
                     all_scores.append((i+j, cos_score))
             
             # O'xshashlik bo'yicha saralash

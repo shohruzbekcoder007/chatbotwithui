@@ -634,7 +634,7 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "llama3.3:70b-instruct-q2_K", base_url: str = "http://172.16.8.44:11434", use_agent: bool = True) -> LangChainOllamaModel:
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "devstral", base_url: str = "http://localhost:11434", use_agent: bool = True) -> LangChainOllamaModel:
     return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url, use_agent=use_agent)
 
 # Asosiy model obyekti (eski kod bilan moslik uchun)

@@ -79,11 +79,16 @@ class NationTool(BaseTool):
             # CustomEmbeddingFunction obyektidan SentenceTransformer modelini olish
             model = self.embedding_model.model
             
+            # Device ni aniqlash (CPU yoki CUDA)
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            
             # Xotira tejash uchun batch usulida ishlash
             batch_size = 100  # Bir vaqtda qayta ishlanadigan hujjatlar soni
             
-            # Query embeddingini olish
+            # Query embeddingini olish va device ga joylashtirish
             query_embedding = model.encode(query, convert_to_tensor=True, show_progress_bar=False)
+            if hasattr(query_embedding, 'to'):
+                query_embedding = query_embedding.to(device)
             
             # Entity embeddinglarini olish
             if not hasattr(self, 'entity_embeddings_cache') or self.entity_embeddings_cache is None:
@@ -96,12 +101,19 @@ class NationTool(BaseTool):
                 for i in range(0, len(self.entity_texts), batch_size):
                     batch_texts = self.entity_texts[i:i+batch_size]
                     
-                    # Batch embeddinglarini olish
+                    # Batch embeddinglarini olish va device ga joylashtirish
                     batch_embeddings = model.encode(batch_texts, convert_to_tensor=True, show_progress_bar=False)
+                    if hasattr(batch_embeddings, 'to'):
+                        batch_embeddings = batch_embeddings.to(device)
                     
-                    # Har bir embedding uchun o'xshashlikni hisoblash
+                    # Har bir embedding uchun o'xshashlikni hisoblash - device consistency bilan
                     for j, emb in enumerate(batch_embeddings):
-                        cos_score = util.cos_sim([query_embedding], [emb])[0][0].item()
+                        # Embeddingni to'g'ri device ga ko'chirish
+                        if hasattr(emb, 'to'):
+                            emb = emb.to(device)
+                        
+                        # Cosine similarity hisoblash - tensor dimensionlarini to'g'rilash
+                        cos_score = torch.cosine_similarity(query_embedding.unsqueeze(0), emb.unsqueeze(0)).item()
                         all_scores.append((i+j, cos_score))
                 
                 # O'xshashlik bo'yicha saralash
@@ -111,11 +123,15 @@ class NationTool(BaseTool):
                 results = [self.entity_infos[idx] for idx, _ in all_scores[:10]]  # Top 10 natijalarni olish
             else:
                 # Agar embeddinglar keshi mavjud bo'lsa, to'g'ridan-to'g'ri hisoblash
-                cos_scores = util.cos_sim(query_embedding, self.entity_embeddings_cache)[0]
+                # Cache ni to'g'ri device ga ko'chirish
+                if hasattr(self.entity_embeddings_cache, 'to'):
+                    self.entity_embeddings_cache = self.entity_embeddings_cache.to(device)
+                
+                # Cosine similarity hisoblash
+                cos_scores = torch.cosine_similarity(query_embedding.unsqueeze(0), self.entity_embeddings_cache, dim=1)
                 
                 # Natijalarni saralash
-                cos_scores_tensor = torch.tensor(cos_scores)
-                sorted_indices = torch.argsort(cos_scores_tensor, descending=True)
+                sorted_indices = torch.argsort(cos_scores, descending=True)
                 
                 # Top natijalarni olish
                 results = [self.entity_infos[idx] for idx in sorted_indices[:10]]  # Top 10 natijalarni olish
