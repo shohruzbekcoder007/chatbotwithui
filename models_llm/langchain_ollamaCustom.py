@@ -560,53 +560,38 @@ class LangChainOllamaModel:
         async for chunk in self._stream_invoke(messages):
             yield chunk
     
-    async def chat_stream(self, context: str, query: str, language: str = "uz", device: str = "web") -> AsyncGenerator[str, None]:
-        """
-        Javobni SSE orqali stream ko'rinishida yuborish
+    async def chat_stream(
+        self, context: str, query: str, language: str = "uz", device: str = "web"
+    ) -> AsyncGenerator[str, None]:
+        agent_output = ""
         
-        Args:
-            context (str): System prompt
-            query (str): User savoli
-            language (str): Til
-            device (str): Qurilma
-            
-        Yields:
-            str: Modeldan kelayotgan har bir token yoki parcha
-        """
-        # Agent ishlatish yoki yo'qligini tekshirish
+        # 1. Agentdan javob olish
         if self.use_agent and self.agent and self._is_agent_query(query):
             try:
-                logger.info(f"So'rov agentga yo'naltirildi (stream) (session: {self.session_id})")
-                # Agent javobini to'liq olish
-                result = await asyncio.wait_for(
-                    asyncio.get_event_loop().run_in_executor(
-                        None, 
-                        lambda: self.agent.invoke({"input": query})
-                    ), 
-                    timeout=60.0
-                )
-                
-                # Javobni tokenlar bo'yicha ajratib stream qilish
-                response_text = result.get("output", "") if isinstance(result, dict) else str(result)
-                response_text = response_text.replace("\n", "<br>")
-                
-                # Javobni tokenlar bo'yicha stream qilish
-                import time
-                for char in response_text:
-                    yield char
-                    await asyncio.sleep(0.01)  # Kichik kechikish stream effekti uchun
-                return
-            except asyncio.TimeoutError:
-                logger.error(f"Agent timeout (stream): {self.session_id}")
-                yield "Agent javob berish vaqti tugadi. Modelga o'tilmoqda..."
+                logger.info("Agent ishlamoqda...")
+                agent_result = self.agent.invoke({"input": query})
+                agent_output = agent_result.get("output", "").strip()
+
+                # Agar agent foydali javob bermasa — bo'sh qoldiramiz
+                if not self._is_satisfactory(agent_output):
+                    logger.warning("Agent javobi qoniqarsiz, model yakka ishlaydi.")
+                    agent_output = ""
+
             except Exception as e:
-                logger.error(f"Agent xatoligi (stream): {str(e)}, modelga o'tilmoqda")
-                # Agent xatolik bersa, modelga o'tish
-        
-        # Agentga tegishli bo'lmagan so'rovlar yoki agent xatolik bergan holda model ishlatiladi
-        messages = self._create_messages(context, query, language, device)
+                logger.error(f"Agent xatosi: {e}")
+                agent_output = ""
+
+        # 2. Agent javobi asosida model promptini yangilash
+        if agent_output:
+            combined_query = f"Savol: {query}\n\nAgent natijasi: {agent_output}\n\nYaxshilangan, aniq javob bering:"
+        else:
+            combined_query = query
+
+        # 3. Modelni ishga tushirish
+        messages = self._create_messages(context, combined_query, language, device)
         async for chunk in self._stream_invoke(messages):
             yield chunk
+
 
     async def get_stream_suggestion_question(self, suggested_context: str, query: str, answer: str, language: str, device: str = "web") -> AsyncGenerator[str, None]:
         """
@@ -684,7 +669,7 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "llama3.3:70b-instruct-q2_K", base_url: str = "http://172.16.8.44:11434", use_agent: bool = True) -> LangChainOllamaModel:
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "devstral:latest", base_url: str = "http://localhost:11434", use_agent: bool = True) -> LangChainOllamaModel:
     return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url, use_agent=use_agent)
 
 # Asosiy model obyekti (eski kod bilan moslik uchun)
