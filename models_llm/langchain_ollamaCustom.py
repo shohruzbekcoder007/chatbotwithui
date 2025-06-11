@@ -220,19 +220,11 @@ class LangChainOllamaModel:
                     
                     Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning. 
                     Agar foydalanuvchi SOATO/MHOBIT (viloyat, tuman, shahar), millat, MST, davlat ma'lumotlari yoki tashkiliy-huquqiy shakllar haqida so'rasa, tegishli toolni chaqiring.
-                    Toollarni chaqirish uchun Action formatidan foydalaning.""")
+                    Toollarni chaqirish uchun Action formatidan foydalaning.
                     JUDA MUHIM QOIDALAR: 
                     1. Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning
                     2. Tool ishlatganingizdan keyin MAJBURIY ravishda Final Answer bering
-                    3. Tool HTML formatida ma'lumot qaytarganida, uni AYNAN shunday Final Answer da qo'ying
-                    4. Final Answer da tool dan kelgan HTML teglarni o'zgartirmang, to'g'ridan-to'g'ri copy-paste qiling
-                    5. HTML formatga mos kelmaydigan matnni qo'shmang
-                    6. Agar tool <div><strong>SOATO MA'LUMOTLARI:</strong></div> deb boshlangan HTML qaytarsa, aynan shuni Final Answer da ham qo'ying
-                    7. HECH QACHON tool javobini oddiy matnga o'tkazmang, HTML formatini saqlang
                     
-                    NAMUNA:
-                    Tool HTML format: <div><strong>SOATO:</strong></div><ul><li>Item 1</li></ul>
-                    Final Answer: <div><strong>SOATO:</strong></div><ul><li>Item 1</li></ul>
                      """),
                 max_iterations=3,  # Maksimal iteratsiya sonini cheklash
                 early_stopping_method="generate"  # Erta to'xtatish usuli
