@@ -574,7 +574,7 @@ class LangChainOllamaModel:
             str: Modeldan kelayotgan har bir token yoki parcha
         """
         # Agent ishlatish yoki yo'qligini tekshirish
-        if self.use_agent and self.agent and self._is_agent_query(query):
+        if self.use_agent and self.agent and self._is_agent_query(query) and False:
             try:
                 logger.info(f"So'rov agentga yo'naltirildi (stream) (session: {self.session_id})")
                 # Agent javobini to'liq olish
