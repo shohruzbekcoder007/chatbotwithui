@@ -667,6 +667,36 @@ class LangChainOllamaModel:
                 logger.error(f"Stream xatoligi: {str(e)}")
                 yield f"data: [ERROR] {str(e)}\n\n"
 
+    def _is_satisfactory(self, response: str) -> bool:
+        """
+        Agent javobining qoniqarli ekanligini tekshirish
+        
+        Args:
+            response (str): Agent javobi
+            
+        Returns:
+            bool: Javob qoniqarli bo'lsa True, aks holda False
+        """
+        if not response or len(response) < 10:
+            return False
+            
+        # Xatolik xabarlarini tekshirish
+        error_indicators = [
+            "xatolik", "error", "topilmadi", "not found", 
+            "mavjud emas", "uzr", "sorry", "kechirasiz"
+        ]
+        
+        response_lower = response.lower()
+        for indicator in error_indicators:
+            if indicator in response_lower:
+                return False
+                
+        # Minimal uzunlik tekshiruvi (kamida 50 belgi)
+        if len(response) < 50:
+            return False
+            
+        return True
+
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
 def get_model_instance(session_id: Optional[str] = None, model_name: str = "devstral:latest", base_url: str = "http://localhost:11434", use_agent: bool = True) -> LangChainOllamaModel:
