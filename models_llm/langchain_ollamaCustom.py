@@ -48,6 +48,7 @@ class LangChainOllamaModel:
                 base_url: str = "http://localhost:11434",
                 temperature: float = 0.5,
                 num_ctx: int = 131072,
+                # num_ctx: int = 4096,
                 num_gpu: int = 1,
                 gpu_layers: int = 100,
                 kv_cache: bool = True,
@@ -568,16 +569,19 @@ class LangChainOllamaModel:
         agent_output = ""
         
         # 1. Agentdan javob olish
-        if self.use_agent and self.agent and self._is_agent_query(query) and False:
+        if self.use_agent and self.agent and self._is_agent_query(query):
             try:
                 logger.info("Agent ishlamoqda...")
                 agent_result = self.agent.invoke({"input": query})
                 agent_output = agent_result.get("output", "").strip()
 
-                # Agar agent foydali javob bermasa — bo'sh qoldiramiz
-                if not self._is_satisfactory(agent_output):
-                    logger.warning("Agent javobi qoniqarsiz, model yakka ishlaydi.")
+                # Agar agent javobi bo'sh bo'lsa yoki juda qisqa bo'lsa, xabar berish
+                if not agent_output or len(agent_output) < 5:
+                    logger.warning("Agent javobi bo'sh yoki juda qisqa.")
                     agent_output = ""
+                else:
+                    # Agent javobini log qilish
+                    logger.info(f"Agent javobi: {agent_output[:50]}...")
 
             except Exception as e:
                 logger.error(f"Agent xatosi: {e}")
@@ -585,7 +589,7 @@ class LangChainOllamaModel:
 
         # 2. Agent javobi asosida model promptini yangilash
         if agent_output:
-            combined_query = f"Savol: {query}\n\nAgent natijasi: {agent_output}\n\nYaxshilangan, aniq javob bering:"
+            combined_query = f"Savol: {query}\n\nAgent natijasi: {agent_output}\n\nAgent natijasini birinchi o'ringa qo'yib, uni asosiy javob sifatida ishlating va kerak bo'lsa to'ldiring:"
         else:
             combined_query = query
 
@@ -693,8 +697,8 @@ class LangChainOllamaModel:
             if indicator in response_lower:
                 return False
                 
-        # Minimal uzunlik tekshiruvi (kamida 50 belgi)
-        if len(response) < 50:
+        # Minimal uzunlik tekshiruvi (kamida 5 belgi)
+        if len(response) < 5:
             return False
             
         return True

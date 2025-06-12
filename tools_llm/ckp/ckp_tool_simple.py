@@ -14,13 +14,13 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 
 
 class CkpToolInput(BaseModel):
-    query: str = Field(description="MST (Mahsulotlarning tasniflagichi) ma'lumotlarini qidirish uchun so'rov")
+    query: str = Field(description="MST/SKP (Mahsulotlarning tasniflagichi) ma'lumotlarini qidirish uchun so'rov")
 
 
 class CkpTool(BaseTool):
-    """MST (Mahsulotlarning tasniflagichi) ma'lumotlarini qidirish uchun tool"""
+    """MST/SKP (Mahsulotlarning tasniflagichi) ma'lumotlarini qidirish uchun tool"""
     name: str = "ckp_tool"
-    description: str = "MST (Mahsulotlarning tasniflagichi) ma\"lumotlarini qidirish va tahlil qilish uchun mo\"ljallangan vosita. Bu tool orqali mahsulotlar kodlari, nomlari va tasniflarini izlash, ularning ma\"lumotlarini ko\"rish va tahlil qilish mumkin. Qidiruv so\"z, kod yoki tasnif bo\"yicha amalga oshirilishi mumkin."
+    description: str = "MST/SKP (Mahsulotlarning tasniflagichi) ma\"lumotlarini qidirish va tahlil qilish uchun mo\"ljallangan vosita. Bu tool orqali mahsulotlar kodlari, nomlari va tasniflarini izlash, ularning ma\"lumotlarini ko\"rish va tahlil qilish mumkin. Qidiruv so\"z, kod yoki tasnif bo\"yicha amalga oshirilishi mumkin."
     args_schema: Type[BaseModel] = CkpToolInput
     
     # Pydantic v2 uchun barcha maydonlarni oldindan e'lon qilish
@@ -49,11 +49,11 @@ class CkpTool(BaseTool):
             self.embedding_model = None
     
     def _load_data(self, ckp_file_path: str):
-        """CKP ma'lumotlarini yuklash"""
+        """MST/CKP ma'lumotlarini yuklash"""
         try:
             # Ma'lumotlar fayli
             if not ckp_file_path:
-                raise ValueError("CKP ma'lumotlari fayli ko'rsatilmagan")
+                raise ValueError("MST/CKP ma'lumotlari fayli ko'rsatilmagan")
                 
             # Absolute path bo'lmasa, relative path sifatida ko'rib chiqish
             if os.path.isabs(ckp_file_path):
@@ -71,10 +71,10 @@ class CkpTool(BaseTool):
                 # Path ni normalize qilish
                 data_file = os.path.normpath(data_file)
             
-            logging.info(f"CKP ma'lumotlari fayli: {data_file}")
+            logging.info(f"MST/CKP ma'lumotlari fayli: {data_file}")
             
             if not os.path.exists(data_file):
-                raise FileNotFoundError(f"CKP ma'lumotlari fayli topilmadi: {data_file}")
+                raise FileNotFoundError(f"MST/CKP ma'lumotlari fayli topilmadi: {data_file}")
             
             # Ma'lumotlarni yuklash
             with open(data_file, 'r', encoding='utf-8') as f:
@@ -89,11 +89,11 @@ class CkpTool(BaseTool):
                 content = f"Kod: {code}\nNomi: {name}"
                 self.ckp_data.append({"content": content})
                 
-            logging.info(f"CKP ma'lumotlari yuklandi: {len(self.ckp_data)} ta element")
+            logging.info(f"MST/CKP ma'lumotlari yuklandi: {len(self.ckp_data)} ta element")
         except Exception as e:
-            logging.error(f"CKP ma'lumotlarini yuklashda xatolik: {str(e)}")
+            logging.error(f"MST/CKP ma'lumotlarini yuklashda xatolik: {str(e)}")
             self.ckp_data = []
-            raise RuntimeError(f"CKP ma'lumotlarini yuklashda xatolik: {str(e)}")
+            raise RuntimeError(f"MST/CKP ma'lumotlarini yuklashda xatolik: {str(e)}")
     
     def _load_embedding_model(self):
         """Embedding modelini yuklash (lazy loading)"""
@@ -147,7 +147,7 @@ class CkpTool(BaseTool):
         """
         # Ma'lumotlar yuklanganligini tekshirish
         if not self.ckp_data:
-            return "CKP ma'lumotlari yuklanmagan. Iltimos, ma'lumotlar faylini tekshiring."
+            return "MST/CKP ma'lumotlari yuklanmagan. Iltimos, ma'lumotlar faylini tekshiring."
             
         # So'rovni tozalash
         query = query.strip()
@@ -159,7 +159,7 @@ class CkpTool(BaseTool):
         return self._search_ckp_data(query)
     
     def _search_ckp_data(self, query: str) -> str:
-        """CKP ma'lumotlaridan so'rov bo'yicha ma'lumot qidirish
+        """MST/CKP ma'lumotlaridan so'rov bo'yicha ma'lumot qidirish
         
         Args:
             query: Qidiruv so'rovi
@@ -169,12 +169,12 @@ class CkpTool(BaseTool):
         """
         try:
             if not self.ckp_data:
-                return "CKP ma'lumotlari yuklanmagan."
+                return "MST/CKP ma'lumotlari yuklanmagan."
             
             # So'rovni tozalash
             original_query = query
             query = query.lower()
-            # Nuqtalarni saqlab qolish, chunki ular CKP kodlari uchun muhim
+            # Nuqtalarni saqlab qolish, chunki ular MST/CKP kodlari uchun muhim
             query = re.sub(r'[^\w\s\.]', '', query)
             logging.info(f"Qidirilayotgan so'rov: '{original_query}', tozalangan so'rov: '{query}'")
             
@@ -202,14 +202,14 @@ class CkpTool(BaseTool):
                         if prefix_result:
                             # Prefiks kod bo'yicha natija topildi
                             if "qaysi mahsulot" in original_query.lower():
-                                # Prefiks natijasidan MST ma'lumotlari: qismini olib tashlash
-                                clean_result = prefix_result.replace("MST ma'lumotlari:", "")
-                                return f"MST ma'lumotlari:\n\n{code} kodi uchun aniq ma'lumot topilmadi, lekin {prefix_code} kodi quyidagi mahsulotga tegishli:\n\n{clean_result}"
+                                # Prefiks natijasidan MST/SKP ma'lumotlari: qismini olib tashlash
+                                clean_result = prefix_result.replace("MST/SKP ma'lumotlari:", "")
+                                return f"MST/SKP ma'lumotlari:\n\n{code} kodi uchun aniq ma'lumot topilmadi, lekin {prefix_code} kodi quyidagi mahsulotga tegishli:\n\n{clean_result}"
                             return prefix_result
                     
                     # Agar kod aniq ko'rsatilgan bo'lsa, lekin natija topilmasa
                     if "qaysi mahsulot" in original_query.lower() or "qaysi kod" in original_query.lower():
-                        return f"MST ma'lumotlari:\n\n{code} kodi bo'yicha ma'lumot topilmadi. Iltimos, kodni tekshiring yoki boshqa so'rov bilan qayta urinib ko'ring."
+                        return f"MST/SKP ma'lumotlari:\n\n{code} kodi bo'yicha ma'lumot topilmadi. Iltimos, kodni tekshiring yoki boshqa so'rov bilan qayta urinib ko'ring."
             
             # 2. Hibrid qidiruv - matn va semantik qidiruv natijalarini birlashtirish
             all_results = []
@@ -249,20 +249,20 @@ class CkpTool(BaseTool):
                 return self._format_results(all_results[:5])
             
             # Natija topilmadi
-            return "MST ma'lumotlari bo'yicha natija topilmadi."
+            return "MST/SKP ma'lumotlari bo'yicha natija topilmadi."
             
         except Exception as e:
-            logging.error(f"CKP qidirishda xatolik: {str(e)}")
-            return f"MST ma'lumotlari:\n\nQidirishda xatolik yuz berdi: {str(e)}"
+            logging.error(f"MST/CKP qidirishda xatolik: {str(e)}")
+            return f"MST/SKP ma'lumotlari:\n\nQidirishda xatolik yuz berdi: {str(e)}"
 
     def _get_general_info(self) -> str:
-        """MST haqida umumiy ma'lumot olish"""
+        """MST/SKP haqida umumiy ma'lumot olish"""
         # Birinchi elementni olish - bu umumiy ma'lumot
         if self.ckp_data and len(self.ckp_data) > 0:
             general_info = self.ckp_data[0].get("content", "")
             return general_info
         
-        return "MST - bu O'zbekiston Respublikasi iqtisodiy faoliyat turlari bo'yicha mahsulotlarning (tovarlar, ishlar, xizmatlarning) statistik tasniflagichi"
+        return "MST/SKP - bu O'zbekiston Respublikasi iqtisodiy faoliyat turlari bo'yicha mahsulotlarning (tovarlar, ishlar, xizmatlarning) statistik tasniflagichi"
     
     def _extract_important_words(self, query: str) -> List[str]:
         """So'rovdan muhim so'zlarni ajratib olish
@@ -306,7 +306,7 @@ class CkpTool(BaseTool):
                 results.append(f"Kod: {item_code}\nNomi: {name}")
                 logging.info(f"Aniq mos kelish topildi: {code}")
                 # Aniq mos kelish topilganda, uni qaytaramiz
-                return f"MST ma'lumotlari:\n\n{results[0]}"
+                return f"MST/SKP ma'lumotlari:\n\n{results[0]}"
         
         # 2. Kod prefiksi bo'yicha qidirish
         prefix_matches = []
@@ -337,7 +337,7 @@ class CkpTool(BaseTool):
             else:
                 result_text = "\n\n".join(results)
             
-            return f"MST ma'lumotlari:\n\n{result_text}"
+            return f"MST/SKP ma'lumotlari:\n\n{result_text}"
         
         # Natija topilmadi
         logging.info(f"Kod {code} uchun natija topilmadi.")
@@ -392,7 +392,7 @@ class CkpTool(BaseTool):
             else:
                 result_text = "\n\n".join(results)
             
-            return f"MST ma'lumotlari:\n\n{result_text}"
+            return f"MST/SKP ma'lumotlari:\n\n{result_text}"
         
         return ""
 
@@ -441,7 +441,7 @@ class CkpTool(BaseTool):
             # Barcha ma'lumotlarni embedding qilish
             # Agar entity_embeddings_cache mavjud bo'lmasa, yangi embeddinglarni hisoblash
             if not hasattr(self, 'entity_embeddings_cache') or self.entity_embeddings_cache is None:
-                logging.info("CKP embeddinglar keshi yaratilmoqda...")
+                logging.info("MST/CKP embeddinglar keshi yaratilmoqda...")
                 self.entity_embeddings_cache = torch.zeros((len(self.entity_texts), model.get_sentence_embedding_dimension()), device=device)
                 
                 # Hujjatlarni batch usulida qayta ishlash
@@ -536,4 +536,4 @@ class CkpTool(BaseTool):
         if len(results) > 3:
             formatted_text += f"\n\nJami {len(results)} ta natija topildi."
         
-        return f"MST ma'lumotlari:\n\n{formatted_text}"
+        return f"MST/SKP ma'lumotlari:\n\n{formatted_text}"
