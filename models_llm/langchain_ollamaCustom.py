@@ -46,8 +46,8 @@ class LangChainOllamaModel:
                 session_id: Optional[str] = None,
                 model_name: str = "mistral-small:24b",
                 base_url: str = "http://localhost:11434",
-                temperature: float = 0.7,
-                num_ctx: int = 2048,
+                temperature: float = 0.5,
+                num_ctx: int = 131072,
                 num_gpu: int = 1,
                 gpu_layers: int = 100,
                 kv_cache: bool = True,
@@ -126,12 +126,14 @@ class LangChainOllamaModel:
                 model=self.model_name,
                 base_url=self.base_url,
                 temperature=self.temperature,
-                context_window=self.num_ctx,
+                # context_window=self.num_ctx,
+                num_ctx=self.num_ctx,
                 extra_model_kwargs={
                     "num_gpu": self.num_gpu,
                     "num_thread": self.num_thread,
                     "gpu_layers": self.gpu_layers,
                     "batch_size": 512,
+                    "num_ctx": self.num_ctx,
                 }
             )
             _MODEL_CACHE[cache_key] = model
@@ -566,7 +568,7 @@ class LangChainOllamaModel:
         agent_output = ""
         
         # 1. Agentdan javob olish
-        if self.use_agent and self.agent and self._is_agent_query(query):
+        if self.use_agent and self.agent and self._is_agent_query(query) and False:
             try:
                 logger.info("Agent ishlamoqda...")
                 agent_result = self.agent.invoke({"input": query})
@@ -699,7 +701,7 @@ class LangChainOllamaModel:
 
 # Factory funksiya - model obyektini olish
 @lru_cache(maxsize=10)  # Eng ko'p 10 ta sessiya uchun cache
-def get_model_instance(session_id: Optional[str] = None, model_name: str = "devstral", base_url: str = "http://localhost:11434", use_agent: bool = True) -> LangChainOllamaModel:
+def get_model_instance(session_id: Optional[str] = None, model_name: str = "llama3.3:70b", base_url: str = "http://AI-2:11434", use_agent: bool = True) -> LangChainOllamaModel:
     return LangChainOllamaModel(session_id=session_id, model_name=model_name, base_url=base_url, use_agent=use_agent)
 
 # Asosiy model obyekti (eski kod bilan moslik uchun)
