@@ -53,7 +53,8 @@ class LangChainOllamaModel:
                 gpu_layers: int = 100,
                 kv_cache: bool = True,
                 num_thread: int = 32,
-                use_agent: bool = True):
+                use_agent: bool = True,
+                agent_model_name: str = "llama3:8b-instruct"):
         """
         Ollama modelini LangChain bilan ishlatish uchun klass.
         
@@ -66,6 +67,7 @@ class LangChainOllamaModel:
             num_gpu: Ishlatilishi kerak bo'lgan GPU soni
             num_thread: Ishlatilishi kerak bo'lgan CPU thread soni
             use_agent: Agent ishlatish yoki yo'q
+            agent_model_name: Agent uchun maxsus model nomi
         """
         self.session_id = session_id or "default"
         self.model_name = model_name
@@ -78,6 +80,7 @@ class LangChainOllamaModel:
         self.kv_cache = kv_cache
         self.use_agent = use_agent
         self.agent = None
+        self.agent_model_name = agent_model_name
         
         # System prompts ro'yxati
         self.default_system_prompts = [
@@ -128,13 +131,47 @@ class LangChainOllamaModel:
                 base_url=self.base_url,
                 temperature=self.temperature,
                 # context_window=self.num_ctx,
-                num_ctx=self.num_ctx,
+                num_ctx=2048,
                 extra_model_kwargs={
                     "num_gpu": self.num_gpu,
                     "num_thread": self.num_thread,
                     "gpu_layers": self.gpu_layers,
                     "batch_size": 512,
-                    "num_ctx": self.num_ctx,
+                    "num_ctx": 2048,
+                }
+            )
+            _MODEL_CACHE[cache_key] = model
+        
+        return _MODEL_CACHE[cache_key]
+    
+    def _get_agent_model(self):
+        """
+        Agent uchun maxsus sozlangan modelni olish (cache dan yoki yangi yaratish)
+        
+        Bu metod agent uchun alohida, statistik ma'lumotlarga fine-tuned qilingan
+        modelni qaytaradi. Bu asosiy chat modelidan farqli ravishda agent uchun
+        maxsus sozlangan bo'lishi mumkin.
+        
+        Returns:
+            ChatOllama: Agent uchun maxsus model
+        """
+        global _MODEL_CACHE
+        
+        cache_key = f"agent_{self.agent_model_name}_{self.base_url}"
+        
+        if cache_key not in _MODEL_CACHE:
+            logger.info(f"Agent uchun maxsus model yaratilmoqda: {self.agent_model_name}")
+            model = ChatOllama(
+                model="devstral",
+                base_url="http://localhost:11434",
+                temperature=0.2,  # Agent uchun past temperature (aniqroq natijalar)
+                num_ctx=2048,
+                extra_model_kwargs={
+                    "num_gpu": self.num_gpu,
+                    "num_thread": self.num_thread,
+                    "gpu_layers": self.gpu_layers,
+                    "batch_size": 512,
+                    "num_ctx": 2048,
                 }
             )
             _MODEL_CACHE[cache_key] = model
@@ -146,8 +183,8 @@ class LangChainOllamaModel:
         Agent va uning toollarini ishga tushirish
         """
         try:
-            # Model yaratish yoki cache dan olish
-            self.model = self._get_model()
+            # Agent uchun maxsus model olish
+            agent_model = self._get_agent_model()
             
             # Bitta embedding modelini yaratish, barcha toollar uchun
             shared_embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
@@ -193,10 +230,10 @@ class LangChainOllamaModel:
             except Exception as e:
                 logger.warning(f"Embedding ma'lumotlarini tayyorlashda ogohlantirish: {e}")
             
-            # Agentni yaratish - mavjud modeldan foydalanish
+            # Agentni yaratish - maxsus agent modeli bilan
             self.agent = initialize_agent(
                 tools=[soato_tool, nation_tool, ckp_tool, dbibt_tool, country_tool, thsh_tool, tif_tn_tool],
-                llm=self.model,  # Yangi model yaratish o'rniga mavjud modeldan foydalanish
+                llm=agent_model,  # Maxsus agent modelidan foydalanish
                 agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
                 handle_parsing_errors=True,
                 verbose=True,
