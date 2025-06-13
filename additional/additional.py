@@ -35,6 +35,9 @@ def get_docs_from_db(request: str):
             return []
         
         relevant_docs = search_documents(request, 4)
+
+        # print("relevant_docs: ", relevant_docs)
+        
         if not relevant_docs:
             return []
             
