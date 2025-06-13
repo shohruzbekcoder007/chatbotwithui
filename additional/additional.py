@@ -34,11 +34,9 @@ def get_docs_from_db(request: str):
         if not request or request.strip() == "":
             return []
         
-        relevant_docs = search_documents(request, 100)
+        relevant_docs = search_documents(request, 4)
 
-        # Write relevant_docs to a text file
-        with open("relevant_docs.txt", "w", encoding="utf-8") as file:
-            file.write(str(relevant_docs))
+        # print("relevant_docs: ", relevant_docs)
         
         if not relevant_docs:
             return []
