@@ -10,11 +10,21 @@ function getChatIdFromUrl() {
     return urlParams.get('chat_id');
 }
 
+// Global variable to track if a message is being processed
+let isMessageProcessing = false;
+
 async function onsubmitstream(event) {
     
     event.preventDefault();
 
+    // Check if already processing a message
+    if (isMessageProcessing) {
+        console.log("Message is already being processed. Please wait...");
+        return;
+    }
+
     const input = event.target.querySelector('input[name="message"]');
+    const submitButton = event.target.querySelector('button[type="submit"]');
     const topicInput = event.target.querySelector('input[name="topic"]');
     const userText = input.value.trim();
     const topic = topicInput ? topicInput.value : 'default';
@@ -27,6 +37,15 @@ async function onsubmitstream(event) {
         alert("Chat ID topilmadi. Iltimos, sahifani qayta yuklang.");
         return;
     }
+
+    // Set processing state and disable only submit functionality
+    isMessageProcessing = true;
+    submitButton.disabled = true;
+    submitButton.style.opacity = '0.5';
+    submitButton.style.cursor = 'not-allowed';
+    
+    // Add event listener to prevent Enter key submission
+    input.addEventListener('keydown', preventEnterSubmission);
 
     addMessage('user', userText); // foydalanuvchi xabarini ko'rsatish
     input.value = "";
@@ -79,6 +98,8 @@ async function onsubmitstream(event) {
 
         if (!response.ok) {
             messageTextSpan.textContent = "Xatolik yuz berdi.";
+            // Re-enable input and button on error
+            enableInputAndButton(input, submitButton);
             return;
         }
 
@@ -102,6 +123,7 @@ async function onsubmitstream(event) {
                 }
             });
         }
+        
         messageTextSpan.innerHTML += `
             <div class="message-actions">
                 <div class="feedback-buttons">
@@ -127,11 +149,38 @@ async function onsubmitstream(event) {
                     </button>
                 </div>
             </div>
-        `
+        `;
+
+        // Re-enable input and button when response is complete
+        enableInputAndButton(input, submitButton);
+
     } catch (err) {
         messageTextSpan.textContent = "Ulanishda xatolik yuz berdi.";
         console.error("Streaming error:", err);
+        // Re-enable input and button on error
+        enableInputAndButton(input, submitButton);
     }
+}
+
+// Function to prevent Enter key submission during processing
+function preventEnterSubmission(event) {
+    if (event.key === 'Enter' && isMessageProcessing) {
+        event.preventDefault();
+        console.log("Please wait for the current message to complete before sending another.");
+        return false;
+    }
+}
+
+// Helper function to enable input and button
+function enableInputAndButton(input, submitButton) {
+    isMessageProcessing = false;
+    submitButton.disabled = false;
+    submitButton.style.opacity = '1';
+    submitButton.style.cursor = 'pointer';
+    
+    // Remove the Enter key prevention listener
+    input.removeEventListener('keydown', preventEnterSubmission);
+    input.focus(); // Focus back to input for better UX
 }
 
 function addMessage(sender, text) {
@@ -154,6 +203,12 @@ function addMessage(sender, text) {
 }
 
 function sendRecommendedText(el) {
+    // Check if message is being processed
+    if (isMessageProcessing) {
+        console.log("Message is already being processed. Please wait...");
+        return;
+    }
+    
     const input = document.querySelector(".chat-input input");
     input.value = el.textContent;
     document.querySelector(".chat-input").dispatchEvent(new Event("submit"));

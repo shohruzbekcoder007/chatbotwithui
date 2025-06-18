@@ -231,6 +231,7 @@ body {
 }
 
 .chat-input {
+    position: relative;
     display: flex;
     max-width: 800px;
     margin: 0 auto;
@@ -249,6 +250,30 @@ body {
     color: #374151;
     font-size: 16px;
     outline: none;
+    transition: opacity 0.2s ease;
+}
+
+.chat-input button {
+    background: transparent;
+    color: #374151;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-input button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.chat-input button:hover:not(:disabled) {
+    opacity: 1;
 }
 
 .chat-input .chat-select {
@@ -313,6 +338,16 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.chat-input button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.chat-input button:hover:not(:disabled) {
+    opacity: 1;
 }
 
 .custom-select-container button.custom-select-button {
@@ -784,7 +819,7 @@ body {
     position: absolute;
     bottom: 100%;
     left: 0;
-    margin-top: 4px;
+    margin-bottom: 8px;
     width: 100%;
     background: white;
     border: 1px solid #e2e8f0;
@@ -793,6 +828,7 @@ body {
     z-index: 50;
     max-height: 200px;
     overflow-y: auto;
+    transform-origin: bottom center;
 }
 
 .custom-select-option {
@@ -846,4 +882,195 @@ body {
     margin-left: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     pointer-events: none;
+}
+
+/* Tool Selection Interface Styles */
+.tool-selection {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    margin-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-start;
+    padding: 0 12px;
+}
+
+.tool-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.tool-button:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.tool-button-selected {
+    background: #eff6ff !important;
+    border-color: #3b82f6 !important;
+    color: #1d4ed8 !important;
+}
+
+.tool-button-selected:hover {
+    background: #dbeafe !important;
+    border-color: #2563eb !important;
+}
+
+.tool-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+/* Tool Selection Dropdown Styles */
+.tool-selector {
+    position: relative;
+    margin-right: 8px;
+}
+
+.tool-selector-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #374151;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 160px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.tool-selector-button:hover {
+    border-color: #d1d5db;
+    background-color: #f9fafb;
+}
+
+.tool-selector-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tool-selector-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: #6b7280;
+}
+
+.tool-selector-text {
+    font-weight: 500;
+    color: #374151;
+}
+
+.dropdown-arrow {
+    width: 16px;
+    height: 16px;
+    color: #9ca3af;
+    transition: transform 0.2s ease;
+}
+
+.dropdown-arrow.rotate-180 {
+    transform: rotate(180deg);
+}
+
+/* Tool Dropdown Menu */
+.tool-dropdown {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    margin-bottom: 8px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    max-height: 280px;
+    overflow-y: auto;
+    transform-origin: bottom center;
+}
+
+.tool-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border-bottom: 1px solid #f9fafb;
+}
+
+.tool-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.tool-dropdown-item:hover {
+    background-color: #f9fafb;
+}
+
+.tool-dropdown-item.selected {
+    background-color: #eff6ff;
+    border-color: #dbeafe;
+}
+
+.tool-dropdown-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: #6b7280;
+}
+
+.tool-dropdown-item.selected .tool-dropdown-icon {
+    color: #3b82f6;
+}
+
+.tool-name {
+    flex: 1;
+    font-weight: 500;
+    color: #374151;
+    font-size: 14px;
+}
+
+.tool-dropdown-item.selected .tool-name {
+    color: #1d4ed8;
+}
+
+.check-icon {
+    width: 16px;
+    height: 16px;
+    color: #22c55e;
+    flex-shrink: 0;
+}
+
+/* Remove unused styles */
+.tool-dropdown-content {
+    display: none !important;
+}
+
+.tool-description {
+    display: none !important;
 }
