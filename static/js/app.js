@@ -259,7 +259,10 @@ async function updateChatNameInSidebar(chatId, firstMessage) {
             if (currentChatLink) {
                 const chatNameSpan = currentChatLink.querySelector('.chat-name');
                 if (chatNameSpan) {
-                    chatNameSpan.textContent = chatName;
+                    // Sidebar da qisqartirilgan nomni ko'rsatish
+                    chatNameSpan.textContent = displayChatName;
+                    // Tooltip uchun to'liq nomni saqlash
+                    chatNameSpan.setAttribute('title', fullChatName);
                 }
             }
         }
@@ -319,6 +322,41 @@ function setupChatLinkHandlers() {
                 
                 // Load chat messages
                 loadChatMessages(chatId);
+            }
+        }
+        
+        // Handle edit button clicks using event delegation
+        const editBtn = event.target.closest('.edit-chat-btn');
+        if (editBtn) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Get chat data from the container
+            const chatContainer = editBtn.closest('.chat-item-container');
+            const chatLink = chatContainer.querySelector('.chat-link');
+            const chatName = chatContainer.querySelector('.chat-name').textContent.trim();
+            const url = new URL(chatLink.href);
+            const chatId = url.searchParams.get('chat_id');
+            
+            if (chatId && chatName) {
+                renameChatPrompt(chatId, chatName);
+            }
+        }
+        
+        // Handle delete button clicks using event delegation
+        const deleteBtn = event.target.closest('.delete-chat-btn');
+        if (deleteBtn) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Get chat data from the container
+            const chatContainer = deleteBtn.closest('.chat-item-container');
+            const chatLink = chatContainer.querySelector('.chat-link');
+            const url = new URL(chatLink.href);
+            const chatId = url.searchParams.get('chat_id');
+            
+            if (chatId) {
+                deleteChatPrompt(chatId);
             }
         }
     });
@@ -407,13 +445,13 @@ async function loadChatHistory(chatId, resetPagination = true) {
                             </div>
                         </a>
                         <div class="chat-actions">
-                            <button class="edit-chat-btn" onclick="renameChatPrompt('${chat?.chat_id}', '${chat?.name || "Yangi suhbat"}')">
+                            <button class="edit-chat-btn">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>
                             </button>
-                            <button class="delete-chat-btn" onclick="deleteChatPrompt('${chat?.chat_id}')">
+                            <button class="delete-chat-btn">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M3 6h18"></path>
                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -518,13 +556,13 @@ async function loadMoreChats() {
                                 </div>
                             </a>
                             <div class="chat-actions">
-                                <button class="edit-chat-btn" onclick="renameChatPrompt('${chat?.chat_id}', '${chat?.name || "Yangi suhbat"}')">
+                                <button class="edit-chat-btn">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                     </svg>
                                 </button>
-                                <button class="delete-chat-btn" onclick="deleteChatPrompt('${chat?.chat_id}')">
+                                <button class="delete-chat-btn">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M3 6h18"></path>
                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -629,7 +667,7 @@ async function loadChatMessages(chatId) {
                                             <button class="action-btn dislike-btn" onclick="giveFeedback(this, 'dislike')" title="Yaxshi emas">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2"/>
-                                            </svg>
+                                                </svg>
                                             </button>
                                             <button class="action-btn comment-btn" onclick="giveFeedback(this, 'comment')" title="Izoh qoldirish">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

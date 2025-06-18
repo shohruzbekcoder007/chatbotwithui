@@ -102,8 +102,8 @@ async def chat(request: Request, chat_request: ChatRequest):
             ).count() - 1  # Hozir saqlangan xabarni hisobga olmaslik
             
             if not existing_chat:
-                # Birinchi savol - chat nomini birinchi 30 ta belgi bilan yaratish
-                chat_name = chat_request.query[:30] + "..." if len(chat_request.query) > 30 else chat_request.query
+                # Birinchi savol - chat nomini to'liq saqlash
+                chat_name = chat_request.query  # To'liq nomni saqlash
                 new_chat = UserChatList(
                     user_id=user_id,
                     chat_id=chat_id,
@@ -116,7 +116,7 @@ async def chat(request: Request, chat_request: ChatRequest):
             else:
                 # Agar bu birinchi xabar bo'lsa (oldingi xabarlar yo'q), chat nomini yangilash
                 if previous_messages_count == 0:
-                    chat_name = chat_request.query[:30] + "..." if len(chat_request.query) > 30 else chat_request.query
+                    chat_name = chat_request.query  # To'liq nomni saqlash
                     await existing_chat.set({
                         "name": chat_name,
                         "updated_at": datetime.utcnow()
@@ -260,8 +260,8 @@ async def stream_chat(request: Request, req: ChatRequest):
             )
 
             if not existing_chat:
-                # Birinchi savol - chat nomini birinchi 20 ta belgi bilan yaratish
-                chat_name = req.query[:20] + "..." if len(req.query) > 20 else req.query
+                # Birinchi savol - chat nomini to'liq saqlash
+                chat_name = req.query  # To'liq nomni saqlash
                 user_chat = UserChatList(
                     user_id=user_id,
                     chat_id=chat_id,
@@ -277,7 +277,7 @@ async def stream_chat(request: Request, req: ChatRequest):
                 
                 # Agar bu birinchi xabar bo'lsa (oldingi xabarlar yo'q), chat nomini yangilash
                 if message_count == 0:
-                    chat_name = req.query[:20] + "..." if len(req.query) > 20 else req.query
+                    chat_name = req.query  # To'liq nomni saqlash
                     await existing_chat.set({
                         "name": chat_name,
                         "updated_at": datetime.utcnow()
