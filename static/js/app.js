@@ -327,10 +327,12 @@ function setupChatLinkHandlers() {
 // Pagination state for chat list
 let chatListPagination = {
     offset: 0,
-    limit: 10,
+    limit: 15, 
+    loadMoreSize: 5,
     hasMore: true,
     isLoading: false,
-    total: 0
+    total: 0,
+    isExpanded: false 
 };
 
 // Function to load chat history
@@ -347,10 +349,12 @@ async function loadChatHistory(chatId, resetPagination = true) {
     if (resetPagination) {
         chatListPagination = {
             offset: 0,
-            limit: 10,
+            limit: 15, 
+            loadMoreSize: 5,
             hasMore: true,
             isLoading: false,
-            total: 0
+            total: 0,
+            isExpanded: false
         };
     }
 
@@ -361,8 +365,6 @@ async function loadChatHistory(chatId, resetPagination = true) {
 
     chatListPagination.isLoading = true;
 
-    // Cookie'dan token olish uchun so'rov yuborishda credentials: 'include' ishlatamiz
-    // Tokenni tekshirish server tomonida amalga oshiriladi
     const headers = {
         'Content-Type': 'application/json'
     };
@@ -371,7 +373,7 @@ async function loadChatHistory(chatId, resetPagination = true) {
     const response = await fetch(`/api/user-chats?limit=${chatListPagination.limit}&offset=${chatListPagination.offset}`, {
         method: 'GET',
         headers: headers,
-        credentials: 'include' // Cookie'larni yuborish uchun
+        credentials: 'include'
     });
 
     if (!response.ok) {
@@ -389,7 +391,7 @@ async function loadChatHistory(chatId, resetPagination = true) {
             
             // Only clear the container if this is the first page
             if (chatListPagination.offset === 0) {
-                chatHistory.innerHTML = ''; // Avvalgi chatlarni tozalash
+                chatHistory.innerHTML = '';
             }
 
             // Add new chats to the list
@@ -427,21 +429,8 @@ async function loadChatHistory(chatId, resetPagination = true) {
                 chatHistory.innerHTML = '<div class="no-chats-message">Hozircha chatlar yo\'q</div>';
             }
             
-            // Add load more button if there are more chats
-            if (chatListPagination.hasMore) {
-                // Remove existing load more button if any
-                const existingLoadMoreBtn = document.querySelector('.load-more-chats');
-                if (existingLoadMoreBtn) {
-                    existingLoadMoreBtn.remove();
-                }
-                
-                // Add new load more button
-                const loadMoreBtn = document.createElement('div');
-                loadMoreBtn.className = 'load-more-chats';
-                loadMoreBtn.textContent = 'Ko\'proq yuklash...';
-                loadMoreBtn.onclick = loadMoreChats;
-                chatHistory.appendChild(loadMoreBtn);
-            }
+            // Smart button logic
+            updateLoadMoreButton(chatHistory);
             
             // Setup scroll event for chat history container
             setupChatHistoryScroll();
@@ -451,35 +440,126 @@ async function loadChatHistory(chatId, resetPagination = true) {
     }
 }
 
-// Function to load more chats when scrolling or clicking load more
-async function loadMoreChats() {
-    if (chatListPagination.hasMore && !chatListPagination.isLoading) {
-        chatListPagination.offset += chatListPagination.limit;
-        await loadChatHistory(getChatIdFromUrl(), false);
+// Function to update load more button based on current state
+function updateLoadMoreButton(chatHistory) {
+    // Remove existing button if any
+    const existingBtn = document.querySelector('.load-more-chats');
+    if (existingBtn) {
+        existingBtn.remove();
     }
-}
 
-// Setup scroll event for chat history container
-function setupChatHistoryScroll() {
-    const chatHistory = document.querySelector('.chat-history');
-    
-    // Remove existing event listener if any
-    chatHistory.removeEventListener('scroll', handleChatHistoryScroll);
-    
-    // Add new event listener
-    chatHistory.addEventListener('scroll', handleChatHistoryScroll);
-}
+    // Don't show button if no chats at all
+    if (chatListPagination.total === 0) {
+        return;
+    }
 
-// Handle scroll event for chat history container
-function handleChatHistoryScroll() {
-    const chatHistory = document.querySelector('.chat-history');
+    // Calculate how many chats are currently shown
+    const currentlyShown = chatListPagination.offset + chatListPagination.limit;
     
-    // If scrolled near bottom, load more chats
-    if (chatHistory.scrollTop + chatHistory.clientHeight >= chatHistory.scrollHeight - 100) {
-        if (chatListPagination.hasMore && !chatListPagination.isLoading) {
-            loadMoreChats();
+    // Show button if there are more chats to load OR if expanded and can collapse
+    if (chatListPagination.hasMore || (chatListPagination.isExpanded && currentlyShown > 15)) {
+        const loadMoreBtn = document.createElement('div');
+        loadMoreBtn.className = 'load-more-chats';
+        
+        // Determine button text and action
+        if (chatListPagination.isExpanded && !chatListPagination.hasMore) {
+            // All chats are shown, show "Yopish" button
+            loadMoreBtn.textContent = 'Yopish';
+            loadMoreBtn.onclick = collapseChats;
+        } else {
+            // Show "Ko'proq ko'rish" button
+            loadMoreBtn.textContent = 'Ko\'proq ko\'rish';
+            loadMoreBtn.onclick = loadMoreChats;
         }
+        
+        chatHistory.appendChild(loadMoreBtn);
     }
+}
+
+// Function to load more chats (5 at a time after initial 15)
+async function loadMoreChats() {
+    if (chatListPagination.isLoading) {
+        return;
+    }
+
+    chatListPagination.isLoading = true;
+    
+    // Calculate next batch size
+    const nextLimit = chatListPagination.loadMoreSize; // 5 ta
+    const nextOffset = chatListPagination.offset + chatListPagination.limit;
+    
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    try {
+        const response = await fetch(`/api/user-chats?limit=${nextLimit}&offset=${nextOffset}`, {
+            method: 'GET',
+            headers: headers,
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                const chatHistory = document.querySelector('.chat-history');
+                const chatId = getChatIdFromUrl();
+                
+                // Add new chats to the list
+                data?.chats?.forEach?.(chat => {
+                    chatHistory.insertAdjacentHTML('beforeend', `
+                        <div class="chat-item-container">
+                            <a href="/?chat_id=${chat?.chat_id}" class="chat-link">
+                                <div class="chat-history-item ${chat?.chat_id === chatId ? 'active' : ''}">
+                                    <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" width="16" height="16">
+                                        <path d="M20 2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h16z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span class="chat-name">${chat?.name || "Yangi suhbat"}</span>
+                                </div>
+                            </a>
+                            <div class="chat-actions">
+                                <button class="edit-chat-btn" onclick="renameChatPrompt('${chat?.chat_id}', '${chat?.name || "Yangi suhbat"}')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
+                                <button class="delete-chat-btn" onclick="deleteChatPrompt('${chat?.chat_id}')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M3 6h18"></path>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    `);
+                });
+                
+                // Update pagination state
+                chatListPagination.limit += nextLimit; // 5 ta qo'shildi
+                chatListPagination.hasMore = data.pagination.has_more;
+                chatListPagination.isExpanded = true;
+                
+                // Update button
+                updateLoadMoreButton(chatHistory);
+            }
+        }
+    } catch (error) {
+        console.error('Error loading more chats:', error);
+    }
+    
+    chatListPagination.isLoading = false;
+}
+
+// Function to collapse chats back to default 15
+function collapseChats() {
+    // Reset to default state
+    chatListPagination.isExpanded = false;
+    chatListPagination.limit = 15;
+    chatListPagination.offset = 0;
+    
+    // Reload chat history with default pagination
+    loadChatHistory(getChatIdFromUrl(), true);
 }
 
 async function loadChatMessages(chatId) {
@@ -753,3 +833,15 @@ document.addEventListener('DOMContentLoaded', function () {
         toast.classList.add('translate-y-full');
     }
 });
+
+// Setup scroll event for chat history container (disabled for new pagination logic)
+function setupChatHistoryScroll() {
+    // Scroll-based loading disabled - using manual "Ko'proq ko'rish" button instead
+    return;
+}
+
+// Handle scroll event for chat history container (disabled for new pagination logic)
+function handleChatHistoryScroll() {
+    // Scroll-based loading disabled - using manual "Ko'proq ko'rish" button instead
+    return;
+}
