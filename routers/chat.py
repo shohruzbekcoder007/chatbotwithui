@@ -18,6 +18,7 @@ class ChatRequest(BaseModel):
     query: str
     chat_id: Optional[str] = None
     device: Optional[str] = None  # Qo'shimcha maydon, agar kerak bo'lsa
+    tool: Optional[str] = "all"  # Tool parametri, default "all"
 
 @router.post("/chat")
 async def chat(request: Request, chat_request: ChatRequest):
@@ -33,7 +34,9 @@ async def chat(request: Request, chat_request: ChatRequest):
         question = chat_request.query
         language = 'uz'
         device = chat_request.device if chat_request.device else "web"
-        print(f"Using device: {device}")
+        tool = chat_request.tool if chat_request.tool else "all"
+        # print(f"Using device: {device}")
+        # print(f"Using tool: {tool}")
 
         # if len(chat_request.query.split(" ")) < 2:
             # res = "Iltimos savolingizni to'liqroq kiriting"
@@ -146,8 +149,10 @@ async def stream_chat(request: Request, req: ChatRequest):
     question = req.query
     language = 'uz'
     device = req.device if req.device else "web"
+    tool = req.tool if req.tool else "all"
     # print(f"\nUsing device: {device}")
     # print(f"Using question: {question}\n")
+    print(f"Using tool: {tool}")
 
     user_id = request.state.user_id
     # print(f"Using user_id from request.state: {user_id}")

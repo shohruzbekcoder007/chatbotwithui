@@ -92,7 +92,7 @@ async function onsubmitstream(event) {
                 chat_id: chatId,
                 language: "uz",
                 device: "web",
-                topic: topic
+                tool: topic  // topic o'rniga tool parametri sifatida yuborish
             })
         });
 
