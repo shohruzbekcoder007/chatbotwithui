@@ -31,6 +31,9 @@ async function onsubmitstream(event) {
     addMessage('user', userText); // foydalanuvchi xabarini ko'rsatish
     input.value = "";
 
+    // Update chat name in sidebar immediately if this is the first message
+    updateChatNameInSidebar(chatId, userText);
+
     // To'g'ri selector ishlatish - conversation konteyneriga to'g'ridan-to'g'ri qo'shish
     const chatMessagesDiv = document.querySelector('.conversation');
 

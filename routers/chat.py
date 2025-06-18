@@ -95,23 +95,38 @@ async def chat(request: Request, chat_request: ChatRequest):
                 UserChatList.chat_id == chat_id
             )
             
+            # Oldingi xabarlar sonini tekshirish
+            previous_messages_count = await ChatMessage.find(
+                ChatMessage.user_id == user_id,
+                ChatMessage.chat_id == chat_id
+            ).count() - 1  # Hozir saqlangan xabarni hisobga olmaslik
+            
             if not existing_chat:
-                # Yangi chat yaratish
+                # Birinchi savol - chat nomini birinchi 30 ta belgi bilan yaratish
+                chat_name = chat_request.query[:30] + "..." if len(chat_request.query) > 30 else chat_request.query
                 new_chat = UserChatList(
                     user_id=user_id,
                     chat_id=chat_id,
-                    name="Yangi suhbat",  # Default nom
+                    name=chat_name,
                     created_at=datetime.utcnow(),
                     updated_at=datetime.utcnow()
                 )
                 await new_chat.insert()
-                print(f"Yangi chat yaratildi: {chat_id}")
+                print(f"Yangi chat yaratildi: {chat_id} with name: {chat_name}")
             else:
-                # Mavjud chatni yangilash
-                existing_chat.updated_at = datetime.utcnow()
-                # Mavjud chat nomini saqlab qolish, faqat vaqtini yangilash
-                await existing_chat.save()
-                print(f"Mavjud chat yangilandi: {chat_id}")
+                # Agar bu birinchi xabar bo'lsa (oldingi xabarlar yo'q), chat nomini yangilash
+                if previous_messages_count == 0:
+                    chat_name = chat_request.query[:30] + "..." if len(chat_request.query) > 30 else chat_request.query
+                    await existing_chat.set({
+                        "name": chat_name,
+                        "updated_at": datetime.utcnow()
+                    })
+                    print(f"Updated chat name to: {chat_name} for chat: {chat_id}")
+                else:
+                    # Faqat vaqtni yangilash, nomni o'zgartirmaslik
+                    existing_chat.updated_at = datetime.utcnow()
+                    await existing_chat.save()
+                    print(f"Mavjud chat yangilandi: {chat_id}")
         else:
             print(f"Anonymous user, message not saved to     - Chat ID: {chat_id}")
 
@@ -245,30 +260,32 @@ async def stream_chat(request: Request, req: ChatRequest):
             )
 
             if not existing_chat:
+                # Birinchi savol - chat nomini birinchi 20 ta belgi bilan yaratish
+                chat_name = req.query[:20] + "..." if len(req.query) > 20 else req.query
                 user_chat = UserChatList(
                     user_id=user_id,
                     chat_id=chat_id,
-                    name=f"Suhbat: {req.query[:30]}...",
+                    name=chat_name,
                     created_at=datetime.utcnow(),
                     updated_at=datetime.utcnow()
                 )
                 await user_chat.insert()
-                print(f"Added chat to user's chat list: {chat_id}")
+                print(f"Added chat to user's chat list: {chat_id} with name: {chat_name}")
             else:
-                await existing_chat.set({"updated_at": datetime.utcnow()})
-                print(f"Updated timestamp for existing chat: {chat_id}")
-            if not existing_chat:
-                user_chat = UserChatList(
-                    user_id=user_id,
-                    chat_id=chat_id,
-                    name=f"Suhbat: {req.query[:30]}...",
-                    created_at=datetime.utcnow(),
-                    updated_at=datetime.utcnow()
-                )
-                await user_chat.insert()
-                print(f"Added chat to user's chat list: {chat_id}")
-            else:
-                await existing_chat.set({"updated_at": datetime.utcnow()})
-                print(f"Updated timestamp for existing chat: {chat_id}")
+                # Birinchi xabar emasligini tekshirish (oldingi xabarlar soni)
+                message_count = len(previous_messages)
+                
+                # Agar bu birinchi xabar bo'lsa (oldingi xabarlar yo'q), chat nomini yangilash
+                if message_count == 0:
+                    chat_name = req.query[:20] + "..." if len(req.query) > 20 else req.query
+                    await existing_chat.set({
+                        "name": chat_name,
+                        "updated_at": datetime.utcnow()
+                    })
+                    print(f"Updated chat name to: {chat_name} for chat: {chat_id}")
+                else:
+                    # Faqat vaqtni yangilash, nomni o'zgartirmaslik
+                    await existing_chat.set({"updated_at": datetime.utcnow()})
+                    print(f"Updated timestamp for existing chat: {chat_id}")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

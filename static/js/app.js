@@ -202,6 +202,9 @@ async function onsubmitnew(event) {
 
             // Auto scroll to bottom after response
             chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Update chat name in sidebar if this is the first message
+            updateChatNameInSidebar(chatId, message);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -221,6 +224,30 @@ function getChatIdFromUrl() {
 function redirectWithNewChat() {
     // Server will auto-generate chat_id and redirect
     window.location.href = '/';
+}
+
+// Function to check if this is the first message in a chat and update sidebar name
+async function updateChatNameInSidebar(chatId, firstMessage) {
+    try {
+        // Check if there are any existing messages in the conversation
+        const existingMessages = document.querySelectorAll('.conversation .message');
+        
+        // If this is the first message (no existing messages), update the sidebar
+        if (existingMessages.length <= 2) { // 2 because we just added user and bot message
+            const chatName = firstMessage.length > 30 ? firstMessage.substring(0, 30) + "..." : firstMessage;
+            
+            // Find the current chat in sidebar and update its name
+            const currentChatLink = document.querySelector(`a[href*="chat_id=${chatId}"]`);
+            if (currentChatLink) {
+                const chatNameSpan = currentChatLink.querySelector('.chat-name');
+                if (chatNameSpan) {
+                    chatNameSpan.textContent = chatName;
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error updating chat name in sidebar:', error);
+    }
 }
 
 // Load chat history when page loads
