@@ -1,8 +1,12 @@
 function sendRecommendedText(element) {
     const text = element.textContent;
-    const input = document.querySelector('.chat-input input');
+    const input = document.querySelector('.chat-input input[name="message"]');
     input.value = text;
-    document.querySelector('.chat-input').requestSubmit();
+    
+    // Create and dispatch a submit event to trigger onsubmitstream
+    const form = document.querySelector('.chat-input');
+    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+    form.dispatchEvent(submitEvent);
 }
 
 // Copy message to clipboard
@@ -526,16 +530,16 @@ async function loadChatMessages(chatId) {
                                         <button class="action-btn like-btn" onclick="giveFeedback(this, 'like')" title="Yaxshi javob">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-btn dislike-btn" onclick="giveFeedback(this, 'dislike')" title="Yaxshi emas">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2"/>
                                         </svg>
                                     </button>
-                                    <button class="action-btn dislike-btn" onclick="giveFeedback(this, 'dislike')" title="Yaxshi emas">
+                                    <button class="action-btn comment-btn" onclick="giveFeedback(this, 'comment')" title="Izoh qoldirish">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2"/>
-                                    </svg>
-                                </button>
-                                <button class="action-btn comment-btn" onclick="giveFeedback(this, 'comment')" title="Izoh qoldirish">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
                                 </svg>
                             </button>
                         </div>
