@@ -252,7 +252,9 @@ async function updateChatNameInSidebar(chatId, firstMessage) {
         
         // If this is the first message (no existing messages), update the sidebar
         if (existingMessages.length <= 2) { // 2 because we just added user and bot message
-            const chatName = firstMessage.length > 30 ? firstMessage.substring(0, 30) + "..." : firstMessage;
+            // Database da to'liq nomni saqlash, sidebar da qisqartirib ko'rsatish
+            const fullChatName = firstMessage; // To'liq nom
+            const displayChatName = firstMessage.length > 30 ? firstMessage.substring(0, 30) + "..." : firstMessage; // Sidebar uchun qisqartirilgan
             
             // Find the current chat in sidebar and update its name
             const currentChatLink = document.querySelector(`a[href*="chat_id=${chatId}"]`);
@@ -325,39 +327,48 @@ function setupChatLinkHandlers() {
             }
         }
         
-        // Handle edit button clicks using event delegation
-        const editBtn = event.target.closest('.edit-chat-btn');
-        if (editBtn) {
+        // Handle settings button clicks
+        const settingsBtn = event.target.closest('.settings-btn');
+        if (settingsBtn) {
             event.preventDefault();
             event.stopPropagation();
             
-            // Get chat data from the container
-            const chatContainer = editBtn.closest('.chat-item-container');
-            const chatLink = chatContainer.querySelector('.chat-link');
-            const chatName = chatContainer.querySelector('.chat-name').textContent.trim();
-            const url = new URL(chatLink.href);
-            const chatId = url.searchParams.get('chat_id');
+            // Close all other open dropdowns
+            document.querySelectorAll('.settings-dropdown.show').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
             
-            if (chatId && chatName) {
-                renameChatPrompt(chatId, chatName);
-            }
+            // Toggle current dropdown
+            const dropdown = settingsBtn.nextElementSibling;
+            dropdown.classList.toggle('show');
         }
         
-        // Handle delete button clicks using event delegation
-        const deleteBtn = event.target.closest('.delete-chat-btn');
-        if (deleteBtn) {
+        // Handle dropdown item clicks
+        const dropdownItem = event.target.closest('.dropdown-item');
+        if (dropdownItem) {
             event.preventDefault();
             event.stopPropagation();
             
-            // Get chat data from the container
-            const chatContainer = deleteBtn.closest('.chat-item-container');
-            const chatLink = chatContainer.querySelector('.chat-link');
-            const url = new URL(chatLink.href);
-            const chatId = url.searchParams.get('chat_id');
+            const chatId = dropdownItem.dataset.chatId;
             
-            if (chatId) {
+            if (dropdownItem.classList.contains('edit')) {
+                const chatName = dropdownItem.dataset.chatName;
+                renameChatPrompt(chatId, chatName);
+            } else if (dropdownItem.classList.contains('delete')) {
                 deleteChatPrompt(chatId);
             }
+            
+            // Close dropdown after action
+            dropdownItem.closest('.settings-dropdown').classList.remove('show');
+        }
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.chat-settings')) {
+            document.querySelectorAll('.settings-dropdown.show').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
         }
     });
 }
@@ -434,6 +445,10 @@ async function loadChatHistory(chatId, resetPagination = true) {
 
             // Add new chats to the list
             data?.chats?.forEach?.(chat => {
+                // Chat nomini 30 belgi + 3 nuqta formatida ko'rsatish
+                const fullName = chat?.name || "Yangi suhbat";
+                const displayName = fullName.length > 30 ? fullName.substring(0, 30) + "..." : fullName;
+                
                 chatHistory.innerHTML += `
                     <div class="chat-item-container">
                         <a href="/?chat_id=${chat?.chat_id}" class="chat-link">
@@ -441,22 +456,33 @@ async function loadChatHistory(chatId, resetPagination = true) {
                                 <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" width="16" height="16">
                                     <path d="M20 2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h16z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
-                                <span class="chat-name">${chat?.name || "Yangi suhbat"}</span>
+                                <span class="chat-name" title="${fullName}">${displayName}</span>
                             </div>
                         </a>
-                        <div class="chat-actions">
-                            <button class="edit-chat-btn">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        <div class="chat-settings">
+                            <button class="settings-btn" type="button">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="1"></circle>
+                                    <circle cx="19" cy="12" r="1"></circle>
+                                    <circle cx="5" cy="12" r="1"></circle>
                                 </svg>
                             </button>
-                            <button class="delete-chat-btn">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 6h18"></path>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                </svg>
-                            </button>
+                            <div class="settings-dropdown">
+                                <button class="dropdown-item edit" data-chat-id="${chat?.chat_id}" data-chat-name="${fullName}">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                    Tahrirlash
+                                </button>
+                                <button class="dropdown-item delete" data-chat-id="${chat?.chat_id}">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M3 6h18"></path>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                    O'chirish
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -545,6 +571,9 @@ async function loadMoreChats() {
                 
                 // Add new chats to the list
                 data?.chats?.forEach?.(chat => {
+                    const fullName = chat?.name || "Yangi suhbat";
+                    const displayName = fullName.length > 30 ? fullName.substring(0, 30) + "..." : fullName;
+                    
                     chatHistory.insertAdjacentHTML('beforeend', `
                         <div class="chat-item-container">
                             <a href="/?chat_id=${chat?.chat_id}" class="chat-link">
@@ -552,22 +581,33 @@ async function loadMoreChats() {
                                     <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" width="16" height="16">
                                         <path d="M20 2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h16z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
-                                    <span class="chat-name">${chat?.name || "Yangi suhbat"}</span>
+                                    <span class="chat-name" title="${fullName}">${displayName}</span>
                                 </div>
                             </a>
-                            <div class="chat-actions">
-                                <button class="edit-chat-btn">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            <div class="chat-settings">
+                                <button class="settings-btn" type="button">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="1"></circle>
+                                        <circle cx="19" cy="12" r="1"></circle>
+                                        <circle cx="5" cy="12" r="1"></circle>
                                     </svg>
                                 </button>
-                                <button class="delete-chat-btn">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M3 6h18"></path>
-                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    </svg>
-                                </button>
+                                <div class="settings-dropdown">
+                                    <button class="dropdown-item edit" data-chat-id="${chat?.chat_id}" data-chat-name="${fullName}">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                        Tahrirlash
+                                    </button>
+                                    <button class="dropdown-item delete" data-chat-id="${chat?.chat_id}">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M3 6h18"></path>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        </svg>
+                                        O'chirish
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     `);

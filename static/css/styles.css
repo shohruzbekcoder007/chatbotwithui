@@ -509,74 +509,119 @@ body {
     width: 100%;
 }
 
-.chat-actions {
+/* Settings dropdown container */
+.chat-settings {
     position: absolute;
     right: 8px;
     top: 50%;
     transform: translateY(-50%);
-    display: flex; /* Har doim ko'rinsin */
-    gap: 6px;
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 5px;
-    border-radius: 4px;
-    z-index: 5;
-    opacity: 0.3; /* Default holatda kam ko'rinsin */
-    transition: opacity 0.2s ease;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 10;
 }
 
-.chat-item-container:hover .chat-actions {
-    opacity: 1; /* Hover holatida to'liq ko'rinsin */
+.chat-item-container:hover .chat-settings {
+    opacity: 1;
+    visibility: visible;
 }
 
-.edit-chat-btn, .delete-chat-btn {
-    background: none;
+/* Settings button */
+.settings-btn {
+    background: rgba(255, 255, 255, 0.95);
     border: none;
-    padding: 4px;
-    cursor: pointer;
     border-radius: 4px;
+    padding: 6px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #6b7280;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.edit-chat-btn:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-    color: #4299e1;
+.settings-btn:hover {
+    background-color: #f3f4f6;
+    color: #374151;
 }
 
-.delete-chat-btn:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-    color: #e53e3e;
-}
-
-.chat-name {
-    margin-left: 8px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 160px;
-    cursor: help; /* Tooltip mavjudligini ko'rsatish uchun */
-}
-
-/* Tooltip funksiyasi uchun qo'shimcha stil */
-.chat-name[title]:hover::after {
-    content: attr(title);
+/* Dropdown menu */
+.settings-dropdown {
     position: absolute;
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 8px 12px;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background: white;
+    border: 1px solid #e5e7eb;
     border-radius: 6px;
-    font-size: 12px;
-    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 140px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-5px);
+    transition: all 0.2s ease;
     z-index: 1000;
-    max-width: 300px;
-    word-wrap: break-word;
-    margin-left: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    pointer-events: none;
+}
+
+.settings-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Dropdown items */
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    transition: all 0.15s ease;
+}
+
+.dropdown-item:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.dropdown-item:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.dropdown-item:hover {
+    background-color: #f9fafb;
+}
+
+.dropdown-item.edit:hover {
+    background-color: #eff6ff;
+    color: #2563eb;
+}
+
+.dropdown-item.delete:hover {
+    background-color: #fef2f2;
+    color: #dc2626;
+}
+
+.dropdown-item svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Old styles - remove these */
+.chat-actions {
+    display: none !important;
+}
+
+.edit-chat-btn, .delete-chat-btn {
+    display: none !important;
 }
 
 /* Modal styles */
@@ -771,4 +816,34 @@ body {
     background-color: #eff6ff;
     color: #3b82f6;
     font-weight: 500;
+}
+
+.chat-name {
+    margin-left: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 160px;
+    cursor: pointer; /* Tooltip mavjudligini ko'rsatish uchun pointer */
+    position: relative;
+}
+
+/* Tooltip funksiyasi uchun qo'shimcha stil */
+.chat-name[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    max-width: 300px;
+    word-wrap: break-word;
+    margin-left: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
 }
