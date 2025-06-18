@@ -4,6 +4,33 @@ import uuid
 from models.user_chat_list import UserChatList
 from models.chat_message import ChatMessage
 
+# Bo'sh chatlarni tozalash funksiyasi
+async def cleanup_empty_chats(user_id: str):
+    """
+    Foydalanuvchining xabar bo'lmagan bo'sh chatlarini o'chirish
+    """
+    try:
+        if user_id == "anonymous":
+            return
+            
+        # Foydalanuvchining barcha chatlarini olish
+        user_chats = await UserChatList.find(UserChatList.user_id == user_id).to_list()
+        
+        for chat in user_chats:
+            # Har bir chat uchun xabarlar mavjudligini tekshirish
+            message_count = await ChatMessage.find(
+                ChatMessage.user_id == user_id,
+                ChatMessage.chat_id == chat.chat_id
+            ).count()
+            
+            # Agar chat da xabar bo'lmasa, uni o'chirish
+            if message_count == 0:
+                await chat.delete()
+                print(f"Deleted empty chat: {chat.chat_id} for user: {user_id}")
+                
+    except Exception as e:
+        print(f"Error cleaning up empty chats: {str(e)}")
+
 # Router yaratish
 router = APIRouter(prefix="/api", tags=["chat"])
 
@@ -198,6 +225,9 @@ async def create_chat(request: Request):
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Anonymous users cannot create chats"
             )
+        
+        # Bo'sh chatlarni tozalash (yangi chat yaratishdan oldin)
+        await cleanup_empty_chats(user_id)
         
         # Yangi chat ID yaratish
         new_chat_id = str(uuid.uuid4())
