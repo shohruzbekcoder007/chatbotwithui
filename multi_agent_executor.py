@@ -2,7 +2,7 @@ from langchain.agents import initialize_agent, AgentType
 from langchain.memory import ConversationBufferMemory
 from langchain_core.messages import SystemMessage
 from langchain_community.chat_models import ChatOllama
-import time
+from typing import AsyncGenerator
 
 # Toollarni import qilish
 from tools_llm.dbibt.dbibt_tool import DBIBTTool
@@ -18,7 +18,8 @@ from retriever.langchain_chroma import CustomEmbeddingFunction
 llm = ChatOllama(
     model="devstral",
     base_url="http://localhost:11434",
-    temperature=0.7
+    temperature=0.7,
+    streaming=True  # Stream rejimini yoqish
 )
 
 # Bitta embedding modelini yaratish, barcha toollar uchun
@@ -43,15 +44,8 @@ country_tool._prepare_embedding_data()
 thsh_tool._prepare_embedding_data()
 tif_tn_tool._prepare_embedding_data()
 
-# Barcha toollarni bir agent ichida birlashtirish
-combined_agent = initialize_agent(
-    tools=[soato_tool, nation_tool, ckp_tool, dbibt_tool, country_tool, thsh_tool, tif_tn_tool],
-    llm=llm,
-    agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
-    handle_parsing_errors=True,
-    verbose=True,
-    memory=ConversationBufferMemory(memory_key="chat_history", return_messages=True),
-    system_message=SystemMessage(content="""Siz O'zbekiston Respublikasi Davlat statistika qo'mitasi ma'lumotlari bilan ishlash uchun maxsus agentsiz. 
+# System message yaratish
+system_message = SystemMessage(content="""Siz O'zbekiston Respublikasi Davlat statistika qo'mitasi ma'lumotlari bilan ishlash uchun maxsus agentsiz. 
                     Sizda quyidagi toollar mavjud:
                     
                     1. soato_tool - O'zbekiston Respublikasining ma'muriy-hududiy birliklari (SOATO/MHOBIT) ma'lumotlarini qidirish uchun mo'ljallangan professional vosita. Bu tool LangChain best practices asosida yaratilgan va quyidagi imkoniyatlarni taqdim etadi:
@@ -80,46 +74,35 @@ combined_agent = initialize_agent(
                     1. Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning
                     2. Tool ishlatganingizdan keyin MAJBURIY ravishda Final Answer bering
                     """)
-    )
 
-if __name__ == "__main__":
-    print("O'zbekiston Respublikasi Davlat statistika qo'mitasi ma'lumotlari bilan ishlash uchun chatbot")
-    print("Chiqish uchun 'exit', 'quit' yoki 'chiqish' deb yozing")
-    print("-" * 50)
+# Barcha toollarni bir agent ichida birlashtirish
+combined_agent = initialize_agent(
+    tools=[soato_tool, nation_tool, ckp_tool, dbibt_tool, country_tool, thsh_tool, tif_tn_tool],
+    llm=llm,
+    agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+    handle_parsing_errors=True,
+    verbose=True,
+    memory=ConversationBufferMemory(memory_key="chat_history", return_messages=True),
+    system_message=system_message
+)
+
+# Stream javob qaytaruvchi funksiya
+async def agent_stream(query: str) -> AsyncGenerator[str, None]:
+    """
+    Agent javobini stream ko'rinishida qaytaradi
     
-    while True:
-        try:
-            # Foydalanuvchidan savolni qabul qilish
-            user_input = input("\nSavolingizni kiriting: ")
-            
-            # Chiqish uchun tekshirish
-            if user_input.lower() in ["exit", "quit", "chiqish"]:
-                print("Chatbot ishini tugatdi. Xayr!")
-                break
-            
-            # Bo'sh kiritishni tekshirish
-            if not user_input.strip():
-                print("Iltimos, savol kiriting.")
-                continue
-            
-            print("\nJavob tayyorlanmoqda...")
-            
-            # Vaqtni o'lchash boshlash
-            start_time = time.time()
-            
-            # Agentni chaqirish
-            result = combined_agent.invoke({"input": user_input})
-            
-            # Vaqtni o'lchash yakunlash
-            end_time = time.time()
-            execution_time = end_time - start_time
-            
-            print("\nNatija:", result["output"])
-            print(f"Ishlash vaqti: {execution_time:.2f} soniya")
-            
-        except KeyboardInterrupt:
-            print("\nChatbot ishini tugatdi. Xayr!")
-            break
-        except Exception as e:
-            print(f"\nXatolik yuz berdi: {str(e)}")
-            print("Xatolik tafsilotlari:", e.__class__.__name__)
+    Args:
+        query: Foydalanuvchi so'rovi
+        
+    Returns:
+        AsyncGenerator: Stream ko'rinishidagi javob
+    """
+    response = ""
+    async for chunk in combined_agent.astream({"input": query}):
+        if "output" in chunk:
+            chunk_text = chunk["output"]
+            response += chunk_text
+            yield chunk_text
+
+# Agentni export qilish
+__all__ = ['combined_agent', 'agent_stream']

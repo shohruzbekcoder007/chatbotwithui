@@ -120,7 +120,7 @@ async function onsubmitnew(event) {
                     <div class="message-content text-right">
                         <span>${message}</span>
                     </div>
-                    <div class="avatar">U</div>
+                    <div class="avatar">Siz</div>
                 </div>
             </div>
             <div class="message bot">
@@ -681,7 +681,7 @@ async function loadChatMessages(chatId) {
                                 <div class="message-content text-right">
                                     <span>${msg.message}</span>
                                 </div>
-                                <div class="avatar">U</div>
+                                <div class="avatar">Siz</div>
                             </div>
                         </div>
                         <div class="message bot">

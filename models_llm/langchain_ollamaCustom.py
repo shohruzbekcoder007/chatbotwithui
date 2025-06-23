@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 from functools import lru_cache
 from langchain_core.messages import (
     AIMessage,
-    HumanMessage, 
-    SystemMessage, 
+    HumanMessage,
+    SystemMessage,
     BaseMessage
 )
 from langchain_community.chat_models import ChatOllama

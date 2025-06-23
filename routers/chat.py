@@ -9,6 +9,7 @@ from models_llm.langchain_ollamaCustom import model as model_llm
 from retriever.langchain_chroma import questions_manager
 from pydantic import BaseModel
 from typing import Optional
+from multi_agent_executor import combined_agent, agent_stream
 
 # Router yaratish
 router = APIRouter(prefix="", tags=["chat"])
@@ -210,9 +211,20 @@ async def stream_chat(request: Request, req: ChatRequest):
         # print(f"Oldingi savollar: {previous_questions}")
     
         # Modeldan chat javobi olish
-        async for token in model_llm.chat_stream(context=context, query=context_query+"\n"+question, language=language, device=device):
-            response_current += token
-            yield f"{token}"
+        # async for token in model_llm.chat_stream(context=context, query=context_query+"\n"+question, language=language, device=device):
+        #     response_current += token
+        #     yield f"{token}"
+
+        if tool == "classifications":
+            async for token in agent_stream(query=context_query+"\n"+question):
+                response_current += token
+                yield f"{token}"
+
+        if tool == "all":
+            async for token in model_llm.chat_stream(context=context, query=context_query+"\n"+question, language=language, device=device):
+                response_current += token
+                yield f"{token}"
+        
         
         # yield suggestion_text
         
@@ -251,8 +263,8 @@ async def stream_chat(request: Request, req: ChatRequest):
             message=req.query,
             response=response_current,
             suggestion_question=clean_html_tags(suggested_question),
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow()
+            created_at=datetime.now(datetime.timezone.utc),
+            updated_at=datetime.now(datetime.timezone.utc)
         )
         await chat_message.insert()
         print(f"Saved message to MongoDB with ID: {chat_message.id}")
@@ -271,8 +283,8 @@ async def stream_chat(request: Request, req: ChatRequest):
                     user_id=user_id,
                     chat_id=chat_id,
                     name=chat_name,
-                    created_at=datetime.utcnow(),
-                    updated_at=datetime.utcnow()
+                    created_at=datetime.now(datetime.timezone.utc),
+                    updated_at=datetime.now(datetime.timezone.utc)
                 )
                 await user_chat.insert()
                 print(f"Added chat to user's chat list: {chat_id} with name: {chat_name}")
@@ -285,12 +297,12 @@ async def stream_chat(request: Request, req: ChatRequest):
                     chat_name = req.query  # To'liq nomni saqlash
                     await existing_chat.set({
                         "name": chat_name,
-                        "updated_at": datetime.utcnow()
+                        "updated_at": datetime.now(datetime.timezone.utc)
                     })
                     print(f"Updated chat name to: {chat_name} for chat: {chat_id}")
                 else:
                     # Faqat vaqtni yangilash, nomni o'zgartirmaslik
-                    await existing_chat.set({"updated_at": datetime.utcnow()})
+                    await existing_chat.set({"updated_at": datetime.now(datetime.timezone.utc)})
                     print(f"Updated timestamp for existing chat: {chat_id}")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

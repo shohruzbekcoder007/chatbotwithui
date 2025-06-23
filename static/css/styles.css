@@ -338,6 +338,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100%;
 }
 
 .chat-input button:disabled {
@@ -1008,6 +1009,7 @@ body {
     max-height: 280px;
     overflow-y: auto;
     transform-origin: bottom center;
+    width: 220px;
 }
 
 .tool-dropdown-item {
