@@ -1,0 +1,361 @@
+[
+    {
+        "report_form": {
+            "name": "4-transport shakli",
+            "submitters": "Tashkiliy-huquqiy va mulkchilik shaklidan qat’i nazar yo‘lovchi va yuk tashish faoliyati bilan shug‘ullanuvchi balansida va yuridik va jismoniy shaxslardan ijaraga olgan beshdan ortiq avtomobili bo‘lgan, maxsus avtomashinalar qo‘shmagan holda, barcha yuridik shaxslar (notijorat tashkilotlar, kichik korxonalar va mikrofirmalardan tashqari) to‘ldiradilar. Avtomobillarni ijaraga olgan va ulardan tijorat maqsadida yuk va yo‘lovchi tashishda foydalanadigan tashkilotlar ushbu avtomobillar bo‘yicha to‘liq ijara davri uchun hisobot to‘ldiradilar, ichki xo‘jalik ijarasiga olinganlarini qo‘shgan holda. Agar korxona yo‘lovchi yoki yuk tashish maqsadida qisqa muddatli ijara shartnomasini tuzsa, ushbu shartnomalarni bajaruvchi avtomabillarni ijaradagi avtomabillar soniga kiritmaydilar.",
+            "structure": "3ta bob, titul va yakuniy qismdan iborat",
+            "indicators": "Hisobot asosida Jamoat transporti ishi to‘g‘risidagi tashilgan yuk, yuk aylanmasi, tashilgan yo'lovchi, yo'lovchi aylamasi ma'lumotlari aniqlashtiriladi"
+        },
+        "sections": [
+            {
+                "bob": "1-BOB",
+                "title": "YUK VA YO‘LOVCHI TASHISHDA FOYDALANILADIGAN AVTOMOBIL TRANSPORTI ISHI, IJARAGA OLINGAN AVTOMOBILLARNI QO‘SHGAN HOLDA",
+                "description": "Tashkiliy-huquqiy va mulkchilik shaklidan qat’i nazar yo‘lovchi va yuk tashish faoliyati bilan shug‘ullanuvchi balansida va yuridik va jismoniy shaxslardan ijaraga olgan beshdan ortiq avtomobili bo‘lgan, maxsus avtomashinalar qo‘shmagan holda, barcha yuridik shaxslar (notijorat tashkilotlar, kichik korxonalar va mikrofirmalardan tashqari) to‘ldiradilar.",
+                "section_type": "statistic",
+                "rows": [
+                    {
+                        "row_code": "101",
+                        "columns": [
+                            {
+                                "column": "1",
+                                "description": "Chorak davomida tashilgan yuk. Tashilgan yuk (yuk tashish hajmi) - yuk avtomobillarida, shuningdek pikap va yengil furgonlar, avtotirkamalarni qo‘shgan holda tashilgan yuklar miqdori, tonnada o‘lchanadi.",
+                                "strict_logical_controls": [
+                                    "Joriy chorak uchun Tashilgan yukni o‘ziga tegishli va ijaraga olingan avtomobillarda tashilgan yuklar hajmiga teng - tonnada ko‘rsating.",
+                                    "1-ustunda choraklik maʼlumotlar taqdim etilsa, 2-ustunda Yil boshidan tashilgan yuklar haqidagi maʼlumotlar taqdim etiladi. (1-ustun <= 2-ustundan barcha satrlarida)",
+                                    "Tashilgan yuk 101-satr 0dan katta bo‘lsa, Yuk aylanmasi maʼlumotlari ham 0dan katta bo‘lishi kerak"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "2",
+                                "description": "Yil boshidan o‘ziga tegishli va ijaraga olingan avtomobillarda tashilgan yuklar hajmi tonnada ko‘rsatiladi.",
+                                "strict_logical_controls": [
+                                    "2-ustun ma‘lumotlari 1-ustun ma'lumotlaridan katta bo‘lishi lozim"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "3",
+                                "description": "Yil boshidan elektromobillarda tashilgan yuklar hajmi tonnada ajratib ko‘rsating.",
+                                "strict_logical_controls": [],
+                                "non_strict_logical_controls": []
+                            }
+                        ]
+                    },
+                    {
+                        "row_code": "102",
+                        "columns": [
+                            {
+                                "column": "1",
+                                "description": "Yuk aylanmasi – tashilgan yukni tashish masofasini kilometrlarda hisobga olgan holda xarakterlaydi va har bir qatnov bo‘yicha yuk hajmi (og‘irligi)ni ushbu qatnov bo‘yicha tashish masofasi (yuk bilan bosib o‘tilgan masofa)ga ko‘paytmasining yig‘indisi orqali aniqlanadi, tonna-kilometrlarda o‘lchanadi.",
+                                "strict_logical_controls": [
+                                    "Agar Yuk aylanmasi 0 dan katta bo‘lsa, Tashilgan yuk ham 0 dan katta bo‘lishi lozim (agar 102-satr>0, unda 101-satr >0)"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "2",
+                                "description": "Yuk aylanmasini yil boshidan qiymati ko‘rsatiladi",
+                                "strict_logical_controls": [
+                                    "Agar Yuk aylanmasi 0 dan katta bo‘lsa, Tashilgan yuk ham 0 dan katta bo‘lishi lozim (agar 102-satr>0, unda 101-satr >0)"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "3",
+                                "description": "Yuk aylanmasini yil boshidan elektromobillarga tegishli qiymati ko‘rsatiladi",
+                                "strict_logical_controls": [],
+                                "non_strict_logical_controls": []
+                            }
+                        ]
+                    },
+                    {
+                        "row_code": "103",
+                        "columns": [
+                            {
+                                "column": "1",
+                                "description": "Tashilgan yo‘lovchi – hisobat davrida avtobuslarda (mikroavtobuslarda), yo‘nalishli va yo‘nalishsiz taksomotlarni qo‘shgan holda, tashilgan yo‘lovchilar soni.",
+                                "strict_logical_controls": [
+                                    "Agar Tashilgan yo‘lovchi 0 dan katta bo‘lsa, Yo‘lovchi aylanmasi ham 0 dan katta bo‘lishi lozim (agar 103-satr>0, unda 104-satr >0)"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "2",
+                                "description": "Tashilgan yulovchilarni yil boshidan qiymati ming yo‘lovchi-km.da ko‘rsatiladi",
+                                "strict_logical_controls": [
+                                    "Joriy chorakda ko'rsatilgan ma'lumotlaridan katta bo'lishi kerak (2-ustun>= 1-ustun)"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "3",
+                                "description": "Elektromobillarda tashilgan yulovchilarni yil boshidan qiymati ming yo‘lovchi-km.da ko‘rsatiladi",
+                                "strict_logical_controls": [],
+                                "non_strict_logical_controls": []
+                            }
+                        ]
+                    },
+                    {
+                        "row_code": "104",
+                        "columns": [
+                            {
+                                "column": "1",
+                                "description": "Yo‘lovchi aylanmasi – tashilgan yo‘lovchini ushbu yo‘lovchilarni tashish masofasini hisobga olgan holda xarakterlaydi va tashilgan yo‘lovchilar sonini har bir qatnov bo‘yicha tashish masofasiga ko‘paytmasini jamlash orqali aniqlanadi.",
+                                "strict_logical_controls": [
+                                    "Agar Yo‘lovchi aylanmasi 0 dan katta bo‘lsa, Tashilgan yo‘lovchi ham 0 dan katta bo‘lishi lozim (agar 104-satr>0, unda 103-satr >0)",
+                                    "Chorak ma'lumotlari Yil boshidan kichik bo'lishi lozim (1-ustun<= 2-ustun)"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "2",
+                                "description": "Yil boshidan yo'lovchi tashish aylanmasi. Ma'lumotlarni ming yo'lovchi kilometrda ko'rsatish lozim",
+                                "strict_logical_controls": [
+                                    "Yil boshidan ko'rsatilayotgan ma'lumotlar chorak uchun taqdim etilayotgan ma'lumotlardan katta yoki teng bo'lishi lozim"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "3",
+                                "description": "Yil boshidan Elektromobillar orqali yo'lovchi tashish aylanmasi ko'rsatiladi. Ma'lumotlarni ming yo'lovchi kilometrda ko'rsatish lozim",
+                                "strict_logical_controls": [
+                                    "Elektromobillar orqali tashilgan yo'lovchilarni ularni bosib o'tgan yo'liga ko'paytirish orqali aniqlanadi."
+                                ],
+                                "non_strict_logical_controls": []
+                            }
+                        ]
+                    },
+                    {
+                        "row_code": "105",
+                        "columns": [
+                            {
+                                "column": "1",
+                                "description": "Joriy chorakda Yengil taksomotorlarning pullik bosib o‘tgan yo‘li",
+                                "strict_logical_controls": [
+                                    "Chorak uchun taqdim etilgan ma'lumotlari yil boshi ma'lumotlaridan kichik yoki teng bo'ladi (1-ustun <= 2-ustun)"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "2",
+                                "description": "Yil boshidan Yengil taksomotorlarning pullik bosib o‘tgan yo‘li",
+                                "strict_logical_controls": [
+                                    "Yil boshidan yengil taksomotorlarning pullik bosib o'tilgan yo'li katta yoki teng bo'lishi kerak chorak uchun taqdim etilayotgan ma'lumotlardan (2-ustun => 1-ustun)"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "3",
+                                "description": "Yengil taksomotorlarning pullik bosib o‘tgan yo‘li",
+                                "strict_logical_controls": [
+                                    "Chorak uchun taqdim etilgan ma'lumotlari yil boshi ma'lumotlaridan kichik yoki teng bo'ladi (1-ustun <= 2-ustun)"
+                                ],
+                                "non_strict_logical_controls": []
+                            }
+                        ]
+                    },
+                    {
+                        "row_code": "106",
+                        "columns": [
+                            {
+                                "column": "1",
+                                "description": "Xizmat yengil avtomobillari bosib o‘tgan yo‘l",
+                                "strict_logical_controls": [
+                                    "Xizmat yengil avtomobillari (106-satr) va yengil taksomotorlar pullik bosib o‘tgan yo‘li (105-satr) tegishli yo‘l varaqalari ma’lumotlari bo‘yicha aniqlanadi."
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "2",
+                                "description": "Yil boshidan xizmat yengil avtomobillari bosib o‘tgan yo‘l ko'rsatkichi",
+                                "strict_logical_controls": [
+                                    "Xizmat yengil avtomobillari (106-satr) va yengil taksomotorlarni Yil boshidan pullik bosib o‘tgan yo‘li (105-satr) tegishli yo‘l varaqalari ma’lumotlari bo‘yicha yil boshidan aniqlanib ko'rsatiladi."
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "3",
+                                "description": "Elektromobil xizmati yengil avtomobillari bosib o‘tgan yo‘l",
+                                "strict_logical_controls": [
+                                    "Xizmat yengil avtomobillari (106-satr) va yengil taksomotorlar pullik bosib o‘tgan yo‘li (105-satr) tegishli yo‘l varaqalari ma’lumotlari bo‘yicha faqat elektromobillarda yil boshidan aniqlanadi."
+                                ],
+                                "non_strict_logical_controls": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bob": "2-BOB",
+                "title": "TRAMVAY, METROPOLITEN, TROLLEYBUS TRANSPORTINING ASOSIY KO‘RSATKICHLARI",
+                "description": "TRAMVAY, METROPOLITEN, TROLLEYBUS transportining asosiy faoliyati bilan bog'liq bo'lgan ma'lumotlari to‘ldiriladi",
+                "section_type": "dynamic",
+                "columns": [
+                    {
+                        "column": "1",
+                        "description": "Chorak ma‘lumotlari taqdim etiladi",
+                        "strict_logical_controls": [
+                            "Tashilgan yo‘lovchilar, shu jumladan, transportda pul to‘lab yurgan yo‘lovchilar, 201-satrdan bepul tashilgan pensionerlar hamda Yo‘lovchi aylanmasi satrlaridagi Choraklik ma'lumotlari (1-ustun) Yil boshi (2-ustun) ma'lumotlaridan kichik yoki teng bo‘lishi kerak. (гр.2 <= гр.1)"
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "2",
+                        "description": "Barcha satrlarda yil boshidan xisobot davrigacha umumlashtirilgan ma‘lumotlari taqdim etiladi",
+                        "strict_logical_controls": [
+                            "Tashilgan yo‘lovchilar, shu jumladan, transportda pul to‘lab yurgan yo‘lovchilar, 201-satrdan bepul tashilgan pensionerlar hamda Yo‘lovchi aylanmasi satrlaridagi Yil boshi (2-ustun) ma'lumotlari Joriy chorak (1-ustun) ma'lumotlaridan katta yoki teng bo‘lishi kerak. (гр.2 >= гр.1)"
+                        ],
+                        "non_strict_logical_controls": []
+                    }
+                ],
+                "rows": [
+                    {
+                        "row_code": "201",
+                        "columns": [
+                            {
+                                "column": "1",
+                                "description": "Tashilgan yo‘lovchi - hisobot davrida metropoliten yoki (tramvay, troleybuslar)da jismoniy shaxslar va tashkilotlarga sotilgan barcha turdagi pulli yo‘l chiptalari bilan, shuningdek bepul transportdan foydalanish xuquqiga ega bo‘lganlarni qo‘shgan holda, tashilgan yo‘lovchilar soni. Ma‘lumotlarni ming kishi birlikda taqdim etish lozim",
+                                "strict_logical_controls": [
+                                    "Chorak uchun Tashilgan yo‘lovchi (201-satr) ma'lumotlari transportda pul to‘lab yurgan yo‘lovchilar (202-satr) ma‘lumotlaridan katta yoki teng bo‘lishi kerak. (Стр.201 гр.1 =>стр.202 гр.1)",
+                                    "Chorak uchun hamda Yil boshi uchun Tashilgan yo‘lovchi (201-satr) ma'lumotlari Bepul tashilgan pensionerlar (203-satr) ma‘lumotlaridan tegishli ustunlari bo'yicha katta yoki teng bo‘lishi kerak. (Стр.201 гр.1 => стр.203 гр.1)"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "2",
+                                "description": "Yil boshidan tashilgan yulovchilar soni ma'lumotlari kiritiladi",
+                                "strict_logical_controls": [
+                                    "Yil boshidan Tashilgan yo‘lovchi (201-satr) ma'lumotlari yil boshidan transportda pul to‘lab yurgan yo‘lovchilar (202-satr) ma‘lumotlaridan katta yoki teng bo‘lishi kerak. (Стр.201 гр.2 =>стр.202 гр.2)",
+                                    "Yil boshi uchun Tashilgan yo‘lovchi (201-satr) ma'lumotlari yil boshidan Bepul tashilgan pensionerlar (203-satr) ma‘lumotlaridan katta yoki teng bo‘lishi kerak. (Стр.201 гр.2 => стр.203 гр.2)"
+                                ],
+                                "non_strict_logical_controls": []
+                            }
+                        ]
+                    },
+                    {
+                        "row_code": "202",
+                        "columns": [
+                            {
+                                "column": "1",
+                                "description": "Chorakda Umumiy tashilgan yo‘lovchilar sonidan chorakda pul to‘lab yurgan yo‘lovchilar soni ajratib ko‘rsatiladi. Ma‘lumotlarni ming kishi birlikda taqdim etish lozim",
+                                "strict_logical_controls": [
+                                    "Joriy chorak uchun Transportda pul to‘lab yurgan yo‘lovchilar (202-satr) ma'lumotlari Chorakda Tashilgan yo‘lovchi (201-satr) ma‘lumotlaridan kichik yoki teng bo‘lishi kerak. (Стр.202 гр.1 =< стр.201 гр.1)"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "2",
+                                "description": "Yil boshidan umumiy tashilgan yo‘lovchilar sonidan yil boshidan pul to‘lab yurgan yo‘lovchilar soni ajratib ko‘rsatiladi. Ma‘lumotlarni ming kishi birlikda taqdim etish lozim",
+                                "strict_logical_controls": [
+                                    "Yil boshidan Transportda pul to‘lab yurgan yo‘lovchilar (202-satr) ma'lumotlari Yil boshidan Tashilgan yo‘lovchilar (201-satr) sonidan kichik yoki teng bo‘lishi kerak. (Стр.202 гр.2 =< стр.201 гр.2)"
+                                ],
+                                "non_strict_logical_controls": []
+                            }
+                        ]
+                    },
+                    {
+                        "row_code": "203",
+                        "columns": [
+                            {
+                                "column": "1",
+                                "description": "Chorak davomida Umumiy tashilgan yo‘lovchilar sonidan chorakda bepul tashilgan pensionerlar soni ajratib ko‘rsatiladi. Ma‘lumotlarni ming kishi birlikda taqdim etish lozim",
+                                "strict_logical_controls": [
+                                    "Chorak davomida Tashilgan yo‘lovchilardan bepul tashilgan pensionerlar (203-satr) ma'lumotlari chorakda Tashilgan yo‘lovchi (201-satr) ma‘lumotlaridan kichik yoki teng bo‘lishi kerak. (Стр.203 гр.1,2 =< стр.201 гр.1,2)"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "2",
+                                "description": "Yil boshidan Umumiy tashilgan yo‘lovchilar sonidan yil boshidan Bepul tashilgan pensionerlar soni ajratib ko‘rsatiladi. Ma‘lumotlarni ming kishi birlikda taqdim etish lozim",
+                                "strict_logical_controls": [
+                                    "Yil boshidan Tashilgan yo‘lovchilardan bepul tashilgan pensionerlar (203-satr) ma'lumotlari yil boshidan Tashilgan yo‘lovchi (201-satr) ma‘lumotlaridan kichik yoki teng bo‘lishi kerak. (Стр.203 гр.1,2 =< стр.201 гр.1,2)"
+                                ],
+                                "non_strict_logical_controls": []
+                            }
+                        ]
+                    },
+                    {
+                        "row_code": "204",
+                        "columns": [
+                            {
+                                "column": "1",
+                                "description": "Yo‘lovchi aylanmasi - tashilgan yo‘lovchini ushbu yo‘lovchilarni tashish masofasini hisobga olgan holda xarakterlaydi. (Joriy chorak ma'lumotlari ko'rsatiladi)",
+                                "strict_logical_controls": [
+                                    "Joriy chorak davomida Yo‘lovchi aylanmasi Tashilgan yo‘lovchilar sonini har bir qatnov bo‘yicha tashish masofasiga ko‘paytmasini jamlash orqali aniqlanadi (204-satr). Ma‘lumotlarni ming yo‘lovchi kilometrda taqdim etish lozim"
+                                ],
+                                "non_strict_logical_controls": []
+                            },
+                            {
+                                "column": "2",
+                                "description": "Yo‘lovchi aylanmasi - tashilgan yo‘lovchini ushbu yo‘lovchilarni tashish masofasini hisobga olgan holda xarakterlaydi. (Yil boshidan bo'lgan ma'lumotlar ko'rsatiladi)",
+                                "strict_logical_controls": [
+                                    "Yil boshidan Yo‘lovchi aylanmasi Tashilgan yo‘lovchilar sonini har bir qatnov bo‘yicha tashish masofasiga ko‘paytmasini jamlash orqali aniqlanadi (204-satr). Ma‘lumotlarni ming yo‘lovchi kilometrda taqdim etish lozim"
+                                ],
+                                "non_strict_logical_controls": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bob": "3-BOB",
+                "title": "HUDUDIY АLOHIDА BO‘LINMАLАRGА EGА BO‘LGАN YURIDIK SHАXSLАR TOMONIDАN YUK VA YO‘LOVCHI TASHISH FAOLIYATINING ASOSIY KO‘RSATKICHLARI",
+                "description": "Hududiy Bo'limlari mavjud bo‘lgan yuridik shaxslarning transport faoliyatining asosiy ko‘rsatkichlari",
+                "section_type": "dynamic",
+                "columns": [
+                    {
+                        "column": "A",
+                        "description": "Hududlar nomi",
+                        "strict_logical_controls": [
+                            "Hududlar nomi tanlanadi"
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "Б",
+                        "description": "Satr kodi",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "1",
+                        "description": "Tashilgan yuk (birlik - tonna)",
+                        "strict_logical_controls": [
+                            "Jami hududlarning tashilgan yuki (300-satr 1-ustun) Tashilgan yukning yil boshidan bo'lgan (101-satr 2-ustun) ma‘lumotlari bilan teng bo‘lishi lozim. (Стр.300 гр.1= стр. 101 гр.2)",
+                            "Jami hududlarning tashilgan yuk (300-satr) ma‘lumoti Hududlar ma‘lumotlari jamlanmasiga teng. (Стр.300 гр.1 = 301 +302+303+304 +305+306+307+308+309+310+311 +312+313+314 гр.1)"
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "2",
+                        "description": "Yuk aylanmasi (birlik: tonna-km)",
+                        "strict_logical_controls": [
+                            "Hududlarning yuk aylanmasi yig'indisi (300-satr 2-ustun) ma‘lumoti Yuk aylanmasining yil boshiga (102-satr 2-ustun) teng bo‘lishi kerak. (Стр.300 гр.2= стр. 102 гр.2)",
+                            "Jami yuk aylanma (301-satr 2-ustun) hududlarning yuk aylanmasi ma'lumotlari yig'indisiga teng. (Стр.300 гр.2=301+302+303+304 +305+306+307+308+309+310+311 +312+313+314 гр.2)"
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "3",
+                        "description": "Tashilgan yo‘lovchilar (birlik: ming kishi)",
+                        "strict_logical_controls": [
+                            "Tashilgan yo‘lovchilar (301-satr 3-ustun) jami ma'lumoti Tashilgan yo‘lovchilar Yil boshi ko'rsatkichlari (103-satr 2-ustun) ma‘lumotiga teng bo‘lishi lozim. Стр.301гр.3= стр. 103 гр.2",
+                            "Tashilgan yo‘lovchilar (301-satr 3-ustun) Hududlar tomondan taqdim etilgan ma'lumotlar jamlanmasiga teng (Стр.300 гр.3=301 +302+303+304 +305+306+307+308+309+310+311 +312+313+314 гр.3)"
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "4",
+                        "description": "Yo‘lovchi tashish aylanmasi (birlik: ming yo‘lovchi-km)",
+                        "strict_logical_controls": [
+                            "Yo‘lovchi tashish aylanmasi (300-satr 4-ustun) Yo‘lovchi tashish aylanmasining Yil boshi ko'rsatkichiga (104-satr 2-ustun) teng (Стр.301 гр.4= стр. 104 гр.2)",
+                            "Yo‘lovchi tashish aylanmasi (301-satr 4-ustun) Hududlar ma'lumotlari jamlanmasiga teng. Стр.300 гр.4=301+302+303+304 +305+306+307+308+309+310+311 +312+313+314 гр.4"
+                        ],
+                        "non_strict_logical_controls": []
+                    }
+                ]
+            }
+        ]
+    }
+]
