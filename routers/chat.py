@@ -18,6 +18,7 @@ class ChatRequest(BaseModel):
     query: str
     chat_id: Optional[str] = None
     device: Optional[str] = None  # Qo'shimcha maydon, agar kerak bo'lsa
+    tool: Optional[str] = "all"  # Tool parametri, default "all"
 
 @router.post("/chat")
 async def chat(request: Request, chat_request: ChatRequest):
@@ -33,7 +34,9 @@ async def chat(request: Request, chat_request: ChatRequest):
         question = chat_request.query
         language = 'uz'
         device = chat_request.device if chat_request.device else "web"
-        print(f"Using device: {device}")
+        tool = chat_request.tool if chat_request.tool else "all"
+        # print(f"Using device: {device}")
+        # print(f"Using tool: {tool}")
 
         # if len(chat_request.query.split(" ")) < 2:
             # res = "Iltimos savolingizni to'liqroq kiriting"
@@ -95,23 +98,38 @@ async def chat(request: Request, chat_request: ChatRequest):
                 UserChatList.chat_id == chat_id
             )
             
+            # Oldingi xabarlar sonini tekshirish
+            previous_messages_count = await ChatMessage.find(
+                ChatMessage.user_id == user_id,
+                ChatMessage.chat_id == chat_id
+            ).count() - 1  # Hozir saqlangan xabarni hisobga olmaslik
+            
             if not existing_chat:
-                # Yangi chat yaratish
+                # Birinchi savol - chat nomini to'liq saqlash
+                chat_name = chat_request.query  # To'liq nomni saqlash
                 new_chat = UserChatList(
                     user_id=user_id,
                     chat_id=chat_id,
-                    name="Yangi suhbat",  # Default nom
+                    name=chat_name,
                     created_at=datetime.utcnow(),
                     updated_at=datetime.utcnow()
                 )
                 await new_chat.insert()
-                print(f"Yangi chat yaratildi: {chat_id}")
+                print(f"Yangi chat yaratildi: {chat_id} with name: {chat_name}")
             else:
-                # Mavjud chatni yangilash
-                existing_chat.updated_at = datetime.utcnow()
-                # Mavjud chat nomini saqlab qolish, faqat vaqtini yangilash
-                await existing_chat.save()
-                print(f"Mavjud chat yangilandi: {chat_id}")
+                # Agar bu birinchi xabar bo'lsa (oldingi xabarlar yo'q), chat nomini yangilash
+                if previous_messages_count == 0:
+                    chat_name = chat_request.query  # To'liq nomni saqlash
+                    await existing_chat.set({
+                        "name": chat_name,
+                        "updated_at": datetime.utcnow()
+                    })
+                    print(f"Updated chat name to: {chat_name} for chat: {chat_id}")
+                else:
+                    # Faqat vaqtni yangilash, nomni o'zgartirmaslik
+                    existing_chat.updated_at = datetime.utcnow()
+                    await existing_chat.save()
+                    print(f"Mavjud chat yangilandi: {chat_id}")
         else:
             print(f"Anonymous user, message not saved to     - Chat ID: {chat_id}")
 
@@ -131,8 +149,10 @@ async def stream_chat(request: Request, req: ChatRequest):
     question = req.query
     language = 'uz'
     device = req.device if req.device else "web"
+    tool = req.tool if req.tool else "all"
     # print(f"\nUsing device: {device}")
     # print(f"Using question: {question}\n")
+    print(f"Using tool: {tool}")
 
     user_id = request.state.user_id
     # print(f"Using user_id from request.state: {user_id}")
@@ -245,30 +265,32 @@ async def stream_chat(request: Request, req: ChatRequest):
             )
 
             if not existing_chat:
+                # Birinchi savol - chat nomini to'liq saqlash
+                chat_name = req.query  # To'liq nomni saqlash
                 user_chat = UserChatList(
                     user_id=user_id,
                     chat_id=chat_id,
-                    name=f"Suhbat: {req.query[:30]}...",
+                    name=chat_name,
                     created_at=datetime.utcnow(),
                     updated_at=datetime.utcnow()
                 )
                 await user_chat.insert()
-                print(f"Added chat to user's chat list: {chat_id}")
+                print(f"Added chat to user's chat list: {chat_id} with name: {chat_name}")
             else:
-                await existing_chat.set({"updated_at": datetime.utcnow()})
-                print(f"Updated timestamp for existing chat: {chat_id}")
-            if not existing_chat:
-                user_chat = UserChatList(
-                    user_id=user_id,
-                    chat_id=chat_id,
-                    name=f"Suhbat: {req.query[:30]}...",
-                    created_at=datetime.utcnow(),
-                    updated_at=datetime.utcnow()
-                )
-                await user_chat.insert()
-                print(f"Added chat to user's chat list: {chat_id}")
-            else:
-                await existing_chat.set({"updated_at": datetime.utcnow()})
-                print(f"Updated timestamp for existing chat: {chat_id}")
+                # Birinchi xabar emasligini tekshirish (oldingi xabarlar soni)
+                message_count = len(previous_messages)
+                
+                # Agar bu birinchi xabar bo'lsa (oldingi xabarlar yo'q), chat nomini yangilash
+                if message_count == 0:
+                    chat_name = req.query  # To'liq nomni saqlash
+                    await existing_chat.set({
+                        "name": chat_name,
+                        "updated_at": datetime.utcnow()
+                    })
+                    print(f"Updated chat name to: {chat_name} for chat: {chat_id}")
+                else:
+                    # Faqat vaqtni yangilash, nomni o'zgartirmaslik
+                    await existing_chat.set({"updated_at": datetime.utcnow()})
+                    print(f"Updated timestamp for existing chat: {chat_id}")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

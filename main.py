@@ -118,6 +118,33 @@ async def startup_event():
         print(f"Error connecting to MongoDB: {str(e)}")
         raise
 
+# Bo'sh chatlarni tozalash funksiyasi
+async def cleanup_empty_chats(user_id: str):
+    """
+    Foydalanuvchining xabar bo'lmagan bo'sh chatlarini o'chirish
+    """
+    try:
+        if user_id == "anonymous":
+            return
+            
+        # Foydalanuvchining barcha chatlarini olish
+        user_chats = await UserChatList.find(UserChatList.user_id == user_id).to_list()
+        
+        for chat in user_chats:
+            # Har bir chat uchun xabarlar mavjudligini tekshirish
+            message_count = await ChatMessage.find(
+                ChatMessage.user_id == user_id,
+                ChatMessage.chat_id == chat.chat_id
+            ).count()
+            
+            # Agar chat da xabar bo'lmasa, uni o'chirish
+            if message_count == 0:
+                await chat.delete()
+                print(f"Deleted empty chat: {chat.chat_id} for user: {user_id}")
+                
+    except Exception as e:
+        print(f"Error cleaning up empty chats: {str(e)}")
+
 # Static fayllarni ulash
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -184,6 +211,9 @@ async def read_root(request: Request, response: Response, chat_id: Optional[str]
     
     # Chat ID ni tekshirish
     if not chat_id:
+        # Bo'sh chatlarni tozalash (yangi chat yaratishdan oldin)
+        await cleanup_empty_chats(user_id)
+        
         # Yangi chat yaratish
         new_chat_id = str(uuid.uuid4())
 

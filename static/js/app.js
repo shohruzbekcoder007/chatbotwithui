@@ -1,8 +1,12 @@
 function sendRecommendedText(element) {
     const text = element.textContent;
-    const input = document.querySelector('.chat-input input');
+    const input = document.querySelector('.chat-input input[name="message"]');
     input.value = text;
-    document.querySelector('.chat-input').requestSubmit();
+    
+    // Create and dispatch a submit event to trigger onsubmitstream
+    const form = document.querySelector('.chat-input');
+    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+    form.dispatchEvent(submitEvent);
 }
 
 // Copy message to clipboard
@@ -202,6 +206,9 @@ async function onsubmitnew(event) {
 
             // Auto scroll to bottom after response
             chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Update chat name in sidebar if this is the first message
+            updateChatNameInSidebar(chatId, message);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -218,9 +225,52 @@ function getChatIdFromUrl() {
 }
 
 // Function to redirect for a new chat - just go to root URL
-function redirectWithNewChat() {
+async function redirectWithNewChat() {
+    // Check if current chat is empty before creating a new one
+    const currentChatId = getChatIdFromUrl();
+    
+    if (currentChatId) {
+        // Check if there are any messages in the current conversation
+        const existingMessages = document.querySelectorAll('.conversation .message');
+        
+        // If current chat is empty (no user messages), don't create a new chat
+        if (existingMessages.length === 0) {
+            console.log('Current chat is empty, not creating a new chat');
+            return; // Don't redirect, stay in current empty chat
+        }
+    }
+    
     // Server will auto-generate chat_id and redirect
     window.location.href = '/';
+}
+
+// Function to check if this is the first message in a chat and update sidebar name
+async function updateChatNameInSidebar(chatId, firstMessage) {
+    try {
+        // Check if there are any existing messages in the conversation
+        const existingMessages = document.querySelectorAll('.conversation .message');
+        
+        // If this is the first message (no existing messages), update the sidebar
+        if (existingMessages.length <= 2) { // 2 because we just added user and bot message
+            // Database da to'liq nomni saqlash, sidebar da qisqartirib ko'rsatish
+            const fullChatName = firstMessage; // To'liq nom
+            const displayChatName = firstMessage.length > 30 ? firstMessage.substring(0, 30) + "..." : firstMessage; // Sidebar uchun qisqartirilgan
+            
+            // Find the current chat in sidebar and update its name
+            const currentChatLink = document.querySelector(`a[href*="chat_id=${chatId}"]`);
+            if (currentChatLink) {
+                const chatNameSpan = currentChatLink.querySelector('.chat-name');
+                if (chatNameSpan) {
+                    // Sidebar da qisqartirilgan nomni ko'rsatish
+                    chatNameSpan.textContent = displayChatName;
+                    // Tooltip uchun to'liq nomni saqlash
+                    chatNameSpan.setAttribute('title', fullChatName);
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error updating chat name in sidebar:', error);
+    }
 }
 
 // Load chat history when page loads
@@ -276,16 +326,62 @@ function setupChatLinkHandlers() {
                 loadChatMessages(chatId);
             }
         }
+        
+        // Handle settings button clicks
+        const settingsBtn = event.target.closest('.settings-btn');
+        if (settingsBtn) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Close all other open dropdowns
+            document.querySelectorAll('.settings-dropdown.show').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+            
+            // Toggle current dropdown
+            const dropdown = settingsBtn.nextElementSibling;
+            dropdown.classList.toggle('show');
+        }
+        
+        // Handle dropdown item clicks
+        const dropdownItem = event.target.closest('.dropdown-item');
+        if (dropdownItem) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const chatId = dropdownItem.dataset.chatId;
+            
+            if (dropdownItem.classList.contains('edit')) {
+                const chatName = dropdownItem.dataset.chatName;
+                renameChatPrompt(chatId, chatName);
+            } else if (dropdownItem.classList.contains('delete')) {
+                deleteChatPrompt(chatId);
+            }
+            
+            // Close dropdown after action
+            dropdownItem.closest('.settings-dropdown').classList.remove('show');
+        }
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.chat-settings')) {
+            document.querySelectorAll('.settings-dropdown.show').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+        }
     });
 }
 
 // Pagination state for chat list
 let chatListPagination = {
     offset: 0,
-    limit: 10,
+    limit: 15, 
+    loadMoreSize: 5,
     hasMore: true,
     isLoading: false,
-    total: 0
+    total: 0,
+    isExpanded: false 
 };
 
 // Function to load chat history
@@ -302,10 +398,12 @@ async function loadChatHistory(chatId, resetPagination = true) {
     if (resetPagination) {
         chatListPagination = {
             offset: 0,
-            limit: 10,
+            limit: 15, 
+            loadMoreSize: 5,
             hasMore: true,
             isLoading: false,
-            total: 0
+            total: 0,
+            isExpanded: false
         };
     }
 
@@ -316,8 +414,6 @@ async function loadChatHistory(chatId, resetPagination = true) {
 
     chatListPagination.isLoading = true;
 
-    // Cookie'dan token olish uchun so'rov yuborishda credentials: 'include' ishlatamiz
-    // Tokenni tekshirish server tomonida amalga oshiriladi
     const headers = {
         'Content-Type': 'application/json'
     };
@@ -326,7 +422,7 @@ async function loadChatHistory(chatId, resetPagination = true) {
     const response = await fetch(`/api/user-chats?limit=${chatListPagination.limit}&offset=${chatListPagination.offset}`, {
         method: 'GET',
         headers: headers,
-        credentials: 'include' // Cookie'larni yuborish uchun
+        credentials: 'include'
     });
 
     if (!response.ok) {
@@ -344,11 +440,15 @@ async function loadChatHistory(chatId, resetPagination = true) {
             
             // Only clear the container if this is the first page
             if (chatListPagination.offset === 0) {
-                chatHistory.innerHTML = ''; // Avvalgi chatlarni tozalash
+                chatHistory.innerHTML = '';
             }
 
             // Add new chats to the list
             data?.chats?.forEach?.(chat => {
+                // Chat nomini 30 belgi + 3 nuqta formatida ko'rsatish
+                const fullName = chat?.name || "Yangi suhbat";
+                const displayName = fullName.length > 30 ? fullName.substring(0, 30) + "..." : fullName;
+                
                 chatHistory.innerHTML += `
                     <div class="chat-item-container">
                         <a href="/?chat_id=${chat?.chat_id}" class="chat-link">
@@ -356,22 +456,33 @@ async function loadChatHistory(chatId, resetPagination = true) {
                                 <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" width="16" height="16">
                                     <path d="M20 2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h16z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
-                                <span class="chat-name">${chat?.name || "Yangi suhbat"}</span>
+                                <span class="chat-name" title="${fullName}">${displayName}</span>
                             </div>
                         </a>
-                        <div class="chat-actions">
-                            <button class="edit-chat-btn" onclick="renameChatPrompt('${chat?.chat_id}', '${chat?.name || "Yangi suhbat"}')">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        <div class="chat-settings">
+                            <button class="settings-btn" type="button">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="1"></circle>
+                                    <circle cx="19" cy="12" r="1"></circle>
+                                    <circle cx="5" cy="12" r="1"></circle>
                                 </svg>
                             </button>
-                            <button class="delete-chat-btn" onclick="deleteChatPrompt('${chat?.chat_id}')">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 6h18"></path>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                </svg>
-                            </button>
+                            <div class="settings-dropdown">
+                                <button class="dropdown-item edit" data-chat-id="${chat?.chat_id}" data-chat-name="${fullName}">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                    Tahrirlash
+                                </button>
+                                <button class="dropdown-item delete" data-chat-id="${chat?.chat_id}">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M3 6h18"></path>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                    O'chirish
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -382,21 +493,8 @@ async function loadChatHistory(chatId, resetPagination = true) {
                 chatHistory.innerHTML = '<div class="no-chats-message">Hozircha chatlar yo\'q</div>';
             }
             
-            // Add load more button if there are more chats
-            if (chatListPagination.hasMore) {
-                // Remove existing load more button if any
-                const existingLoadMoreBtn = document.querySelector('.load-more-chats');
-                if (existingLoadMoreBtn) {
-                    existingLoadMoreBtn.remove();
-                }
-                
-                // Add new load more button
-                const loadMoreBtn = document.createElement('div');
-                loadMoreBtn.className = 'load-more-chats';
-                loadMoreBtn.textContent = 'Ko\'proq yuklash...';
-                loadMoreBtn.onclick = loadMoreChats;
-                chatHistory.appendChild(loadMoreBtn);
-            }
+            // Smart button logic
+            updateLoadMoreButton(chatHistory);
             
             // Setup scroll event for chat history container
             setupChatHistoryScroll();
@@ -406,35 +504,140 @@ async function loadChatHistory(chatId, resetPagination = true) {
     }
 }
 
-// Function to load more chats when scrolling or clicking load more
-async function loadMoreChats() {
-    if (chatListPagination.hasMore && !chatListPagination.isLoading) {
-        chatListPagination.offset += chatListPagination.limit;
-        await loadChatHistory(getChatIdFromUrl(), false);
+// Function to update load more button based on current state
+function updateLoadMoreButton(chatHistory) {
+    // Remove existing button if any
+    const existingBtn = document.querySelector('.load-more-chats');
+    if (existingBtn) {
+        existingBtn.remove();
     }
-}
 
-// Setup scroll event for chat history container
-function setupChatHistoryScroll() {
-    const chatHistory = document.querySelector('.chat-history');
-    
-    // Remove existing event listener if any
-    chatHistory.removeEventListener('scroll', handleChatHistoryScroll);
-    
-    // Add new event listener
-    chatHistory.addEventListener('scroll', handleChatHistoryScroll);
-}
+    // Don't show button if no chats at all
+    if (chatListPagination.total === 0) {
+        return;
+    }
 
-// Handle scroll event for chat history container
-function handleChatHistoryScroll() {
-    const chatHistory = document.querySelector('.chat-history');
+    // Calculate how many chats are currently shown
+    const currentlyShown = chatListPagination.offset + chatListPagination.limit;
     
-    // If scrolled near bottom, load more chats
-    if (chatHistory.scrollTop + chatHistory.clientHeight >= chatHistory.scrollHeight - 100) {
-        if (chatListPagination.hasMore && !chatListPagination.isLoading) {
-            loadMoreChats();
+    // Show button if there are more chats to load OR if expanded and can collapse
+    if (chatListPagination.hasMore || (chatListPagination.isExpanded && currentlyShown > 15)) {
+        const loadMoreBtn = document.createElement('div');
+        loadMoreBtn.className = 'load-more-chats';
+        
+        // Determine button text and action
+        if (chatListPagination.isExpanded && !chatListPagination.hasMore) {
+            // All chats are shown, show "Yopish" button
+            loadMoreBtn.textContent = 'Yopish';
+            loadMoreBtn.onclick = collapseChats;
+        } else {
+            // Show "Ko'proq ko'rish" button
+            loadMoreBtn.textContent = 'Ko\'proq ko\'rish';
+            loadMoreBtn.onclick = loadMoreChats;
         }
+        
+        chatHistory.appendChild(loadMoreBtn);
     }
+}
+
+// Function to load more chats (5 at a time after initial 15)
+async function loadMoreChats() {
+    if (chatListPagination.isLoading) {
+        return;
+    }
+
+    chatListPagination.isLoading = true;
+    
+    // Calculate next batch size
+    const nextLimit = chatListPagination.loadMoreSize; // 5 ta
+    const nextOffset = chatListPagination.offset + chatListPagination.limit;
+    
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    try {
+        const response = await fetch(`/api/user-chats?limit=${nextLimit}&offset=${nextOffset}`, {
+            method: 'GET',
+            headers: headers,
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                const chatHistory = document.querySelector('.chat-history');
+                const chatId = getChatIdFromUrl();
+                
+                // Add new chats to the list
+                data?.chats?.forEach?.(chat => {
+                    const fullName = chat?.name || "Yangi suhbat";
+                    const displayName = fullName.length > 30 ? fullName.substring(0, 30) + "..." : fullName;
+                    
+                    chatHistory.insertAdjacentHTML('beforeend', `
+                        <div class="chat-item-container">
+                            <a href="/?chat_id=${chat?.chat_id}" class="chat-link">
+                                <div class="chat-history-item ${chat?.chat_id === chatId ? 'active' : ''}">
+                                    <svg stroke="currentColor" fill="none" viewBox="0 0 24 24" width="16" height="16">
+                                        <path d="M20 2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h16z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span class="chat-name" title="${fullName}">${displayName}</span>
+                                </div>
+                            </a>
+                            <div class="chat-settings">
+                                <button class="settings-btn" type="button">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="1"></circle>
+                                        <circle cx="19" cy="12" r="1"></circle>
+                                        <circle cx="5" cy="12" r="1"></circle>
+                                    </svg>
+                                </button>
+                                <div class="settings-dropdown">
+                                    <button class="dropdown-item edit" data-chat-id="${chat?.chat_id}" data-chat-name="${fullName}">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                        Tahrirlash
+                                    </button>
+                                    <button class="dropdown-item delete" data-chat-id="${chat?.chat_id}">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M3 6h18"></path>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        </svg>
+                                        O'chirish
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                });
+                
+                // Update pagination state
+                chatListPagination.limit += nextLimit; // 5 ta qo'shildi
+                chatListPagination.hasMore = data.pagination.has_more;
+                chatListPagination.isExpanded = true;
+                
+                // Update button
+                updateLoadMoreButton(chatHistory);
+            }
+        }
+    } catch (error) {
+        console.error('Error loading more chats:', error);
+    }
+    
+    chatListPagination.isLoading = false;
+}
+
+// Function to collapse chats back to default 15
+function collapseChats() {
+    // Reset to default state
+    chatListPagination.isExpanded = false;
+    chatListPagination.limit = 15;
+    chatListPagination.offset = 0;
+    
+    // Reload chat history with default pagination
+    loadChatHistory(getChatIdFromUrl(), true);
 }
 
 async function loadChatMessages(chatId) {
@@ -494,28 +697,30 @@ async function loadChatMessages(chatId) {
                                             <button class="action-btn copy-btn" onclick="copyMessage(this)" title="Nusxa olish">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
-                                            </svg>
-                                        </button>
-                                        <button class="action-btn like-btn" onclick="giveFeedback(this, 'like')" title="Yaxshi javob">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
-                                        </svg>
-                                    </button>
-                                    <button class="action-btn dislike-btn" onclick="giveFeedback(this, 'dislike')" title="Yaxshi emas">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2"/>
-                                    </svg>
-                                </button>
-                                <button class="action-btn comment-btn" onclick="giveFeedback(this, 'comment')" title="Izoh qoldirish">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
-                                </svg>
-                            </button>
+                                                </svg>
+                                            </button>
+                                            <button class="action-btn like-btn" onclick="giveFeedback(this, 'like')" title="Yaxshi javob">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+                                                </svg>
+                                            </button>
+                                            <button class="action-btn dislike-btn" onclick="giveFeedback(this, 'dislike')" title="Yaxshi emas">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2"/>
+                                                </svg>
+                                            </button>
+                                            <button class="action-btn comment-btn" onclick="giveFeedback(this, 'comment')" title="Izoh qoldirish">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        `;
+                `;
             });
 
             // Auto scroll to bottom
@@ -706,3 +911,15 @@ document.addEventListener('DOMContentLoaded', function () {
         toast.classList.add('translate-y-full');
     }
 });
+
+// Setup scroll event for chat history container (disabled for new pagination logic)
+function setupChatHistoryScroll() {
+    // Scroll-based loading disabled - using manual "Ko'proq ko'rish" button instead
+    return;
+}
+
+// Handle scroll event for chat history container (disabled for new pagination logic)
+function handleChatHistoryScroll() {
+    // Scroll-based loading disabled - using manual "Ko'proq ko'rish" button instead
+    return;
+}
