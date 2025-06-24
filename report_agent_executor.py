@@ -6,7 +6,6 @@ from typing import AsyncGenerator
 import asyncio
 # Toollarni import qilish
 from tools_llm.transport4.transport4_tool import Transport4Tool
-from tools_llm.dbibt.dbibt_tool import DBIBTTool
 from retriever.langchain_chroma import CustomEmbeddingFunction
 
 # LLM modelini yaratish
@@ -22,12 +21,10 @@ shared_embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
 
 # Toollarni yaratish
 transport4_tool = Transport4Tool("tools_llm/transport4/transport4.json", use_embeddings=True, embedding_model=shared_embedding_model)
-# dbibt_tool = DBIBTTool("tools_llm/dbibt/dbibt.json", use_embeddings=True, embedding_model=shared_embedding_model)
 
 # Embedding ma'lumotlarini tayyorlash
 print("Barcha toollar uchun embedding ma'lumotlari tayyorlanmoqda...")
 transport4_tool._prepare_embedding_data()
-# dbibt_tool._prepare_embedding_data()
 
 # System message yaratish
 system_message = SystemMessage(content="""Siz O'zbekiston Respublikasi Davlat statistika qo'mitasi hisobotlar ma'lumotlari bilan ishlash uchun maxsus agentsiz. 
@@ -71,9 +68,7 @@ system_message = SystemMessage(content="""Siz O'zbekiston Respublikasi Davlat st
                         - "Bo'lim turi: [bo'lim turi]"
                     12. Hech qachon ingliz tilidagi kalit so'zlarni ko'rsatmang, faqat o'zbek tilidagi kalit so'zlarni ko'rsating
                     13. JUDA MUHIM: Final Answer ham faqat o'zbek tilida bo'lishi kerak
-                    14. JUDA MUHIM: Hech qachon ingliz tilida Final Answer bermang
-                    15. JUDA MUHIM: Fikrlash jarayoningiz ingliz tilida bo'lsa ham, Final Answer faqat o'zbek tilida bo'lishi kerak
-                    16. Agar foydalanuvchi "o'zbek tilida" yoki "o'zbek tilida va to'liq" deb so'rasa, javobni o'zbek tilida va to'liq qaytaring
+                    14. Agar foydalanuvchi "o'zbek tilida" yoki "o'zbek tilida va to'liq" deb so'rasa, javobni o'zbek tilida va to'liq qaytaring
                     """)
 
 # Barcha toollarni bir agent ichida birlashtirish
