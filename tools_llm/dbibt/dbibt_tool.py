@@ -10,8 +10,6 @@ from pydantic import BaseModel, Field
 from sentence_transformers import util
 from retriever.langchain_chroma import CustomEmbeddingFunction
 
-# 5614 6887 1366 8035
-
 # CustomEmbeddingFunction klassi retriever.langchain_chroma modulidan import qilingan
 
 class DBIBTToolInput(BaseModel):

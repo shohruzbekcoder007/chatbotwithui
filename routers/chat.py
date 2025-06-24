@@ -225,7 +225,6 @@ async def stream_chat(request: Request, req: ChatRequest):
                 response_current += token
                 yield f"{token}"
         
-        
         # yield suggestion_text
         
         questions_manager_questions = questions_manager.search_documents(response_current, 10)
