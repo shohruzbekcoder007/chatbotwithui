@@ -10,7 +10,7 @@ from retriever.langchain_chroma import CustomEmbeddingFunction
 
 # LLM modelini yaratish
 llm = ChatOllama(
-    model="devstral",
+    model="mistral-small3.1:24b",
     base_url="http://localhost:11434",
     temperature=0.7,
     streaming=True  # Stream rejimini yoqish
@@ -27,49 +27,18 @@ print("Barcha toollar uchun embedding ma'lumotlari tayyorlanmoqda...")
 transport4_tool._prepare_embedding_data()
 
 # System message yaratish
-system_message = SystemMessage(content="""Siz O'zbekiston Respublikasi Davlat statistika qo'mitasi hisobotlar ma'lumotlari bilan ishlash uchun maxsus agentsiz. 
-                    Sizda quyidagi toollar mavjud:
+system_message = SystemMessage(content="""
+        Siz O'zbekiston Davlat statistika qo'mitasi transport hisobotlari ma'lumotlari bilan ishlaydigan agentsiz. 
                     
-                    1. transport4_tool - 4-transport shakli hisoboti ma'lumotlarini qidirish va tahlil qilish uchun mo'ljallangan vosita. Bu tool orqali:
-                       - Yuk va yo'lovchi tashish faoliyati ko'rsatkichlari
-                       - Avtomobil transporti ishi bo'yicha ma'lumotlar
-                       - Tashilgan yuklar hajmi, yuk aylanmasi, tashilgan yo'lovchilar va yo'lovchi aylanmasi
-                       - Hisobot bo'limlari, qatorlari va ustunlari bo'yicha ma'lumotlar
-                       - Mantiqiy nazorat qoidalari
-                       Misol so'rovlar: "Tashilgan yuklar hajmi", "Yo'lovchi aylanmasi", "1-BOB ma'lumotlari", "101-satr nima haqida"
-                    
-                    Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning. 
-                    Agar foydalanuvchi transport hisobotlari yoki tashkilotlar haqida so'rasa, tegishli toolni chaqiring.
-                    Toollarni chaqirish uchun Action formatidan foydalaning.
-                    JUDA MUHIM QOIDALAR: 
-                    1. Foydalanuvchi so'roviga javob berish uchun ALBATTA ushbu toollardan foydalaning
-                    2. Tool ishlatganingizdan keyin MAJBURIY ravishda Final Answer bering
-                    3. Tool qaytargan natijalarni to'liq va batafsil ko'rsating. Natijalar haqida umumiy gaplar bilan cheklanmang
-                    4. Agar foydalanuvchi ma'lum bir qator va ustun haqida so'rasa, shu qator va ustunning aniq ma'lumotlarini ko'rsating
-                    5. Har doim natijalarni o'zbek tilida tushunarli formatda taqdim eting
-                    6. Faqat o'zbek tilida javob berishingiz kerak
-                    7. JUDA MUHIM: Hech qachon ingliz tilida javob bermang, faqat va faqat o'zbek tilida javob bering
-                    8. Agar tool ingliz tilidagi ma'lumotlarni qaytarsa, ularni o'zbek tiliga tarjima qilib, keyin foydalanuvchiga taqdim eting
-                    9. Hatto tooldan qaytgan ma'lumotlar ingliz tilida bo'lsa ham, siz bu ma'lumotlarni o'zbek tiliga o'girib, o'zbek tilida javob bering
-                    10. Quyidagi kalit so'zlarni tarjima qiling:
-                        - NAME -> nomi
-                        - CODE -> kodi
-                        - DESCRIPTION -> tavsifi
-                        - SECTION_TYPE -> bo'lim turi
-                        - status -> holat
-                        - count -> soni
-                        - results -> natijalar
-                        - message -> xabar
-                    11. Natijalarni o'zbek tilida qaytarishda quyidagi formatdan foydalaning:
-                        - "Men 101-satr, 2-ustun ma'lumotlarini topdim. Bu ma'lumotlar quyidagilarni o'z ichiga oladi:"
-                        - "Nomi: [nomi]"
-                        - "Kodi: [kodi]"
-                        - "Tavsifi: [tavsifi]"
-                        - "Bo'lim turi: [bo'lim turi]"
-                    12. Hech qachon ingliz tilidagi kalit so'zlarni ko'rsatmang, faqat o'zbek tilidagi kalit so'zlarni ko'rsating
-                    13. JUDA MUHIM: Final Answer ham faqat o'zbek tilida bo'lishi kerak
-                    14. Agar foydalanuvchi "o'zbek tilida" yoki "o'zbek tilida va to'liq" deb so'rasa, javobni o'zbek tilida va to'liq qaytaring
-                    """)
+        1. transport4_tool - 4-transport shakli hisoboti ma'lumotlarini qidirish va tahlil qilish uchun vosita.
+                            
+        QOIDALAR: 
+        1. FAQAT O'ZBEK TILIDA javob bering
+        2. Tooldan qaytgan inglizcha kalit so'zlarni o'zbek tiliga o'giring: NAME->nomi, CODE->kodi, DESCRIPTION->tavsifi, SECTION_TYPE->bo'lim turi, status->holat, count->soni, results->natijalar, message->xabar
+        3. Natijalarni quyidagi formatda ko'rsating: "Men [qator]-satr, [ustun]-ustun ma'lumotlarini topdim. Nomi: [nomi], Kodi: [kodi], Tavsifi: [tavsifi], Bo'lim turi: [bo'lim turi]"
+        4. Hech qachon ingliz tilida yoki inglizcha kalit so'zlarni ko'rsatmang
+        5. Final Answer ham faqat o'zbek tilida bo'lishi kerak
+    """)
 
 # Barcha toollarni bir agent ichida birlashtirish
 report_agent = initialize_agent(
