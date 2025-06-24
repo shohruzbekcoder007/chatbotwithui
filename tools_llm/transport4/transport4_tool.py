@@ -201,12 +201,12 @@ class Transport4Tool(BaseTool):
                 report_form = item['report_form']
                 if query.lower() in report_form.get('name', '').lower() or query.lower() in report_form.get('submitters', '').lower():
                     results.append({
-                        'NAME': report_form.get('name', ''),
-                        'CODE': '',
-                        'DESCRIPTION': report_form.get('submitters', ''),
-                        'SECTION_TYPE': 'report_form',
-                        'STRUCTURE': report_form.get('structure', ''),
-                        'INDICATORS': report_form.get('indicators', '')
+                        'NOMI': report_form.get('name', ''),
+                        'KODI': '',
+                        'TAVSIFI': report_form.get('submitters', ''),
+                        'BO_LIM_TURI': 'report_form',
+                        'TARKIBI': report_form.get('structure', ''),
+                        'KO_RSATICHLARI': report_form.get('indicators', '')
                     })
             
             # Sections qismini tekshirish
@@ -218,12 +218,12 @@ class Transport4Tool(BaseTool):
                     
                     if query.lower() in bob.lower() or query.lower() in title.lower():
                         results.append({
-                            'NAME': bob,
-                            'CODE': '',
-                            'DESCRIPTION': description,
-                            'SECTION_TYPE': section.get('section_type', ''),
+                            'NOMI': bob,
+                            'KODI': '',
+                            'TAVSIFI': description,
+                            'BO_LIM_TURI': section.get('section_type', ''),
                             'BOB': bob,
-                            'TITLE': title
+                            'SARLAVHA': title
                         })
                     
                     # Rows qismini tekshirish
@@ -237,12 +237,12 @@ class Transport4Tool(BaseTool):
                                 (row_part and row_part == row_code)):
                                 
                                 row_info = {
-                                    'NAME': f"{bob} - {row_code}",
-                                    'CODE': row_code,
-                                    'DESCRIPTION': '',
-                                    'SECTION_TYPE': section.get('section_type', ''),
+                                    'NOMI': f"{bob} - {row_code}",
+                                    'KODI': row_code,
+                                    'TAVSIFI': '',
+                                    'BO_LIM_TURI': section.get('section_type', ''),
                                     'BOB': bob,
-                                    'COLUMNS': []
+                                    'USTUNLAR': []
                                 }
                                 
                                 # Columns qismini tekshirish
@@ -254,24 +254,24 @@ class Transport4Tool(BaseTool):
                                         # Agar ustun qismi aniqlangan bo'lsa va mos kelsa
                                         if column_part and column_part == column_num:
                                             row_info = {
-                                                'NAME': f"{bob} - {row_code} - Ustun {column_num}",
-                                                'CODE': f"{row_code}-{column_num}",
-                                                'DESCRIPTION': column_desc,
-                                                'SECTION_TYPE': section.get('section_type', ''),
+                                                'NOMI': f"{bob} - {row_code} - Ustun {column_num}",
+                                                'KODI': f"{row_code}-{column_num}",
+                                                'TAVSIFI': column_desc,
+                                                'BO_LIM_TURI': section.get('section_type', ''),
                                                 'BOB': bob,
-                                                'ROW_CODE': row_code,
-                                                'COLUMN': column_num
+                                                'QATOR_KODI': row_code,
+                                                'USTUN': column_num
                                             }
                                             results.append(row_info)
                                             continue
                                         
-                                        row_info['DESCRIPTION'] += column_desc + ' '
-                                        # Ensure 'COLUMNS' key exists before appending to it
-                                        if 'COLUMNS' not in row_info:
-                                            row_info['COLUMNS'] = []
-                                        row_info['COLUMNS'].append({
-                                            'column': column_num,
-                                            'description': column_desc
+                                        row_info['TAVSIFI'] += column_desc + ' '
+                                        # Ensure 'USTUNLAR' key exists before appending to it
+                                        if 'USTUNLAR' not in row_info:
+                                            row_info['USTUNLAR'] = []
+                                        row_info['USTUNLAR'].append({
+                                            'ustun_raqami': column_num,
+                                            'tavsifi': column_desc
                                         })
                                 
                                 # Agar ustun qismi aniqlanmagan bo'lsa, butun qator ma'lumotlarini qo'shish
@@ -286,12 +286,12 @@ class Transport4Tool(BaseTool):
                                     
                                     if query == control_code or query.lower() in control_code.lower():
                                         results.append({
-                                            'NAME': f"{bob} - {row_code} - {control_code}",
-                                            'CODE': control_code,
-                                            'DESCRIPTION': control_desc,
-                                            'SECTION_TYPE': 'logical_control',
+                                            'NOMI': f"{bob} - {row_code} - {control_code}",
+                                            'KODI': control_code,
+                                            'TAVSIFI': control_desc,
+                                            'BO_LIM_TURI': 'logical_control',
                                             'BOB': bob,
-                                            'ROW_CODE': row_code
+                                            'QATOR_KODI': row_code
                                         })
 
         # Natijalarni qaytarish
@@ -379,15 +379,15 @@ class Transport4Tool(BaseTool):
                 if similarity > 0.5:  # Minimal o'xshashlik chegarasi
                     entity_info = self.entity_infos[idx]
                     results.append({
-                        'NAME': entity_info.get('content', {}).get('title', '') or 
+                        'NOMI': entity_info.get('content', {}).get('title', '') or 
                                entity_info.get('content', {}).get('description', ''),
-                        'CODE': entity_info.get('content', {}).get('row_code', '') or 
+                        'KODI': entity_info.get('content', {}).get('row_code', '') or 
                                entity_info.get('content', {}).get('column', ''),
-                        'DESCRIPTION': self.entity_texts[idx],
-                        'SECTION_TYPE': entity_info.get('section_type', ''),
+                        'TAVSIFI': self.entity_texts[idx],
+                        'BO_LIM_TURI': entity_info.get('section_type', ''),
                         'BOB': entity_info.get('content', {}).get('bob', ''),
-                        'TYPE': entity_info.get('type', ''),
-                        'SIMILARITY': similarity
+                        'TURI': entity_info.get('type', ''),
+                        'OXSHASHLIK': similarity
                     })
             
             # Natijalarni qaytarish
@@ -397,13 +397,13 @@ class Transport4Tool(BaseTool):
                 if results:
                     return self._format_results(results)
                 else:
-                    return {"status": "no_results", "count": 0, "results": []}
+                    return {"holat": "natijalar_yoq", "soni": 0, "natijalar": []}
                 
         except Exception as e:
             logging.error(f"Semantic search error: {str(e)}")
             import traceback
             logging.error(traceback.format_exc())
-            return [] if return_raw else {"status": "error", "message": str(e), "results": []}
+            return [] if return_raw else {"holat": "xatolik", "xabar": str(e), "natijalar": []}
 
     def _format_results(self, results: List[Dict]) -> Dict:
         """Format the search results.
@@ -415,63 +415,63 @@ class Transport4Tool(BaseTool):
             Dict containing formatted results and metadata
         """
         if not results:
-            return {"status": "natijalar_yoq", "count": 0, "results": []}
+            return {"holat": "natijalar_yoq", "soni": 0, "natijalar": []}
         
         formatted_results = []
         for result in results:
             # Basic information extraction
             formatted_result = {
-                'NAME': result.get('NAME', ''),
-                'CODE': result.get('CODE', ''),
-                'DESCRIPTION': result.get('DESCRIPTION', '')
+                'nomi': result.get('NOMI', ''),
+                'kodi': result.get('KODI', ''),
+                'tavsifi': result.get('TAVSIFI', '')
             }
             
             # Add additional information if available
-            if 'SECTION_TYPE' in result:
+            if 'BO_LIM_TURI' in result:
                 # O'zbek tiliga o'girish
-                section_type = result['SECTION_TYPE']
+                section_type = result['BO_LIM_TURI']
                 if section_type.lower() == 'statistic':
-                    formatted_result['bo_lim_turi'] = 'statistika'
+                    formatted_result['bolim_turi'] = 'statistika'
                 else:
-                    formatted_result['bo_lim_turi'] = section_type
+                    formatted_result['bolim_turi'] = section_type
         
             if 'BOB' in result:
                 formatted_result['bob'] = result['BOB']
             
-            if 'COLUMNS' in result and isinstance(result['COLUMNS'], list):
+            if 'USTUNLAR' in result and isinstance(result['USTUNLAR'], list):
                 formatted_result['ustunlar'] = [
                     {
-                        'ustun_raqami': col.get('column', ''),
-                        'tavsifi': col.get('description', '')
+                        'ustun_raqami': col.get('ustun_raqami', ''),
+                        'tavsifi': col.get('tavsifi', '')
                     }
-                    for col in result['COLUMNS']
+                    for col in result['USTUNLAR']
                 ]
         
             # Add any logical controls if present
-            if 'STRICT_CONTROLS' in result and result['STRICT_CONTROLS']:
-                formatted_result['qat_iy_nazoratlar'] = result['STRICT_CONTROLS']
+            if 'QATIY_NAZORATLAR' in result and result['QATIY_NAZORATLAR']:
+                formatted_result['qatiy_nazoratlar'] = result['QATIY_NAZORATLAR']
             
-            if 'NON_STRICT_CONTROLS' in result and result['NON_STRICT_CONTROLS']:
-                formatted_result['qat_iy_bo_lmagan_nazoratlar'] = result['NON_STRICT_CONTROLS']
+            if 'QATIY_BOLMAGAN_NAZORATLAR' in result and result['QATIY_BOLMAGAN_NAZORATLAR']:
+                formatted_result['qatiy_bolmagan_nazoratlar'] = result['QATIY_BOLMAGAN_NAZORATLAR']
         
             # Semantik qidiruv natijalarini formatlash
-            if 'SIMILARITY' in result:
-                formatted_result['o_hshashlik'] = round(result['SIMILARITY'], 3)
-                formatted_result['tur'] = result.get('TYPE', '')
+            if 'OXSHASHLIK' in result:
+                formatted_result['oxshashlik'] = round(result['OXSHASHLIK'], 3)
+                formatted_result['tur'] = result.get('TURI', '')
         
-            if 'COLUMN' in result:
-                formatted_result['ustun'] = result['COLUMN']
+            if 'USTUN' in result:
+                formatted_result['ustun'] = result['USTUN']
             
-            if 'ROW_CODE' in result:
-                formatted_result['qator_kodi'] = result['ROW_CODE']
+            if 'QATOR_KODI' in result:
+                formatted_result['qator_kodi'] = result['QATOR_KODI']
         
             formatted_results.append(formatted_result)
     
         # Return a structured response with metadata
         return {
-            "status": "muaffaqiyatli",
-            "count": len(formatted_results),
-            "results": formatted_results
+            "holat": "muvaffaqiyatli",
+            "soni": len(formatted_results),
+            "natijalar": formatted_results
         }
 
     def _run(self, query: str) -> Dict:
@@ -486,7 +486,7 @@ class Transport4Tool(BaseTool):
         if text_results:
             logging.info("Matn qidiruvida topilgan natijalar:")
             for i, result in enumerate(text_results[:3]):  # Show only first 3 results to avoid log clutter
-                logging.info(f"  {i+1}. {result.get('NAME', 'No Name')} - {result.get('DESCRIPTION', 'No Description')[:100]}...")
+                logging.info(f"  {i+1}. {result.get('NOMI', 'No Name')} - {result.get('TAVSIFI', 'No Description')[:100]}...")
         
         # Agar matn qidiruvida natijalar topilmagan bo'lsa, semantik qidiruvni sinab ko'rish
         if not text_results and self.use_embeddings:
@@ -500,12 +500,12 @@ class Transport4Tool(BaseTool):
                 if semantic_results:
                     logging.info("Semantik qidiruvda topilgan natijalar:")
                     for i, result in enumerate(semantic_results[:3]):  # Show only first 3 results
-                        logging.info(f"  {i+1}. {result.get('NAME', 'No Name')} - {result.get('DESCRIPTION', 'No Description')[:100]}...")
+                        logging.info(f"  {i+1}. {result.get('NOMI', 'No Name')} - {result.get('TAVSIFI', 'No Description')[:100]}...")
                 
                 return self._format_results(semantic_results)
             else:
                 logging.warning(f"Semantik qidiruv xatolik qaytardi: {semantic_results}")
-                return {"status": "xatolik", "message": "Qidiruv natijasiz yakunlandi", "results": []}
+                return {"holat": "xatolik", "xabar": "Qidiruv natijasiz yakunlandi", "natijalar": []}
         
         # Matn qidiruvida natijalar topilgan bo'lsa
         return self._format_results(text_results)

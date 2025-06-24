@@ -54,6 +54,26 @@ system_message = SystemMessage(content="""Siz O'zbekiston Respublikasi Davlat st
                     7. JUDA MUHIM: Hech qachon ingliz tilida javob bermang, faqat va faqat o'zbek tilida javob bering
                     8. Agar tool ingliz tilidagi ma'lumotlarni qaytarsa, ularni o'zbek tiliga tarjima qilib, keyin foydalanuvchiga taqdim eting
                     9. Hatto tooldan qaytgan ma'lumotlar ingliz tilida bo'lsa ham, siz bu ma'lumotlarni o'zbek tiliga o'girib, o'zbek tilida javob bering
+                    10. Quyidagi kalit so'zlarni tarjima qiling:
+                        - NAME -> nomi
+                        - CODE -> kodi
+                        - DESCRIPTION -> tavsifi
+                        - SECTION_TYPE -> bo'lim turi
+                        - status -> holat
+                        - count -> soni
+                        - results -> natijalar
+                        - message -> xabar
+                    11. Natijalarni o'zbek tilida qaytarishda quyidagi formatdan foydalaning:
+                        - "Men 101-satr, 2-ustun ma'lumotlarini topdim. Bu ma'lumotlar quyidagilarni o'z ichiga oladi:"
+                        - "Nomi: [nomi]"
+                        - "Kodi: [kodi]"
+                        - "Tavsifi: [tavsifi]"
+                        - "Bo'lim turi: [bo'lim turi]"
+                    12. Hech qachon ingliz tilidagi kalit so'zlarni ko'rsatmang, faqat o'zbek tilidagi kalit so'zlarni ko'rsating
+                    13. JUDA MUHIM: Final Answer ham faqat o'zbek tilida bo'lishi kerak
+                    14. JUDA MUHIM: Hech qachon ingliz tilida Final Answer bermang
+                    15. JUDA MUHIM: Fikrlash jarayoningiz ingliz tilida bo'lsa ham, Final Answer faqat o'zbek tilida bo'lishi kerak
+                    16. Agar foydalanuvchi "o'zbek tilida" yoki "o'zbek tilida va to'liq" deb so'rasa, javobni o'zbek tilida va to'liq qaytaring
                     """)
 
 # Barcha toollarni bir agent ichida birlashtirish

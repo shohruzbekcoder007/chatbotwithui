@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
-from datetime import datetime
+from datetime import datetime, timezone
 import time
 from models.chat_message import ChatMessage
 from models.user_chat_list import UserChatList
@@ -87,8 +87,8 @@ async def chat(request: Request, chat_request: ChatRequest):
                 chat_id=chat_id,
                 message=chat_request.query,
                 response=response_current,
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
+                created_at=datetime.now(timezone.utc),
+                updated_at=datetime.now(timezone.utc)
             )
             await chat_message.insert()
             print(f"Saved message to MongoDB with ID: {chat_message.id}")
@@ -112,8 +112,8 @@ async def chat(request: Request, chat_request: ChatRequest):
                     user_id=user_id,
                     chat_id=chat_id,
                     name=chat_name,
-                    created_at=datetime.utcnow(),
-                    updated_at=datetime.utcnow()
+                    created_at=datetime.now(timezone.utc),
+                    updated_at=datetime.now(timezone.utc)
                 )
                 await new_chat.insert()
                 print(f"Yangi chat yaratildi: {chat_id} with name: {chat_name}")
@@ -123,12 +123,12 @@ async def chat(request: Request, chat_request: ChatRequest):
                     chat_name = chat_request.query  # To'liq nomni saqlash
                     await existing_chat.set({
                         "name": chat_name,
-                        "updated_at": datetime.utcnow()
+                        "updated_at": datetime.now(timezone.utc)
                     })
                     print(f"Updated chat name to: {chat_name} for chat: {chat_id}")
                 else:
                     # Faqat vaqtni yangilash, nomni o'zgartirmaslik
-                    existing_chat.updated_at = datetime.utcnow()
+                    existing_chat.updated_at = datetime.now(timezone.utc)
                     await existing_chat.save()
                     print(f"Mavjud chat yangilandi: {chat_id}")
         else:
@@ -262,8 +262,8 @@ async def stream_chat(request: Request, req: ChatRequest):
             message=req.query,
             response=response_current,
             suggestion_question=clean_html_tags(suggested_question),
-            created_at=datetime.now(datetime.timezone.utc),
-            updated_at=datetime.now(datetime.timezone.utc)
+            created_at=datetime.now(timezone.utc),
+            updated_at=datetime.now(timezone.utc)
         )
         await chat_message.insert()
         print(f"Saved message to MongoDB with ID: {chat_message.id}")
@@ -282,8 +282,8 @@ async def stream_chat(request: Request, req: ChatRequest):
                     user_id=user_id,
                     chat_id=chat_id,
                     name=chat_name,
-                    created_at=datetime.now(datetime.timezone.utc),
-                    updated_at=datetime.now(datetime.timezone.utc)
+                    created_at=datetime.now(timezone.utc),
+                    updated_at=datetime.now(timezone.utc)
                 )
                 await user_chat.insert()
                 print(f"Added chat to user's chat list: {chat_id} with name: {chat_name}")
@@ -296,12 +296,12 @@ async def stream_chat(request: Request, req: ChatRequest):
                     chat_name = req.query  # To'liq nomni saqlash
                     await existing_chat.set({
                         "name": chat_name,
-                        "updated_at": datetime.now(datetime.timezone.utc)
+                        "updated_at": datetime.now(timezone.utc)
                     })
                     print(f"Updated chat name to: {chat_name} for chat: {chat_id}")
                 else:
                     # Faqat vaqtni yangilash, nomni o'zgartirmaslik
-                    await existing_chat.set({"updated_at": datetime.now(datetime.timezone.utc)})
+                    await existing_chat.set({"updated_at": datetime.now(timezone.utc)})
                     print(f"Updated timestamp for existing chat: {chat_id}")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
