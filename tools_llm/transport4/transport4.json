@@ -190,25 +190,7 @@
                 "bob": "2-BOB",
                 "title": "TRAMVAY, METROPOLITEN, TROLLEYBUS TRANSPORTINING ASOSIY KO‘RSATKICHLARI",
                 "description": "TRAMVAY, METROPOLITEN, TROLLEYBUS transportining asosiy faoliyati bilan bog'liq bo'lgan ma'lumotlari to‘ldiriladi",
-                "section_type": "dynamic",
-                "columns": [
-                    {
-                        "column": "1",
-                        "description": "Chorak ma‘lumotlari taqdim etiladi",
-                        "strict_logical_controls": [
-                            "Tashilgan yo‘lovchilar, shu jumladan, transportda pul to‘lab yurgan yo‘lovchilar, 201-satrdan bepul tashilgan pensionerlar hamda Yo‘lovchi aylanmasi satrlaridagi Choraklik ma'lumotlari (1-ustun) Yil boshi (2-ustun) ma'lumotlaridan kichik yoki teng bo‘lishi kerak. (гр.2 <= гр.1)"
-                        ],
-                        "non_strict_logical_controls": []
-                    },
-                    {
-                        "column": "2",
-                        "description": "Barcha satrlarda yil boshidan xisobot davrigacha umumlashtirilgan ma‘lumotlari taqdim etiladi",
-                        "strict_logical_controls": [
-                            "Tashilgan yo‘lovchilar, shu jumladan, transportda pul to‘lab yurgan yo‘lovchilar, 201-satrdan bepul tashilgan pensionerlar hamda Yo‘lovchi aylanmasi satrlaridagi Yil boshi (2-ustun) ma'lumotlari Joriy chorak (1-ustun) ma'lumotlaridan katta yoki teng bo‘lishi kerak. (гр.2 >= гр.1)"
-                        ],
-                        "non_strict_logical_controls": []
-                    }
-                ],
+                "section_type": "statistic",
                 "rows": [
                     {
                         "row_code": "201",

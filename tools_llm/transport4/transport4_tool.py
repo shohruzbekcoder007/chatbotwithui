@@ -191,6 +191,38 @@ class Transport4Tool(BaseTool):
                             'sarlavha': sarlavha
                         })
                     
+                    # Dynamic section_type uchun
+                    if section.get('section_type', '') == 'dynamic' and 'columns' in section:
+                        for column in section['columns']:
+                            ustun_num = column.get('column', '')
+                            ustun_tavsifi = column.get('description', '')
+                            
+                            if (so_rov.lower() in ustun_tavsifi.lower() or 
+                                (ustun_part and ustun_part == ustun_num)):
+                                
+                                column_info = {
+                                    'nomi': f"{bob} - Ustun {ustun_num}",
+                                    'kodi': ustun_num,
+                                    'tavsifi': ustun_tavsifi,
+                                    'bo\'lim_turi': 'dynamic',
+                                    'bob': bob,
+                                    'ustun': ustun_num,
+                                    'sarlavha': sarlavha
+                                }
+                                
+                                # Qat'iy nazoratlarni qo'shish
+                                strict_controls = column.get('strict_logical_controls', [])
+                                if strict_controls:
+                                    column_info['qatiy_nazoratlar'] = strict_controls
+                                
+                                # Qat'iy bo'lmagan nazoratlarni qo'shish
+                                non_strict_controls = column.get('non_strict_logical_controls', [])
+                                if non_strict_controls:
+                                    column_info['qatiy_bolmagan_nazoratlar'] = non_strict_controls
+                                
+                                results.append(column_info)
+                    
+                    # Statistic section_type uchun
                     if 'rows' in section:
                         for row in section['rows']:
                             qator_kodi = row.get('row_code', '')
