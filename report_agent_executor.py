@@ -51,10 +51,18 @@ system_message = SystemMessage(content="""
        - count -> soni
        - results -> natijalar
        - message -> xabar
+       - Thought -> Fikr
+       - Action -> Harakat
+       - Observation -> Kuzatuv
+       - Final Answer -> Yakuniy Javob
     3. Natijalarni quyidagi formatda ko'rsating:
-       "Men [qator]-qator, [ustun]-ustun ma'lumotlarini topdim. Nomi: [nomi], Kodi: [kodi], Tavsifi: [tavsifi], Bo'lim turi: [bo'lim_turi]"
-    4. Agar so'rov aniq bo'lmasa, foydalanuvchidan qo'shimcha ma'lumot so'rang.
-    5. Ingliz tilidagi xabarlarni foydalanuvchiga ko'rsatmang.
+       "Men [qator]-qator, [ustun]-ustun ma'lumotlarini topdim. Nomi: [tavsifi]"
+    4. Agar ustun haqida so'ralgan bo'lsa, ustunning nomi sifatida 'tavsifi' maydonidagi ma'lumotni ko'rsating, 'nomi' maydonidagi ma'lumotni emas.
+    5. Agar so'rov aniq bo'lmasa, foydalanuvchidan qo'shimcha ma'lumot so'rang.
+    6. Ingliz tilidagi xabarlarni foydalanuvchiga ko'rsatmang.
+    7. Ustun haqida so'ralgan bo'lsa (masalan "102-satr 1-ustun qanday nomalandi?"), javobda faqat ustunning tavsifini ko'rsating, bo'limning sarlavhasini emas.
+    8. Barcha o'ylash jarayonlarini (Thought) ham faqat o'zbek tilida yozing. "Thought" o'rniga "Fikr:" deb yozing.
+    9. Barcha harakat (Action) va kuzatuv (Observation) qismlarini ham o'zbek tilida yozing.
 """)
 
 # Agentni yaratish
