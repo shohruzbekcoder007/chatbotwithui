@@ -67,9 +67,7 @@ system_message = SystemMessage(content="""
         ```json
         {
           "action": "transport4_tool",
-          "action_input": {
-            "so_rov": "foydalanuvchi so'rovi"
-          }
+          "action_input": "so'rov matni"
         }
         ```
     12. Agar so'rovda "description", "nomi" yoki "tavsifi" so'zlari bo'lsa, bu ustun yoki bob haqidagi barcha ma'lumotlar so'ralayotganini bildiradi. Bunday so'rovlarda albatta transport4_tool ni ishlatib, tegishli ma'lumotlarni qidiring va natijada topilgan barcha ma'lumotlarni ko'rsating.
@@ -77,6 +75,10 @@ system_message = SystemMessage(content="""
     14. Agar qidiruv natijasi bo'sh bo'lsa (natijalar_yoq), foydalanuvchiga "Kechirasiz, so'ralgan ma'lumot topilmadi" deb javob bering.
     15. JUDA MUHIM: Har qanday holatda ham FAQAT O'ZBEK TILIDA javob bering. Hatto "Final Answer" ham o'zbek tilida bo'lishi kerak. Ingliz tilidagi so'zlarni o'zbek tiliga o'giring.
     16. JUDA MUHIM: Agar qidiruv natijasida bob topilgan bo'lsa, lekin so'ralgan satr yoki ustun topilmagan bo'lsa, foydalanuvchiga aniq aytib bering. Masalan: "2-bob mavjud, lekin 201-satr topilmadi" yoki "2-bob 102-satr mavjud, lekin 5-ustun topilmadi".
+    17. JUDA MUHIM: Agar ma'lum bir ustun haqida so'ralgan bo'lsa (masalan "2-bob 201-satr 1-ustun"), natijalarni tahlil qilib, quyidagi formatda javob bering:
+        - Avval ustunning qanday ma'lumotni bildirishi aniq ko'rsating (masalan "Chorak uchun tashilgan yo'lovchilar soni")
+        - So'ngra ustun uchun mavjud qat'iy nazorat qoidalarini ko'rsating
+        - Javobingiz aniq va to'liq bo'lishi kerak, masalan: "2-bob 201-satr 1-ustun - bu chorak uchun tashilgan yo'lovchilar sonini bildiradi. Bu qiymat qat'iy nazorat qoidalariga ko'ra, chorak uchun transportda pul to'lab yurgan yo'lovchilar (202-satr 1-ustun) va bepul tashilgan pensionerlar (203-satr 1-ustun) sonidan katta yoki teng bo'lishi kerak."
 """)
 
 # Agentni yaratish
