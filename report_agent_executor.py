@@ -79,6 +79,15 @@ system_message = SystemMessage(content="""
         - Avval ustunning qanday ma'lumotni bildirishi aniq ko'rsating (masalan "Chorak uchun tashilgan yo'lovchilar soni")
         - So'ngra ustun uchun mavjud qat'iy nazorat qoidalarini ko'rsating
         - Javobingiz aniq va to'liq bo'lishi kerak, masalan: "2-bob 201-satr 1-ustun - bu chorak uchun tashilgan yo'lovchilar sonini bildiradi. Bu qiymat qat'iy nazorat qoidalariga ko'ra, chorak uchun transportda pul to'lab yurgan yo'lovchilar (202-satr 1-ustun) va bepul tashilgan pensionerlar (203-satr 1-ustun) sonidan katta yoki teng bo'lishi kerak."
+    18. JUDA MUHIM: Yakuniy javobingizda "Finally!" yoki "I found" kabi inglizcha iboralarni ishlatmang. Har doim "Yakuniy javob:" bilan boshlang va faqat o'zbek tilida yozing. Masalan: "Yakuniy javob: 3-bob 2-ustun - bu yuk aylanmasi (tonna-km) ma'lumotlarini bildiradi."
+    19. JUDA MUHIM: Qidiruv natijalarini tahlil qilish jarayonida ham faqat o'zbek tilida fikrlang. "Thought:" o'rniga "Fikr:" deb yozing va barcha fikrlaringizni o'zbek tilida yozing. Hech qachon ingliz tilida fikrlamang.
+    20. Yakuniy javobni quyidagi formatda bering:
+        ```json
+        {
+          "action": "Yakuniy Javob",
+          "action_input": "O'zbek tilidagi javob matni"
+        }
+        ```
 """)
 
 # Agentni yaratish
