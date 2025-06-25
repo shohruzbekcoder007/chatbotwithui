@@ -136,13 +136,11 @@ class Transport4Tool(BaseTool):
         self.entity_embeddings_cache = None
         logging.info(f"Embedding uchun {len(self.entity_texts)} ta ma'lumot tayyorlandi")
 
-    def _extract_important_words(self, so_rov: str):
+    def _extract_important_words(self, so_rov: str) -> List[str]:
         """So'rovdan muhim so'zlarni ajratib olish."""
-        words = so_rov.lower().split()
-        # Stop so'zlarni olib tashlash
-        stop_words = ['va', 'bilan', 'uchun', 'qanday', 'qanaqa', 'qaysi', 'nima', 'nimalar', 'qayerda', 'qachon', 'kim', 'necha', 'qancha']
-        important_words = [word for word in words if word not in stop_words]
-        return important_words
+        stop_words = ['va', 'bilan', 'uchun', 'qanday', 'qaysi', 'nima', 'qanaqa', 'deb', 'nomalandi', 'nomlanadi', 'nomi', 'tavsifi', 'description']
+        words = [word for word in so_rov.lower().split() if word not in stop_words and len(word) > 1]
+        return words
 
     def _search_by_text(self, so_rov: str, return_raw: bool = False) -> Union[List[Dict], Dict]:
         """Matn bo'yicha qidirish."""
@@ -155,42 +153,43 @@ class Transport4Tool(BaseTool):
         ustun_part = None
         bob_part = None
         
-        # Bob va ustun qismlarini aniqlash
-        for i, part in enumerate(so_rov_parts):
-            # Bob qismini aniqlash
-            if 'bob' in part:
-                # Bob raqamini olish
-                bob_digits = ''.join(filter(str.isdigit, part))
-                if bob_digits:
-                    bob_part = bob_digits
-                # Agar bob so'zi alohida kelsa, oldingi so'zni tekshirish
-                elif i > 0 and so_rov_parts[i-1].isdigit():
-                    bob_part = so_rov_parts[i-1]
+        # Bob va ustun qismlarini aniqlash (regex yordamida)
+        import re
         
-            # Qator qismini aniqlash
-            if 'qator' in part or 'satr' in part or part.isdigit():
-                qator_digits = ''.join(filter(str.isdigit, part))
-                if qator_digits:
-                    qator_part = qator_digits
+        # Bob qismini aniqlash
+        bob_pattern = re.compile(r'(\d+)[-\s]*bob')
+        bob_match = bob_pattern.search(so_rov.lower())
+        if bob_match:
+            bob_part = bob_match.group(1)
         
-            # Ustun qismini aniqlash
-            elif 'ustun' in part or 'column' in part:
-                # Agar ustun so'zi alohida kelsa, oldingi so'zni tekshirish
-                if i > 0:
-                    prev_part = so_rov_parts[i-1]
-                    # Agar oldingi so'z raqam yoki harf bo'lsa
-                    if prev_part.isdigit():
-                        ustun_part = prev_part
-                    elif len(prev_part) == 1 and prev_part.isalpha():
-                        ustun_part = prev_part.upper()
-    
+        # Qator/satr qismini aniqlash
+        qator_pattern = re.compile(r'(\d+)[-\s]*(qator|satr)')
+        qator_match = qator_pattern.search(so_rov.lower())
+        if qator_match:
+            qator_part = qator_match.group(1)
+        
+        # Ustun qismini aniqlash
+        ustun_pattern = re.compile(r'([a-zA-Z\d]+)[-\s]*ustun')
+        ustun_match = ustun_pattern.search(so_rov.lower())
+        if ustun_match:
+            ustun_part = ustun_match.group(1).upper()
+        
         # Agar ustun_part aniqlanmagan bo'lsa, so'rovda alohida harflarni qidirish
         if not ustun_part:
             for part in so_rov_parts:
                 if len(part) == 1 and part.isalpha():
                     ustun_part = part.upper()
                     break
-    
+        
+        # Agar ustun_part aniqlanmagan bo'lsa, raqamlarni tekshirish
+        if not ustun_part:
+            # "3-bob 3" kabi so'rovlarni tekshirish
+            if bob_part:
+                for i, part in enumerate(so_rov_parts):
+                    if part.isdigit() and "bob" not in so_rov_parts[i-1] if i > 0 else True:
+                        ustun_part = part
+                        break
+        
         for item in self.transport4_data:
             if 'report_form' in item:
                 report_form = item['report_form']
@@ -225,6 +224,43 @@ class Transport4Tool(BaseTool):
                             'sarlavha': sarlavha
                         })
                 
+                # Statistic section_type uchun
+                if section.get('section_type', '') == 'statistic' and 'rows' in section:
+                    for row in section['rows']:
+                        row_code = row.get('row_code', '')
+                        
+                        # Qator qismini tekshirish
+                        qator_match = False
+                        if qator_part:
+                            qator_match = qator_part == row_code
+                        
+                        if 'columns' in row:
+                            for column in row['columns']:
+                                column_code = column.get('column', '')
+                                column_description = column.get('description', '')
+                                
+                                # Ustun qismini tekshirish
+                                ustun_match = False
+                                if ustun_part:
+                                    ustun_match = ustun_part == column_code
+                                
+                                # So'rovda qator va ustun bo'lsa
+                                if (qator_match and ustun_match) or \
+                                   (qator_match and not ustun_part) or \
+                                   (ustun_match and not qator_part) or \
+                                   (so_rov.lower() in column_description.lower()):
+                                    
+                                    results.append({
+                                        'nomi': f"{bob} {row_code}-qator {column_code}-ustun",
+                                        'kodi': column_code,
+                                        'tavsifi': column_description,
+                                        'bo\'lim_turi': 'statistic',
+                                        'bob': bob,
+                                        'qator_kodi': row_code,
+                                        'ustun': column_code,
+                                        'sarlavha': sarlavha
+                                    })
+                
                 # Dynamic section_type uchun
                 if section.get('section_type', '') == 'dynamic' and 'columns' in section:
                     # Bob qismini tekshirish
@@ -235,14 +271,17 @@ class Transport4Tool(BaseTool):
                         ustun_num = column.get('column', '')
                         ustun_tavsifi = column.get('description', '')
                         
-                        # Ustun qismini tekshirish
+                        # Ustun qismini tekshirish - harf yoki raqam bo'lishi mumkin
                         ustun_match = False
                         if ustun_part:
-                            ustun_match = ustun_part == ustun_num
+                            # Ustun qismi harf yoki raqam bo'lishi mumkin
+                            ustun_match = ustun_part.upper() == ustun_num.upper()
                         
-                        if (so_rov.lower() in ustun_tavsifi.lower() or 
-                            ustun_match or
-                            (bob_part and ustun_part and bob_part in bob and ustun_part == ustun_num)):
+                        # So'rovda bob va ustun bo'lsa yoki tavsifda so'rov bo'lsa
+                        if (so_rov.lower() in ustun_tavsifi.lower()) or \
+                           (ustun_match) or \
+                           (bob_part and ustun_part and bob_part in bob and ustun_part.upper() == ustun_num.upper()) or \
+                           (bob_part and not ustun_part and bob_part in bob):
                             
                             column_info = {
                                 'nomi': f"{bob} - Ustun {ustun_num}",
@@ -265,55 +304,13 @@ class Transport4Tool(BaseTool):
                                 column_info['qatiy_bolmagan_nazoratlar'] = non_strict_controls
                             
                             results.append(column_info)
-                
-                # Statistic section_type uchun
-                if 'rows' in section:
-                    for row in section['rows']:
-                        qator_kodi = row.get('row_code', '')
-                        if (so_rov.lower() in qator_kodi.lower() or 
-                            so_rov == qator_kodi or 
-                            (qator_part and qator_part == qator_kodi)):
-                            
-                            qator_info = {
-                                'nomi': f"{bob} - {qator_kodi}",
-                                'kodi': qator_kodi,
-                                'tavsifi': '',
-                                'bo\'lim_turi': section.get('section_type', ''),
-                                'bob': bob,
-                                'ustunlar': []  # Ustunlar kalit so'zini qo'shamiz
-                            }
-                            
-                            if 'columns' in row:
-                                for column in row['columns']:
-                                    ustun_num = column.get('column', '')
-                                    ustun_tavsifi = column.get('description', '')
-                                    
-                                    if ustun_part and ustun_part == ustun_num:
-                                        qator_info = {
-                                            'nomi': f"{bob} - {qator_kodi} - Ustun {ustun_num}",
-                                            'kodi': f"{qator_kodi}-{ustun_num}",
-                                            'tavsifi': ustun_tavsifi,
-                                            'bo\'lim_turi': section.get('section_type', ''),
-                                            'bob': bob,
-                                            'qator_kodi': qator_kodi,
-                                            'ustun': ustun_num,
-                                            'ustunlar': []  # Ustunlar kalit so'zini qo'shamiz
-                                        }
-                                        results.append(qator_info)
-                                        continue
-                                    
-                                    # Ustunlar kalit so'zi mavjudligini tekshiramiz
-                                    if 'ustunlar' not in qator_info:
-                                        qator_info['ustunlar'] = []
-                                        
-                                    qator_info['tavsifi'] += ustun_tavsifi + ' '
-                                    qator_info['ustunlar'].append({
-                                        'ustun_raqami': ustun_num,
-                                        'tavsifi': ustun_tavsifi
-                                    })
-                            
-                            if not ustun_part:
-                                results.append(qator_info)
+    
+        # Agar natijalar bo'sh bo'lsa, so'rovni qismlarga bo'lib qidirish
+        if not results and len(important_words) > 1:
+            for word in important_words:
+                word_results = self._search_by_text(word, return_raw=True)
+                if word_results:
+                    results.extend(word_results)
     
         return results if return_raw else self._format_results(results)
 
