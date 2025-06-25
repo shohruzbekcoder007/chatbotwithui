@@ -189,6 +189,11 @@ class Transport4Tool(BaseTool):
                     if part.isdigit() and "bob" not in so_rov_parts[i-1] if i > 0 else True:
                         ustun_part = part
                         break
+    
+        # Qidiruv natijalarini saqlash uchun
+        found_bob = False
+        found_qator = False
+        found_ustun = False
         
         for item in self.transport4_data:
             if 'report_form' in item:
@@ -213,6 +218,8 @@ class Transport4Tool(BaseTool):
                     bob_match = False
                     if bob_part:
                         bob_match = bob_part in bob
+                        if bob_match:
+                            found_bob = True
                     
                     if so_rov.lower() in bob.lower() or so_rov.lower() in sarlavha.lower() or bob_match:
                         results.append({
@@ -233,6 +240,8 @@ class Transport4Tool(BaseTool):
                         qator_match = False
                         if qator_part:
                             qator_match = qator_part == row_code
+                            if qator_match:
+                                found_qator = True
                         
                         if 'columns' in row:
                             for column in row['columns']:
@@ -243,6 +252,8 @@ class Transport4Tool(BaseTool):
                                 ustun_match = False
                                 if ustun_part:
                                     ustun_match = ustun_part == column_code
+                                    if ustun_match:
+                                        found_ustun = True
                                 
                                 # So'rovda qator va ustun bo'lsa
                                 if (qator_match and ustun_match) or \
@@ -276,6 +287,8 @@ class Transport4Tool(BaseTool):
                         if ustun_part:
                             # Ustun qismi harf yoki raqam bo'lishi mumkin
                             ustun_match = ustun_part.upper() == ustun_num.upper()
+                            if ustun_match:
+                                found_ustun = True
                         
                         # So'rovda bob va ustun bo'lsa yoki tavsifda so'rov bo'lsa
                         if (so_rov.lower() in ustun_tavsifi.lower()) or \
@@ -311,6 +324,19 @@ class Transport4Tool(BaseTool):
                 word_results = self._search_by_text(word, return_raw=True)
                 if word_results:
                     results.extend(word_results)
+    
+        # Qidiruv natijalarini tahlil qilish
+        if bob_part and qator_part and ustun_part:
+            if found_bob and not found_qator:
+                results.append({
+                    'xabar': f"{qator_part}-satr topilmadi",
+                    'topilmadi': 'qator'
+                })
+            elif found_bob and found_qator and not found_ustun:
+                results.append({
+                    'xabar': f"{ustun_part}-ustun topilmadi",
+                    'topilmadi': 'ustun'
+                })
     
         return results if return_raw else self._format_results(results)
 
@@ -405,8 +431,29 @@ class Transport4Tool(BaseTool):
         logging.info(f"Qidiruv so'rovi: {so_rov}")
         text_results = self._search_by_text(so_rov, return_raw=True)
         
-        if not text_results and self.use_embeddings:
-            logging.info("Matn qidiruvida natija topilmadi, semantik qidiruv ishga tushirilmoqda")
+        # Agar matn qidiruvida natija topilmagan bo'lsa yoki natijalar soni kam bo'lsa
+        if (not text_results or len(text_results) < 3) and self.use_embeddings:
+            logging.info("Semantik qidiruv ishga tushirilmoqda")
+            semantic_results = self._semantic_search(so_rov, return_raw=True)
+            
+            # Natijalarni birlashtirish
+            if semantic_results:
+                # Takrorlanishlarni oldini olish uchun
+                existing_items = set()
+                if text_results:
+                    for item in text_results:
+                        item_key = f"{item.get('bob', '')}-{item.get('kodi', '')}-{item.get('ustun', '')}"
+                        existing_items.add(item_key)
+                
+                # Semantik qidiruv natijalarini qo'shish
+                for item in semantic_results:
+                    item_key = f"{item.get('bob', '')}-{item.get('kodi', '')}-{item.get('ustun', '')}"
+                    if item_key not in existing_items:
+                        text_results.append(item)
+        
+        # Agar natijalar bo'sh bo'lsa va embedding ishlatilmasa, semantik qidiruvni majburiy ishlatish
+        if not text_results and not self.use_embeddings:
+            logging.info("Matn qidiruvida natija topilmadi, semantik qidiruv majburiy ishga tushirilmoqda")
             return self._semantic_search(so_rov)
         
         return self._format_results(text_results)
