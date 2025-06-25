@@ -12,7 +12,7 @@ from retriever.langchain_chroma import CustomEmbeddingFunction
 
 # LLM modelini yaratish
 llm = ChatOllama(
-    model="devstral",
+    model="gemma3:27b",
     base_url="http://localhost:11434",
     temperature=0.7,
     streaming=True
