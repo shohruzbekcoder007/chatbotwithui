@@ -284,11 +284,12 @@ class Transport4Tool(BaseTool):
                         
                         # Ustun qismini tekshirish - harf yoki raqam bo'lishi mumkin
                         ustun_match = False
-                        if ustun_part:
+                        if ustun_part and ustun_num:
                             # Ustun qismi harf yoki raqam bo'lishi mumkin
                             ustun_match = ustun_part.upper() == ustun_num.upper()
                             if ustun_match:
                                 found_ustun = True
+                                logging.info(f"Dynamic bo'limda ustun mos keldi: {ustun_num}")
                         
                         # So'rovda bob va ustun bo'lsa yoki tavsifda so'rov bo'lsa
                         if (so_rov.lower() in ustun_tavsifi.lower()) or \
@@ -306,17 +307,37 @@ class Transport4Tool(BaseTool):
                                 'sarlavha': sarlavha
                             }
                             
+                            results.append(column_info)
+                            
                             # Qat'iy nazoratlarni qo'shish
                             strict_controls = column.get('strict_logical_controls', [])
                             if strict_controls:
-                                column_info['qatiy_nazoratlar'] = strict_controls
+                                for control in strict_controls:
+                                    results.append({
+                                        'nomi': f"{bob} - Ustun {ustun_num}",
+                                        'kodi': ustun_num,
+                                        'tavsifi': control,
+                                        'bo\'lim_turi': 'dynamic',
+                                        'bob': bob,
+                                        'ustun': ustun_num,
+                                        'sarlavha': sarlavha,
+                                        'tur': 'qatiy_nazorat'
+                                    })
                             
                             # Qat'iy bo'lmagan nazoratlarni qo'shish
                             non_strict_controls = column.get('non_strict_logical_controls', [])
                             if non_strict_controls:
-                                column_info['qatiy_bolmagan_nazoratlar'] = non_strict_controls
-                            
-                            results.append(column_info)
+                                for control in non_strict_controls:
+                                    results.append({
+                                        'nomi': f"{bob} - Ustun {ustun_num}",
+                                        'kodi': ustun_num,
+                                        'tavsifi': control,
+                                        'bo\'lim_turi': 'dynamic',
+                                        'bob': bob,
+                                        'ustun': ustun_num,
+                                        'sarlavha': sarlavha,
+                                        'tur': 'qatiy_bolmagan_nazorat'
+                                    })
     
         # Agar natijalar bo'sh bo'lsa, so'rovni qismlarga bo'lib qidirish
         if not results and len(important_words) > 1:
