@@ -1,9 +1,8 @@
-# tools_llm/transport4/transport4_tool.py
 import json
 import logging
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
-from typing import Type, Optional, Dict, List, Union, Any
+from typing import Type, Optional, Dict, List, Union
 import torch
 import torch.nn.functional as F
 
@@ -24,7 +23,7 @@ class Invest12Tool(BaseTool):
     args_schema: Type[BaseModel] = Invest12ToolInput
 
     embedding_model: Optional['CustomEmbeddingFunction'] = Field(default=None)
-    transport4_data: Dict = Field(default_factory=dict)
+    invest12_data: Dict = Field(default_factory=dict)
     entity_texts: List[str] = Field(default_factory=list)
     entity_infos: List[Dict] = Field(default_factory=list)
     use_embeddings: bool = Field(default=True)
@@ -32,7 +31,7 @@ class Invest12Tool(BaseTool):
 
     def __init__(self, transport4_file_path: str, use_embeddings: bool = True, embedding_model=None):
         super().__init__()
-        self.transport4_data = self._load_transport4_data(transport4_file_path)
+        self.invest12_data = self._load_transport4_data(transport4_file_path)
         self.use_embeddings = use_embeddings
         self.embedding_model = embedding_model
         if embedding_model is not None:
@@ -54,7 +53,7 @@ class Invest12Tool(BaseTool):
         self.entity_texts = []
         self.entity_infos = []
         
-        for item in self.transport4_data:
+        for item in self.invest12_data:
             if 'report_form' in item:
                 report_form = item['report_form']
                 text = f"12-invest shakli: {report_form.get('name', '')}. {report_form.get('submitters', '')}. {report_form.get('structure', '')}. {report_form.get('indicators', '')}"
@@ -78,6 +77,40 @@ class Invest12Tool(BaseTool):
                         },
                         'bo\'lim_turi': section.get('section_type', '')
                     })
+                    
+                    # Bobdagi ustunlar uchun alohida
+                    if 'columns' in section:
+                        for column in section['columns']:
+                            col_num = column.get('column', '')
+                            description = column.get('description', '')
+                            
+                            # Ustun uchun alohida format - qator kodsiz
+                            ustun_text = f"{section.get('bob', '')} {col_num}-ustun: {description}"
+                            self.entity_texts.append(ustun_text)
+                            self.entity_infos.append({
+                                'turi': 'ustun',
+                                'mazmun': {
+                                    'bob': section.get('bob', ''),
+                                    'ustun': col_num,
+                                    'tavsifi': description,
+                                    'sarlavha': section.get('title', '')
+                                },
+                                'bo\'lim_turi': section.get('section_type', '')
+                            })
+                            
+                            # Faqat ustun nomi uchun alohida format
+                            ustun_nom_text = f"{col_num}-ustun {section.get('bob', '')}: {description}"
+                            self.entity_texts.append(ustun_nom_text)
+                            self.entity_infos.append({
+                                'turi': 'ustun_nom',
+                                'mazmun': {
+                                    'bob': section.get('bob', ''),
+                                    'ustun': col_num,
+                                    'tavsifi': description,
+                                    'sarlavha': section.get('title', '')
+                                },
+                                'bo\'lim_turi': section.get('section_type', '')
+                            })
                     
                     if 'rows' in section:
                         for row in section['rows']:
@@ -132,7 +165,7 @@ class Invest12Tool(BaseTool):
                                             },
                                             'bo\'lim_turi': section.get('section_type', '')
                                         })
-        
+    
         self.entity_embeddings_cache = None
         logging.info(f"Embedding uchun {len(self.entity_texts)} ta ma'lumot tayyorlandi")
 
@@ -161,24 +194,28 @@ class Invest12Tool(BaseTool):
         bob_match = bob_pattern.search(so_rov.lower())
         if bob_match:
             bob_part = bob_match.group(1)
+            logging.info(f"Bob qismi aniqlandi: {bob_part}")
         
         # Qator/satr qismini aniqlash
         qator_pattern = re.compile(r'(\d+)[-\s]*(qator|satr)')
         qator_match = qator_pattern.search(so_rov.lower())
         if qator_match:
             qator_part = qator_match.group(1)
+            logging.info(f"Qator qismi aniqlandi: {qator_part}")
         
         # Ustun qismini aniqlash
         ustun_pattern = re.compile(r'([a-zA-Zа-яА-ЯёЁ\d]+)[-\s]*ustun')
         ustun_match = ustun_pattern.search(so_rov.lower())
         if ustun_match:
             ustun_part = ustun_match.group(1).upper()
+            logging.info(f"Ustun qismi aniqlandi: {ustun_part}")
         
         # Agar ustun_part aniqlanmagan bo'lsa, so'rovda alohida harflarni qidirish
         if not ustun_part:
             for part in so_rov_parts:
                 if len(part) == 1: # and part.isalpha():
                     ustun_part = part.upper()
+                    logging.info(f"Alohida harf sifatida ustun qismi aniqlandi: {ustun_part}")
                     break
         
         # Agar ustun_part aniqlanmagan bo'lsa, raqamlarni tekshirish
@@ -186,16 +223,21 @@ class Invest12Tool(BaseTool):
             # "3-bob 3" kabi so'rovlarni tekshirish
             if bob_part:
                 for i, part in enumerate(so_rov_parts):
-                    if part.isdigit() and "bob" not in so_rov_parts[i-1] if i > 0 else True:
+                    if part.isdigit() and ("bob" not in so_rov_parts[i-1] if i > 0 else True):
                         ustun_part = part
+                        logging.info(f"Raqam sifatida ustun qismi aniqlandi: {ustun_part}")
                         break
-    
+
         # Qidiruv natijalarini saqlash uchun
         found_bob = False
         found_qator = False
         found_ustun = False
         
-        for item in self.transport4_data:
+        # Bob va ustun aniq ko'rsatilgan bo'lsa, faqat shu bob va ustun uchun natijalarni qaytarish
+        exact_bob_ustun_search = bob_part and ustun_part
+        exact_match_results = []
+        
+        for item in self.invest12_data:
             if 'report_form' in item:
                 report_form = item['report_form']
                 if so_rov.lower() in report_form.get('name', '').lower() or so_rov.lower() in report_form.get('submitters', '').lower():
@@ -231,134 +273,173 @@ class Invest12Tool(BaseTool):
                             'sarlavha': sarlavha
                         })
                 
-                # Statistic section_type uchun
-                if section.get('section_type', '') == 'statistic' and 'rows' in section:
-                    for row in section['rows']:
-                        row_code = row.get('row_code', '')
-                        
-                        # Qator qismini tekshirish
-                        qator_match = False
-                        if qator_part:
-                            qator_match = qator_part == row_code
-                            if qator_match:
-                                found_qator = True
-                        
-                        if 'columns' in row:
-                            for column in row['columns']:
-                                column_code = column.get('column', '')
-                                column_description = column.get('description', '')
-                                
-                                # Ustun qismini tekshirish
-                                ustun_match = False
-                                if ustun_part:
-                                    ustun_match = ustun_part == column_code
-                                    if ustun_match:
-                                        found_ustun = True
-                                
-                                # So'rovda qator va ustun bo'lsa
-                                if (qator_match and ustun_match) or \
-                                   (qator_match and not ustun_part) or \
-                                   (ustun_match and not qator_part) or \
-                                   (so_rov.lower() in column_description.lower()):
+                    # Statistic section_type uchun
+                    if section.get('section_type', '') == 'statistic' and 'rows' in section:
+                        for row in section['rows']:
+                            row_code = row.get('row_code', '')
+                            
+                            # Qator qismini tekshirish
+                            qator_match = False
+                            if qator_part:
+                                qator_match = qator_part == row_code
+                                if qator_match:
+                                    found_qator = True
+                            
+                            if 'columns' in row:
+                                for column in row['columns']:
+                                    column_code = column.get('column', '')
+                                    column_description = column.get('description', '')
                                     
-                                    results.append({
-                                        'nomi': f"{bob} {row_code}-qator {column_code}-ustun",
-                                        'kodi': column_code,
-                                        'tavsifi': column_description,
-                                        'bo\'lim_turi': 'statistic',
-                                        'bob': bob,
-                                        'qator_kodi': row_code,
-                                        'ustun': column_code,
-                                        'sarlavha': sarlavha
-                                    })
-                
-                # Dynamic section_type uchun
-                if section.get('section_type', '') == 'dynamic' and 'columns' in section:
-                    # Bob qismini tekshirish
-                    if bob_part and bob_part not in bob:
-                        continue
-                        
-                    for column in section['columns']:
-                        ustun_num = column.get('column', '')
-                        ustun_tavsifi = column.get('description', '')
-                        
-                        # Ustun qismini tekshirish - harf yoki raqam bo'lishi mumkin
-                        ustun_match = False
-                        if ustun_part and ustun_num:
-                            # Ustun qismi harf yoki raqam bo'lishi mumkin
-                            ustun_match = ustun_part.upper() == ustun_num.upper()
-                            if ustun_match:
-                                found_ustun = True
-                                logging.info(f"Dynamic bo'limda ustun mos keldi: {ustun_num}")
-                        
-                        # So'rovda bob va ustun bo'lsa yoki tavsifda so'rov bo'lsa
-                        if (so_rov.lower() in ustun_tavsifi.lower()) or \
-                           (ustun_match) or \
-                           (bob_part and ustun_part and bob_part in bob and ustun_part.upper() == ustun_num.upper()) or \
-                           (bob_part and not ustun_part and bob_part in bob):
+                                    # Ustun qismini tekshirish
+                                    ustun_match = False
+                                    if ustun_part:
+                                        ustun_match = ustun_part == column_code
+                                        if ustun_match:
+                                            found_ustun = True
+                                    
+                                    # So'rovda qator va ustun bo'lsa
+                                    if (qator_match and ustun_match) or \
+                                       (qator_match and not ustun_part) or \
+                                       (ustun_match and not qator_part) or \
+                                       (so_rov.lower() in column_description.lower()):
+                                        
+                                        result = {
+                                            'nomi': f"{bob} {row_code}-qator {column_code}-ustun",
+                                            'kodi': column_code,
+                                            'tavsifi': column_description,
+                                            'bo\'lim_turi': 'statistic',
+                                            'bob': bob,
+                                            'qator_kodi': row_code,
+                                            'ustun': column_code,
+                                            'sarlavha': sarlavha
+                                        }
+                                        
+                                        results.append(result)
+                                        
+                                        # Aniq bob va ustun qidiruvida mos kelsa
+                                        if exact_bob_ustun_search and bob_part in bob and ustun_part == column_code:
+                                            exact_match_results.append(result)
+                    
+                    # Dynamic section_type uchun
+                    if section.get('section_type', '') == 'dynamic' and 'columns' in section:
+                        # Bob qismini tekshirish
+                        bob_section_match = False
+                        if bob_part:
+                            bob_section_match = bob_part in bob
+                            if not bob_section_match and exact_bob_ustun_search:
+                                continue
+                                
+                        for column in section['columns']:
+                            ustun_num = column.get('column', '')
+                            ustun_tavsifi = column.get('description', '')
                             
-                            column_info = {
-                                'nomi': f"{bob} - Ustun {ustun_num}",
-                                'kodi': ustun_num,
-                                'tavsifi': ustun_tavsifi,
-                                'bo\'lim_turi': 'dynamic',
-                                'bob': bob,
-                                'ustun': ustun_num,
-                                'sarlavha': sarlavha
-                            }
+                            # Ustun qismini tekshirish - harf yoki raqam bo'lishi mumkin
+                            ustun_match = False
+                            if ustun_part and ustun_num:
+                                # Ustun qismi harf yoki raqam bo'lishi mumkin
+                                ustun_match = ustun_part.upper() == ustun_num.upper()
+                                if ustun_match:
+                                    found_ustun = True
+                                    logging.info(f"Dynamic bo'limda ustun mos keldi: {ustun_num}")
                             
-                            results.append(column_info)
-                            
-                            # Qat'iy nazoratlarni qo'shish
-                            strict_controls = column.get('strict_logical_controls', [])
-                            if strict_controls:
-                                for control in strict_controls:
-                                    results.append({
-                                        'nomi': f"{bob} - Ustun {ustun_num}",
-                                        'kodi': ustun_num,
-                                        'tavsifi': control,
-                                        'bo\'lim_turi': 'dynamic',
-                                        'bob': bob,
-                                        'ustun': ustun_num,
-                                        'sarlavha': sarlavha,
-                                        'tur': 'qatiy_nazorat'
-                                    })
-                            
-                            # Qat'iy bo'lmagan nazoratlarni qo'shish
-                            non_strict_controls = column.get('non_strict_logical_controls', [])
-                            if non_strict_controls:
-                                for control in non_strict_controls:
-                                    results.append({
-                                        'nomi': f"{bob} - Ustun {ustun_num}",
-                                        'kodi': ustun_num,
-                                        'tavsifi': control,
-                                        'bo\'lim_turi': 'dynamic',
-                                        'bob': bob,
-                                        'ustun': ustun_num,
-                                        'sarlavha': sarlavha,
-                                        'tur': 'qatiy_bolmagan_nazorat'
-                                    })
-    
+                            # So'rovda bob va ustun bo'lsa yoki tavsifda so'rov bo'lsa
+                            if (so_rov.lower() in ustun_tavsifi.lower()) or \
+                               (ustun_match) or \
+                               (bob_part and ustun_part and bob_part in bob and ustun_part.upper() == ustun_num.upper()) or \
+                               (bob_part and not ustun_part and bob_part in bob):
+                                
+                                column_info = {
+                                    'nomi': f"{sarlavha}",
+                                    'kodi': ustun_num,
+                                    'tavsifi': ustun_tavsifi,
+                                    'bo\'lim_turi': 'dynamic',
+                                    'bob': bob,
+                                    'ustun': ustun_num,
+                                    'sarlavha': sarlavha,
+                                    'tur': 'ustun'
+                                }
+                                
+                                results.append(column_info)
+                                
+                                # Aniq bob va ustun qidiruvida mos kelsa
+                                if exact_bob_ustun_search and bob_part in bob and ustun_part.upper() == ustun_num.upper():
+                                    exact_match_results.append(column_info)
+                                
+                                # Ustun nomi uchun alohida qo'shish
+                                results.append({
+                                    'nomi': f"{sarlavha}",
+                                    'kodi': ustun_num,
+                                    'tavsifi': f"{ustun_num}-ustun {bob}: {ustun_tavsifi}",
+                                    'bo\'lim_turi': 'dynamic',
+                                    'bob': bob,
+                                    'ustun': ustun_num,
+                                    'sarlavha': sarlavha,
+                                    'tur': 'ustun_nom'
+                                })
+                                
+                                # Qat'iy nazoratlarni qo'shish
+                                strict_controls = column.get('strict_logical_controls', [])
+                                if strict_controls:
+                                    for control in strict_controls:
+                                        control_info = {
+                                            'nomi': f"{bob} - Ustun {ustun_num}",
+                                            'kodi': ustun_num,
+                                            'tavsifi': control,
+                                            'bo\'lim_turi': 'dynamic',
+                                            'bob': bob,
+                                            'ustun': ustun_num,
+                                            'sarlavha': sarlavha,
+                                            'tur': 'qatiy_nazorat'
+                                        }
+                                        results.append(control_info)
+                                        
+                                        # Aniq bob va ustun qidiruvida mos kelsa
+                                        if exact_bob_ustun_search and bob_part in bob and ustun_part.upper() == ustun_num.upper():
+                                            exact_match_results.append(control_info)
+                                
+                                # Qat'iy bo'lmagan nazoratlarni qo'shish
+                                non_strict_controls = column.get('non_strict_logical_controls', [])
+                                if non_strict_controls:
+                                    for control in non_strict_controls:
+                                        control_info = {
+                                            'nomi': f"{bob} - Ustun {ustun_num}",
+                                            'kodi': ustun_num,
+                                            'tavsifi': control,
+                                            'bo\'lim_turi': 'dynamic',
+                                            'bob': bob,
+                                            'ustun': ustun_num,
+                                            'sarlavha': sarlavha,
+                                            'tur': 'qatiy_bolmagan_nazorat'
+                                        }
+                                        results.append(control_info)
+                                        
+                                        # Aniq bob va ustun qidiruvida mos kelsa
+                                        if exact_bob_ustun_search and bob_part in bob and ustun_part.upper() == ustun_num.upper():
+                                            exact_match_results.append(control_info)
+        
+        # Agar aniq bob va ustun qidiruvi bo'lsa va natijalar topilgan bo'lsa
+        if exact_bob_ustun_search and exact_match_results:
+            logging.info(f"Aniq bob ({bob_part}) va ustun ({ustun_part}) uchun {len(exact_match_results)} ta natija topildi")
+            return exact_match_results if return_raw else self._format_results(exact_match_results)
+        
+        # Agar aniq bob va ustun qidiruvi bo'lsa, lekin natijalar topilmagan bo'lsa
+        if exact_bob_ustun_search and not exact_match_results:
+            logging.info(f"Aniq bob ({bob_part}) va ustun ({ustun_part}) uchun natija topilmadi")
+            if not return_raw:
+                return {
+                    "holat": "natijalar_yoq", 
+                    "xabar": f"{bob_part}-BOB {ustun_part}-ustun uchun ma'lumot topilmadi", 
+                    "soni": 0, 
+                    "natijalar": []
+                }
+        
         # Agar natijalar bo'sh bo'lsa, so'rovni qismlarga bo'lib qidirish
         if not results and len(important_words) > 1:
             for word in important_words:
                 word_results = self._search_by_text(word, return_raw=True)
                 if word_results:
                     results.extend(word_results)
-    
-        # Qidiruv natijalarini tahlil qilish
-        if bob_part and qator_part and ustun_part:
-            if found_bob and not found_qator:
-                results.append({
-                    'xabar': f"{qator_part}-satr topilmadi",
-                    'topilmadi': 'qator'
-                })
-            elif found_bob and found_qator and not found_ustun:
-                results.append({
-                    'xabar': f"{ustun_part}-ustun topilmadi",
-                    'topilmadi': 'ustun'
-                })
-    
+        
         return results if return_raw else self._format_results(results)
 
     def _semantic_search(self, so_rov: str, return_raw: bool = False) -> Union[List[Dict], Dict]:
@@ -413,6 +494,39 @@ class Invest12Tool(BaseTool):
             logging.error(f"Semantik qidiruvda xatolik: {str(e)}")
             return [] if return_raw else {"holat": "xatolik", "xabar": str(e), "natijalar": []}
 
+    def _get_logical_controls(self, bob: str, ustun: str) -> Dict:
+        """Berilgan bob va ustun uchun mantiqiy nazoratlarni qaytaradi."""
+        nazoratlar = {
+            'qatiy_nazoratlar': [],
+            'qatiy_bolmagan_nazoratlar': []
+        }
+        
+        # Bobni topish
+        for item in self.invest12_data:
+            if 'sections' in item:
+                for section in item['sections']:
+                    if section.get('bob', '') == bob:
+                        # Ustunni topish
+                        # Avval section.columns da qidirish (1-BOB kabi)
+                        if 'columns' in section:
+                            for column in section['columns']:
+                                if column.get('column', '') == ustun:
+                                    nazoratlar['qatiy_nazoratlar'] = column.get('strict_logical_controls', [])
+                                    nazoratlar['qatiy_bolmagan_nazoratlar'] = column.get('non_strict_logical_controls', [])
+                                    return nazoratlar
+                        
+                        # Keyin rows.columns da qidirish
+                        if 'rows' in section:
+                            for row in section['rows']:
+                                if 'columns' in row:
+                                    for column in row['columns']:
+                                        if column.get('column', '') == ustun:
+                                            nazoratlar['qatiy_nazoratlar'] = column.get('strict_logical_controls', [])
+                                            nazoratlar['qatiy_bolmagan_nazoratlar'] = column.get('non_strict_logical_controls', [])
+                                            return nazoratlar
+        
+        return nazoratlar
+
     def _format_results(self, results: List[Dict]) -> Dict:
         """Qidiruv natijalarini formatlash."""
         if not results:
@@ -439,8 +553,19 @@ class Invest12Tool(BaseTool):
             if 'qator_kodi' in result:
                 formatted_result['qator_kodi'] = result['qator_kodi']
             
-            formatted_results.append(formatted_result)
+            # Mantiqiy nazoratlarni qo'shish
+            if result.get('tur') == 'ustun' or result.get('tur') == 'ustun_nom':
+                # Invest12 JSON faylidan ustun uchun mantiqiy nazoratlarni topish
+                bob = result.get('bob', '')
+                ustun = result.get('kodi', '')
+                
+                if bob and ustun:
+                    nazoratlar = self._get_logical_controls(bob, ustun)
+                    if nazoratlar:
+                        formatted_result['mantiqiy_nazoratlar'] = nazoratlar
         
+            formatted_results.append(formatted_result)
+    
         return {
             "holat": "muvaffaqiyatli",
             "soni": len(formatted_results),
