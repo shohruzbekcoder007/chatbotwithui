@@ -29,7 +29,7 @@ transport4_tool = Transport4Tool(
     embedding_model=shared_embedding_model
 )
 invest12_tool = Invest12Tool(
-    invest12_file_path="tools_llm/invest12/invest12.json",
+    transport4_file_path="tools_llm/invest12/invest12.json",
     use_embeddings=True,
     embedding_model=shared_embedding_model
 )

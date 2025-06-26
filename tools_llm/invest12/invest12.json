@@ -1,15 +1,16 @@
-{
+[
+  {
     "report_form": {
       "name": "12 invest",
-      "submitters": "1 – 2 boblar: Barcha iqtisodiy faoliyat turlarini amalga oshiruvchi yuridik shaxslar, qurilish xo‘jalik boshqaruvi organlarini qo‘shgan holda (kichik korxonalar, mikrofirmalar, fermer xo‘jaliklari, notijorat tashkilotlardan tashqari). 3 – bob: Investitsiya loyihasi ijrochilari (tashabbuskorlari).",
+      "submitters": "1 – 2 boblar: Barcha iqtisodiy faoliyat turlarini amalga oshiruvchi yuridik shaxslar, qurilish xo'jalik boshqaruvi organlarini qo'shgan holda (kichik korxonalar, mikrofirmalar, fermer xo'jaliklari, notijorat tashkilotlardan tashqari). 3 – bob: Investitsiya loyihasi ijrochilari (tashabbuskorlari).",
       "structure": "3 bob",
-      "indicators": "O‘zlashtirilgan investitsiyalar, obyektlarni ishga tushirilishi"
+      "indicators": "O'zlashtirilgan investitsiyalar, obyektlarni ishga tushirilishi"
     },
     "sections": [
       {
         "bob": "1-BOB",
-        "title": "ASOSIY KAPITALGA O‘ZLASHTIRILGAN INVESTITSIYALAR",
-        "description": "O‘zlashtirilgan investitsiyalar haqidagi ma'lumotlar kiritiladi",
+        "title": "ASOSIY KAPITALGA O'ZLASHTIRILGAN INVESTITSIYALAR",
+        "description": "O'zlashtirilgan investitsiyalar haqidagi ma'lumotlar kiritiladi",
         "section_type": "dynamic",
         "columns": [
           {
@@ -256,63 +257,64 @@
           },
           {
             "column": "2",
-              "description": "2 ustunda Yil boshidan o‘zlashtirilgan–jami investitsiyalar",
-              "strict_logical_controls": [
-                  "Barcha satrlar(loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami investitsiyalar = Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yengi va import orqali xarid qilingan asosiy vositalar + Yil boshidan o‘zlashtirilgan–jami shu jumladan boshqa yo'nalishlarga"
-              ],
+            "description": "2 ustunda Yil boshidan o‘zlashtirilgan–jami investitsiyalar",
+            "strict_logical_controls": [
+              "Barcha satrlar(loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami investitsiyalar = Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yengi va import orqali xarid qilingan asosiy vositalar + Yil boshidan o‘zlashtirilgan–jami shu jumladan boshqa yo'nalishlarga"
+            ],
             "non_strict_logical_controls": []
           },
           {
             "column": "3",
-              "description": "3-ustun “Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar aks ettiriladi.",
-              "strict_logical_controls": [
-                  "Barcha satrlar (loyihalar) bo’yicha Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar = mashinalar, uskunalar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari + Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan qurilish montaj ishlari + Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan Boshqa kapital xarajatlar",
-                  "Barcha satrlar (loyihalar) bo’yicha Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar < =Yil boshidan o‘zlashtirilgan–jami investitsiyalar"
-              ],
+            "description": "3-ustun “Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar aks ettiriladi.",
+            "strict_logical_controls": [
+              "Barcha satrlar (loyihalar) bo’yicha Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar = mashinalar, uskunalar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari + Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan qurilish montaj ishlari + Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan Boshqa kapital xarajatlar",
+              "Barcha satrlar (loyihalar) bo’yicha Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar < =Yil boshidan o‘zlashtirilgan–jami investitsiyalar"
+            ],
             "non_strict_logical_controls": []
           },
           {
             "column": "4",
-              "description": "4-ustunda “mashina, uskunalar, mebellar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari qiymati” mashinalar, transport vositalari, uskuna, mebellar, asbob va jihozni sotib olishga harajatlar (qurilish smetasiga kiradigan va kirmaydigan).",
-              "strict_logical_controls": [
-                  "Barcha satrlar (loyihalar) bo’yicha mashinalar, uskunalar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari < =Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar"
-              ],
+            "description": "4-ustunda “mashina, uskunalar, mebellar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari qiymati” mashinalar, transport vositalari, uskuna, mebellar, asbob va jihozni sotib olishga harajatlar (qurilish smetasiga kiradigan va kirmaydigan).",
+            "strict_logical_controls": [
+              "Barcha satrlar (loyihalar) bo’yicha mashinalar, uskunalar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari < =Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar"
+            ],
             "non_strict_logical_controls": []
           },
           {
             "column": "5",
-              "description": "5-ustun Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan qurilish montaj ishlari",
-              "strict_logical_controls": [
-                  "Barcha satrlar (loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan qurilish montaj ishlari < =Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar"
-              ],
+            "description": "5-ustun Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan qurilish montaj ishlari",
+            "strict_logical_controls": [
+              "Barcha satrlar (loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan qurilish montaj ishlari < =Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar"
+            ],
             "non_strict_logical_controls": []
           },
           {
             "column": "6",
-              "description": "6-ustun Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan Boshqa kapital xarajatlar",
-              "strict_logical_controls": [
-                  "Barcha satrlar (loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan Boshqa kapital xarajatlar < =Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar"
-              ],
+            "description": "6-ustun Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan Boshqa kapital xarajatlar",
+            "strict_logical_controls": [
+              "Barcha satrlar (loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan Boshqa kapital xarajatlar < =Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar"
+            ],
             "non_strict_logical_controls": []
           },
           {
             "column": "7",
-              "description": "7-ustun Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan boshqa kapital xarajatlar ulardan kompyuter dasturiy ta’minoti va ma’lumotlar bazasi",
-              "strict_logical_controls": [
-                  "Barcha satrlar (loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan boshqa kapital xarajatlar ulardan kompyuter dasturiy ta’minoti va ma’lumotlar bazasi < =Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan Boshqa kapital xarajatlar"
-              ],
+            "description": "7-ustun Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan boshqa kapital xarajatlar ulardan kompyuter dasturiy ta’minoti va ma’lumotlar bazasi",
+            "strict_logical_controls": [
+              "Barcha satrlar (loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan boshqa kapital xarajatlar ulardan kompyuter dasturiy ta’minoti va ma’lumotlar bazasi < =Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan Boshqa kapital xarajatlar"
+            ],
             "non_strict_logical_controls": []
           },
           {
             "column": "8",
-              "description": "8-ustun Yil boshidan o‘zlashtirilgan–jami shu jumladan boshqa yo'nalishlarga",
-              "strict_logical_controls": [
-                  "Barcha satrlar (loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami shu jumladan boshqa yo'nalishlarga < = Yil boshidan o‘zlashtirilgan–jami investitsiyalar",
-                  "Yil boshidan o‘zlashtirilgan–jami shu jumladan boshqa yo'nalishlarga ≠ Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapital bo‘yicha shu jumladan boshqa"
-              ],
+            "description": "8-ustun Yil boshidan o‘zlashtirilgan–jami shu jumladan boshqa yo'nalishlarga",
+            "strict_logical_controls": [
+              "Barcha satrlar (loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami shu jumladan boshqa yo'nalishlarga < = Yil boshidan o‘zlashtirilgan–jami investitsiyalar",
+              "Yil boshidan o‘zlashtirilgan–jami shu jumladan boshqa yo'nalishlarga ≠ Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapital bo‘yicha shu jumladan boshqa"
+            ],
             "non_strict_logical_controls": []
           }
         ]
       }
     ]
   }
+]
