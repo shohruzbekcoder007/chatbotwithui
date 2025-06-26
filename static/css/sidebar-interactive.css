@@ -1,0 +1,249 @@
+/* Interactive Sidebar Styles */
+
+/* Base sidebar transition */
+.sidebar {
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+/* New chat button animations */
+.new-chat-btn {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.new-chat-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* background-color: #2563eb; */
+    /* color: white; */
+}
+
+.new-chat-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.new-chat-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.6s ease;
+    z-index: -1;
+}
+
+.new-chat-btn:hover::before {
+    left: 100%;
+}
+
+.new-chat-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.new-chat-btn:hover svg {
+    transform: rotate(90deg);
+}
+
+/* Chat history item hover effects */
+.chat-history-item {
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.chat-history-item:hover {
+    transform: translateX(5px);
+    border-left-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.05) !important;
+}
+
+.chat-history-item.active {
+    border-left-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+.chat-history-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.chat-history-item:hover::after {
+    transform: translateX(100%);
+}
+
+/* Chat history item actions */
+.chat-history-item-actions {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.chat-history-item:hover .chat-history-item-actions {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Chat history item action buttons */
+.chat-history-item-action {
+    transition: all 0.2s ease;
+    transform: scale(0.9);
+}
+
+.chat-history-item-action:hover {
+    transform: scale(1.1);
+    color: #3b82f6;
+}
+
+/* Upgrade button animation */
+.upgrade-btn {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.upgrade-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.upgrade-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.upgrade-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.2), transparent);
+    transition: all 0.6s ease;
+}
+
+.upgrade-btn:hover::before {
+    left: 100%;
+}
+
+.upgrade-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.upgrade-btn:hover svg {
+    transform: rotate(-10deg);
+}
+
+/* Sidebar scroll animation */
+.chat-history {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.chat-history::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-history::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-history::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.chat-history:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(59, 130, 246, 0.5);
+}
+
+/* Sidebar collapse/expand animation */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    
+    .sidebar-overlay {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        backdrop-filter: blur(2px);
+    }
+    
+    .sidebar-overlay.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+/* Sidebar toggle button animation */
+.sidebar-toggle {
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    transform: scale(1.1);
+}
+
+.sidebar-toggle.active {
+    transform: rotate(180deg);
+}
+
+/* Chat history empty state animation */
+.chat-history-empty {
+    transition: all 0.3s ease;
+}
+
+.chat-history-empty:hover {
+    transform: translateY(-5px);
+}
+
+/* Pulsating dot for new chats */
+.chat-history-item .new-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #3b82f6;
+    animation: pulsate 1.5s infinite;
+}
+
+@keyframes pulsate {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+}
+
+/* Hover effect for the entire sidebar */
+.sidebar:hover {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+}
