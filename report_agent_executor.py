@@ -8,6 +8,7 @@ import asyncio
 
 # Toollarni import qilish
 from tools_llm.transport4.transport4_tool import Transport4Tool
+from tools_llm.invest12.invest12_tool import Invest12Tool
 from retriever.langchain_chroma import CustomEmbeddingFunction
 
 # LLM modelini yaratish
@@ -27,10 +28,16 @@ transport4_tool = Transport4Tool(
     use_embeddings=True,
     embedding_model=shared_embedding_model
 )
+invest12_tool = Invest12Tool(
+    invest12_file_path="tools_llm/invest12/invest12.json",
+    use_embeddings=True,
+    embedding_model=shared_embedding_model
+)
 
 # Embedding ma'lumotlarini tayyorlash
 print("Barcha toollar uchun embedding ma'lumotlari tayyorlanmoqda...")
 transport4_tool._prepare_embedding_data()
+invest12_tool._prepare_embedding_data()
 
 # System message
 system_message = SystemMessage(content="""
@@ -39,6 +46,7 @@ system_message = SystemMessage(content="""
     
     Quyidagi vositalar mavjud:
     1. transport4_tool - 4-transport shakli hisoboti ma'lumotlarini qidirish uchun.
+    2. invest12_tool - 12-invest shakli hisoboti ma'lumotlarini qidirish uchun.
     
     Quyidagi qoidalarga rioya qiling:
     1. Foydalanuvchi so'roviga javob berishda quyidagi kalit so'zlarni o'zbek tiliga tarjima qiling:
@@ -92,7 +100,7 @@ system_message = SystemMessage(content="""
 
 # Agentni yaratish
 report_agent = initialize_agent(
-    tools=[transport4_tool],
+    tools=[transport4_tool, invest12_tool],
     llm=llm,
     agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
     handle_parsing_errors=True,

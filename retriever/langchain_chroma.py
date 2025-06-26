@@ -421,3 +421,8 @@ def search_documents(query: str, n_results: int = 15):
 def create_collection():
     """ChromaDB collection yaratish"""
     return chroma_manager.create_collection()
+
+
+
+# https://www.youtube.com/watch?v=hVM8qGRTaOA
+# https://youtu.be/dN0lsF2cvm4

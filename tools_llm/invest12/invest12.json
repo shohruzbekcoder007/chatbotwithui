@@ -1,0 +1,318 @@
+{
+    "report_form": {
+      "name": "12 invest",
+      "submitters": "1 – 2 boblar: Barcha iqtisodiy faoliyat turlarini amalga oshiruvchi yuridik shaxslar, qurilish xo‘jalik boshqaruvi organlarini qo‘shgan holda (kichik korxonalar, mikrofirmalar, fermer xo‘jaliklari, notijorat tashkilotlardan tashqari). 3 – bob: Investitsiya loyihasi ijrochilari (tashabbuskorlari).",
+      "structure": "3 bob",
+      "indicators": "O‘zlashtirilgan investitsiyalar, obyektlarni ishga tushirilishi"
+    },
+    "sections": [
+      {
+        "bob": "1-BOB",
+        "title": "ASOSIY KAPITALGA O‘ZLASHTIRILGAN INVESTITSIYALAR",
+        "description": "O‘zlashtirilgan investitsiyalar haqidagi ma'lumotlar kiritiladi",
+        "section_type": "dynamic",
+        "columns": [
+          {
+            "column": "A",
+            "description": "A ustunda investitsiya oqimining qaysi moliyalashtirish manbai orqali kirib kelgani ko'rsatiladi. (2-ustunda tanlangan kod ning yozma nomi)",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "B",
+            "description": "B ustunda investitsiya oqimining qaysi moliyalashtirish manbai orqali kirib kelgani ko'rsatiladi. (1 dan 14 gacha bo‘lgan sanoq sonlar)da.",
+            "strict_logical_controls": [
+              "Agar moliyalashtirish kodi 4,5,6,7,11,12 bo‘lsa D ustun to‘ldirilgan bo‘lishi shart (agar moliyalashtirish manbai kodi > 0, Chet el investori (kreditori)ning kodi >0 bo‘lishi shart)",
+              "Agar moliyalashtirish manbai kodi 4,5,6,7,11,12 kodlar tanlangan bo’lsa, u holda Chet el investori (kreditori)ning kodi ≠ 860",
+              "Agar moliyalashtirish manbai kodi =4,5,6,7,11,12 bo’lsa AQSh dollari kursi to’ldirilishi shart (AQSH dollar kursi verguldan keyin 2 xonali)"
+            ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "D",
+            "description": "D ustunda investitsiya kiritayotgan xorijiy investorning mamlakat kodi ko‘rsatiladi (havola orqalik mamlakatlar nomi va kodlarini aniqlashtirish imkoni mavjud).",
+            "strict_logical_controls": [
+              "Agar Moliyalashtirish manbai kodida 4,5,6,7,11,12 kodlar tanlangan bo’lsa, u holda chet el investori (kreditori)ning kodi ≠ 860"
+            ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "E",
+            "description": "E ustunda iqtisodiy faoliyat turining kodi va nomlanishi “Umumdavlat iqtisodiy faoliyat turlari tasniflagichi”(IFUT-2)ga muvofiq keltiriladi. Iqtisodiy faoliyat turlari bo‘yicha taqsimlash asosiy fondlarni yo‘naltirilganligidan, ya’ni ular foydalaniladigan iqtisodiy faoliyat sohasidan kelib chiqqan holda amalga oshiriladi.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "F",
+            "description": "F ustunida investitsiya kiritaladigan hudud kodi ko‘rsatiladi. Agar investitsiya kiritish loyihasi ikki va undan ortiq hududga ega bo‘lsa, u holda har bir hudud bo‘yicha ma’lumotlar alohida satrlarda ajratilib ko‘rsatiladi.",
+            "strict_logical_controls": [
+              "MHOBT kodi bo’yicha (1-bob asosiy kapitalga investitsiyalar - jami shu jumladan qurilish-montaj ishlari, uskunalarni montaj qilish ishlarini qo‘shgan holda - asosiy kapitalga investitsiyalar - jami shu jumladan qurilish-montaj ishlari, uskunalarni montaj qilish ishlarini qo‘shgan holda ulardan xo‘jalik usulida amalga oshirilgan.) >0, asosiy kapitalga investitsiyalar - jami shu jumladan mashina, uskunalar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari (uskunalarni montaj qilish xarajatlarsiz) qiymati, asosiy kapitalga investitsiyalar - jami shu jumladan boshqa xarajatlar, intellektual mulk obyektlariga investitsiyalarni qo‘shgan holda =0, unda qo'yilma turi kodi bo’yicha= 1 yoki 2",
+              "MHOBT kodi bo’yicha asosiy kapitalga investitsiyalar - jami shu jumladan boshqa xarajatlar, intellektual mulk obyektlariga investitsiyalarni qo‘shgan holda > 0, asosiy kapitalga investitsiyalar - jami shu jumladan qurilish-montaj ishlari, uskunalarni montaj qilish ishlarini qo‘shgan holda va asosiy kapitalga investitsiyalar - jami shu jumladan mashina, uskunalar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari (uskunalarni montaj qilish xarajatlarsiz) qiymati = 0, unda qo'yilma turi kodi =3",
+              "MHOBT kodi bo’yicha asosiy kapitalga investitsiyalar - jami shu jumladan mashina, uskunalar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari (uskunalarni montaj qilish xarajatlarsiz) qiymati > 0, asosiy kapitalga investitsiyalar - jami shu jumladan qurilish-montaj ishlari, uskunalarni montaj qilish ishlarini qo‘shgan holda =0, unda qo'yilma turi kodi = 2 yoki 3"
+            ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "G",
+            "description": "G ustunda agar loyihalashtirishda ikki va undan ortiq investitsiya kiritishning yo‘nalishlari nazarda tutilgan bo‘lsa (yangi qurilish, kengaytirish, modernizatsiya hamda rekonstruksiya va boshqa yo‘nalishlar) investitsiyaning umumiy xajmini mos ravishda yo‘nalishlarga qarab ajratib ko‘rsatish kerak. Agar loyiha bir qancha investor va kreditorlar ishtirokida amalga oshirilsa, u holda investitsiyalarni jalb qilish va o‘zlashtirish bo‘yicha ma’lumotlar har biri uchun alohida ajratib ko‘rsatilishi kerak.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "H",
+            "description": "H ustunda chet el valyutasiga olingan import asbob-uskunalarning qiymati, AQSh dollaridan farqli, bojxona deklaratsiyasini rasmiylashtirish uchun qabul qilingan sanadagi O‘zbekiston Respublikasi Markaziy banki tomonidan yoki mulkdor o‘zgargan vaqtdan so‘ng (shartnoma shartlariga asosan) belgilangan kursda hisoblanadi.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "1",
+            "description": "1-ustun “Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar aks ettiriladi.",
+            "strict_logical_controls": [
+              "Hisobot choragida asosiy kapitalga investitsiyalar - jamidan to jamidan: atrof-muhitni muhofaza qilish va tabiiy boyliklardan oqilona foydalanishga yo‘naltirilgan investitsiyalar bo‘yicha ma’lumotlar butun sonda kiritiladi",
+              "Hisobot choragida asosiy kapitalga investitsiyalar - jami = Hisobot choragida asosiy kapitalga investitsiyalar - jami shu jumladan: qurilish-montaj ishlari, uskunalarni montaj qilish ishlarini qo‘shgan holda + Hisobot choragida asosiy kapitalga investitsiyalar - jami shu jumladan: mashina, uskunalar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari (uskunalarni montaj qilish xarajatlarsiz) qiymati + Hisobot choragida asosiy kapitalga investitsiyalar - jami shu jumladan boshqa xarajatlar, intellektual mulk obyektlariga investitsiyalarni qo‘shgan holda",
+              "Hisobot choragida asosiy kapitalga investitsiyalar - jami >= jamidan: atrof-muhitni muhofaza qilish va tabiiy boyliklardan oqilona foydalanishga yo‘naltirilgan investitsiyalar"
+            ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "2",
+            "description": "2-ustunda bino va inshootlarni qurish bo‘yicha va energetika, texnologik va boshqa uskunalar (ShNK 4.01.16-09 ning 2.7, 2.8, 4.12 bo‘limlariga mos holda)ning montaji bo‘yicha qurilish-montaj ishlari ajratib beriladi.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "3",
+            "description": "3-ustunda “xo‘jalik usulida amalga oshirilgan” 2-ustunda o‘z ehtiyojlari uchun o‘z kuchlari bilan amalga oshirgan xo‘jalik usulidagi, shuningdek, qurilishni amalga oshirish uchun tashkilot tomonidan asosiy faoliyatdagi ishchilar jalb qilinib, ularga qurilish naryadi bo‘yicha ish haqlari to‘lanadigan hamda o‘z ehtiyojlari uchun qurilishni (qurilish pudrati shartnomalari doirasidan tashqari, masalan, tashkilotning ma‘muriy xo‘jalik binolarini rekonstruksiya qilishda, shaxsiy ishlab chiqarish bazasini qurishda va xokazo) amalga oshiruvchi qurilish tashkilotlarining qurilish-montaj ishlari olib ko‘rsatiladi. Agar xo‘jalik usulidagi qurilishning alohida ishlarini pudratchi tashkilotlar amalga oshirsa, bunday ishlar 3-ustunda ko‘rsatilmaydi.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "4",
+            "description": "4-ustunda “2-ustundan: norezident-pudratchilar tomonidan o‘z kuchi bilan bajarildi” O‘zbekiston Respublikasi hududidagi yirik qurilish obyektlari bo‘yicha ma’lumotlar ajratib ko‘rsatiladi. Bajarilgan hajm qo‘shimcha qiymat solig‘isiz ko‘rsatiladi. Ushbu satrda pudratchi – norezidentlarning loyihalarini amalga oshirish muddati 1 yildan kam bo‘lgan qurilish-montaj ishlari aks ettirilmaydi.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "5",
+            "description": "5-ustunda “mashina, uskunalar, mebellar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari qiymati” mashinalar, transport vositalari, uskuna, mebellar, asbob va jihozni sotib olishga harajatlar (qurilish smetasiga kiradigan va kirmaydigan). Uzoq tsiklli ishlab chiqarishni hamda ishlab chiqaruvchilar tomonidan oraliq hisob ishlarini talab qiladigan asbob-uskunalar uchun to‘lov shakli buyurtmachi tomonidan asbob-uskuna qismlarining tayyor bo‘lganlik darajasi to‘g‘risidagi dalolatnoma asosida amalga oshiriladi.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "6",
+            "description": "6-ustunda 5-ustundan AKT (axborot, kompyuter va telekommunikatsiya) vositalariga investitsiyalar ajratib ko‘rsatiladi. AKT vositalariga elektron boshqaruv vositalarida foydalaniluvchi qurilmalar, shuningdek ushbu qurilmalarning elektron komponentlari kiradi: kompyuter, klaviatura, joystik, noutbuk va subnoutbuk kabi ma‘lumotlarni qayta ishlovchi portativ mashinalar, shaxsiy cho‘ntak kompyuterlari va shunga o‘xshash kompyuterlar, nashr qilish, skaner qilish, nusxa olish, faks jo‘natish kabi vazifalardan ikki yoki undan ortig‘ini bajaruvchi qurilmalar (skaner, printer va h.k), tashiladigan va tashilmaydigan xotirali saqlovchi qurilmalar, qabul qiluvchi, ovoz yozuvchi, qayta ishlovchi qurilmalarni ichiga oladigan va olmaydigan radio va televideniya uzatish moslamalari, televizion kameralar, raqamli kameralar va yozuvchi videokameralar, telefonlar, uyali tarmoq va boshqa simsiz aloqa tarmoqlariga mo‘ljallangan telefon moslamalari, simli va simsiz tarmoq (mahalliy yoki global tarmoq) vositasida aloqaga mo‘ljallangan qurilmalar, va h.k.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "7",
+            "description": "7-ustunda “Boshqa harajatlar, intellektual mulk obyektlariga investitsiyalarni qo‘shgan holda” ushbu shaklning 2 va 5-ustunlarida ko‘rsatilmagan asosiy kapitalga boshqa investitsiyalar aks ettiriladi: intellektual mulkchilik obyektlariga va intellektual faoliyat mahsulotlariga investitsiyalar, qurilish ostida bo‘lgan yer maydonini bo‘shatilishi natijasida mulkdorlarga qarashli buzilgan bino va ekinlarning qiymatini to‘lab berish bilan bog‘liq harajatlar; neft va gaz uchun geologiya qidiruv ishlarini bajarishga xarajatlar; neft, gaz va termal suvlarni chuqur kuzatuv-burg‘ulash va foydalanish ishlari xarajatlari; ko‘p yillik o‘simliklarni ekish va o‘stirish ishlari xarajatlari; ish kuchi, oziq-ovqat va nasl uchun boqiladigan chorva xarajatlari; qayta ishga tushiriladigan obyektlarda ishlash uchun mutaxassislarni tayyorlashga ketgan harajatlar; pudrat savdo ishlarini tashkillashtirish va o‘tkazish bo‘yicha harajatlar; fan-texnika axborotlariga moslashtirilgan kutubxonalar, arxiv, muzeylar va shunga o‘xshash muassasalarni tashkil etish xarajatlari, noinventar xarakterga ega bo‘lgan yerni yaxshilash uchun kapital xarajatlar; qishloq xo‘jalik mahsulotlarining tannarxiga aloqador bo‘lmagan xarajatlardan tashqaridan boshqa, kelgusi yillar uchun loyiha-qidiruv ishlari; asosiy vositalarga yuqorida aytib o‘tilmagan xarajat va mablag‘lar ko‘rsatiladi.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "8",
+            "description": "8-ustunda 7-ustundan intellektual mulkchilik obyektlariga va intellektual faoliyat maxsulotlariga investitsiyalar aks ettiriladi. Intellektual mulkchilik obyektlari asosan intellektual mulkchilik shaklidagi ishlab chiqarish natijasi hisoblanadi, aniqrog‘i o‘zining ishlab chiqaruvchi va foydalanuvchilariga daromad keltirishi, sotilishi mumkin bo‘lgan tadqiqotlar, ishlanmalar, innovatsiyalar natijasidir.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "9",
+            "description": "9-ustunda jami asosiy kapitalga kiritilgan investitsiyalardan (1-ustundan) atrof-muhitni muhofaza qilish va tabiiy boyliklardan oqilona foydalanishga yo‘naltirilgan investitsiyalar ajratib ko’rsatiladi.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          }
+        ]
+      },
+      {
+        "bob": "2-BOB",
+        "title": "NOMOLIYAVIY AKTIVLARGA INVESTITSIYALAR",
+        "description": "NOMOLIYAVIY AKTIVLARGA INVESTITSIYALAR",
+        "section_type": "dynamic",
+        "columns": [
+          {
+            "column": "A",
+            "description": "A ustunda tanlangan satrning nomi chiqadi (ya'ni B-ustundan)",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "B",
+            "description": "B ustunda 201-satr “Asosiy vositalarni kapital ta’mirlash”da (uskunalar, mashina, transport vositalari, bino va inshootlarni kapital ta’mirlashiga harajatlar aks ettiriladi, bunga asos buyurtmachi va tashkilotlar – ishlarni bajaruvchi tomonidan tasdiqlangan bajarilgan ishlar qiymati to‘g‘risidagi hujjatdir. Qoidaga ko‘ra, kapital ta’mirlash harajatlari asosiy vositalarning boshlang‘ich qiymatini oshirmaydi, balki mahsulot, ishlar hamda xizmatlarning (ishlab chiqarish obyektlari bo‘yicha) ishlab chiqarish tannarxiga yoki davr harajatlarining (noishlabchiqarish obyektlari bo‘yicha) tarkibiga kiritiladi. 204-satrda ishlab chiqarilmagan nomoliyaviy aktivlarga investitsiyalarga quyidagilar ko‘rsatiladi: yuridik shaxslar tomonidan o‘z egaligiga yer uchastkalari, tabiatdan foydalanish obyektlarini sotib olish harajatlari; kontraktlar, ijara shartnomalari, litsenziyalar (shu jumladan, tabiat obyektlaridan foydalanish huquqi), ishbilarmonlik obro‘-e’tibori (“gudvill”) va xizmat aloqalari (marketing aktivlari) harajatlari. 201-204 satrlarda aks ettirilgan ma’lumotlar asosiy kapitalga investitsiyalarga kirmaydi va bo‘yicha jami asosiy kapitalga o’zlashtirilgan investitsiyalarga kiritilmaydi.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "D",
+            "description": "D ustunda investitsiya kiritaladigan hudud kodi ko‘rsatiladi. Agar investitsiya kiritish loyihasi ikki va undan ortiq hududga ega bo‘lsa, u holda har bir hudud bo‘yicha ma’lumotlar alohida satrlarda ajratilib ko‘rsatiladi.",
+            "strict_logical_controls": [
+              "MHOBT kodi bo’yicha xo‘jalik usulida amalga oshirilgan satr ≠ MHOBT kodi bo’yicha 1-bob 3 ustun yig’indisi (Iqtisodiy faoliyat turi kodi-ustun 236,237,244,351,452,491,492,495,552,553,812,891,931,1061,1091,7112 kodlaridan)",
+              "MHOBT kodi bo’yicha Noishlab chiqarish nomoliyaviy aktivlarga investitsiyalar satr ≠ MHOBT kodi bo’yicha 1-bob 3 ustun yig’indisi (Iqtisodiy faoliyat turi kodi-ustun 236,237,244,351,452,491,492,495,552,553,812,891,931,1061,1091,7112 kodlaridan)",
+              "MHOBT kodi bo’yicha Asosiy vositalarni kapital ta’mirlash satr ≠ MHOBT kodi bo’yicha 1-bob 3 ustun yig’indisi (Iqtisodiy faoliyat turi kodi-ustun 236,237,244,351,452,491,492,495,552,553,812,891,931,1061,1091,7112 kodlaridan)"
+            ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "1",
+            "description": "1-ustunda hisobot choragida o'zlashtirilgan jami investitsiyalar ko'rsatiladi",
+            "strict_logical_controls": [
+              "Hisobot choragida-jami >= Hisobot choragida-jami shu jumladan, chet el investitsiyalari va kreditlari hisobidan (reinvestitsiyalarni qo‘shgan holda): hamma satrlar bo’yicha"
+            ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "2",
+            "description": "2-ustunda hisobot choragida o'zlashtirilgan jami investitsiyalar hajmidan chet el investitsiyalari va kreditlari hisobidan (reinvestitsiyalarni qo‘shgan holda) ko'rsatiladi.",
+            "strict_logical_controls": [
+              "Hisobot choragida-jami shu jumladan, chet el investitsiyalari va kreditlari hisobidan (reinvestitsiyalarni qo‘shgan holda) >= Hisobot choragida-jami shu jumladan, chet el investitsiyalari va kreditlari hisobidan (reinvestitsiyalarni qo‘shgan holda) ulardan, O‘zbekiston Respublikasi kafolati bilan xorijiy kreditlar hamma satrlar bo’yicha"
+            ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "3",
+            "description": "3-ustunda hisobot choragida o'zlashtirilgan jami investitsiyalar hajmida chet el investitsiyalari va kreditlari hisobidan (reinvestitsiyalarni qo‘shgan holda) ulardan, O‘zbekiston Respublikasi kafolati bilan xorijiy kreditlar ko'rsatiladi.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          }
+        ]
+      },
+      {
+        "bob": "3-BOB",
+        "title": "INVESTITSIYA DASTURIGA KIRITILGAN LOYIHALAR BO‘YICHA KIRIB KELGAN VA O‘ZLASHTIRILGAN INVESTITSIYALAR",
+        "description": "INVESTITSIYA DASTURIGA KIRITILGAN LOYIHALAR BO‘YICHA KIRIB KELGAN VA O‘ZLASHTIRILGAN INVESTITSIYALAR",
+        "section_type": "dynamic",
+        "columns": [
+          {
+            "column": "A",
+            "description": "A ustunda investitsiya loyihalarining loyiha raqami ko'rsatiladi",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "B",
+            "description": "B ustunda investitsiya loyihalarining loyiha nomi ko'rsatiladi",
+            "strict_logical_controls": [
+              "Agar moliyalashtirish kodi 4,5,6,7,11,12 bo‘lsa D ustun to‘ldirilgan bo‘lishi shart (agar moliyalashtirish manbai kodi > 0, Chet el investori (kreditori)ning kodi >0 bo‘lishi shart)",
+              "Agar moliyalashtirish manbai kodi 4,5,6,7,11,12 kodlar tanlangan bo’lsa, u holda Chet el investori (kreditori)ning kodi ≠ 860",
+              "Agar moliyalashtirish manbai kodi =4,5,6,7,11,12 bo’lsa AQSh dollari kursi to’ldirilishi shart (AQSH dollar kursi verguldan keyin 2 xonali)"
+            ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "D",
+            "description": "D ustunida investitsiya kiritaladigan hudud kodi ko‘rsatiladi. Agar investitsiya kiritish loyihasi ikki va undan ortiq hududga ega bo‘lsa, u holda har bir hudud bo‘yicha ma’lumotlar alohida satrlarda ajratilib ko‘rsatiladi.",
+            "strict_logical_controls": [
+              "Agar investitsiya kiritaladigan hudud kodi > 0 bo'lsa u holda investitsiya loyihalarining loyiha nomidan to investitsiya dasturigacha bo'lgan ustunlar to'ldirilishi shart"
+            ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "E",
+            "description": "E ustunda investitsiya kiritayotgan xorijiy investorning mamlakat kodi ko‘rsatiladi (havola orqalik mamlakatlar nomi va kodlarini aniqlashtirish imkoni mavjud).",
+            "strict_logical_controls": [
+              "Agar Moliyalashtirish manbai kodida 4,5,6,7,11,12 kodlar tanlangan bo’lsa, u holda chet el investori (kreditori)ning kodi ≠ 860"
+            ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "F",
+            "description": "F ustunda iqtisodiy faoliyat turining kodi va nomlanishi “Umumdavlat iqtisodiy faoliyat turlari tasniflagichi”(IFUT-2)ga muvofiq keltiriladi. Iqtisodiy faoliyat turlari bo‘yicha taqsimlash asosiy fondlarni yo‘naltirilganligidan, ya’ni ular foydalaniladigan iqtisodiy faoliyat sohasidan kelib chiqqan holda amalga oshiriladi.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "G",
+            "description": "G ustunda investitsiya oqimining qaysi moliyalashtirish manbai orqali kirib kelgani ko'rsatiladi. (1 dan 14 gacha bo‘lgan sanoq sonlar)da.",
+            "strict_logical_controls": [
+              "Agar investitsiya oqimining qaysi moliyalashtirish manbai =4,5,6,7,10,11,12 bo’lsa, investitsiya kiritayotgan xorijiy investorning mamlakat kodi to’ldirilishi shart",
+              "Agar investitsiya oqimining qaysi moliyalashtirish manbai bo’yicha 4,5,6,7,11,12 kodlar tanlangan bo’lsa u holda investitsiya kiritayotgan xorijiy investorning mamlakat kodi ≠ 860",
+              "Agar investitsiya oqimining qaysi moliyalashtirish manbai 1, 9 yoki 13 bo'lsa investitsiya loyihalarining loyiha raqami ko'rsatilishi shart"
+            ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "H",
+            "description": "H ustunda agar loyihalashtirishda ikki va undan ortiq investitsiya kiritishning yo‘nalishlari nazarda tutilgan bo‘lsa (yangi qurilish, kengaytirish, modernizatsiya hamda rekonstruksiya va boshqa yo‘nalishlar) investitsiyaning umumiy xajmini mos ravishda yo‘nalishlarga qarab ajratib ko‘rsatiladi. Agar loyiha bir qancha investor va kreditorlar ishtirokida amalga oshirilsa, u holda investitsiyalarni jalb qilish va o‘zlashtirish bo‘y ma’lumotlar har biri uchun alohida ajratib ko‘rsatilishi shart.",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "I",
+            "description": "I ustunda moliyalashtirish manbaidan kelib chiqan hollatda avtomatik chiqadigan o'lchov birligi mavjud",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "J",
+            "description": "J ustunda investitsiya dasturiga muvofiq loyihalar qaysi dasturga tegishli bo'lsa quyidagi ilovada ko'rsatilgandan birontasi ko'rsatiladi",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "1",
+            "description": "1-ustun Yil boshidan xorijdan kirib kelgan investitsiya va kreditlar (yoki O‘zbekiston Respublikasi Tiklanish va taraqqiyot jamg‘armasidan moliyalashtirildi)",
+            "strict_logical_controls": [],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "2",
+              "description": "2 ustunda Yil boshidan o‘zlashtirilgan–jami investitsiyalar",
+              "strict_logical_controls": [
+                  "Barcha satrlar(loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami investitsiyalar = Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yengi va import orqali xarid qilingan asosiy vositalar + Yil boshidan o‘zlashtirilgan–jami shu jumladan boshqa yo'nalishlarga"
+              ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "3",
+              "description": "3-ustun “Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar aks ettiriladi.",
+              "strict_logical_controls": [
+                  "Barcha satrlar (loyihalar) bo’yicha Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar = mashinalar, uskunalar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari + Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan qurilish montaj ishlari + Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan Boshqa kapital xarajatlar",
+                  "Barcha satrlar (loyihalar) bo’yicha Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar < =Yil boshidan o‘zlashtirilgan–jami investitsiyalar"
+              ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "4",
+              "description": "4-ustunda “mashina, uskunalar, mebellar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari qiymati” mashinalar, transport vositalari, uskuna, mebellar, asbob va jihozni sotib olishga harajatlar (qurilish smetasiga kiradigan va kirmaydigan).",
+              "strict_logical_controls": [
+                  "Barcha satrlar (loyihalar) bo’yicha mashinalar, uskunalar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari < =Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar"
+              ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "5",
+              "description": "5-ustun Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan qurilish montaj ishlari",
+              "strict_logical_controls": [
+                  "Barcha satrlar (loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan qurilish montaj ishlari < =Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar"
+              ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "6",
+              "description": "6-ustun Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan Boshqa kapital xarajatlar",
+              "strict_logical_controls": [
+                  "Barcha satrlar (loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan Boshqa kapital xarajatlar < =Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar”da yangi va import orqali xarid qilingan asosiy vositalar"
+              ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "7",
+              "description": "7-ustun Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan boshqa kapital xarajatlar ulardan kompyuter dasturiy ta’minoti va ma’lumotlar bazasi",
+              "strict_logical_controls": [
+                  "Barcha satrlar (loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan boshqa kapital xarajatlar ulardan kompyuter dasturiy ta’minoti va ma’lumotlar bazasi < =Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapitalga ulardan Boshqa kapital xarajatlar"
+              ],
+            "non_strict_logical_controls": []
+          },
+          {
+            "column": "8",
+              "description": "8-ustun Yil boshidan o‘zlashtirilgan–jami shu jumladan boshqa yo'nalishlarga",
+              "strict_logical_controls": [
+                  "Barcha satrlar (loyihalar) bo’yicha Yil boshidan o‘zlashtirilgan–jami shu jumladan boshqa yo'nalishlarga < = Yil boshidan o‘zlashtirilgan–jami investitsiyalar",
+                  "Yil boshidan o‘zlashtirilgan–jami shu jumladan boshqa yo'nalishlarga ≠ Yil boshidan o‘zlashtirilgan–jami shu jumladan asosiy kapital bo‘yicha shu jumladan boshqa"
+              ],
+            "non_strict_logical_controls": []
+          }
+        ]
+      }
+    ]
+  }
