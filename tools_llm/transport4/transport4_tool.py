@@ -169,7 +169,7 @@ class Transport4Tool(BaseTool):
             qator_part = qator_match.group(1)
         
         # Ustun qismini aniqlash
-        ustun_pattern = re.compile(r'([a-zA-Z\d]+)[-\s]*ustun')
+        ustun_pattern = re.compile(r'([a-zA-Zа-яА-ЯёЁ\d]+)[-\s]*ustun')
         ustun_match = ustun_pattern.search(so_rov.lower())
         if ustun_match:
             ustun_part = ustun_match.group(1).upper()
@@ -177,7 +177,7 @@ class Transport4Tool(BaseTool):
         # Agar ustun_part aniqlanmagan bo'lsa, so'rovda alohida harflarni qidirish
         if not ustun_part:
             for part in so_rov_parts:
-                if len(part) == 1 and part.isalpha():
+                if len(part) == 1: # and part.isalpha():
                     ustun_part = part.upper()
                     break
         
