@@ -1,7 +1,6 @@
 import os
 import asyncio
 import logging
-import torch
 from typing import List, Dict, Any, Optional, ClassVar, AsyncGenerator
 from dotenv import load_dotenv
 from functools import lru_cache
@@ -408,10 +407,6 @@ class LangChainOllamaModel:
         Yields:
             str: Har bir token yoki matn bo‘lagi
         """
-        detect_lang = {
-            "uz": "O'zbek",
-            "ru": "Rus",
-        }
         system_prompt = (
             "Siz tavsiya beruvchi yordamchisiz. Foydalanuvchining sorovi va unga berilgan javobga asoslanib, "
             "quyida berilgan kontekst savollari ichidan mantiqan eng yaqin bitta savolni tanlashingiz kerak.\n\n"

@@ -1,0 +1,599 @@
+[
+    {
+        "report_form": {
+            "name": "4 invest asosiy",
+            "submitters": "1, 2, 4 va 5-boblar: Barcha iqtisodiy faoliyat turlarini amalga oshiruvchi yuridik shaxslar, qurilish xo‘jalik boshqaruvi organlarini qo‘shgan holda (kichik korxonalar, mikrofirmalar, fermer xo‘jaliklari va notijorat tashkilotlardan tashqari). 3-bob: Investitsiya loyihasi ijrochilari (tashabbuskorlari). 6-bob: Qoraqalpog‘iston Respublikasi Vazirlar Kengashi, viloyat hokimliklari, Toshkent shahar injiniring kompaniyalari va boshqa yuridik shaxslar.",
+            "structure": "6 ta bob, titul va yakuniy qismdan iborat",
+            "indicators": "O‘zlashtirilgan investitsiyalar, obyektlarni ishga tushirish"
+        },
+        "sections": [
+            {
+                "bob": "1-BOB",
+                "title": "ASOSIY KAPITALGA O‘ZLASHTIRILGAN INVESTITSIYALAR",
+                "description": "Asosiy kapitalga o‘zlashtirilgan investitsiyalar haqidagi ma'lumotlar",
+                "section_type": "dynamic",
+                "columns": [
+                    {
+                        "column": "A",
+                        "description": "Investitsiya oqimining qaysi moliyalashtirish manbai orqali kirib kelgani ko‘rsatiladi (B ustundagi kodning yozma nomi)",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "B",
+                        "description": "Investitsiya oqimining qaysi moliyalashtirish manbai orqali kirib kelgani ko‘rsatiladi (1 dan 14 gacha bo‘lgan sanoq sonlar)",
+                        "strict_logical_controls": [
+                            "Agar moliyalashtirish kodi 4, 5, 6, 7, 11 yoki 12 bo‘lsa, D ustun to‘ldirilgan bo‘lishi shart (agar moliyalashtirish manbai kodi > 0, chet el investori (kreditori)ning kodi > 0 bo‘lishi shart).",
+                            "Agar moliyalashtirish manbai kodi 4, 5, 6, 7, 11 yoki 12 bo‘lsa, chet el investori (kreditori)ning kodi ≠ 860.",
+                            "Agar moliyalashtirish manbai kodi 4, 5, 6, 7, 11 yoki 12 bo‘lsa, AQSh dollari kursi to‘ldirilishi shart (AQSh dollari kursi verguldan keyin 2 xonali)."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "D",
+                        "description": "Investitsiya kiritayotgan xorijiy investorning mamlakat kodi ko‘rsatiladi (havola orqali mamlakatlar nomi va kodlarini aniqlashtirish imkoni mavjud)",
+                        "strict_logical_controls": [
+                            "Agar moliyalashtirish manbai kodi 4, 5, 6, 7, 11 yoki 12 bo‘lsa, chet el investori (kreditori)ning kodi ≠ 860."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "E",
+                        "description": "Iqtisodiy faoliyat turining kodi va nomlanishi 'Umumdavlat iqtisodiy faoliyat turlari tasniflagichi' (IFUT-2)ga muvofiq keltiriladi",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "F",
+                        "description": "Investitsiya kiritiladigan hudud kodi ko‘rsatiladi; agar loyiha ikki va undan ortiq hududga ega bo‘lsa, har bir hudud bo‘yicha ma'lumotlar alohida satrlarda ko‘rsatiladi",
+                        "strict_logical_controls": [
+                            "Agar MHOBT kodi bo‘yicha asosiy kapitalga investitsiyalar jami > 0 bo‘lsa, qo‘yilma turi kodi 1 yoki 2 bo‘lishi shart (qurilish-montaj ishlari va uskunalarni montaj qilish xarajatlarini qo‘shgan holda).",
+                            "Agar MHOBT kodi bo‘yicha boshqa xarajatlar va intellektual mulk obyektlariga investitsiyalar > 0 bo‘lsa, qo‘yilma turi kodi = 3.",
+                            "Agar MHOBT kodi bo‘yicha mashina, uskunalar, transport vositalari va ishlab chiqarish jihozlari > 0, lekin qurilish-montaj ishlari = 0 bo‘lsa, qo‘yilma turi kodi 2 yoki 3 bo‘lishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "G",
+                        "description": "Agar loyihalashtirishda ikki va undan ortiq investitsiya yo‘nalishlari (yangi qurilish, kengaytirish, modernizatsiya, rekonstruksiya va boshqalar) nazarda tutilgan bo‘lsa, investitsiyaning umumiy hajmi mos ravishda yo‘nalishlarga qarab ajratib ko‘rsatiladi",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "H",
+                        "description": "Chet el valyutasiga olingan import asbob-uskunalarning qiymati, AQSh dollaridan farqli, bojxona deklaratsiyasini rasmiylashtirish uchun qabul qilingan sanadagi O‘zbekiston Respublikasi Markaziy banki kursi bo‘yicha hisoblanadi",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "1",
+                        "description": "Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar, yangi va import orqali xarid qilingan asosiy vositalar aks ettiriladi",
+                        "strict_logical_controls": [
+                            "Hisobot choragida ma'lumotlar butun sonda kiritiladi.",
+                            "Asosiy kapitalga investitsiyalar jami = qurilish-montaj ishlari + mashina, uskunalar, transport vositalari + boshqa xarajatlar va intellektual mulk obyektlariga investitsiyalar.",
+                            "Asosiy kapitalga investitsiyalar jami >= atrof-muhitni muhofaza qilish va tabiiy boyliklardan oqilona foydalanishga yo‘naltirilgan investitsiyalar."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "2",
+                        "description": "Bino va inshootlarni qurish bo‘yicha va energetika, texnologik va boshqa uskunalar montaji bo‘yicha qurilish-montaj ishlari",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "3",
+                        "description": "Xo‘jalik usulida amalga oshirilgan qurilish-montaj ishlari, o‘z ehtiyojlari uchun tashkilotning o‘z kuchlari bilan amalga oshirilgan",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "4",
+                        "description": "Norezident-pudratchilar tomonidan o‘z kuchi bilan bajarilgan qurilish-montaj ishlari (1 yildan kam muddatli loyihalar bundan mustasno)",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "5",
+                        "description": "Mashina, uskunalar, mebellar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari qiymati",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "6",
+                        "description": "5-ustundan AKT (axborot, kompyuter va telekommunikatsiya) vositalariga investitsiyalar",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "7",
+                        "description": "Boshqa xarajatlar, intellektual mulk obyektlariga investitsiyalarni qo‘shgan holda",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "8",
+                        "description": "7-ustundan intellektual mulkchilik obyektlariga va intellektual faoliyat mahsulotlariga investitsiyalar",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "9",
+                        "description": "1-ustundan atrof-muhitni muhofaza qilish va tabiiy boyliklardan oqilona foydalanishga yo‘naltirilgan investitsiyalar",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    }
+                ]
+            },
+            {
+                "bob": "2-BOB",
+                "title": "NOMOLIYAVIY AKTIVLARGA INVESTITSIYALAR",
+                "description": "Nomoliyaviy aktivlarga investitsiyalar haqidagi ma'lumotlar",
+                "section_type": "dynamic",
+                "columns": [
+                    {
+                        "column": "A",
+                        "description": "Tanlangan satrning nomi (B ustundan)",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "B",
+                        "description": "201-satr: Asosiy vositalarni kapital ta’mirlash; 204-satr: Ishlab chiqarilmagan nomoliyaviy aktivlarga investitsiyalar",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "D",
+                        "description": "Investitsiya kiritiladigan hudud kodi; agar loyiha ikki va undan ortiq hududga ega bo‘lsa, har bir hudud bo‘yicha ma'lumotlar alohida satrlarda ko‘rsatiladi",
+                        "strict_logical_controls": [
+                            "Xo‘jalik usulida amalga oshirilgan satr ≠ 1-bob 3-ustun yig‘indisi (MHOBT kodlari: 236, 237, 244, 351, 452, 491, 492, 495, 552, 553, 812, 891, 931, 1061, 1091, 7112).",
+                            "Noishlab chiqarish nomoliyaviy aktivlarga investitsiyalar ≠ 1-bob 3-ustun yig‘indisi (MHOBT kodlari: 236, 237, 244, 351, 452, 491, 492, 495, 552, 553, 812, 891, 931, 1061, 1091, 7112).",
+                            "Asosiy vositalarni kapital ta’mirlash ≠ 1-bob 3-ustun yig‘indisi (MHOBT kodlari: 236, 237, 244, 351, 452, 491, 492, 495, 552, 553, 812, 891, 931, 1061, 1091, 7112)."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "1",
+                        "description": "Hisobot choragida o‘zlashtirilgan jami investitsiyalar",
+                        "strict_logical_controls": [
+                            "Jami investitsiyalar >= chet el investitsiyalari va kreditlari (reinvestitsiyalarni qo‘shgan holda)."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "2",
+                        "description": "Jami investitsiyalardan chet el investitsiyalari va kreditlari (reinvestitsiyalarni qo‘shgan holda)",
+                        "strict_logical_controls": [
+                            "Chet el investitsiyalari va kreditlari >= O‘zbekiston Respublikasi kafolati bilan xorijiy kreditlar."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "3",
+                        "description": "Chet el investitsiyalari va kreditlaridan O‘zbekiston Respublikasi kafolati bilan xorijiy kreditlar",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    }
+                ]
+            },
+            {
+                "bob": "3-BOB",
+                "title": "INVESTITSIYA DASTURIGA KIRITILGAN LOYIHALAR BO‘YICHA KIRIB KELGAN VA O‘ZLASHTIRILGAN INVESTITSIYALAR",
+                "description": "Investitsiya dasturiga kiritilgan loyihalar bo‘yicha kirib kelgan va o‘zlashtirilgan investitsiyalar",
+                "section_type": "dynamic",
+                "columns": [
+                    {
+                        "column": "A",
+                        "description": "Investitsiya loyihalarining loyiha raqami",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "B",
+                        "description": "Investitsiya loyihalarining loyiha nomi",
+                        "strict_logical_controls": [
+                            "Agar moliyalashtirish kodi 4, 5, 6, 7, 11 yoki 12 bo‘lsa, D ustun to‘ldirilgan bo‘lishi shart (agar moliyalashtirish manbai kodi > 0, chet el investori (kreditori)ning kodi > 0 bo‘lishi shart).",
+                            "Agar moliyalashtirish manbai kodi 4, 5, 6, 7, 11 yoki 12 bo‘lsa, chet el investori (kreditori)ning kodi ≠ 860.",
+                            "Agar moliyalashtirish manbai kodi 4, 5, 6, 7, 11 yoki 12 bo‘lsa, AQSh dollari kursi to‘ldirilishi shart (AQSh dollari kursi verguldan keyin 2 xonali)."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "D",
+                        "description": "Investitsiya kiritiladigan hudud kodi; agar loyiha ikki va undan ortiq hududga ega bo‘lsa, har bir hudud bo‘yicha ma'lumotlar alohida satrlarda ko‘rsatiladi",
+                        "strict_logical_controls": [
+                            "Agar investitsiya kiritiladigan hudud kodi > 0 bo‘lsa, loyiha nomidan investitsiya dasturigacha bo‘lgan ustunlar to‘ldirilishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "E",
+                        "description": "Investitsiya kiritayotgan xorijiy investorning mamlakat kodi (havola orqali mamlakatlar nomi va kodlarini aniqlashtirish imkoni mavjud)",
+                        "strict_logical_controls": [
+                            "Agar moliyalashtirish manbai kodi 4, 5, 6, 7, 11 yoki 12 bo‘lsa, chet el investori (kreditori)ning kodi ≠ 860."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "F",
+                        "description": "Iqtisodiy faoliyat turining kodi va nomlanishi 'Umumdavlat iqtisodiy faoliyat turlari tasniflagichi' (IFUT-2)ga muvofiq keltiriladi",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "G",
+                        "description": "Investitsiya oqimining qaysi moliyalashtirish manbai orqali kirib kelgani ko‘rsatiladi (1 dan 14 gacha bo‘lgan sanoq sonlar)",
+                        "strict_logical_controls": [
+                            "Agar moliyalashtirish manbai kodi 4, 5, 6, 7, 10, 11 yoki 12 bo‘lsa, xorijiy investorning mamlakat kodi to‘ldirilishi shart.",
+                            "Agar moliyalashtirish manbai kodi 4, 5, 6, 7, 11 yoki 12 bo‘lsa, xorijiy investorning mamlakat kodi ≠ 860.",
+                            "Agar moliyalashtirish manbai kodi 1, 9 yoki 13 bo‘lsa, loyiha raqami ko‘rsatilishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "H",
+                        "description": "Agar loyihalashtirishda ikki va undan ortiq investitsiya yo‘nalishlari (yangi qurilish, kengaytirish, modernizatsiya, rekonstruksiya va boshqalar) nazarda tutilgan bo‘lsa, investitsiyaning umumiy hajmi mos ravishda yo‘nalishlarga qarab ajratib ko‘rsatiladi",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "I",
+                        "description": "Moliyalashtirish manbaidan kelib chiqadigan avtomatik o‘lchov birligi",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "J",
+                        "description": "Investitsiya dasturiga muvofiq loyihalar qaysi dasturga tegishli bo‘lsa, ilovada ko‘rsatilganlardan biri tanlanadi",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "1",
+                        "description": "Yil boshidan xorijdan kirib kelgan investitsiyalar va kreditlar (yoki O‘zR Tiklanish va taraqqiyot jamg‘armasidan moliyalashtirildi)",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "2",
+                        "description": "Yil boshidan o‘zlashtirilgan jami investitsiyalar",
+                        "strict_logical_controls": [
+                            "Barcha satrlar bo‘yicha yil boshidan o‘zlashtirilgan jami investitsiyalar = asosiy kapitalga kiritilgan investitsiyalar + boshqa yo‘nalishlarga."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "3",
+                        "description": "Barcha moliyalashtirish manbalaridan asosiy kapitalga kiritilgan investitsiyalar (yangi va import orqali xarid qilingan asosiy vositalar)",
+                        "strict_logical_controls": [
+                            "Asosiy kapitalga kiritilgan investitsiyalar = mashinalar, uskunalar, transport vositalari + qurilish-montaj ishlari + boshqa kapital xarajatlar.",
+                            "Asosiy kapitalga kiritilgan investitsiyalar <= yil boshidan o‘zlashtirilgan jami investitsiyalar."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "4",
+                        "description": "Mashina, uskunalar, mebellar, transport vositalari, ishlab chiqarish va xo‘jalik jihozlari qiymati",
+                        "strict_logical_controls": [
+                            "Mashinalar, uskunalar, transport vositalari <= asosiy kapitalga kiritilgan investitsiyalar."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "5",
+                        "description": "Yil boshidan o‘zlashtirilgan jami shu jumladan asosiy kapitalga qurilish-montaj ishlari",
+                        "strict_logical_controls": [
+                            "Qurilish-montaj ishlari <= asosiy kapitalga kiritilgan investitsiyalar."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "6",
+                        "description": "Yil boshidan o‘zlashtirilgan jami shu jumladan asosiy kapitalga boshqa kapital xarajatlar",
+                        "strict_logical_controls": [
+                            "Boshqa kapital xarajatlar <= asosiy kapitalga kiritilgan investitsiyalar."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "7",
+                        "description": "Yil boshidan o‘zlashtirilgan jami shu jumladan asosiy kapitalga boshqa kapital xarajatlar ulardan kompyuter dasturiy ta’minoti va ma’lumotlar bazasi",
+                        "strict_logical_controls": [
+                            "Kompyuter dasturiy ta’minoti va ma’lumotlar bazasi <= boshqa kapital xarajatlar."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "8",
+                        "description": "Yil boshidan o‘zlashtirilgan jami shu jumladan boshqa yo‘nalishlarga",
+                        "strict_logical_controls": [
+                            "Boshqa yo‘nalishlar <= yil boshidan o‘zlashtirilgan jami investitsiyalar.",
+                            "Boshqa yo‘nalishlar ≠ boshqa kapital xarajatlar."
+                        ],
+                        "non_strict_logical_controls": []
+                    }
+                ]
+            },
+            {
+                "bob": "4-BOB",
+                "title": "TURAR JOY-FUQAROLIK OBYEKTLARINI ISHGA TUSHIRISH VA ASOSIY KAPITALGA INVESTITSIYALARDAN FOYDALANISH",
+                "description": "Ishga tushirilgan turar joy-fuqarolik obyektlari va asosiy kapitalga investitsiyalardan foydalanish haqidagi ma'lumotlar",
+                "section_type": "dynamic",
+                "columns": [
+                    {
+                        "column": "A",
+                        "description": "Tanlangan satr kodi (turar joy uylari, xonadonlar soni, umumiy maydon va boshqalar)",
+                        "strict_logical_controls": [
+                            "501-satr: Turar joy uylari va yotoqxonalar soni (sotish uchun mo‘ljallanganlarni qo‘shgan holda) birlikda ko‘rsatiladi.",
+                            "502-satr: Xonadonlar soni, yotoqxonasiz (sotish uchun mo‘ljallanganlarni qo‘shgan holda) birlikda ko‘rsatiladi.",
+                            "503-satr: Turar joy uylari va yotoqxonalar umumiy maydoni kv.m.da ko‘rsatiladi.",
+                            "505-satr: Suv quvuri tarmoqlari km.da ko‘rsatiladi.",
+                            "506-satr: Gaz tarmoqlari km.da ko‘rsatiladi.",
+                            "507-satr: Ko‘pxonadonli turar joylar soni (sotish uchun mo‘ljallanganlarni qo‘shgan holda) birlikda ko‘rsatiladi.",
+                            "508-satr: Yotoqxonalar (sotish uchun mo‘ljallanganlarni qo‘shgan holda) birlikda ko‘rsatiladi.",
+                            "509-satr: Ko‘pxonadonli turar joylarda xonadonlar soni (sotish uchun mo‘ljallanganlarni qo‘shgan holda) birlikda ko‘rsatiladi.",
+                            "510-satr: Ko‘pxonadonli turar joylar umumiy maydoni kv.m.da ko‘rsatiladi.",
+                            "511-satr: Yotoqxonalar umumiy maydoni kv.m.da ko‘rsatiladi."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "B",
+                        "description": "Tanlangan MHOBT kodi",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "D",
+                        "description": "Tanlangan qurilish turi kodi (yangi qurilish, rekonstruksiya)",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "1",
+                        "description": "Hisobot choragida foydalanishga topshirilgan (qabul komissiyasi tasdiqlagan dalolatnoma bo‘yicha) moliyalashtirishning barcha manbalari hisobidan natura ko‘rinishida obyektlar, quvvatlar",
+                        "strict_logical_controls": [
+                            "Agar 4-ustun (jami investitsiyalar) > 0 bo‘lsa, 1-ustun (natura ko‘rinishida obyektlar) A ustundagi satr kodlari bo‘yicha > 0 bo‘lishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "2",
+                        "description": "Shu jumladan qishloq joylarida hisobot choragida foydalanishga topshirilgan (qabul komissiyasi tasdiqlagan dalolatnoma bo‘yicha) moliyalashtirishning barcha manbalari hisobidan natura ko‘rinishida obyektlar, quvvatlar",
+                        "strict_logical_controls": [
+                            "2-ustun (qishloq joylarida foydalanishga topshirilgan) <= 1-ustun (jami foydalanishga topshirilgan) A va D ustunlar bo‘yicha."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "3",
+                        "description": "Hisobot choragida foydalanishga topshirilgan buyurtmachi uchun ishga tushirilgan fondlar qiymati (ming so‘m)",
+                        "strict_logical_controls": [
+                            "Agar 1-ustun (natura ko‘rinishida obyektlar) > 0 bo‘lsa, 3-ustun (fondlar qiymati) A va D ustunlar bo‘yicha >= 0 bo‘lishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "4",
+                        "description": "Hisobot choragida qurilish smetasiga kiritilmagan asosiy vositalarni sotib olishga ketgan xarajatlardan tashqari qurilayotgan va foydalanishga topshirilgan obyektlar bo‘yicha jami investitsiyalar (ming so‘m)",
+                        "strict_logical_controls": [
+                            "4-ustun = 5-ustun (respublika byudjeti) + 6-ustun (tashkilot mablag‘lari) + 7-ustun (aholi mablag‘lari) + 8-ustun (chet el investitsiyalari) + 9-ustun (suv ta'minoti jamg‘armasi) + 10-ustun (boshqa manbalar)."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "5",
+                        "description": "4-ustundan respublika byudjeti mablag‘lari hisobiga investitsiyalar",
+                        "strict_logical_controls": [
+                            "Agar 503-satr (umumiy maydon) > 0 bo‘lsa va 1-ustun yoki 2-ustun > 0 bo‘lsa, 501-satr (turar joy uylari soni) > 0 bo‘lishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "6",
+                        "description": "4-ustundan tashkilot mablag‘lari hisobiga investitsiyalar",
+                        "strict_logical_controls": [
+                            "507-satr (ko‘pxonadonli turar joylar soni) + 508-satr (yotoqxonalar soni) >= 501-satr (turar joy uylari soni) D ustundagi qurilish turi kodlari bo‘yicha."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "7",
+                        "description": "4-ustundan aholi mablag‘lari hisobiga investitsiyalar",
+                        "strict_logical_controls": [
+                            "510-satr (ko‘pxonadonli turar joylar maydoni) + 511-satr (yotoqxonalar maydoni) <= 503-satr (umumiy maydon) D ustundagi qurilish turi kodlari bo‘yicha."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "8",
+                        "description": "4-ustundan chet el investitsiyalari va kreditlari hisobiga investitsiyalar",
+                        "strict_logical_controls": [
+                            "502-satr (xonadonlar soni) <= 509-satr (ko‘pxonadonli turar joylarda xonadonlar soni) D ustundagi qurilish turi kodlari bo‘yicha."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "9",
+                        "description": "4-ustundan suv ta'minoti va kanalizatsiya tizimlarini rivojlantirish jamg‘armasi mablag‘lari hisobiga investitsiyalar",
+                        "strict_logical_controls": [
+                            "Agar 501-satr (turar joy uylari soni) > 0 bo‘lsa va 1-ustun yoki 2-ustun > 0 bo‘lsa, 503-satr (umumiy maydon) > 0 bo‘lishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "10",
+                        "description": "4-ustundan boshqa manbalar mablag‘lari hisobiga investitsiyalar",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    }
+                ]
+            },
+            {
+                "bob": "5-BOB",
+                "title": "AYRIM QURILISH VA OBYEKTLAR BO‘YICHA QUVVATLARNI ISHGA TUSHIRISH",
+                "description": "Yangi qurilish, kengaytirish, rekonstruksiya va texnik qayta jihozlash hisobiga ishga tushirilgan quvvatlar haqidagi ma'lumotlar",
+                "section_type": "dynamic",
+                "columns": [
+                    {
+                        "column": "A",
+                        "description": "Qurilish, obyekt, ishga tushiriladigan majmuaning nomi, quvvati",
+                        "strict_logical_controls": [
+                            "Agar A ustun (obyekt nomi, quvvati) > 0 bo‘lsa, B, D, E, 1, 2, 3-ustunlar > 0 bo‘lishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "B",
+                        "description": "Tanlangan MHOBT kodi",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "D",
+                        "description": "Qurilish turi xos raqami",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "E",
+                        "description": "Hisobot choragida qurilish, obyekt, ishga tushirilgan majmuaning o‘lchov birligi",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "1",
+                        "description": "Yil boshidan ishga tushirilgan qurilish, obyekt, majmualar natura birligida",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "2",
+                        "description": "Hisobot choragida qurilish, obyekt, majmuaning buyurtmachi uchun ishga tushirilgan fondlar qiymati (ming so‘m)",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "3",
+                        "description": "Hisobot choragida davlat qabul komissiyasi dalolatnomasi tasdiqlanganligi to‘g‘risidagi qaror (buyruq) soni va sanasi",
+                        "strict_logical_controls": [],
+                        "non_strict_logical_controls": []
+                    }
+                ]
+            },
+            {
+                "bob": "6-BOB",
+                "title": "IJTIMOIY SOHA OBYEKTLARINING QURILISHI",
+                "description": "Ijtimoiy soha obyektlarining qurilishi haqidagi ma'lumotlar",
+                "section_type": "dynamic",
+                "columns": [
+                    {
+                        "column": "A",
+                        "description": "Ijtimoiy va ishlab chiqarish infratuzilmasini rivojlantirish bo‘yicha iqtisodiyot va moliya vazirligi tomonidan shakllantirilgan obyekt raqami",
+                        "strict_logical_controls": [
+                            "Agar obyekt raqami > 0 bo‘lsa, obyekt nomi, satr kodi, MHOBT raqami, qurilish turi, qurilish holati, ishga tushiriladigan obyekt/majmua, moliyalashtirish raqami to‘ldirilishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "B",
+                        "description": "Ijtimoiy va ishlab chiqarish infratuzilmasini rivojlantirish bo‘yicha manzilli ro‘yxatga asoslangan obyekt nomi",
+                        "strict_logical_controls": [
+                            "Agar obyekt nomi > 0 bo‘lsa, obyekt raqami, satr kodi, MHOBT raqami, qurilish turi, qurilish holati, ishga tushiriladigan obyekt/majmua, moliyalashtirish raqami > 0 bo‘lishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "D",
+                        "description": "Ijtimoiy soha ko‘rsatgichlari ro‘yxatining obyektlar bo‘yicha satr kodi",
+                        "strict_logical_controls": [
+                            "Agar satr kodi tanlangan bo‘lsa, obyekt raqami, obyekt nomi, MHOBT raqami, qurilish turi, qurilish holati, ishga tushiriladigan obyekt/majmua, moliyalashtirish raqami to‘ldirilishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "E",
+                        "description": "Obyektning joylashgan manzil raqami (MHOBT)",
+                        "strict_logical_controls": [
+                            "Agar MHOBT raqami tanlangan bo‘lsa, obyekt raqami, obyekt nomi, satr kodi, qurilish turi, qurilish holati, ishga tushiriladigan obyekt/majmua, moliyalashtirish raqami to‘ldirilishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "F",
+                        "description": "Obyektlar qurilishi turining xos raqami",
+                        "strict_logical_controls": [
+                            "Agar qurilish turi raqami tanlangan bo‘lsa, obyekt raqami, obyekt nomi, satr kodi, MHOBT raqami, qurilish holati, ishga tushiriladigan obyekt/majmua, moliyalashtirish raqami to‘ldirilishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "G",
+                        "description": "Obyektlar qurilishi holatining xos raqami",
+                        "strict_logical_controls": [
+                            "Agar qurilish holati raqami tanlangan bo‘lsa, obyekt raqami, obyekt nomi, satr kodi, MHOBT raqami, qurilish turi, ishga tushiriladigan obyekt/majmua, moliyalashtirish raqami to‘ldirilishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "H",
+                        "description": "Ishga tushiriladigan obyektning xos raqami (1 – obyekt, 2 – majmua)",
+                        "strict_logical_controls": [
+                            "Agar ishga tushiriladigan obyekt/majmua raqami tanlangan bo‘lsa, obyekt raqami, obyekt nomi, satr kodi, MHOBT raqami, qurilish turi, qurilish holati, moliyalashtirish raqami to‘ldirilishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "I",
+                        "description": "Moliyalashtirish bo‘yicha xos raqami (1 – davlat byudjeti, 2 – tashkilotning o‘z mablag‘lari, 3 – chet el investitsiyalari va kreditlari, 4 – boshqa manbalar)",
+                        "strict_logical_controls": [
+                            "Agar moliyalashtirish raqami tanlangan bo‘lsa, obyekt raqami, obyekt nomi, satr kodi, MHOBT raqami, qurilish turi, qurilish holati, ishga tushiriladigan obyekt/majmua to‘ldirilishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "1",
+                        "description": "Yil boshidan ishga tushirish quvvati (birlik, o‘quv o‘rinlari, suv yuzasi m², yotoq, o‘rin, qatnov)",
+                        "strict_logical_controls": [
+                            "Agar ishga tushirish quvvati > 0 bo‘lsa, asosiy fondlar (ming so‘m) > 0 va qabul komissiyasi qarori raqami va sanasi > 0 bo‘lishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "2",
+                        "description": "Yil boshidan ishga tushirish quvvati (birlik, o‘quv o‘rinlari, suv yuzasi m², yotoq, o‘rin, qatnov)",
+                        "strict_logical_controls": [
+                            "Agar ishga tushirish quvvati > 0 bo‘lsa, asosiy fondlar (ming so‘m) > 0 va qabul komissiyasi qarori raqami va sanasi > 0 bo‘lishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "3",
+                        "description": "Yil boshidan ishga tushirish asosiy fondlar, amaldagi narxlarda (ming so‘m)",
+                        "strict_logical_controls": [
+                            "Agar asosiy fondlar > 0 bo‘lsa, qabul komissiyasi qarori raqami va sanasi > 0 bo‘lishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "4",
+                        "description": "Yil boshidan o‘zlashtirilgan investitsiyalar (ming so‘m)",
+                        "strict_logical_controls": [
+                            "Agar investitsiyalar > 0 bo‘lsa, obyekt raqami, obyekt nomi, satr kodi, MHOBT raqami, qurilish turi, qurilish holati, ishga tushiriladigan obyekt/majmua, moliyalashtirish raqami to‘ldirilishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    },
+                    {
+                        "column": "5",
+                        "description": "Davlat qabul komissiyasi dalolatnomasi tasdiqlanganligi to‘g‘risidagi qaror (buyruq) raqami va sanasi",
+                        "strict_logical_controls": [
+                            "Agar qaror raqami va sanasi > 0 bo‘lsa, asosiy fondlar (ming so‘m) > 0 bo‘lishi shart."
+                        ],
+                        "non_strict_logical_controls": []
+                    }
+                ]
+            }
+        ]
+    }
+]
