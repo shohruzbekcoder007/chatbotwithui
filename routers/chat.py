@@ -6,6 +6,7 @@ from models.chat_message import ChatMessage
 from models.user_chat_list import UserChatList
 from additional.additional import change_translate, combine_text_arrays, get_docs_from_db, change_redis, is_russian, old_context, clean_html_tags
 from models_llm.langchain_ollamaCustom import model as model_llm
+from report_agent_executor import agent_stream_report
 from retriever.langchain_chroma import questions_manager
 from pydantic import BaseModel
 from typing import Optional
@@ -217,6 +218,11 @@ async def stream_chat(request: Request, req: ChatRequest):
 
         if tool == "classifications":
             async for token in agent_stream(query=context_query+"\n"+question):
+                response_current += token
+                yield f"{token}"
+
+        if tool == "report":
+            async for token in agent_stream_report(query=context_query+"\n"+question):
                 response_current += token
                 yield f"{token}"
 

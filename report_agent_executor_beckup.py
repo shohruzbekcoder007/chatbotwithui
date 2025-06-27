@@ -110,10 +110,10 @@ report_agent = initialize_agent(
 )
 
 # Stream javob qaytaruvchi funksiya
-async def agent_stream_report(query: str) -> AsyncGenerator[str, None]:
+async def agent_stream(so_rov: str) -> AsyncGenerator[str, None]:
     """Agent javobini stream ko'rinishida qaytaradi."""
     response = ""
-    async for chunk in report_agent.astream({"input": query}):
+    async for chunk in report_agent.astream({"input": so_rov}):
         if "output" in chunk:
             chunk_text = chunk["output"]
             # Ingliz tilidagi so'zlarni o'zbekchaga o'girish
@@ -128,22 +128,19 @@ async def agent_stream_report(query: str) -> AsyncGenerator[str, None]:
             response += chunk_text
             yield chunk_text
 
-# Agentni export qilish
-__all__ = ['report_agent', 'agent_stream_report']
-
-# async def main():
-#     print("O'zbekiston Respublikasi Davlat statistika qo'mitasi ma'lumotlari bilan ishlash uchun chatbot")
-#     print("Chiqish uchun 'exit', 'quit' yoki 'chiqish' deb yozing")
-#     print("-" * 50)
+async def main():
+    print("O'zbekiston Respublikasi Davlat statistika qo'mitasi ma'lumotlari bilan ishlash uchun chatbot")
+    print("Chiqish uchun 'exit', 'quit' yoki 'chiqish' deb yozing")
+    print("-" * 50)
     
-#     while True:
-#         user_input = input("Foydalanuvchi: ").strip().lower()
-#         if user_input in ['exit', 'quit', 'chiqish']:
-#             break
+    while True:
+        user_input = input("Foydalanuvchi: ").strip().lower()
+        if user_input in ['exit', 'quit', 'chiqish']:
+            break
         
-#         async for chunk in agent_stream(user_input):
-#             print(chunk, end="")
-#         print("\n")
+        async for chunk in agent_stream(user_input):
+            print(chunk, end="")
+        print("\n")
 
-# if __name__ == "__main__":
-#     asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
