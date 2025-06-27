@@ -110,12 +110,16 @@ class Invest12KnowledgeGraph:
                 section_id = f"section_{section.get('bob', '')}"
                 section_title = section.get('title', '')
                 
+                # Ustunlar sonini hisoblash
+                columns_count = len(section.get('columns', []))
+                
                 # Bo'lim tuguni
                 self.knowledge_graph.add_node(section_id, 
                                             type="section", 
                                             bob=section.get('bob', ''), 
                                             title=section_title,
-                                            description=section.get('description', ''))
+                                            description=section.get('description', ''),
+                                            columns_count=columns_count)
                 self.node_mapping[section_id] = section_id
                 
                 # Bo'limni hisobot shakliga bog'lash
@@ -327,6 +331,7 @@ class Invest12KnowledgeGraph:
         qator_part = None
         ustun_part = None
         nazorat_part = False
+        ustunlar_soni_part = False
         
         # Bob qismini aniqlash
         bob_pattern = re.compile(r'(\d+)[-\s]*bob')
@@ -355,7 +360,14 @@ class Invest12KnowledgeGraph:
             if keyword in so_rov.lower():
                 nazorat_part = True
                 break
-        
+                
+        # Ustunlar soni qismini aniqlash
+        ustunlar_soni_keywords = ['nechta ustun', 'ustunlar soni', 'qancha ustun']
+        for keyword in ustunlar_soni_keywords:
+            if keyword in so_rov.lower():
+                ustunlar_soni_part = True
+                break
+                
         # Tugunlar bo'yicha qidirish
         for node_id, node_data in self.knowledge_graph.nodes(data=True):
             node_text = ""
@@ -385,6 +397,10 @@ class Invest12KnowledgeGraph:
             if nazorat_part and node_data.get('type') in ['strict_control', 'non_strict_control']:
                 match_score += 3  # Nazorat so'ralgan va tugun nazorat bo'lsa, eng yuqori ball
             
+            # Ustunlar soni qismini tekshirish
+            if ustunlar_soni_part and node_data.get('type') == 'section' and 'columns_count' in node_data:
+                match_score += 3  # Ustunlar soni so'ralgan va tugun bo'lim bo'lsa, eng yuqori ball
+            
             # Agar moslik topilgan bo'lsa
             if match_score > 0:
                 node_type = node_data.get('type', '')
@@ -396,6 +412,7 @@ class Invest12KnowledgeGraph:
                         'nomi': node_data.get('title', ''),
                         'bob': node_data.get('bob', ''),
                         'tavsifi': node_data.get('description', ''),
+                        'ustunlar_soni': node_data.get('columns_count', 0),
                         'bo\'lim_turi': '',
                         'o\'xshashlik': match_score / len(important_words) if important_words else 0
                     })
@@ -536,6 +553,10 @@ class Invest12KnowledgeGraph:
             if 'nazorat_turi' in result:
                 formatted_result['nazorat_turi'] = result['nazorat_turi']
             
+            # Ustunlar soni ma'lumotini qo'shish
+            if 'ustunlar_soni' in result:
+                formatted_result['maydonlar_soni'] = result['ustunlar_soni']
+                
             # Mantiqiy nazoratlarni qo'shish
             if 'qatiy_nazoratlar' in result:
                 formatted_result['qatiy_nazoratlar'] = result['qatiy_nazoratlar']
@@ -570,10 +591,13 @@ def main():
     # Knowledge Graph ni vizualizatsiya qilish
     # kg.visualize_graph(graph_output)
 
-    # Qidiruv o'tkazish
-    results = kg.search("2-bob 2-ustun mantiqiy nazoratlari")
+    # Qidiruv o'tkazish - ustunlar va qatorlar soni haqida so'rov
+    print("\nUstunlar soni haqida so'rov:")
+    results = kg.search("2-bob da nechta ustun bor")
     formatted_results = kg.format_search_results(results)
     print(formatted_results)
+    
+    # Qatorlar soni haqida so'rov - o'chirildi
     
     logger.info("Jarayon muvaffaqiyatli yakunlandi.")
 
