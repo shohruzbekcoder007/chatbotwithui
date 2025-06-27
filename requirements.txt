@@ -28,3 +28,4 @@ blobfile==2.1.1
 sentencepiece==0.2.0
 # ctransformers[cu128]==0.2.27
 # llama-cpp-python==0.2.57
+networkx==3.4.2
