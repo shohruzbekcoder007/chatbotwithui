@@ -326,6 +326,7 @@ class Invest12KnowledgeGraph:
         bob_part = None
         qator_part = None
         ustun_part = None
+        nazorat_part = False
         
         # Bob qismini aniqlash
         bob_pattern = re.compile(r'(\d+)[-\s]*bob')
@@ -347,6 +348,13 @@ class Invest12KnowledgeGraph:
         if ustun_match:
             ustun_part = ustun_match.group(1).upper()
             logger.info(f"Ustun qismi aniqlandi: {ustun_part}")
+        
+        # Mantiqiy nazorat qismini aniqlash
+        nazorat_keywords = ['mantiqiy', 'nazorat', 'kontrol', 'logik', 'tekshir']
+        for keyword in nazorat_keywords:
+            if keyword in so_rov.lower():
+                nazorat_part = True
+                break
         
         # Tugunlar bo'yicha qidirish
         for node_id, node_data in self.knowledge_graph.nodes(data=True):
@@ -373,6 +381,10 @@ class Invest12KnowledgeGraph:
             if ustun_part and node_data.get('column') == ustun_part:
                 match_score += 2  # Ustun mos kelsa, yuqoriroq ball
             
+            # Mantiqiy nazorat qismini tekshirish
+            if nazorat_part and node_data.get('type') in ['strict_control', 'non_strict_control']:
+                match_score += 3  # Nazorat so'ralgan va tugun nazorat bo'lsa, eng yuqori ball
+            
             # Agar moslik topilgan bo'lsa
             if match_score > 0:
                 node_type = node_data.get('type', '')
@@ -388,7 +400,7 @@ class Invest12KnowledgeGraph:
                         'o\'xshashlik': match_score / len(important_words) if important_words else 0
                     })
                 elif node_type == 'column':
-                    results.append({
+                    column_result = {
                         'turi': 'ustun',
                         'nomi': node_data.get('description', ''),
                         'kodi': node_data.get('column', ''),
@@ -396,7 +408,27 @@ class Invest12KnowledgeGraph:
                         'tavsifi': node_data.get('description', ''),
                         'bo\'lim_turi': '',
                         'o\'xshashlik': match_score / len(important_words) if important_words else 0
-                    })
+                    }
+                    
+                    # Ustun bilan bog'liq mantiqiy nazoratlarni qo'shish
+                    strict_controls = []
+                    non_strict_controls = []
+                    
+                    # Ustun bilan bog'liq nazoratlarni topish
+                    for succ in self.knowledge_graph.successors(node_id):
+                        succ_data = self.knowledge_graph.nodes[succ]
+                        if succ_data.get('type') == 'strict_control':
+                            strict_controls.append(succ_data.get('description', ''))
+                        elif succ_data.get('type') == 'non_strict_control':
+                            non_strict_controls.append(succ_data.get('description', ''))
+                    
+                    if strict_controls:
+                        column_result['qatiy_nazoratlar'] = strict_controls
+                    
+                    if non_strict_controls:
+                        column_result['qatiy_emas_nazoratlar'] = non_strict_controls
+                    
+                    results.append(column_result)
                 elif node_type == 'row':
                     results.append({
                         'turi': 'qator',
@@ -503,6 +535,13 @@ class Invest12KnowledgeGraph:
             
             if 'nazorat_turi' in result:
                 formatted_result['nazorat_turi'] = result['nazorat_turi']
+            
+            # Mantiqiy nazoratlarni qo'shish
+            if 'qatiy_nazoratlar' in result:
+                formatted_result['qatiy_nazoratlar'] = result['qatiy_nazoratlar']
+            
+            if 'qatiy_emas_nazoratlar' in result:
+                formatted_result['qatiy_emas_nazoratlar'] = result['qatiy_emas_nazoratlar']
             
             formatted_results.append(formatted_result)
         

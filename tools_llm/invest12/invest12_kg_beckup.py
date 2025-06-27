@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 
 """
-12-invest hisoboti ma'lumotlarini XLSX fayldan o'qib, LLM uchun tayyorlash va Knowledge Graph yaratish.
+12-invest hisoboti ma'lumotlarini JSON fayldan o'qib, Knowledge Graph yaratish.
 """
 
 import os
 import json
 import logging
-import pandas as pd
 import networkx as nx
 from typing import Dict, List, Any, Optional, Tuple
 from collections import defaultdict
@@ -18,207 +17,60 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 class Invest12KnowledgeGraph:
-    """12-invest hisoboti ma'lumotlarini XLSX fayldan o'qib, Knowledge Graph yaratish uchun klass."""
+    """12-invest hisoboti ma'lumotlarini JSON fayldan o'qib, Knowledge Graph yaratish uchun klass."""
     
-    def __init__(self, xlsx_file_path: str):
+    def __init__(self, json_file_path: str):
         """
         Invest12KnowledgeGraph klassini yaratish.
         
         Args:
-            xlsx_file_path: XLSX fayl yo'li
+            json_file_path: JSON fayl yo'li
         """
-        self.xlsx_file_path = xlsx_file_path
+        self.json_file_path = json_file_path
         self.data = {}
         self.knowledge_graph = nx.DiGraph()
         self.node_mapping = {}
         
-    def read_xlsx(self) -> Dict:
+    def read_json(self) -> Dict:
         """
-        XLSX fayldan ma'lumotlarni o'qish.
+        JSON fayldan ma'lumotlarni o'qish.
         
         Returns:
             Dict: O'qilgan ma'lumotlar
         """
-        logger.info(f"XLSX fayldan ma'lumotlarni o'qish: {self.xlsx_file_path}")
+        logger.info(f"JSON fayldan ma'lumotlarni o'qish: {self.json_file_path}")
         
         try:
-            # Excel faylni o'qish
-            xls = pd.ExcelFile(self.xlsx_file_path)
+            with open(self.json_file_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
             
-            # Barcha varaqlarni o'qish
-            sheets_data = {}
-            for sheet_name in xls.sheet_names:
-                logger.info(f"'{sheet_name}' varaqni o'qish")
-                df = pd.read_excel(xls, sheet_name)
-                sheets_data[sheet_name] = df
-            
-            # Ma'lumotlarni strukturalash
-            self.data = self._structure_data(sheets_data)
+            # JSON fayl ro'yxat yoki lug'at formatida bo'lishi mumkin
+            if isinstance(data, list) and len(data) > 0:
+                # Agar ro'yxat bo'lsa, birinchi elementni olish
+                self.data = data[0]
+                logger.info(f"JSON fayl ro'yxat formatida o'qildi: {len(data)} element")
+                
+                # Agar sections mavjud bo'lsa, bo'limlar sonini ko'rsatish
+                if 'sections' in self.data:
+                    logger.info(f"JSON faylda {len(self.data['sections'])} bo'lim topildi")
+            else:
+                # Agar lug'at bo'lsa, to'g'ridan-to'g'ri olish
+                self.data = data
+                
+                # Agar sections mavjud bo'lsa, bo'limlar sonini ko'rsatish
+                if isinstance(self.data, dict) and 'sections' in self.data:
+                    logger.info(f"JSON faylda {len(self.data['sections'])} bo'lim topildi")
             
             return self.data
-            
+        except FileNotFoundError:
+            logger.error(f"JSON fayl topilmadi: {self.json_file_path}")
+            raise FileNotFoundError(f"JSON fayl topilmadi: {self.json_file_path}")
+        except json.JSONDecodeError:
+            logger.error(f"JSON fayl formati noto'g'ri: {self.json_file_path}")
+            raise ValueError(f"JSON fayl formati noto'g'ri: {self.json_file_path}")
         except Exception as e:
-            logger.error(f"XLSX faylni o'qishda xatolik: {str(e)}")
+            logger.error(f"JSON faylni o'qishda xatolik: {str(e)}")
             raise
-    
-    def _structure_data(self, sheets_data: Dict[str, pd.DataFrame]) -> Dict:
-        """
-        Excel varaqlaridan olingan ma'lumotlarni strukturalash.
-        
-        Args:
-            sheets_data: Excel varaqlaridan olingan ma'lumotlar
-            
-        Returns:
-            Dict: Strukturalangan ma'lumotlar
-        """
-        structured_data = {
-            "report_form": {
-                "name": "12-invest shakli",
-                "submitters": "Korxona va tashkilotlar",
-                "structure": "Choraklik, yillik",
-                "indicators": "Investitsiyalar va qurilish faoliyati"
-            },
-            "sections": []
-        }
-        
-        # Har bir varaqni alohida bo'lim sifatida qo'shish
-        for sheet_name, df in sheets_data.items():
-            # Bo'sh qatorlarni olib tashlash
-            df = df.dropna(how='all')
-            
-            # Bo'lim ma'lumotlarini olish
-            section_info = self._extract_section_info(sheet_name, df)
-            
-            # Bo'limni qo'shish
-            structured_data["sections"].append(section_info)
-        
-        return structured_data
-    
-    def _extract_section_info(self, sheet_name: str, df: pd.DataFrame) -> Dict:
-        """
-        Excel varaqdan bo'lim ma'lumotlarini ajratib olish.
-        
-        Args:
-            sheet_name: Varaq nomi
-            df: Varaq ma'lumotlari
-            
-        Returns:
-            Dict: Bo'lim ma'lumotlari
-        """
-        # Bo'lim turi va raqamini aniqlash
-        section_type = "dynamic"  # Default qiymat
-        bob = "1"  # Default qiymat
-        
-        # Varaq nomidan bo'lim raqamini olish
-        if "bob" in sheet_name.lower():
-            parts = sheet_name.split()
-            for part in parts:
-                if part.isdigit():
-                    bob = part
-                    break
-        
-        # Sarlavhani aniqlash
-        title = sheet_name
-        description = f"{bob}-BOB. {title}"
-        
-        # Bo'lim ma'lumotlarini yaratish
-        section_info = {
-            "bob": bob,
-            "title": title,
-            "description": description,
-            "section_type": section_type,
-            "columns": [],
-            "rows": []
-        }
-        
-        # Ustunlarni aniqlash
-        columns = self._extract_columns(df)
-        section_info["columns"] = columns
-        
-        # Qatorlarni aniqlash
-        rows = self._extract_rows(df, columns)
-        section_info["rows"] = rows
-        
-        return section_info
-    
-    def _extract_columns(self, df: pd.DataFrame) -> List[Dict]:
-        """
-        Excel varaqdan ustunlarni ajratib olish.
-        
-        Args:
-            df: Varaq ma'lumotlari
-            
-        Returns:
-            List[Dict]: Ustunlar ro'yxati
-        """
-        columns = []
-        
-        # Birinchi qatorni ustun nomlari sifatida olish
-        header_row = df.iloc[0]
-        
-        # Ustunlarni yaratish
-        for i, col_name in enumerate(df.columns[1:], 1):  # Birinchi ustunni tashlab ketish (qator kodi)
-            column_letter = chr(65 + i)  # A, B, C, ...
-            
-            # Ustun tavsifi
-            description = str(header_row[col_name]) if pd.notna(header_row[col_name]) else f"{column_letter}-ustun"
-            
-            # Ustun ma'lumotlarini yaratish
-            column_info = {
-                "column": column_letter,
-                "description": description,
-                "strict_logical_controls": [],
-                "non_strict_logical_controls": []
-            }
-            
-            columns.append(column_info)
-        
-        return columns
-    
-    def _extract_rows(self, df: pd.DataFrame, columns: List[Dict]) -> List[Dict]:
-        """
-        Excel varaqdan qatorlarni ajratib olish.
-        
-        Args:
-            df: Varaq ma'lumotlari
-            columns: Ustunlar ro'yxati
-            
-        Returns:
-            List[Dict]: Qatorlar ro'yxati
-        """
-        rows = []
-        
-        # Birinchi qatorni tashlab ketish (ustun nomlari)
-        for i, row in df.iloc[1:].iterrows():
-            # Qator kodi va nomi
-            row_code = str(row.iloc[0]) if pd.notna(row.iloc[0]) else str(i)
-            row_name = row_code
-            
-            # Qator ma'lumotlarini yaratish
-            row_info = {
-                "row_code": row_code,
-                "name": row_name,
-                "columns": []
-            }
-            
-            # Qator ustunlarini yaratish
-            for j, column in enumerate(columns):
-                col_idx = j + 1  # Birinchi ustunni tashlab ketish (qator kodi)
-                
-                # Ustun qiymati
-                value = str(row.iloc[col_idx]) if pd.notna(row.iloc[col_idx]) else ""
-                
-                # Ustun ma'lumotlarini yaratish
-                column_info = {
-                    "column": column["column"],
-                    "description": value
-                }
-                
-                row_info["columns"].append(column_info)
-            
-            rows.append(row_info)
-        
-        return rows
     
     def build_knowledge_graph(self) -> nx.DiGraph:
         """
@@ -229,9 +81,9 @@ class Invest12KnowledgeGraph:
         """
         logger.info("Knowledge Graph yaratilmoqda...")
         
-        # Agar ma'lumotlar mavjud bo'lmasa, XLSX faylni o'qish
+        # Agar ma'lumotlar mavjud bo'lmasa, JSON faylni o'qish
         if not self.data:
-            self.read_xlsx()
+            self.read_json()
         
         # NetworkX kutubxonasi yordamida yo'naltirilgan graf yaratish
         self.knowledge_graph = nx.DiGraph()
@@ -355,9 +207,9 @@ class Invest12KnowledgeGraph:
         """
         logger.info(f"Ma'lumotlarni JSON faylga saqlash: {output_file}")
         
-        # Agar ma'lumotlar mavjud bo'lmasa, XLSX faylni o'qish
+        # Agar ma'lumotlar mavjud bo'lmasa, JSON faylni o'qish
         if not self.data:
-            self.read_xlsx()
+            self.read_json()
         
         # JSON faylga saqlash
         with open(output_file, 'w', encoding='utf-8') as f:
@@ -474,6 +326,7 @@ class Invest12KnowledgeGraph:
         bob_part = None
         qator_part = None
         ustun_part = None
+        nazorat_part = False
         
         # Bob qismini aniqlash
         bob_pattern = re.compile(r'(\d+)[-\s]*bob')
@@ -495,6 +348,13 @@ class Invest12KnowledgeGraph:
         if ustun_match:
             ustun_part = ustun_match.group(1).upper()
             logger.info(f"Ustun qismi aniqlandi: {ustun_part}")
+        
+        # Mantiqiy nazorat qismini aniqlash
+        nazorat_keywords = ['mantiqiy', 'nazorat', 'kontrol', 'logik', 'tekshir']
+        for keyword in nazorat_keywords:
+            if keyword in so_rov.lower():
+                nazorat_part = True
+                break
         
         # Tugunlar bo'yicha qidirish
         for node_id, node_data in self.knowledge_graph.nodes(data=True):
@@ -521,6 +381,10 @@ class Invest12KnowledgeGraph:
             if ustun_part and node_data.get('column') == ustun_part:
                 match_score += 2  # Ustun mos kelsa, yuqoriroq ball
             
+            # Mantiqiy nazorat qismini tekshirish
+            if nazorat_part and node_data.get('type') in ['strict_control', 'non_strict_control']:
+                match_score += 3  # Nazorat so'ralgan va tugun nazorat bo'lsa, eng yuqori ball
+            
             # Agar moslik topilgan bo'lsa
             if match_score > 0:
                 node_type = node_data.get('type', '')
@@ -536,7 +400,7 @@ class Invest12KnowledgeGraph:
                         'o\'xshashlik': match_score / len(important_words) if important_words else 0
                     })
                 elif node_type == 'column':
-                    results.append({
+                    column_result = {
                         'turi': 'ustun',
                         'nomi': node_data.get('description', ''),
                         'kodi': node_data.get('column', ''),
@@ -544,7 +408,27 @@ class Invest12KnowledgeGraph:
                         'tavsifi': node_data.get('description', ''),
                         'bo\'lim_turi': '',
                         'o\'xshashlik': match_score / len(important_words) if important_words else 0
-                    })
+                    }
+                    
+                    # Ustun bilan bog'liq mantiqiy nazoratlarni qo'shish
+                    strict_controls = []
+                    non_strict_controls = []
+                    
+                    # Ustun bilan bog'liq nazoratlarni topish
+                    for succ in self.knowledge_graph.successors(node_id):
+                        succ_data = self.knowledge_graph.nodes[succ]
+                        if succ_data.get('type') == 'strict_control':
+                            strict_controls.append(succ_data.get('description', ''))
+                        elif succ_data.get('type') == 'non_strict_control':
+                            non_strict_controls.append(succ_data.get('description', ''))
+                    
+                    if strict_controls:
+                        column_result['qatiy_nazoratlar'] = strict_controls
+                    
+                    if non_strict_controls:
+                        column_result['qatiy_emas_nazoratlar'] = non_strict_controls
+                    
+                    results.append(column_result)
                 elif node_type == 'row':
                     results.append({
                         'turi': 'qator',
@@ -652,6 +536,13 @@ class Invest12KnowledgeGraph:
             if 'nazorat_turi' in result:
                 formatted_result['nazorat_turi'] = result['nazorat_turi']
             
+            # Mantiqiy nazoratlarni qo'shish
+            if 'qatiy_nazoratlar' in result:
+                formatted_result['qatiy_nazoratlar'] = result['qatiy_nazoratlar']
+            
+            if 'qatiy_emas_nazoratlar' in result:
+                formatted_result['qatiy_emas_nazoratlar'] = result['qatiy_emas_nazoratlar']
+            
             formatted_results.append(formatted_result)
         
         return {
@@ -664,24 +555,25 @@ def main():
     """Asosiy funksiya."""
     # Fayl yo'llarini aniqlash
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    xlsx_file = os.path.join(current_dir, "12 invest Hisobot (AI chat uchun).xlsx")
-    json_output = os.path.join(current_dir, "invest12.json")
-    graph_output = os.path.join(current_dir, "invest12_graph.png")
+    json_file = os.path.join(current_dir, "invest12.json")
+    # graph_output = os.path.join(current_dir, "invest12_graph.png")
     
     # Invest12KnowledgeGraph klassini yaratish
-    kg = Invest12KnowledgeGraph(xlsx_file)
+    kg = Invest12KnowledgeGraph(json_file)
     
-    # XLSX fayldan ma'lumotlarni o'qish
-    kg.read_xlsx()
-    
-    # Ma'lumotlarni JSON faylga saqlash
-    kg.save_data_to_json(json_output)
+    # JSON fayldan ma'lumotlarni o'qish
+    kg.read_json()
     
     # Knowledge Graph yaratish
     kg.build_knowledge_graph()
     
     # Knowledge Graph ni vizualizatsiya qilish
-    kg.visualize_graph(graph_output)
+    # kg.visualize_graph(graph_output)
+
+    # Qidiruv o'tkazish
+    results = kg.search("2-bob 2-ustun mantiqiy nazoratlari")
+    formatted_results = kg.format_search_results(results)
+    print(formatted_results)
     
     logger.info("Jarayon muvaffaqiyatli yakunlandi.")
 
