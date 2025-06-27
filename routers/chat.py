@@ -176,6 +176,8 @@ async def stream_chat(request: Request, req: ChatRequest):
     suggestion_text = suggestion_dict.get(device, {}).get(language, "")
     context_query = await old_context(user_id, question)
 
+    print(context_query, "<< context_query")
+
     # print(suggestion_text, "<< suggestion_text")
     # print(device, "<< device")
     # print(language, "<< language")

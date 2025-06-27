@@ -189,9 +189,9 @@
     overflow: hidden;
 }
 
-.bot .message-text {
+/* .bot .message-text {
     animation: fadeIn 0.5s ease;
-}
+} */
 
 @keyframes fadeIn {
     from {

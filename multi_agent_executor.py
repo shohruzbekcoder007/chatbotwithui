@@ -1,8 +1,10 @@
 from langchain.agents import initialize_agent, AgentType
 from langchain.memory import ConversationBufferMemory
 from langchain_core.messages import SystemMessage
-from langchain_community.chat_models import ChatOllama
 from typing import AsyncGenerator
+
+# Umumiy modellarni import qilish
+from shared_models import llm, shared_embedding_model
 
 # Toollarni import qilish
 from tools_llm.dbibt.dbibt_tool import DBIBTTool
@@ -12,18 +14,6 @@ from tools_llm.ckp.ckp_tool_simple import CkpTool
 from tools_llm.country.country_tool import CountryTool
 from tools_llm.thsh.thsh_tool import THSHTool
 from tools_llm.tif_tn.tif_tn_tool import TIFTNTool
-from retriever.langchain_chroma import CustomEmbeddingFunction
-
-# LLM modelini yaratish
-llm = ChatOllama(
-    model="devstral",
-    base_url="http://localhost:11434",
-    temperature=0.7,
-    streaming=True  # Stream rejimini yoqish
-)
-
-# Bitta embedding modelini yaratish, barcha toollar uchun
-shared_embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
 
 # Toollarni yaratish
 soato_tool = SoatoTool("tools_llm/soato/soato.json", use_embeddings=True, embedding_model=shared_embedding_model)

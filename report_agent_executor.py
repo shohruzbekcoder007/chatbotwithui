@@ -2,25 +2,14 @@
 from langchain.agents import initialize_agent, AgentType
 from langchain.memory import ConversationBufferMemory
 from langchain_core.messages import SystemMessage
-from langchain_community.chat_models import ChatOllama
 from typing import AsyncGenerator
-import asyncio
+
+# Umumiy modellarni import qilish
+from shared_models import llm, shared_embedding_model
 
 # Toollarni import qilish
 from tools_llm.transport4.transport4_tool import Transport4Tool
 from tools_llm.invest12.invest12_tool import Invest12Tool
-from retriever.langchain_chroma import CustomEmbeddingFunction
-
-# LLM modelini yaratish
-llm = ChatOllama(
-    model="gemma3:27b",
-    base_url="http://localhost:11434",
-    temperature=0.7,
-    streaming=True
-)
-
-# Embedding modelini yaratish
-shared_embedding_model = CustomEmbeddingFunction(model_name='BAAI/bge-m3')
 
 # Toollarni yaratish
 transport4_tool = Transport4Tool(
@@ -41,8 +30,11 @@ invest12_tool._prepare_embedding_data()
 
 # System message
 system_message = SystemMessage(content="""
-    Siz O'zbekiston Davlat statistika qo'mitasi transport hisobotlari ma'lumotlari bilan ishlaydigan agentsiz. 
-    FAQAT O'ZBEK TILIDA JAVOB BERING. Hech qanday holatda ingliz tilida so'z yoki ibora ishlatmang.
+    Siz O'zbekiston Davlat statistika qo'mitasi transport hisobotlari ma'lumotlari bilan ishlaydigan agentsiz.
+    
+    ⚠️ JUDA MUHIM: FAQAT VA FAQAT O'ZBEK TILIDA JAVOB BERING! ⚠️
+    ⚠️ HECH QANDAY HOLATDA INGLIZ TILIDA SO'Z YOKI IBORA ISHLATMANG! ⚠️
+    ⚠️ BARCHA FIKRLASH JARAYONLARI, HARAKAT VA KUZATUVLAR FAQAT O'ZBEK TILIDA BO'LISHI SHART! ⚠️
     
     Quyidagi vositalar mavjud:
     1. transport4_tool - 4-transport shakli hisoboti ma'lumotlarini qidirish uchun.
@@ -113,18 +105,44 @@ report_agent = initialize_agent(
 async def agent_stream_report(query: str) -> AsyncGenerator[str, None]:
     """Agent javobini stream ko'rinishida qaytaradi."""
     response = ""
-    async for chunk in report_agent.astream({"input": query}):
+    # So'rovga o'zbek tilida javob berish kerakligini qo'shimcha qilamiz
+    enhanced_query = query + "\n\n###########\nJUDA MUHIM: FAQAT O'ZBEK TILIDA JAVOB BERING! Ingliz tilini umuman ishlatmang!\n###########"
+    
+    async for chunk in report_agent.astream({"input": enhanced_query}):
         if "output" in chunk:
             chunk_text = chunk["output"]
-            # Ingliz tilidagi so'zlarni o'zbekchaga o'girish
-            chunk_text = (chunk_text.replace("NAME", "nomi")
+            
+            # Ingliz tilidagi so'zlarni o'zbekchaga o'girish - kengaytirilgan ro'yxat
+            chunk_text = (chunk_text
+                         # Asosiy kalit so'zlar
+                         .replace("NAME", "nomi")
                          .replace("CODE", "kodi")
                          .replace("DESCRIPTION", "tavsifi")
                          .replace("SECTION_TYPE", "bo'lim_turi")
                          .replace("status", "holat")
                          .replace("count", "soni")
                          .replace("results", "natijalar")
-                         .replace("message", "xabar"))
+                         .replace("message", "xabar")
+                         # Agent jarayoni bilan bog'liq so'zlar
+                         .replace("Thought:", "Fikr:")
+                         .replace("Action:", "Harakat:")
+                         .replace("Observation:", "Kuzatuv:")
+                         .replace("Final Answer:", "Yakuniy Javob:")
+                         .replace("I need to", "Men kerak")
+                         .replace("I will", "Men")
+                         .replace("I found", "Men topdim")
+                         .replace("Let me", "Men")
+                         .replace("First", "Birinchi")
+                         .replace("According to", "Ma'lumotlarga ko'ra")
+                         .replace("Looking at", "Ko'rib chiqsak")
+                         .replace("Based on", "Asoslanib")
+                         .replace("The information", "Ma'lumot")
+                         .replace("shows that", "ko'rsatadiki")
+                         .replace("indicates that", "ko'rsatadiki")
+                         .replace("Finally", "Yakuniy")
+                         .replace("In conclusion", "Xulosa qilib aytganda")
+                         .replace("To summarize", "Qisqacha aytganda"))
+            
             response += chunk_text
             yield chunk_text
 
