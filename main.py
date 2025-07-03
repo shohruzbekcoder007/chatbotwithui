@@ -286,8 +286,8 @@ async def login_page():
     return response
 
 # Auth routerlarini qo'shish
-app.include_router(auth_router)
 app.include_router(admin_router)
+app.include_router(auth_router)
 app.include_router(chat_crud_router)
 app.include_router(feedback_router)
 app.include_router(admin_page_router)

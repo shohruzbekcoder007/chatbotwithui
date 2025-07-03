@@ -51,6 +51,8 @@ async def admin_login(login_data: AdminLogin):
 @router.post("/api/admin/create", response_model=AdminResponse)
 async def create_admin(login_data: AdminLogin):
     existing_admin = await Admin.find_one({"username": login_data.username})
+    print(existing_admin)
+    print("\n\n========================")
     if existing_admin:
         return AdminResponse(success=False, error="Admin already exists")
     
